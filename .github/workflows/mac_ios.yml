@@ -1,0 +1,67 @@
+name: Build and test workflow
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build and Test default scheme using any available iPhone simulator
+    runs-on: macos-13
+    # https://github.com/actions/virtual-environments/blob/main/images/macos/macos-13-Readme.md
+    # target macOS 12.4 isn't supported in default Xcode for macOS 12
+
+    #strategy:
+    #  matrix:
+    #    run-config:
+    #      - { scheme: 'SPISearch', destination: 'platform=macOS' }
+    #      - { scheme: 'SPISearch', destination: 'platform=iOS Simulator,OS=15.2,name=iPhone 8' }
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Select Xcode 14.3.1
+        run: sudo xcode-select -s /Applications/Xcode_14.3.1.app
+      
+      # env:
+      #  DEVELOPER_DIR: /Applications/Xcode_14.3.1.app/Contents/Developer
+      #- name: Show what's in Applications
+      #  run: ls -al /Applications
+
+      - name: Show Build Version
+        run: xcodebuild -version
+
+      #- name: Show Build Settings
+      #  run: xcodebuild -showBuildSettings
+
+      - name: Show Build SDK
+        run: xcodebuild -showsdks
+      # iOS 16.4, macOS 13.3 on macOS-13 w/ Xcode 13.4.1
+
+      #- name: iOS xcodebuild basic invoke
+      #  run: xcodebuild clean test -scheme 'MeetingNotes'
+
+      - name: iOS build for MeetingNotes
+        run: xcodebuild clean build -scheme 'MeetingNotes' -destination 'platform=iOS Simulator,OS=16.4,name=iPhone 8' -sdk iphonesimulator16.4 -showBuildTimingSummary
+
+      #- name: iOS test
+      #  run: xcodebuild clean test -scheme 'MeetingNotes' -destination 'platform=iOS Simulator,OS=16.4,name=iPhone 8' -sdk iphonesimulator16.4 -showBuildTimingSummary
+
+      - name: macOS build for MeetingNotes
+        run: xcodebuild clean build -scheme 'MeetingNotes' -destination 'platform=macOS' -sdk macosx13.3 -showBuildTimingSummary
+        
+      - name: macOS build for testing MeetingNotes
+        run: xcodebuild build-for-testing -scheme 'MeetingNotes' -destination 'platform=macOS' -sdk macosx13.3 -showBuildTimingSummary
+
+      #- name: macOS test for MeetingNotes
+      #  run: xcodebuild test -scheme 'MeetingNotes' -destination 'platform=macOS' -sdk macosx12.3 -showBuildTimingSummary
+
+# w/ Xcode 14 beta 3:
+# Local: xcodebuild clean test -scheme 'MeetingNotes' -destination 'platform=iOS Simulator,OS=16.0,name=iPhone 8' -sdk iphonesimulator16.0
+
+#export DEVELOPER_DIR=/Applications/Xcode.app
+#xcodebuild clean build -scheme 'MeetingNotes' -destination 'platform=iOS Simulator,OS=16.4,name=iPhone 8' -sdk iphonesimulator16.4
+#xcodebuild clean build -scheme 'MeetingNotes' -destination 'platform=macOS' -sdk macosx13.3 
