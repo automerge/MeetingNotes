@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "06454CE4-7DBF-4729-ADD0-0E15432E55E3",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:MeetingNotes.xcodeproj",
+      "identifier" : "1A0DDC302A464DEA001ECADD",
+      "name" : "MeetingNotes"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:MeetingNotes.xcodeproj",
+        "identifier" : "1A0DDC442A464DEB001ECADD",
+        "name" : "MeetingNotesTests"
+      }
+    },
+    {
+      "enabled" : false,
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:MeetingNotes.xcodeproj",
+        "identifier" : "1A0DDC4E2A464DEB001ECADD",
+        "name" : "MeetingNotesUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
