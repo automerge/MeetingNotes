@@ -15,6 +15,8 @@
 		1A0DDC4A2A464DEB001ECADD /* MeetingNotesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC492A464DEB001ECADD /* MeetingNotesTests.swift */; };
 		1A0DDC542A464DEB001ECADD /* MeetingNotesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC532A464DEB001ECADD /* MeetingNotesUITests.swift */; };
 		1A0DDC562A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */; };
+		1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD5DA322A464FBD0085DF79 /* Automerge */; };
+		1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,7 @@
 		1A0DDC532A464DEB001ECADD /* MeetingNotesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesUITests.swift; sourceTree = "<group>"; };
 		1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeetingNotes.xctestplan; sourceTree = "<group>"; };
+		1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingNotesModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,6 +106,7 @@
 			children = (
 				1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */,
 				1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */,
+				1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */,
 				1A0DDC382A464DEA001ECADD /* ContentView.swift */,
 				1A0DDC3A2A464DEB001ECADD /* Assets.xcassets */,
 				1A0DDC3C2A464DEB001ECADD /* Info.plist */,
@@ -152,6 +157,9 @@
 			dependencies = (
 			);
 			name = MeetingNotes;
+			packageProductDependencies = (
+				1AD5DA322A464FBD0085DF79 /* Automerge */,
+			);
 			productName = MeetingNotes;
 			productReference = 1A0DDC312A464DEA001ECADD /* MeetingNotes.app */;
 			productType = "com.apple.product-type.application";
@@ -224,6 +232,9 @@
 				Base,
 			);
 			mainGroup = 1A0DDC282A464DEA001ECADD;
+			packageReferences = (
+				1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */,
+			);
 			productRefGroup = 1A0DDC322A464DEA001ECADD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -267,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A0DDC372A464DEA001ECADD /* MeetingNotesDocument.swift in Sources */,
+				1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */,
 				1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */,
 				1A0DDC392A464DEA001ECADD /* ContentView.swift in Sources */,
 			);
@@ -626,6 +638,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/automerge/automerge-swift/";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1AD5DA322A464FBD0085DF79 /* Automerge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */;
+			productName = Automerge;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1A0DDC292A464DEA001ECADD /* Project object */;
 }
