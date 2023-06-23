@@ -1,10 +1,3 @@
-//
-//  MeetingNotesUITestsLaunchTests.swift
-//  MeetingNotesUITests
-//
-//  Created by Joseph Heck on 6/23/23.
-//
-
 import XCTest
 
 final class MeetingNotesUITestsLaunchTests: XCTestCase {

@@ -1,10 +1,3 @@
-//
-//  MeetingNotesApp.swift
-//  MeetingNotes
-//
-//  Created by Joseph Heck on 6/23/23.
-//
-
 import SwiftUI
 
 @main
