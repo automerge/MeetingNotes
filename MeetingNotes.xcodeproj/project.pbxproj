@@ -17,6 +17,12 @@
 		1A0DDC562A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */; };
 		1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD5DA322A464FBD0085DF79 /* Automerge */; };
 		1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */; };
+		1AD7A8E52A4767A1003B6A1E /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD7A8E42A4767A1003B6A1E /* PotentCodables */; };
+		1AD7A8EB2A476801003B6A1E /* NWParameters+InitWithPasscode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E62A476801003B6A1E /* NWParameters+InitWithPasscode.swift */; };
+		1AD7A8EC2A476801003B6A1E /* PeerBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E72A476801003B6A1E /* PeerBrowser.swift */; };
+		1AD7A8ED2A476801003B6A1E /* AutomergeSyncProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E82A476801003B6A1E /* AutomergeSyncProtocol.swift */; };
+		1AD7A8EE2A476801003B6A1E /* PeerListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E92A476801003B6A1E /* PeerListener.swift */; };
+		1AD7A8EF2A476801003B6A1E /* PeerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8EA2A476801003B6A1E /* PeerConnection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +58,11 @@
 		1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeetingNotes.xctestplan; sourceTree = "<group>"; };
 		1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingNotesModel.swift; sourceTree = "<group>"; };
+		1AD7A8E62A476801003B6A1E /* NWParameters+InitWithPasscode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NWParameters+InitWithPasscode.swift"; sourceTree = "<group>"; };
+		1AD7A8E72A476801003B6A1E /* PeerBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerBrowser.swift; sourceTree = "<group>"; };
+		1AD7A8E82A476801003B6A1E /* AutomergeSyncProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutomergeSyncProtocol.swift; sourceTree = "<group>"; };
+		1AD7A8E92A476801003B6A1E /* PeerListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerListener.swift; sourceTree = "<group>"; };
+		1AD7A8EA2A476801003B6A1E /* PeerConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerConnection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +71,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */,
+				1AD7A8E52A4767A1003B6A1E /* PotentCodables in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +116,7 @@
 		1A0DDC332A464DEA001ECADD /* MeetingNotes */ = {
 			isa = PBXGroup;
 			children = (
+				1AD7A8F02A476807003B6A1E /* PeerNetworking */,
 				1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */,
 				1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */,
 				1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */,
@@ -141,6 +154,18 @@
 			path = MeetingNotesUITests;
 			sourceTree = "<group>";
 		};
+		1AD7A8F02A476807003B6A1E /* PeerNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				1AD7A8E62A476801003B6A1E /* NWParameters+InitWithPasscode.swift */,
+				1AD7A8E72A476801003B6A1E /* PeerBrowser.swift */,
+				1AD7A8EA2A476801003B6A1E /* PeerConnection.swift */,
+				1AD7A8E92A476801003B6A1E /* PeerListener.swift */,
+				1AD7A8E82A476801003B6A1E /* AutomergeSyncProtocol.swift */,
+			);
+			path = PeerNetworking;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -159,6 +184,7 @@
 			name = MeetingNotes;
 			packageProductDependencies = (
 				1AD5DA322A464FBD0085DF79 /* Automerge */,
+				1AD7A8E42A4767A1003B6A1E /* PotentCodables */,
 			);
 			productName = MeetingNotes;
 			productReference = 1A0DDC312A464DEA001ECADD /* MeetingNotes.app */;
@@ -234,6 +260,7 @@
 			mainGroup = 1A0DDC282A464DEA001ECADD;
 			packageReferences = (
 				1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */,
+				1AD7A8E32A4767A1003B6A1E /* XCRemoteSwiftPackageReference "PotentCodables" */,
 			);
 			productRefGroup = 1A0DDC322A464DEA001ECADD /* Products */;
 			projectDirPath = "";
@@ -279,8 +306,13 @@
 			files = (
 				1A0DDC372A464DEA001ECADD /* MeetingNotesDocument.swift in Sources */,
 				1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */,
+				1AD7A8ED2A476801003B6A1E /* AutomergeSyncProtocol.swift in Sources */,
 				1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */,
 				1A0DDC392A464DEA001ECADD /* ContentView.swift in Sources */,
+				1AD7A8EC2A476801003B6A1E /* PeerBrowser.swift in Sources */,
+				1AD7A8EF2A476801003B6A1E /* PeerConnection.swift in Sources */,
+				1AD7A8EB2A476801003B6A1E /* NWParameters+InitWithPasscode.swift in Sources */,
+				1AD7A8EE2A476801003B6A1E /* PeerListener.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -652,6 +684,14 @@
 				kind = branch;
 			};
 		};
+		1AD7A8E32A4767A1003B6A1E /* XCRemoteSwiftPackageReference "PotentCodables" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/outfoxx/PotentCodables";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -659,6 +699,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */;
 			productName = Automerge;
+		};
+		1AD7A8E42A4767A1003B6A1E /* PotentCodables */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1AD7A8E32A4767A1003B6A1E /* XCRemoteSwiftPackageReference "PotentCodables" */;
+			productName = PotentCodables;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -11,17 +11,30 @@ import AppKit
 // - ROOT {
 //     "id" - UUID (Scalar) // for comparing origins for sync
 //     "title" - String (scalar)
-//     "summary" - Text (collaborative)
+//     "attendees" - [ String (scalar) ]
+//     "agenda" - [
+//        AgendaItem {
+//           "title": String (scalar)
+//           "discussion": Text
+//        }
+//     ]
 //   }
+
+struct AgendaItem: Codable {
+    var title: String
+    var discussion: Text
+}
 
 struct MeetingNotesModel: Codable, Identifiable {
     let id: UUID
     var title: String
-    var summary: Text
-
-    init(title: String, summary: Text) {
+    var attendees: [String]
+    var agenda: [AgendaItem]
+    
+    init(title: String) {
         id = UUID()
         self.title = title
-        self.summary = summary
+        attendees = []
+        agenda = []
     }
 }

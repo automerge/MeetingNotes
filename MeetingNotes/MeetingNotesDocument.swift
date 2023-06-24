@@ -28,7 +28,7 @@ class MeetingNotesDocument: ReferenceFileDocument {
         doc = Document()
         enc = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
         dec = AutomergeDecoder(doc: doc)
-        model = MeetingNotesModel(title: "Untitled", summary: Automerge.Text(""))
+        model = MeetingNotesModel(title: "Untitled")
         do {
             try enc.encode(model)
         } catch {

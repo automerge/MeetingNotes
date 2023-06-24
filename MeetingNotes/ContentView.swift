@@ -14,8 +14,6 @@ struct ContentView: View {
             Form {
                 TextField("Title", text: $document.model.title)
             }
-            TextEditor(text: $document.model.summary.value)
-                .padding()
         }
     }
 }
