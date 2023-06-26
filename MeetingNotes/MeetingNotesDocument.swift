@@ -1,8 +1,8 @@
+import Automerge
+import OSLog
+import PotentCBOR
 import SwiftUI
 import UniformTypeIdentifiers
-import Automerge
-import PotentCBOR
-import OSLog
 
 extension UTType {
     static var automerge: UTType {
@@ -53,7 +53,10 @@ class MeetingNotesDocument: ReferenceFileDocument {
     required init(configuration: ReadConfiguration) throws {
         guard let filedata = configuration.file.regularFileContents
         else {
-            logger.error("Opened file \(String(describing: configuration.file.filename), privacy: .public) has no associated data.")
+            logger
+                .error(
+                    "Opened file \(String(describing: configuration.file.filename), privacy: .public) has no associated data."
+                )
             throw CocoaError(.fileReadCorruptFile)
         }
         // Binary is a CBOR encoded file that includes an origin ID, so decode that into
@@ -66,7 +69,10 @@ class MeetingNotesDocument: ReferenceFileDocument {
         model = try dec.decode(MeetingNotesModel.self)
         // Verify the ID in the document matches the one in the wrapper
         if model.id != wrappedDocument.id {
-            logger.error("Internal document id: \(self.model.id, privacy: .public) doesn't match the origin ID in the file wrapper (\(wrappedDocument.id, privacy: .public)")
+            logger
+                .error(
+                    "Internal document id: \(self.model.id, privacy: .public) doesn't match the origin ID in the file wrapper (\(wrappedDocument.id, privacy: .public)"
+                )
             throw CocoaError(.fileReadCorruptFile)
         }
     }

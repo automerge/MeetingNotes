@@ -30,7 +30,7 @@ struct MeetingNotesModel: Codable, Identifiable {
     var title: String
     var attendees: [String]
     var agenda: [AgendaItem]
-    
+
     init(title: String) {
         id = UUID()
         self.title = title
