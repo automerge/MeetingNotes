@@ -18,7 +18,7 @@ struct WrappedAutomergeFile: Codable {
     let data: Data
 }
 
-class MeetingNotesDocument: ReferenceFileDocument {
+final class MeetingNotesDocument: ReferenceFileDocument {
     // NOTE(heckj): With Automerge 2.0, a document doesn't have an internal
     // document identifier that's easily available to use for comparison
     // to determine if documents have a "shared origin". (You really only
