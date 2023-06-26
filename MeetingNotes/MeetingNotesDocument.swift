@@ -5,6 +5,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 extension UTType {
+    /// An Automerge document that is CBOR encoded with a document identifier.
     static var automerge: UTType {
         UTType(exportedAs: "com.github.automerge.localfirst")
     }
@@ -18,18 +19,23 @@ struct WrappedAutomergeFile: Codable {
     let data: Data
 }
 
+/// The concrete subclass of a reference-based file document.
+///
+/// The Document subclass includes saving the application model ``MeetingNotesModel`` into a managed Automerge document,
+/// and serializing that document out to the filesystem as a ``WrappedAutomergeFile``.
+/// The `WrappedAutomergeFile` uses `CBOR` encoding to add a document identifier to the file format.
+///
+/// With [Automerge](https://automerge.org) version 2.0, a document doesn't have an internal  document identifier that's easily available to use for comparison
+/// to determine if documents have a "shared origin".
+/// With Automerge (and other CRDTs), merging of documents is predicated on having a shared history that the algorithms can use to merge the causal history in an expected format.
+/// It is possible to merge without that shared history, but the results of the merging during the sync "appear" to be far more random;
+/// one peer consistently "winning" over the other with conflicting causal data points.
+///
+/// The upstream project is working around this by wrapping the data stream from "core" Automerge with a simple wrapper
+/// (using `CBOR` encoding) and tacking on an automatically generated `UUID` as that identifier.
+///
+/// For more information about `CBOR` encoding, see [CBOR specification overview](https://cbor.io).
 final class MeetingNotesDocument: ReferenceFileDocument {
-    // NOTE(heckj): With Automerge 2.0, a document doesn't have an internal
-    // document identifier that's easily available to use for comparison
-    // to determine if documents have a "shared origin". (You really only
-    // want to merge documents if they have a shared history - you can still
-    // merge without that shared history, but the results of the merging
-    // during the sync "appear" to be far more random, with one peer consistently
-    // "winning" over the other with conflicting causal data points.
-
-    // The upstream project is working around this by wrapping the data
-    // stream from "core" Automerge with a simple wrapper (using CBOR encoding)
-    // and tacking on an automatically generated UUID() as that identifier.
 
     let logger = Logger(subsystem: "Document", category: "Serialization")
     let fileEncoder = CBOREncoder()
