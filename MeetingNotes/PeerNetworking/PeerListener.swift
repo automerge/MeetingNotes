@@ -32,7 +32,7 @@ class PeerListener {
     let passcode: String?
     let type: ServiceType
     let logger = Logger(subsystem: "PeerNetwork", category: "PeerListener")
-    
+
     // Create a listener with a name to advertise, a passcode for authentication,
     // and a delegate to handle inbound connections.
     init(name: String, passcode: String, delegate: PeerConnectionDelegate) {
@@ -64,7 +64,7 @@ class PeerListener {
 
             startListening()
         } catch {
-            self.logger.critical("Failed to create application service listener")
+            logger.critical("Failed to create application service listener")
             abort()
         }
     }
@@ -74,7 +74,7 @@ class PeerListener {
         do {
             // When hosting a game via Bonjour, use the passcode and advertise the automerge sync service.
             guard let name = name, let passcode = passcode else {
-                self.logger.error("Cannot create Bonjour listener without name and passcode")
+                logger.error("Cannot create Bonjour listener without name and passcode")
                 return
             }
 
@@ -87,7 +87,7 @@ class PeerListener {
 
             startListening()
         } catch {
-            self.logger.critical("Failed to create bonjour listener")
+            logger.critical("Failed to create bonjour listener")
             abort()
         }
     }
@@ -95,7 +95,7 @@ class PeerListener {
     func bonjourListenerStateChanged(newState: NWListener.State) {
         switch newState {
         case .ready:
-            logger.info("Listener ready on \(String(describing: self.listener?.port), privacy: .public)")
+            logger.info("Listener ready on \(String(describing: listener?.port), privacy: .public)")
         case let .failed(error):
             if error == NWError.dns(DNSServiceErrorType(kDNSServiceErr_DefunctConnection)) {
                 logger.warning("Listener failed with \(error, privacy: .public), restarting.")

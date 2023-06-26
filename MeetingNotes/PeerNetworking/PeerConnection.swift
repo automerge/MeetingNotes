@@ -106,7 +106,10 @@ class PeerConnection {
                     delegate.connectionReady()
                 }
             case let .failed(error):
-                self?.logger.warning("\(String(describing: connection), privacy: .public) failed with \(error, privacy: .public)")
+                self?.logger
+                    .warning(
+                        "\(String(describing: connection), privacy: .public) failed with \(error, privacy: .public)"
+                    )
                 // Cancel the connection upon a failure.
                 connection.cancel()
 
