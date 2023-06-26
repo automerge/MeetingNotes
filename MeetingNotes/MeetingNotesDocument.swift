@@ -10,6 +10,9 @@ extension UTType {
     }
 }
 
+/// A CBOR encoded wrapper around a serialized Automerge document.
+///
+/// The `id` is a unique identifier that provides a "new document" identifier for the purpose of comparing two documents to determine if they were branched from the same root document.
 struct WrappedAutomergeFile: Codable {
     let id: UUID
     let data: Data
@@ -31,8 +34,8 @@ class MeetingNotesDocument: ReferenceFileDocument {
     let logger = Logger(subsystem: "Document", category: "Serialization")
     let fileEncoder = CBOREncoder()
     let fileDecoder = CBORDecoder()
-    let enc: AutomergeEncoder
-    let dec: AutomergeDecoder
+    let modelEncoder: AutomergeEncoder
+    let modelDecoder: AutomergeDecoder
     var doc: Document
     var model: MeetingNotesModel
 
@@ -40,11 +43,12 @@ class MeetingNotesDocument: ReferenceFileDocument {
 
     init() {
         doc = Document()
-        enc = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
-        dec = AutomergeDecoder(doc: doc)
+        modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
+        modelDecoder = AutomergeDecoder(doc: doc)
         model = MeetingNotesModel(title: "Untitled")
         do {
-            try enc.encode(model)
+            // Establish the schema in the new Automerge document by encoding the model.
+            try modelEncoder.encode(model)
         } catch {
             fatalError(error.localizedDescription)
         }
@@ -59,14 +63,17 @@ class MeetingNotesDocument: ReferenceFileDocument {
                 )
             throw CocoaError(.fileReadCorruptFile)
         }
-        // Binary is a CBOR encoded file that includes an origin ID, so decode that into
-        // a wrapper struct
+        
+        // The binary format of the document is a CBOR encoded file. The goal being to wrap the
+        // raw automerge document serialization with an 'envelope' that includes an origin ID,
+        // so that an application can know if the document stemmed from the same original source
+        // or if they're entirely independent.
         let wrappedDocument = try fileDecoder.decode(WrappedAutomergeFile.self, from: filedata)
         // And then deserialize the Automerge document from the wrappers data
         doc = try Document(wrappedDocument.data)
-        enc = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
-        dec = AutomergeDecoder(doc: doc)
-        model = try dec.decode(MeetingNotesModel.self)
+        modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
+        modelDecoder = AutomergeDecoder(doc: doc)
+        model = try modelDecoder.decode(MeetingNotesModel.self)
         // Verify the ID in the document matches the one in the wrapper
         if model.id != wrappedDocument.id {
             logger
@@ -78,7 +85,7 @@ class MeetingNotesDocument: ReferenceFileDocument {
     }
 
     func snapshot(contentType _: UTType) throws -> Document {
-        try enc.encode(model)
+        try modelEncoder.encode(model)
         return doc
     }
 
