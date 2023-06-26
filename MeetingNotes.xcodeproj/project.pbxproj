@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A0917002A4A171C00D80BF7 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 1A0916FF2A4A171C00D80BF7 /* Documentation.docc */; };
 		1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */; };
 		1A0DDC372A464DEA001ECADD /* MeetingNotesDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */; };
 		1A0DDC392A464DEA001ECADD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC382A464DEA001ECADD /* ContentView.swift */; };
@@ -43,6 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A0916FF2A4A171C00D80BF7 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		1A0DDC312A464DEA001ECADD /* MeetingNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeetingNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesApp.swift; sourceTree = "<group>"; };
 		1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesDocument.swift; sourceTree = "<group>"; };
@@ -125,10 +127,11 @@
 				1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */,
 				1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */,
 				1A0DDC382A464DEA001ECADD /* ContentView.swift */,
+				1A0916FF2A4A171C00D80BF7 /* Documentation.docc */,
 				1A0DDC3A2A464DEB001ECADD /* Assets.xcassets */,
+				1A0DDC3E2A464DEB001ECADD /* Preview Content */,
 				1A0DDC3C2A464DEB001ECADD /* Info.plist */,
 				1A0DDC3D2A464DEB001ECADD /* MeetingNotes.entitlements */,
-				1A0DDC3E2A464DEB001ECADD /* Preview Content */,
 			);
 			path = MeetingNotes;
 			sourceTree = "<group>";
@@ -311,6 +314,7 @@
 				1A0DDC372A464DEA001ECADD /* MeetingNotesDocument.swift in Sources */,
 				1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */,
 				1AD7A8ED2A476801003B6A1E /* AutomergeSyncProtocol.swift in Sources */,
+				1A0917002A4A171C00D80BF7 /* Documentation.docc in Sources */,
 				1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */,
 				1A0DDC392A464DEA001ECADD /* ContentView.swift in Sources */,
 				1AD7A8EC2A476801003B6A1E /* PeerBrowser.swift in Sources */,

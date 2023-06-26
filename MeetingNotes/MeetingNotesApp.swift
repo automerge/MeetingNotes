@@ -1,5 +1,6 @@
 import SwiftUI
 
+/// The document-based Meeting Notes application.
 @main
 struct MeetingNotesApp: App {
     var body: some Scene {
