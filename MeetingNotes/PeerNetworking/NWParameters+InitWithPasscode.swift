@@ -61,7 +61,8 @@ extension NWParameters {
         )
         sec_protocol_options_append_tls_ciphersuite(
             tlsOptions.securityProtocolOptions,
-            tls_ciphersuite_t(rawValue: TLS_PSK_WITH_AES_128_GCM_SHA256)!
+            tls_ciphersuite_t.AES_128_GCM_SHA256
+            //tls_ciphersuite_t(rawValue: TLS_PSK_WITH_AES_128_GCM_SHA256)!
         )
         return tlsOptions
     }
