@@ -10,7 +10,8 @@ struct AgendaItem: Codable, Hashable {
 
 /// The top-level application model for Meeting Notes.
 ///
-/// The `id` is meant to provide a root document identifier for use in comparing synced or external documents to determine if they share a common history.
+/// The `id` is meant to provide a root document identifier for use in comparing synced or external documents to
+/// determine if they share a common history.
 ///
 /// The overall document schema is laid out to map into Automerge using the following schema:
 /// ```

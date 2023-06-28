@@ -7,3 +7,5 @@
 --closingparen balanced
 --maxwidth 120
 
+# rules
+--disable redundantSelf
