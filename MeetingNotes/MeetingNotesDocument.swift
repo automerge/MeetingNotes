@@ -7,7 +7,7 @@ import UniformTypeIdentifiers
 extension UTType {
     /// An Automerge document that is CBOR encoded with a document identifier.
     static var automerge: UTType {
-        UTType(exportedAs: "com.github.automerge.localfirst")
+        UTType(exportedAs: "com.github.automerge.meetingnotes")
     }
 }
 
