@@ -95,7 +95,7 @@ class PeerListener {
     func bonjourListenerStateChanged(newState: NWListener.State) {
         switch newState {
         case .ready:
-            logger.info("Listener ready on \(String(describing: self.listener?.port), privacy: .public)")
+            logger.info("Listener ready on \(String(describing: listener?.port), privacy: .public)")
         case let .failed(error):
             if error == NWError.dns(DNSServiceErrorType(kDNSServiceErr_DefunctConnection)) {
                 logger.warning("Listener failed with \(error, privacy: .public), restarting.")
