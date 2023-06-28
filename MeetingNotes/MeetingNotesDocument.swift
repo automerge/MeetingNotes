@@ -97,7 +97,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         if model.id != wrappedDocument.id {
             logger
                 .error(
-                    "Internal document id: \(model.id, privacy: .public) doesn't match the origin ID in the file wrapper (\(wrappedDocument.id, privacy: .public)"
+                    "Internal document id: \(self.model.id, privacy: .public) doesn't match the origin ID in the file wrapper (\(wrappedDocument.id, privacy: .public)"
                 )
             throw CocoaError(.fileReadCorruptFile)
         }
