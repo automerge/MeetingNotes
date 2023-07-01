@@ -7,7 +7,7 @@ struct MeetingNotesApp: App {
         DocumentGroup {
             MeetingNotesDocument()
         } editor: { file in
-            ContentView(document: file.document)
+            MeetingNoteDocumentView(document: file.document)
         }
     }
 }

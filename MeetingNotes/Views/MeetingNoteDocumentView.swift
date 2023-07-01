@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ContentView: View {
+struct MeetingNoteDocumentView: View {
     @ObservedObject var document: MeetingNotesDocument
 
     var body: some View {
@@ -30,8 +30,8 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct MeetingNoteDocumentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(document: MeetingNotesDocument.sample())
+        MeetingNoteDocumentView(document: MeetingNotesDocument.sample())
     }
 }
