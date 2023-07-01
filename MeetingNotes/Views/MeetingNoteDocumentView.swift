@@ -1,4 +1,5 @@
 import SwiftUI
+import Automerge
 
 struct MeetingNoteDocumentView: View {
     @ObservedObject var document: MeetingNotesDocument
@@ -20,10 +21,28 @@ struct MeetingNoteDocumentView: View {
                         Text(attendee)
                     }
                 }
-                Section("Agenda") {
-                    ForEach(document.model.agenda, id: \.self) { agendaItem in
-                        Text(agendaItem.title)
+                Section {
+                    ForEach($document.model.agenda, id: \.self) { agendaItem in
+                        TextField(text: agendaItem.title) {
+                            Text(";-)")
+                        }
                     }
+                } header: {
+                    HStack {
+                        Text("Agenda")
+                        Spacer()
+                        Button {
+                            let newAgendaItem = AgendaItem(title: "", discussion: Automerge.Text(""))
+                            print("Adding agenda item!")
+                            document.model.agenda.append(newAgendaItem)
+                            try! document.storeModelUpdates()
+                        } label: {
+                            Image(systemName: "plus.circle")
+                        }
+
+                    }
+                } footer: {
+                    Text("footer here")
                 }
             }
         }
