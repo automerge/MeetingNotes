@@ -29,7 +29,6 @@ struct EditableAgendaItemListView: View {
         .focused($titleIsFocused)
         .onSubmit {
             agendaItemBinding.title.wrappedValue = agendaTitle
-            try! document.storeModelUpdates()
             // registering an undo with even an empty handler for re-do marks
             // the associated document as 'dirty' and causes SwiftUI to invoke
             // a snapshot to save the file.
