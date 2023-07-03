@@ -16,7 +16,7 @@
 		1A0DDC4A2A464DEB001ECADD /* MeetingNotesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC492A464DEB001ECADD /* MeetingNotesTests.swift */; };
 		1A0DDC542A464DEB001ECADD /* MeetingNotesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC532A464DEB001ECADD /* MeetingNotesUITests.swift */; };
 		1A0DDC562A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */; };
-		1A2A02A52A50E74B0044064B /* AgendaItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2A02A42A50E74A0044064B /* AgendaItemListView.swift */; };
+		1A2A02A52A50E74B0044064B /* EditableAgendaItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2A02A42A50E74A0044064B /* EditableAgendaItemListView.swift */; };
 		1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD5DA322A464FBD0085DF79 /* Automerge */; };
 		1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */; };
 		1AD7A8E52A4767A1003B6A1E /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD7A8E42A4767A1003B6A1E /* PotentCodables */; };
@@ -60,7 +60,7 @@
 		1A0DDC532A464DEB001ECADD /* MeetingNotesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesUITests.swift; sourceTree = "<group>"; };
 		1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeetingNotes.xctestplan; sourceTree = "<group>"; };
-		1A2A02A42A50E74A0044064B /* AgendaItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgendaItemListView.swift; sourceTree = "<group>"; };
+		1A2A02A42A50E74A0044064B /* EditableAgendaItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableAgendaItemListView.swift; sourceTree = "<group>"; };
 		1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingNotesModel.swift; sourceTree = "<group>"; };
 		1AD7A8E62A476801003B6A1E /* NWParameters+InitWithPasscode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NWParameters+InitWithPasscode.swift"; sourceTree = "<group>"; };
 		1AD7A8E72A476801003B6A1E /* PeerBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerBrowser.swift; sourceTree = "<group>"; };
@@ -167,7 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				1A0DDC382A464DEA001ECADD /* MeetingNoteDocumentView.swift */,
-				1A2A02A42A50E74A0044064B /* AgendaItemListView.swift */,
+				1A2A02A42A50E74A0044064B /* EditableAgendaItemListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -324,7 +324,7 @@
 			files = (
 				1A0DDC372A464DEA001ECADD /* MeetingNotesDocument.swift in Sources */,
 				1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */,
-				1A2A02A52A50E74B0044064B /* AgendaItemListView.swift in Sources */,
+				1A2A02A52A50E74B0044064B /* EditableAgendaItemListView.swift in Sources */,
 				1AD7A8ED2A476801003B6A1E /* AutomergeSyncProtocol.swift in Sources */,
 				1A0917002A4A171C00D80BF7 /* Documentation.docc in Sources */,
 				1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */,
