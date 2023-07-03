@@ -46,7 +46,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     let modelEncoder: AutomergeEncoder
     let modelDecoder: AutomergeDecoder
     var doc: Document
-    
+
     @Published
     var model: MeetingNotesModel
 

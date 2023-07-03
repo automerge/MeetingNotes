@@ -3,9 +3,20 @@ import Foundation
 
 /// An individual agenda item tracked by meeting notes.
 /// The `discussion` property is the type `Text` is from Automerge, and represents a collaboratively edited string.
-struct AgendaItem: Codable, Hashable {
+struct AgendaItem: Identifiable, Codable, Hashable {
+    let id: UUID
     var title: String
     var discussion: Text
+
+    init(title: String, discussion: Text? = nil) {
+        self.id = UUID()
+        self.title = title
+        if let discussion {
+            self.discussion = discussion
+        } else {
+            self.discussion = Text("")
+        }
+    }
 }
 
 /// The top-level application model for Meeting Notes.
