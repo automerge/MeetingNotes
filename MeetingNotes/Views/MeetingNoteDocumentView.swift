@@ -22,8 +22,10 @@ struct MeetingNoteDocumentView: View {
                             // the associated document as 'dirty' and causes SwiftUI to invoke
                             // a snapshot to save the file.
                         }
+                        .autocorrectionDisabled()
+                    #if os(iOS)
                         .textInputAutocapitalization(.never)
-                        .disableAutocorrection(true)
+                    #endif
                 }
                 Section("Attendees") {
                     ForEach(document.model.attendees, id: \.self) { attendee in

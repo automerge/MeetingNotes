@@ -35,9 +35,10 @@ struct EditableAgendaItemListView: View {
             // a snapshot to save the file.
             undoManager?.registerUndo(withTarget: document) { _ in }
         }
-        .textInputAutocapitalization(.never)
-        .disableAutocorrection(true)
-//        .border(.secondary)
+        .autocorrectionDisabled()
+        #if os(iOS)
+            .textInputAutocapitalization(.never)
+        #endif
     }
 }
 
