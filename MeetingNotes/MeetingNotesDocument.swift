@@ -46,15 +46,17 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     let modelEncoder: AutomergeEncoder
     let modelDecoder: AutomergeDecoder
     var doc: Document
+    
+    @Published
     var model: MeetingNotesModel
 
     static var readableContentTypes: [UTType] { [.automerge] }
 
     init() {
         doc = Document()
+        model = MeetingNotesModel(title: "Untitled")
         modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
         modelDecoder = AutomergeDecoder(doc: doc)
-        model = MeetingNotesModel(title: "Untitled")
         do {
             // Establish the schema in the new Automerge document by encoding the model.
             try modelEncoder.encode(model)
