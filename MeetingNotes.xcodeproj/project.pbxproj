@@ -10,12 +10,13 @@
 		1A0917002A4A171C00D80BF7 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 1A0916FF2A4A171C00D80BF7 /* Documentation.docc */; };
 		1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */; };
 		1A0DDC372A464DEA001ECADD /* MeetingNotesDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */; };
-		1A0DDC392A464DEA001ECADD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC382A464DEA001ECADD /* ContentView.swift */; };
+		1A0DDC392A464DEA001ECADD /* MeetingNoteDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC382A464DEA001ECADD /* MeetingNoteDocumentView.swift */; };
 		1A0DDC3B2A464DEB001ECADD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A0DDC3A2A464DEB001ECADD /* Assets.xcassets */; };
 		1A0DDC402A464DEB001ECADD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A0DDC3F2A464DEB001ECADD /* Preview Assets.xcassets */; };
 		1A0DDC4A2A464DEB001ECADD /* MeetingNotesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC492A464DEB001ECADD /* MeetingNotesTests.swift */; };
 		1A0DDC542A464DEB001ECADD /* MeetingNotesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC532A464DEB001ECADD /* MeetingNotesUITests.swift */; };
 		1A0DDC562A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */; };
+		1A2A02A52A50E74B0044064B /* AgendaItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2A02A42A50E74A0044064B /* AgendaItemListView.swift */; };
 		1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD5DA322A464FBD0085DF79 /* Automerge */; };
 		1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */; };
 		1AD7A8E52A4767A1003B6A1E /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD7A8E42A4767A1003B6A1E /* PotentCodables */; };
@@ -48,7 +49,7 @@
 		1A0DDC312A464DEA001ECADD /* MeetingNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeetingNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesApp.swift; sourceTree = "<group>"; };
 		1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesDocument.swift; sourceTree = "<group>"; };
-		1A0DDC382A464DEA001ECADD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		1A0DDC382A464DEA001ECADD /* MeetingNoteDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNoteDocumentView.swift; sourceTree = "<group>"; };
 		1A0DDC3A2A464DEB001ECADD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A0DDC3C2A464DEB001ECADD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1A0DDC3D2A464DEB001ECADD /* MeetingNotes.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MeetingNotes.entitlements; sourceTree = "<group>"; };
@@ -59,6 +60,7 @@
 		1A0DDC532A464DEB001ECADD /* MeetingNotesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesUITests.swift; sourceTree = "<group>"; };
 		1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeetingNotes.xctestplan; sourceTree = "<group>"; };
+		1A2A02A42A50E74A0044064B /* AgendaItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgendaItemListView.swift; sourceTree = "<group>"; };
 		1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingNotesModel.swift; sourceTree = "<group>"; };
 		1AD7A8E62A476801003B6A1E /* NWParameters+InitWithPasscode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NWParameters+InitWithPasscode.swift"; sourceTree = "<group>"; };
 		1AD7A8E72A476801003B6A1E /* PeerBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerBrowser.swift; sourceTree = "<group>"; };
@@ -122,11 +124,11 @@
 		1A0DDC332A464DEA001ECADD /* MeetingNotes */ = {
 			isa = PBXGroup;
 			children = (
+				1AB369012A50D82C00F855F8 /* Views */,
 				1AD7A8F02A476807003B6A1E /* PeerNetworking */,
 				1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */,
 				1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */,
 				1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */,
-				1A0DDC382A464DEA001ECADD /* ContentView.swift */,
 				1A0916FF2A4A171C00D80BF7 /* Documentation.docc */,
 				1A0DDC3A2A464DEB001ECADD /* Assets.xcassets */,
 				1A0DDC3E2A464DEB001ECADD /* Preview Content */,
@@ -159,6 +161,15 @@
 				1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */,
 			);
 			path = MeetingNotesUITests;
+			sourceTree = "<group>";
+		};
+		1AB369012A50D82C00F855F8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1A0DDC382A464DEA001ECADD /* MeetingNoteDocumentView.swift */,
+				1A2A02A42A50E74A0044064B /* AgendaItemListView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		1AD7A8F02A476807003B6A1E /* PeerNetworking */ = {
@@ -313,10 +324,11 @@
 			files = (
 				1A0DDC372A464DEA001ECADD /* MeetingNotesDocument.swift in Sources */,
 				1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */,
+				1A2A02A52A50E74B0044064B /* AgendaItemListView.swift in Sources */,
 				1AD7A8ED2A476801003B6A1E /* AutomergeSyncProtocol.swift in Sources */,
 				1A0917002A4A171C00D80BF7 /* Documentation.docc in Sources */,
 				1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */,
-				1A0DDC392A464DEA001ECADD /* ContentView.swift in Sources */,
+				1A0DDC392A464DEA001ECADD /* MeetingNoteDocumentView.swift in Sources */,
 				1AD7A8EC2A476801003B6A1E /* PeerBrowser.swift in Sources */,
 				1AD7A8EF2A476801003B6A1E /* PeerConnection.swift in Sources */,
 				1AD7A8EB2A476801003B6A1E /* NWParameters+InitWithPasscode.swift in Sources */,
@@ -692,8 +704,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/automerge/automerge-swift/";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.3.0;
 			};
 		};
 		1AD7A8E32A4767A1003B6A1E /* XCRemoteSwiftPackageReference "PotentCodables" */ = {

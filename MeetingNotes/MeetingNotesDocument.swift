@@ -65,11 +65,13 @@ final class MeetingNotesDocument: ReferenceFileDocument {
 
     /// Updates the Automerge document with the current value from the model.
     func storeModelUpdates() throws {
+        self.objectWillChange.send()
         try modelEncoder.encode(model)
     }
 
     /// Updates the model document with any changed values in the Automerge document.
     func getModelUpdates() throws {
+        self.objectWillChange.send()
         model = try modelDecoder.decode(MeetingNotesModel.self)
     }
 
