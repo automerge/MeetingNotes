@@ -16,6 +16,12 @@ struct MeetingNotesApp: App {
                 })
                 .keyboardShortcut(KeyEquivalent("O"), modifiers: [.command, .shift])
             }
+            CommandGroup(replacing: CommandGroupPlacement.saveItem) {
+                // removes File > Close, Save As, Duplicate, Revert menu options
+            }
+            CommandGroup(replacing: CommandGroupPlacement.toolbar) {
+                // removes show/hide toolbar, and customize toolbar menu options
+            }
         }
     }
 }
