@@ -9,9 +9,14 @@ import Automerge
 import SwiftUI
 
 struct EditableAgendaItemListView: View {
+    // Document is needed within this file to link to the undo manager.
     @ObservedObject var document: MeetingNotesDocument
-    let agendaItemBinding: Binding<AgendaItem>
+    // The undo manager triggers serializations and saving changes to the model
+    // back into the automerge document (as a part of it's "save to disk"
+    // sequence with ReferenceFileDocument.
     @Environment(\.undoManager) var undoManager
+
+    let agendaItemBinding: Binding<AgendaItem>
 
     @State
     private var agendaTitle: String = ""
@@ -29,7 +34,7 @@ struct EditableAgendaItemListView: View {
         .focused($titleIsFocused)
         .onSubmit {
             agendaItemBinding.title.wrappedValue = agendaTitle
-            // registering an undo with even an empty handler for re-do marks
+            // Registering an undo with even an empty handler for re-do marks
             // the associated document as 'dirty' and causes SwiftUI to invoke
             // a snapshot to save the file.
             undoManager?.registerUndo(withTarget: document) { _ in }

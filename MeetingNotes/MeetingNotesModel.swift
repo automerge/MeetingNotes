@@ -24,13 +24,14 @@ struct AgendaItem: Identifiable, Codable, Hashable {
 /// The `id` is meant to provide a root document identifier for use in comparing synced or external documents to
 /// determine if they share a common history.
 ///
-/// The overall document schema is laid out to map into Automerge using the following schema:
+/// The overall document schema maps into Automerge using the following schema:
+///
 /// ```
 /// ROOT {
 ///   "id" - UUID (as a scalar value)
 ///   "title" - String (as a scalar value)
 ///   "attendees" - [ String (as a scalar value) ]
-///   "agenda" - [
+///   "agendas" - [
 ///      AgendaItem {
 ///        "title": String (as a scalar value)
 ///        "discussion": Text (collaborative sync for edits)
@@ -42,12 +43,12 @@ struct MeetingNotesModel: Codable, Identifiable {
     let id: UUID
     var title: String
     var attendees: [String]
-    var agenda: [AgendaItem]
+    var agendas: [AgendaItem]
 
     init(title: String) {
         id = UUID()
         self.title = title
         attendees = []
-        agenda = []
+        agendas = []
     }
 }
