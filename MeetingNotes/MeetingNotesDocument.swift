@@ -123,12 +123,15 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         return fileWrapper
     }
 
-    // MARK: sample document for SwiftUI previews
+    // MARK: Sample document for SwiftUI previews
 
+    /// Creates a same meeting notes document with two empty agenda items.
+    ///
+    /// Intended for internal preview usage.
     static func sample() -> MeetingNotesDocument {
         let newDoc = MeetingNotesDocument()
-        newDoc.model.agenda.append(AgendaItem(title: "First topic", discussion: Automerge.Text("")))
-        newDoc.model.agenda.append(AgendaItem(title: "Second topic", discussion: Automerge.Text("")))
+        newDoc.model.agendas.append(AgendaItem(title: "First topic", discussion: Automerge.Text("")))
+        newDoc.model.agendas.append(AgendaItem(title: "Second topic", discussion: Automerge.Text("")))
         try! newDoc.storeModelUpdates()
         return newDoc
     }

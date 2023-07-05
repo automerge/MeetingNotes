@@ -9,5 +9,13 @@ struct MeetingNotesApp: App {
         } editor: { file in
             MeetingNoteDocumentView(document: file.document)
         }
+        .commands {
+            CommandMenu("Merge") {
+                Button("Merge in another document", action: {
+                    // TODO: placeholder for finding and merging in an external document
+                })
+                .keyboardShortcut(KeyEquivalent("O"), modifiers: [.command, .shift])
+            }
+        }
     }
 }
