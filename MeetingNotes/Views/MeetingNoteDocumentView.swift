@@ -44,7 +44,6 @@ struct MeetingNoteDocumentView: View {
                             let newAgendaItem = AgendaItem(title: "")
                             print("Adding agenda item!")
                             document.model.agenda.append(newAgendaItem)
-                            try! document.storeModelUpdates()
                             undoManager?.registerUndo(withTarget: document) { _ in }
                             // registering an undo with even an empty handler for re-do marks
                             // the associated document as 'dirty' and causes SwiftUI to invoke
