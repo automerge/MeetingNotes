@@ -1,10 +1,3 @@
-//
-//  AgendaItemListView.swift
-//  MeetingNotes
-//
-//  Created by Joseph Heck on 7/1/23.
-//
-
 import Automerge
 import SwiftUI
 

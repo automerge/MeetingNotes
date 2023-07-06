@@ -1,10 +1,3 @@
-//
-//  AppTabView.swift
-//  MeetingNotes
-//
-//  Created by Joseph Heck on 7/6/23.
-//
-
 import SwiftUI
 
 struct AppTabView: View {
@@ -12,13 +5,17 @@ struct AppTabView: View {
 
     var body: some View {
         TabView {
-            MeetingNoteDocumentView(document: document)
+            DocumentEditorView(document: document)
                 .tabItem {
                     Label("Editor", systemImage: "doc.fill")
                 }
             MergeView()
                 .tabItem {
                     Label("Merge", systemImage: "doc.badge.gearshape.fill")
+                }
+            SyncView()
+                .tabItem {
+                    Label("Sync", systemImage: "arrow.triangle.2.circlepath.circle.fill")
                 }
         }
     }

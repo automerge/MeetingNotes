@@ -1,10 +1,3 @@
-//
-//  MergeView.swift
-//  MeetingNotes
-//
-//  Created by Joseph Heck on 7/6/23.
-//
-
 import SwiftUI
 
 struct MergeView: View {

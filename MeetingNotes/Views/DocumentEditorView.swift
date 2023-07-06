@@ -1,7 +1,7 @@
 import Automerge
 import SwiftUI
 
-struct MeetingNoteDocumentView: View {
+struct DocumentEditorView: View {
     // Document is needed within this file to link to the undo manager.
     @ObservedObject var document: MeetingNotesDocument
     // The undo manager triggers serializations and saving changes to the model
@@ -71,8 +71,8 @@ struct MeetingNoteDocumentView: View {
     }
 }
 
-struct MeetingNoteDocumentView_Previews: PreviewProvider {
+struct DocumentEditorView_Previews: PreviewProvider {
     static var previews: some View {
-        MeetingNoteDocumentView(document: MeetingNotesDocument.sample())
+        DocumentEditorView(document: MeetingNotesDocument.sample())
     }
 }
