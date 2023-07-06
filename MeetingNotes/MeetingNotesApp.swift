@@ -7,7 +7,7 @@ struct MeetingNotesApp: App {
         DocumentGroup {
             MeetingNotesDocument()
         } editor: { file in
-            MeetingNoteDocumentView(document: file.document)
+            AppTabView(document: file.document)
         }
         .commands {
             CommandMenu("Merge") {
