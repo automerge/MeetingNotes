@@ -9,7 +9,7 @@ struct AppTabView: View {
                 .tabItem {
                     Label("Editor", systemImage: "doc.fill")
                 }
-            MergeView()
+            MergeView(document: document)
                 .tabItem {
                     Label("Merge", systemImage: "doc.badge.gearshape.fill")
                 }
@@ -17,6 +17,11 @@ struct AppTabView: View {
                 .tabItem {
                     Label("Sync", systemImage: "arrow.triangle.2.circlepath.circle.fill")
                 }
+            HistoryView(document: document)
+                .tabItem {
+                    Label("History", systemImage: "doc.badge.clock.fill")
+                }
+            
         }
     }
 }
