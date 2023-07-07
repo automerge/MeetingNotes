@@ -20,6 +20,10 @@ struct WrappedAutomergeFile: Codable {
     let data: Data
 }
 
+enum MergeError: LocalizedError {
+    case NoSharedHistory
+}
+
 /// The concrete subclass of a reference-based file document.
 ///
 /// The Document subclass includes saving the application model ``MeetingNotesModel`` into a managed Automerge document,
@@ -45,14 +49,16 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     let fileDecoder = CBORDecoder()
     let modelEncoder: AutomergeEncoder
     let modelDecoder: AutomergeDecoder
+    let id: UUID
     var doc: Document
-
+    
     @Published
     var model: MeetingNotesModel
 
     static var readableContentTypes: [UTType] { [.meetingnote] }
 
     init() {
+        id = UUID()
         doc = Document()
         model = MeetingNotesModel(title: "Untitled")
         modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
@@ -92,19 +98,13 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         // so that an application can know if the document stemmed from the same original source
         // or if they're entirely independent.
         let wrappedDocument = try fileDecoder.decode(WrappedAutomergeFile.self, from: filedata)
-        // And then deserialize the Automerge document from the wrappers data
+        // Set the identifier of this document, external from the Automerge document.
+        id = wrappedDocument.id
+        // Then deserialize the Automerge document from the wrappers data.
         doc = try Document(wrappedDocument.data)
         modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
         modelDecoder = AutomergeDecoder(doc: doc)
         model = try modelDecoder.decode(MeetingNotesModel.self)
-        // Verify the ID in the document matches the one in the wrapper
-        if model.id != wrappedDocument.id {
-            logger
-                .error(
-                    "Internal document id: \(self.model.id, privacy: .public) doesn't match the origin ID in the file wrapper (\(wrappedDocument.id, privacy: .public)"
-                )
-            throw CocoaError(.fileReadCorruptFile)
-        }
     }
 
     func snapshot(contentType _: UTType) throws -> Document {
@@ -115,7 +115,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     func fileWrapper(snapshot: Document, configuration _: WriteConfiguration) throws -> FileWrapper {
         // Using the updated Automerge document returned from snapshot, create a wrapper
         // with the origin ID from the serialized automerge file.
-        let wrappedDocument = WrappedAutomergeFile(id: model.id, data: snapshot.save())
+        let wrappedDocument = WrappedAutomergeFile(id: id, data: snapshot.save())
         // Encode that wrapper using CBOR encoding
         let filedata = try fileEncoder.encode(wrappedDocument)
         // And hand that file to the FileWrapper for the operating system to save, transfer, etc.
@@ -123,6 +123,23 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         return fileWrapper
     }
 
+    func mergeFile(_ fileURL: URL) -> Result<Bool, Error> {
+        precondition(fileURL.isFileURL)
+        do {
+            let fileData = try Data(contentsOf: fileURL)
+            let newWrappedDocument = try fileDecoder.decode(WrappedAutomergeFile.self, from: fileData)
+            if newWrappedDocument.id != self.id {
+                throw MergeError.NoSharedHistory
+            }
+            let newAutomergeDoc = try Document(newWrappedDocument.data)
+            try doc.merge(other: newAutomergeDoc)
+            model = try modelDecoder.decode(MeetingNotesModel.self)
+            return .success(true)
+        } catch {
+            return .failure(error)
+        }
+    }
+    
     // MARK: Sample document for SwiftUI previews
 
     /// Creates a same meeting notes document with two empty agenda items.

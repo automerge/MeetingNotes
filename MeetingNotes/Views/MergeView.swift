@@ -21,6 +21,22 @@ struct MergeView: View {
                 case let .success(success):
                     // url contains the URL of the chosen file.
                     importURL = success.absoluteString
+                    
+                    // gain access to the directory
+                    if success.startAccessingSecurityScopedResource() {
+                        defer { success.stopAccessingSecurityScopedResource() }
+                        let filename = success.lastPathComponent
+                        switch document.mergeFile(success) {
+                        case .success(_):
+                            print("MERGED \(filename)")
+                        case let .failure(oops):
+                            print(oops)
+                        }
+                        // access the directory URL
+                        // (read templates in the directory, make a bookmark, etc.)
+                        //onTemplatesDirectoryPicked(success)
+                        // release access
+                    }
                 case let .failure(failure):
                     print(failure)
                 }
