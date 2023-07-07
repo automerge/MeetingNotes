@@ -13,7 +13,7 @@ struct DocumentEditorView: View {
         VStack {
             HStack {
                 Spacer()
-                Text("Document ID: \(document.model.id)")
+                Text("Document ID: \(document.id)")
                     .font(.caption)
                 Spacer()
             }

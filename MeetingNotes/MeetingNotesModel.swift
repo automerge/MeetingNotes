@@ -39,14 +39,12 @@ struct AgendaItem: Identifiable, Codable, Hashable {
 ///   ]
 /// }
 /// ```
-struct MeetingNotesModel: Codable, Identifiable {
-    let id: UUID
+struct MeetingNotesModel: Codable {
     var title: String
     var attendees: [String]
     var agendas: [AgendaItem]
 
     init(title: String) {
-        id = UUID()
         self.title = title
         attendees = []
         agendas = []
