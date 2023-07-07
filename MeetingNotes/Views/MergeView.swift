@@ -13,6 +13,9 @@ struct MergeView: View {
                 Image(systemName: "tray.and.arrow.down").font(.largeTitle)
             }
             .padding()
+            #if os(macOS)
+            .buttonStyle(.borderless)
+            #endif
             .fileImporter(
                 isPresented: $isImporting,
                 allowedContentTypes: [.meetingnote]
