@@ -17,11 +17,6 @@ struct AppTabView: View {
                 .tabItem {
                     Label("Sync", systemImage: "arrow.triangle.2.circlepath.circle.fill")
                 }
-            HistoryView(document: document)
-                .tabItem {
-                    Label("History", systemImage: "doc.badge.clock.fill")
-                }
-            
         }
     }
 }

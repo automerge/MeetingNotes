@@ -6,7 +6,7 @@ import UniformTypeIdentifiers
 
 extension UTType {
     /// An Automerge document that is CBOR encoded with a document identifier.
-    static var automerge: UTType {
+    static var meetingnote: UTType {
         UTType(exportedAs: "com.github.automerge.meetingnotes")
     }
 }
@@ -50,7 +50,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     @Published
     var model: MeetingNotesModel
 
-    static var readableContentTypes: [UTType] { [.automerge] }
+    static var readableContentTypes: [UTType] { [.meetingnote] }
 
     init() {
         doc = Document()
