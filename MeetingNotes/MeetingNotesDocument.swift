@@ -51,7 +51,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     let modelDecoder: AutomergeDecoder
     let id: UUID
     var doc: Document
-    
+
     @Published
     var model: MeetingNotesModel
 
@@ -139,7 +139,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
             return .failure(error)
         }
     }
-    
+
     // MARK: Sample document for SwiftUI previews
 
     /// Creates a same meeting notes document with two empty agenda items.
