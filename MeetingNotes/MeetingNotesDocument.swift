@@ -109,10 +109,12 @@ final class MeetingNotesDocument: ReferenceFileDocument {
 
     func snapshot(contentType _: UTType) throws -> Document {
         try modelEncoder.encode(model)
+        print("CREATING SNAPSHOT")
         return doc
     }
 
     func fileWrapper(snapshot: Document, configuration _: WriteConfiguration) throws -> FileWrapper {
+        print("RETURNING FILEWRAPPER WITH WRAPPED DATA")
         // Using the updated Automerge document returned from snapshot, create a wrapper
         // with the origin ID from the serialized automerge file.
         let wrappedDocument = WrappedAutomergeFile(id: id, data: snapshot.save())

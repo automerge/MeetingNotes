@@ -29,7 +29,9 @@ struct EditableAgendaItemView: View {
                 TextField(text: $agendaTitle) {
                     Text("Enter a title for the agenda item.")
                 }
-            }.padding()
+                .padding(2)
+                .border(.gray)
+            }.padding(.horizontal)
 
             TextEditor(text: $agendaDetail)
                 .padding(2)
@@ -41,22 +43,23 @@ struct EditableAgendaItemView: View {
                     .font(.callout)
                     .foregroundStyle(Color.red)
             }
-
-        }.onAppear(perform: {
+        }
+        .onAppear(perform: {
             agendaTitle = agendaItemBinding.title.wrappedValue
             agendaDetail = agendaItemBinding.discussion.value.wrappedValue
         })
         .focused($titleIsFocused)
         .onChange(of: agendaDetail, perform: { _ in
             agendaItemBinding.discussion.value.wrappedValue = agendaDetail
-            // Registering an undo with even an empty handler for re-do marks
-            // the associated document as 'dirty' and causes SwiftUI to invoke
-            // a snapshot to save the file.
             do {
                 try document.storeModelUpdates()
             } catch {
                 errorMsg = error.localizedDescription
             }
+            // Registering an undo with even an empty handler for re-do marks
+            // the associated document as 'dirty' and causes SwiftUI to invoke
+            // a snapshot to save the file.
+            undoManager?.registerUndo(withTarget: document) { _ in }
         })
         .onSubmit {
             agendaItemBinding.title.wrappedValue = agendaTitle
@@ -68,15 +71,20 @@ struct EditableAgendaItemView: View {
         .autocorrectionDisabled()
         #if os(iOS)
             .textInputAutocapitalization(.never)
+            // hides the extra space at the top of the view that comes
+            // from the default navigation title.
+            .navigationBarTitleDisplayMode(.inline)
         #endif
     }
 }
 
 struct EditableAgendaItemListView_Previews: PreviewProvider {
     static var previews: some View {
-        EditableAgendaItemView(
-            document: MeetingNotesDocument.sample(),
-            agendaItemBinding: .constant(AgendaItem(title: ""))
-        )
+        NavigationView {
+            EditableAgendaItemView(
+                document: MeetingNotesDocument.sample(),
+                agendaItemBinding: .constant(AgendaItem(title: ""))
+            )
+        }
     }
 }
