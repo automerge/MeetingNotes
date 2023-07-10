@@ -66,6 +66,8 @@ struct DocumentEditorView: View {
 
 struct DocumentEditorView_Previews: PreviewProvider {
     static var previews: some View {
-        DocumentEditorView(document: MeetingNotesDocument.sample())
+        NavigationView {
+            DocumentEditorView(document: MeetingNotesDocument.sample())
+        }
     }
 }
