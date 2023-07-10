@@ -1,7 +1,7 @@
 import Automerge
 import SwiftUI
 
-struct EditableAgendaItemListView: View {
+struct EditableAgendaItemView: View {
     // Document is needed within this file to link to the undo manager.
     @ObservedObject var document: MeetingNotesDocument
     // The undo manager triggers serializations and saving changes to the model
@@ -13,18 +13,51 @@ struct EditableAgendaItemListView: View {
 
     @State
     private var agendaTitle: String = ""
+    @State
+    private var agendaDetail: String = ""
+
+    @State
+    private var errorMsg: String = ""
+
     @FocusState
     private var titleIsFocused: Bool
 
     var body: some View {
         VStack {
-            TextField(text: $agendaTitle) {
-                Text("Enter a title for the agenda item.")
+            HStack {
+                Image(systemName: "note.text")
+                TextField(text: $agendaTitle) {
+                    Text("Enter a title for the agenda item.")
+                }
+            }.padding()
+
+            TextEditor(text: $agendaDetail)
+                .padding(2)
+                .border(Color.black)
+                .padding()
+
+            if !errorMsg.isEmpty {
+                Text(errorMsg)
+                    .font(.callout)
+                    .foregroundStyle(Color.red)
             }
+
         }.onAppear(perform: {
             agendaTitle = agendaItemBinding.title.wrappedValue
+            agendaDetail = agendaItemBinding.discussion.value.wrappedValue
         })
         .focused($titleIsFocused)
+        .onChange(of: agendaDetail, perform: { _ in
+            agendaItemBinding.discussion.value.wrappedValue = agendaDetail
+            // Registering an undo with even an empty handler for re-do marks
+            // the associated document as 'dirty' and causes SwiftUI to invoke
+            // a snapshot to save the file.
+            do {
+                try document.storeModelUpdates()
+            } catch {
+                errorMsg = error.localizedDescription
+            }
+        })
         .onSubmit {
             agendaItemBinding.title.wrappedValue = agendaTitle
             // Registering an undo with even an empty handler for re-do marks
@@ -41,7 +74,7 @@ struct EditableAgendaItemListView: View {
 
 struct EditableAgendaItemListView_Previews: PreviewProvider {
     static var previews: some View {
-        EditableAgendaItemListView(
+        EditableAgendaItemView(
             document: MeetingNotesDocument.sample(),
             agendaItemBinding: .constant(AgendaItem(title: ""))
         )

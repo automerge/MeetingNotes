@@ -25,11 +25,11 @@ struct DocumentEditorView: View {
                 #endif
             }
             Section {
-                ForEach($document.model.agendas, id: \.self) { agendaItem in
+                ForEach($document.model.agendas) { $agendaItem in
                     NavigationLink {
-                        EditableAgendaItemListView(document: document, agendaItemBinding: agendaItem)
+                        EditableAgendaItemView(document: document, agendaItemBinding: $agendaItem)
                     } label: {
-                        Label(agendaItem.title.wrappedValue, systemImage: "note.text")
+                        Label(agendaItem.title, systemImage: "note.text")
                     }
                 }
             } header: {
