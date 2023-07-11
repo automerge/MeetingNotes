@@ -6,10 +6,9 @@ struct AppTabView: View {
     // back into the automerge document (as a part of it's "save to disk"
     // sequence with ReferenceFileDocument.
     @Environment(\.undoManager) var undoManager
-    @State private var selection: UUID?
+    @State private var selection: AgendaItem.ID?
 
     var body: some View {
-        #if os(macOS)
         NavigationSplitView {
             VStack {
                 TextField("Meeting Title", text: $document.model.title)
@@ -20,64 +19,29 @@ struct AppTabView: View {
                         // a snapshot to save the file.
                     }
                     .autocorrectionDisabled()
-                List($document.model.agendas, selection: $selection) {
-                    $agendaItem in
-                    NavigationLink {
-                        EditableAgendaItemView(document: document, agendaItemBinding: $agendaItem)
-                    } label: {
-                        Label(agendaItem.title, systemImage: "note.text")
-                    }
+                    .padding(.horizontal)
+                List($document.model.agendas, selection: $selection) { $agendaItem in
+                    Label(agendaItem.title, systemImage: "note.text")
                 }
-//                } header: {
-//                    HStack {
-//                        Text("Agenda")
-//                        Button {
-//                            let newAgendaItem = AgendaItem(title: "")
-//                            print("Adding agenda item!")
-//                            document.model.agendas.append(newAgendaItem)
-//                            undoManager?.registerUndo(withTarget: document) { _ in }
-//                            // Registering an undo with even an empty handler for re-do marks
-//                            // the associated document as 'dirty' and causes SwiftUI to invoke
-//                            // a snapshot to save the file.
-//                        } label: {
-//                            Image(systemName: "plus.circle")
-//                        }
-//                        .buttonStyle(.plain)
-//                        Spacer()
-//                    }
             }
-//                Section {
-//                    HStack {
-//                        Spacer()
-//                        Text("\(document.id)")
-//                            .font(.caption)
-//                        Spacer()
-//                    }
-//                } header: {
-//                    Text("Document Id")
-//                }
-//            }
             .navigationSplitViewColumnWidth(250)
+            .toolbar {
+                ToolbarItem(id: "merge", placement: .principal) {
+                    MergeView(document: document)                
+                }
+            }
         } detail: {
-            if let itemId = selection,
-               let itemBinding = $document.model.agendas.first(where: {
-                   $0.wrappedValue.id == itemId
-               })
-            {
-                EditableAgendaItemView(document: document, agendaItemBinding: itemBinding)
+            if selection != nil {
+                EditableAgendaItemView(document: document, agendaItemId: selection)
+                    .id(selection)
             } else {
                 Text("Select an agenda item")
             }
         }
-        #else // iOS
-        DocumentEditorView(document: document)
-            .toolbar {
-                ToolbarItemGroup(placement: .bottomBar) {
-                    Button("Sync") {}
-                    MergeView(document: document)
-                }
-            }
-        #endif
+#if os(iOS)
+        // hides the additional navigation stacks that iOS imposes on a document-based app
+        .toolbar(.hidden, for: .navigationBar)
+#endif
     }
 }
 

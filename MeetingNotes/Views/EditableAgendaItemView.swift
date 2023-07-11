@@ -8,9 +8,8 @@ struct EditableAgendaItemView: View {
     // back into the automerge document (as a part of it's "save to disk"
     // sequence with ReferenceFileDocument.
     @Environment(\.undoManager) var undoManager
-
-    let agendaItemBinding: Binding<AgendaItem>
-
+    let agendaItemId: UUID?
+    
     @State
     private var agendaTitle: String = ""
     @State
@@ -45,30 +44,20 @@ struct EditableAgendaItemView: View {
             }
         }
         .onAppear(perform: {
-            agendaTitle = agendaItemBinding.wrappedValue.title
-            agendaDetail = agendaItemBinding.wrappedValue.discussion.value
-
+            if let agendaItem = document.model.agendas.first(where: {
+                   $0.id == agendaItemId
+            }) {
+                agendaTitle = agendaItem.title
+                agendaDetail = agendaItem.discussion.value
+            }
         })
         .focused($titleIsFocused)
         .onChange(of: agendaDetail, perform: { _ in
-            agendaItemBinding.discussion.value.wrappedValue = agendaDetail
-            do {
-                try document.storeModelUpdates()
-            } catch {
-                errorMsg = error.localizedDescription
-            }
-            // Registering an undo with even an empty handler for re-do marks
-            // the associated document as 'dirty' and causes SwiftUI to invoke
-            // a snapshot to save the file.
-            undoManager?.registerUndo(withTarget: document) { _ in }
+            updateAgendaItem()
         })
-        .onSubmit {
-            agendaItemBinding.title.wrappedValue = agendaTitle
-            // Registering an undo with even an empty handler for re-do marks
-            // the associated document as 'dirty' and causes SwiftUI to invoke
-            // a snapshot to save the file.
-            undoManager?.registerUndo(withTarget: document) { _ in }
-        }
+        .onChange(of: agendaTitle, perform: { _ in
+            updateAgendaItem()
+        })
         .autocorrectionDisabled()
         #if os(iOS)
             .textInputAutocapitalization(.never)
@@ -77,6 +66,23 @@ struct EditableAgendaItemView: View {
             .navigationBarTitleDisplayMode(.inline)
         #endif
     }
+    
+    private func updateAgendaItem() {
+        if let indexPosition = document.model.agendas.firstIndex(where: {$0.id == agendaItemId}) {
+            document.model.agendas[indexPosition].title = agendaTitle
+            document.model.agendas[indexPosition].discussion.value = agendaDetail
+            do {
+                // serialize the changes into the internal Automerge document
+                try document.storeModelUpdates()
+            } catch {
+                errorMsg = error.localizedDescription
+            }
+        }
+        // Registering an undo with even an empty handler for re-do marks
+        // the associated document as 'dirty' and causes SwiftUI to invoke
+        // a snapshot to save the file.
+        undoManager?.registerUndo(withTarget: document) { _ in }
+    }
 }
 
 struct EditableAgendaItemListView_Previews: PreviewProvider {
@@ -84,7 +90,7 @@ struct EditableAgendaItemListView_Previews: PreviewProvider {
         NavigationView {
             EditableAgendaItemView(
                 document: MeetingNotesDocument.sample(),
-                agendaItemBinding: .constant(AgendaItem(title: ""))
+                agendaItemId: MeetingNotesDocument.sample().model.agendas[0].id
             )
         }
     }
