@@ -10,7 +10,8 @@ struct MergeView: View {
             Button {
                 isImporting = true
             } label: {
-                Image(systemName: "tray.and.arrow.down").font(.largeTitle)
+                Image(systemName: "tray.and.arrow.down")
+                    .font(.title2)
             }
             .padding()
             #if os(macOS)

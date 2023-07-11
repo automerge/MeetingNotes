@@ -45,8 +45,9 @@ struct EditableAgendaItemView: View {
             }
         }
         .onAppear(perform: {
-            agendaTitle = agendaItemBinding.title.wrappedValue
-            agendaDetail = agendaItemBinding.discussion.value.wrappedValue
+            agendaTitle = agendaItemBinding.wrappedValue.title
+            agendaDetail = agendaItemBinding.wrappedValue.discussion.value
+
         })
         .focused($titleIsFocused)
         .onChange(of: agendaDetail, perform: { _ in
