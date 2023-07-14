@@ -68,20 +68,30 @@ struct EditableAgendaItemView: View {
     }
     
     private func updateAgendaItem() {
+        var store = false
         if let indexPosition = document.model.agendas.firstIndex(where: {$0.id == agendaItemId}) {
-            document.model.agendas[indexPosition].title = agendaTitle
-            document.model.agendas[indexPosition].discussion.value = agendaDetail
-            do {
-                // serialize the changes into the internal Automerge document
-                try document.storeModelUpdates()
-            } catch {
-                errorMsg = error.localizedDescription
+            if document.model.agendas[indexPosition].title != agendaTitle {
+                document.model.agendas[indexPosition].title = agendaTitle
+                store = true
+            }
+            if document.model.agendas[indexPosition].discussion.value != agendaDetail {
+                document.model.agendas[indexPosition].discussion.value = agendaDetail
+                store = true
+            }
+            // Encode the model back into the Automerge document if the values changed.
+            if store {
+                do {
+                    // serialize the changes into the internal Automerge document
+                    try document.storeModelUpdates()
+                } catch {
+                    errorMsg = error.localizedDescription
+                }
+                // Registering an undo with even an empty handler for re-do marks
+                // the associated document as 'dirty' and causes SwiftUI to invoke
+                // a snapshot to save the file - on iOS.
+                undoManager?.registerUndo(withTarget: document) { _ in }
             }
         }
-        // Registering an undo with even an empty handler for re-do marks
-        // the associated document as 'dirty' and causes SwiftUI to invoke
-        // a snapshot to save the file.
-        undoManager?.registerUndo(withTarget: document) { _ in }
     }
 }
 
