@@ -12,8 +12,8 @@ swiftformat .
 
 ## Building and Developing
 
-The project is set to build for both iOS 16.4 and macOS 13.3. 
-Verify both builds, as [the CI system](.github/workflows/mac_ios.yml) does.
+The project is set to build for both iOS 14 and macOS 11.
+Verify both mac and iOS builds, as [the CI system](.github/workflows/mac_ios.yml) does.
 
 Example command-line builds using Xcode:
 
