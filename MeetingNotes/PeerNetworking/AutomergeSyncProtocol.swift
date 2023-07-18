@@ -11,8 +11,6 @@
   WWDC Video references aligned with this code:
   - https://developer.apple.com/videos/play/wwdc2019/713/
   - https://developer.apple.com/videos/play/wwdc2020/10110/
-  - https://developer.apple.com/videos/play/wwdc2022/110339/
-
   */
 
 import Foundation

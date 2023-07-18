@@ -10,64 +10,28 @@
  WWDC Video references aligned with this code:
  - https://developer.apple.com/videos/play/wwdc2019/713/
  - https://developer.apple.com/videos/play/wwdc2020/10110/
- - https://developer.apple.com/videos/play/wwdc2022/110339/
-
  */
 
 import Network
 import OSLog
 
 var bonjourListener: PeerListener?
-var applicationServiceListener: PeerListener?
 
 final class PeerListener {
-    enum ServiceType {
-        case bonjour
-        case applicationService
-    }
-
     weak var delegate: PeerConnectionDelegate?
     var listener: NWListener?
     var name: String?
     let passcode: String?
-    let type: ServiceType
     let logger = Logger(subsystem: "PeerNetwork", category: "PeerListener")
 
     // Create a listener with a name to advertise, a passcode for authentication,
     // and a delegate to handle inbound connections.
     init(name: String, passcode: String, delegate: PeerConnectionDelegate) {
-        type = .bonjour
         self.delegate = delegate
         self.name = name
         self.passcode = passcode
         setupBonjourListener()
     }
-
-    // Create a listener that advertises the app's sync service
-    // and has a delegate to handle inbound connections.
-//    init(delegate: PeerConnectionDelegate) {
-//        type = .applicationService
-//        self.delegate = delegate
-//        name = nil
-//        passcode = nil
-//        setupApplicationServiceListener()
-//    }
-
-//    func setupApplicationServiceListener() {
-//        do {
-//            // Create the listener object.
-//            let listener = try NWListener(using: applicationServiceParameters())
-//            self.listener = listener
-//
-//            // Set the service to advertise.
-//            listener.service = NWListener.Service(applicationService: AutomergeSyncProtocol.applicationService)
-//
-//            startListening()
-//        } catch {
-//            logger.critical("Failed to create application service listener")
-//            abort()
-//        }
-//    }
 
     // Start listening and advertising.
     func setupBonjourListener() {
@@ -92,7 +56,7 @@ final class PeerListener {
         }
     }
 
-    func bonjourListenerStateChanged(newState: NWListener.State) {
+    func listenerStateChanged(newState: NWListener.State) {
         switch newState {
         case .ready:
             logger.info("Listener ready on \(String(describing: self.listener?.port), privacy: .public)")
@@ -110,30 +74,6 @@ final class PeerListener {
             bonjourListener = nil
         default:
             break
-        }
-    }
-
-    func applicationServiceListenerStateChanged(newState: NWListener.State) {
-        switch newState {
-        case .ready:
-            logger.info("Listener ready for nearby devices")
-        case let .failed(error):
-            logger.error("Listener failed with \(error, privacy: .public), stopping.")
-            delegate?.displayAdvertiseError(error)
-            listener?.cancel()
-        case .cancelled:
-            applicationServiceListener = nil
-        default:
-            break
-        }
-    }
-
-    func listenerStateChanged(newState: NWListener.State) {
-        switch type {
-        case .bonjour:
-            bonjourListenerStateChanged(newState: newState)
-        case .applicationService:
-            applicationServiceListenerStateChanged(newState: newState)
         }
     }
 
@@ -162,25 +102,16 @@ final class PeerListener {
     func stopListening() {
         if let listener = listener {
             listener.cancel()
-            switch type {
-            case .bonjour:
-                bonjourListener = nil
-            case .applicationService:
-                applicationServiceListener = nil
-            }
+            bonjourListener = nil
         }
     }
 
     // If the user changes their name, update the advertised name.
     func resetName(_ name: String) {
-        guard type == .bonjour else {
-            return
-        }
-
         self.name = name
         if let listener = listener {
             // Reset the service to advertise.
-            listener.service = NWListener.Service(name: self.name, type: "_tictactoe._tcp")
+            listener.service = NWListener.Service(name: self.name, type: AutomergeSyncProtocol.bonjourType)
         }
     }
 }
