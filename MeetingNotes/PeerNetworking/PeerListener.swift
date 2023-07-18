@@ -45,29 +45,29 @@ final class PeerListener {
 
     // Create a listener that advertises the app's sync service
     // and has a delegate to handle inbound connections.
-    init(delegate: PeerConnectionDelegate) {
-        type = .applicationService
-        self.delegate = delegate
-        name = nil
-        passcode = nil
-        setupApplicationServiceListener()
-    }
+//    init(delegate: PeerConnectionDelegate) {
+//        type = .applicationService
+//        self.delegate = delegate
+//        name = nil
+//        passcode = nil
+//        setupApplicationServiceListener()
+//    }
 
-    func setupApplicationServiceListener() {
-        do {
-            // Create the listener object.
-            let listener = try NWListener(using: applicationServiceParameters())
-            self.listener = listener
-
-            // Set the service to advertise.
-            listener.service = NWListener.Service(applicationService: AutomergeSyncProtocol.applicationService)
-
-            startListening()
-        } catch {
-            logger.critical("Failed to create application service listener")
-            abort()
-        }
-    }
+//    func setupApplicationServiceListener() {
+//        do {
+//            // Create the listener object.
+//            let listener = try NWListener(using: applicationServiceParameters())
+//            self.listener = listener
+//
+//            // Set the service to advertise.
+//            listener.service = NWListener.Service(applicationService: AutomergeSyncProtocol.applicationService)
+//
+//            startListening()
+//        } catch {
+//            logger.critical("Failed to create application service listener")
+//            abort()
+//        }
+//    }
 
     // Start listening and advertising.
     func setupBonjourListener() {
