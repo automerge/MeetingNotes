@@ -30,9 +30,7 @@ An example iOS and macOS document-based application that uses Automerge as an un
 
 ### Shared Peer Networking Components
 
-- ``sharedBrowser``
 - ``bonjourListener``
-- ``applicationServiceListener``
 - ``sharedConnection``
 
 ### Peer Networking
@@ -40,15 +38,12 @@ An example iOS and macOS document-based application that uses Automerge as an un
 - ``PeerBrowser``
 - ``PeerListener``
 - ``PeerConnection``
-- ``PeerBrowserDelegate``
-- ``PeerConnectionDelegate``
 
 ### Peer to Peer Syncing Protocol
 
 - ``AutomergeSyncProtocol``
 - ``SyncMessageType`` 
 - ``AutomergeSyncProtocolHeader``
-- ``applicationServiceParameters()``
 
 ### Application Resources
 
