@@ -29,6 +29,9 @@ struct AppTabView: View {
                 ToolbarItem(id: "merge", placement: .principal) {
                     MergeView(document: document)
                 }
+                ToolbarItem(id: "sync", placement: .status) {
+                    SyncView(document: document)
+                }
             }
         } detail: {
             if selection != nil {
