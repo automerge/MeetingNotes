@@ -1,5 +1,9 @@
 import SwiftUI
 
+// Global variables to hold peer to peer connection controls
+let sharedbrowser: PeerBrowser? = nil
+let sharedListener: PeerListener? = nil
+
 /// The document-based Meeting Notes application.
 @main
 struct MeetingNotesApp: App {
@@ -10,12 +14,12 @@ struct MeetingNotesApp: App {
             AppTabView(document: file.document)
         }
         .commands {
-            CommandMenu("Merge") {
-                Button("Merge in another document", action: {
-                    // TODO: placeholder for finding and merging in an external document
-                })
-                .keyboardShortcut(KeyEquivalent("O"), modifiers: [.command, .shift])
-            }
+//            CommandMenu("Merge") {
+//                Button("Merge in another document", action: {
+//                    // TODO: placeholder for finding and merging in an external document
+//                })
+//                .keyboardShortcut(KeyEquivalent("O"), modifiers: [.command, .shift])
+//            }
             CommandGroup(replacing: CommandGroupPlacement.toolbar) {
                 // removes show/hide toolbar, and customize toolbar menu options
             }

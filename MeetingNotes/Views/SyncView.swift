@@ -3,10 +3,15 @@ import SwiftUI
 struct SyncView: View {
     @ObservedObject var document: MeetingNotesDocument
 
+    @State private var sharingPasscode: String = ""
     @State private var syncEnabled: Bool = false
-
+    @State private var sheetShown: Bool = false
     var body: some View {
         Button {
+            if !syncEnabled {
+                // Activate the sheet to collect a passcode only on activating sync.
+                sheetShown.toggle()
+            }
             syncEnabled.toggle()
         } label: {
             Image(
@@ -18,6 +23,17 @@ struct SyncView: View {
         #if os(macOS)
         .buttonStyle(.borderless)
         #endif
+        .sheet(isPresented: $sheetShown) {
+            VStack {
+                Text("Provide a passcode to allow collaboration")
+                TextField("passcode", text: $sharingPasscode)
+                    .textFieldStyle(.roundedBorder)
+                    .padding()
+                    .onSubmit {
+                        sheetShown.toggle()
+                    }
+            }.padding()
+        }
     }
 }
 
