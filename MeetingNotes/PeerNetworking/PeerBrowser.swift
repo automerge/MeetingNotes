@@ -16,22 +16,15 @@
 import Network
 import OSLog
 
-var sharedBrowser: PeerBrowser?
-
-// Update the UI when you receive new browser results.
-protocol PeerBrowserDelegate: AnyObject {
-    func refreshResults(results: Set<NWBrowser.Result>)
-    func displayBrowseError(_ error: NWError)
-}
-
-class PeerBrowser {
+final class PeerBrowser: ObservableObject {
     let logger = Logger(subsystem: "PeerNetwork", category: "PeerBrowser")
-    weak var delegate: PeerBrowserDelegate?
     var browser: NWBrowser?
 
-    // Create a browsing object with a delegate.
-    init(delegate: PeerBrowserDelegate) {
-        self.delegate = delegate
+    @Published var browserResults: [NWBrowser.Result] = []
+    @Published var browserStatus: NWBrowser.State
+
+    init() {
+        browserStatus = .setup
         startBrowsing()
     }
 
@@ -48,8 +41,10 @@ class PeerBrowser {
         )
         self.browser = browser
         browser.stateUpdateHandler = { newState in
+            self.logger.debug("State Update: \(String(describing: newState), privacy: .public)")
             switch newState {
             case let .failed(error):
+                self.browserStatus = .failed(error)
                 // Restart the browser if it loses its connection.
                 if error == NWError.dns(DNSServiceErrorType(kDNSServiceErr_DefunctConnection)) {
                     self.logger.info("Browser failed with \(error, privacy: .public), restarting")
@@ -57,15 +52,14 @@ class PeerBrowser {
                     self.startBrowsing()
                 } else {
                     self.logger.warning("Browser failed with \(error, privacy: .public), stopping")
-                    self.delegate?.displayBrowseError(error)
                     browser.cancel()
                 }
             case .ready:
                 // Post initial results.
-                self.delegate?.refreshResults(results: browser.browseResults)
+                self.browserStatus = .ready
             case .cancelled:
-                sharedBrowser = nil
-                self.delegate?.refreshResults(results: Set())
+                self.browserStatus = .cancelled
+                self.browserResults = []
             default:
                 break
             }
@@ -73,9 +67,13 @@ class PeerBrowser {
 
         // When the list of discovered endpoints changes, refresh the delegate.
         browser.browseResultsChangedHandler = { results, _ in
-            self.delegate?.refreshResults(results: results)
+            self.logger.debug("\(results.count, privacy: .public) results provided.")
+            self.browserResults = results.sorted(by: {
+                $0.hashValue < $1.hashValue
+            })
         }
 
+        self.logger.debug("Activating NWBrowser \(browser.debugDescription, privacy: .public)")
         // Start browsing and ask for updates on the main queue.
         browser.start(queue: .main)
     }

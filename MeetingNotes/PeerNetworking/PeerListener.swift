@@ -20,7 +20,7 @@ import OSLog
 var bonjourListener: PeerListener?
 var applicationServiceListener: PeerListener?
 
-class PeerListener {
+final class PeerListener {
     enum ServiceType {
         case bonjour
         case applicationService

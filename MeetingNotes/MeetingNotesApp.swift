@@ -1,17 +1,16 @@
 import SwiftUI
 
-// Global variables to hold peer to peer connection controls
-let sharedbrowser: PeerBrowser? = nil
-let sharedListener: PeerListener? = nil
-
 /// The document-based Meeting Notes application.
 @main
 struct MeetingNotesApp: App {
+    @StateObject private var peerBrowser = PeerBrowser()
+
     var body: some Scene {
         DocumentGroup {
             MeetingNotesDocument()
         } editor: { file in
             AppTabView(document: file.document)
+                .environmentObject(peerBrowser)
         }
         .commands {
 //            CommandMenu("Merge") {

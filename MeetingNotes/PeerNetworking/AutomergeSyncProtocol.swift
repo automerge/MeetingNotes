@@ -40,7 +40,7 @@ class AutomergeSyncProtocol: NWProtocolFramerImplementation {
     // Set a name for your protocol for use in debugging.
     static var label: String { "AutomergeSync" }
 
-    static var bonjourType: String { "_autmergesync._tcp" }
+    static var bonjourType: String { "_automergesync._tcp" }
     static var applicationService: String { "AutomergeSync" }
 
     // Set the default behavior for most framing protocol functions.
