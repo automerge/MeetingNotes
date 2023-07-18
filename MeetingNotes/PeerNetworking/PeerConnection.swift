@@ -18,15 +18,15 @@ import Network
 import OSLog
 
 // Create parameters for use in PeerConnection and PeerListener with app services.
-func applicationServiceParameters() -> NWParameters {
-    let parameters = NWParameters.applicationService
-
-    // Add your custom protocol to support messages.
-    let syncOptions = NWProtocolFramer.Options(definition: AutomergeSyncProtocol.definition)
-    parameters.defaultProtocolStack.applicationProtocols.insert(syncOptions, at: 0)
-
-    return parameters
-}
+//func applicationServiceParameters() -> NWParameters {
+//    let parameters = NWParameters.applicationService
+//
+//    // Add your custom protocol to support messages.
+//    let syncOptions = NWProtocolFramer.Options(definition: AutomergeSyncProtocol.definition)
+//    parameters.defaultProtocolStack.applicationProtocols.insert(syncOptions, at: 0)
+//
+//    return parameters
+//}
 
 var sharedConnection: PeerConnection?
 
@@ -57,17 +57,17 @@ final class PeerConnection {
     }
 
     // Create an outbound connection when the user initiates a game via DeviceDiscoveryUI.
-    init(endpoint: NWEndpoint, delegate: PeerConnectionDelegate) {
-        self.delegate = delegate
-        self.endpoint = endpoint
-        initiatedConnection = true
-
-        // Create the NWConnection to the supplied endpoint.
-        let connection = NWConnection(to: endpoint, using: applicationServiceParameters())
-        self.connection = connection
-
-        startConnection()
-    }
+//    init(endpoint: NWEndpoint, delegate: PeerConnectionDelegate) {
+//        self.delegate = delegate
+//        self.endpoint = endpoint
+//        initiatedConnection = true
+//
+//        // Create the NWConnection to the supplied endpoint.
+//        let connection = NWConnection(to: endpoint, using: applicationServiceParameters())
+//        self.connection = connection
+//
+//        startConnection()
+//    }
 
     // Handle an inbound connection when the user receives a game request.
     init(connection: NWConnection, delegate: PeerConnectionDelegate) {
@@ -117,9 +117,9 @@ final class PeerConnection {
                    initiated, error == NWError.posix(.ECONNABORTED)
                 {
                     // Reconnect if the user suspends the app on the nearby device.
-                    let connection = NWConnection(to: endpoint, using: applicationServiceParameters())
-                    self?.connection = connection
-                    self?.startConnection()
+//                    let connection = NWConnection(to: endpoint, using: applicationServiceParameters())
+//                    self?.connection = connection
+//                    self?.startConnection()
                 } else if let delegate = self?.delegate {
                     // Notify the delegate when the connection fails.
                     delegate.connectionFailed()
