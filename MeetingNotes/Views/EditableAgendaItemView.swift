@@ -9,7 +9,7 @@ struct EditableAgendaItemView: View {
     // sequence with ReferenceFileDocument.
     @Environment(\.undoManager) var undoManager
     let agendaItemId: UUID?
-    
+
     @State
     private var agendaTitle: String = ""
     @State
@@ -45,7 +45,7 @@ struct EditableAgendaItemView: View {
         }
         .onAppear(perform: {
             if let agendaItem = document.model.agendas.first(where: {
-                   $0.id == agendaItemId
+                $0.id == agendaItemId
             }) {
                 agendaTitle = agendaItem.title
                 agendaDetail = agendaItem.discussion.value
@@ -66,10 +66,10 @@ struct EditableAgendaItemView: View {
             .navigationBarTitleDisplayMode(.inline)
         #endif
     }
-    
+
     private func updateAgendaItem() {
         var store = false
-        if let indexPosition = document.model.agendas.firstIndex(where: {$0.id == agendaItemId}) {
+        if let indexPosition = document.model.agendas.firstIndex(where: { $0.id == agendaItemId }) {
             if document.model.agendas[indexPosition].title != agendaTitle {
                 document.model.agendas[indexPosition].title = agendaTitle
                 store = true

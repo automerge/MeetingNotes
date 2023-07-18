@@ -13,7 +13,7 @@ struct MergeView: View {
                 .font(.title2)
         }
         #if os(macOS)
-            .buttonStyle(.borderless)
+        .buttonStyle(.borderless)
         #endif
         .fileImporter(
             isPresented: $isImporting,

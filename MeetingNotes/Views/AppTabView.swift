@@ -27,7 +27,7 @@ struct AppTabView: View {
             .navigationSplitViewColumnWidth(250)
             .toolbar {
                 ToolbarItem(id: "merge", placement: .principal) {
-                    MergeView(document: document)                
+                    MergeView(document: document)
                 }
             }
         } detail: {
@@ -38,10 +38,10 @@ struct AppTabView: View {
                 Text("Select an agenda item")
             }
         }
-#if os(iOS)
+        #if os(iOS)
         // hides the additional navigation stacks that iOS imposes on a document-based app
         .toolbar(.hidden, for: .navigationBar)
-#endif
+        #endif
     }
 }
 
