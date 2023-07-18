@@ -1,10 +1,3 @@
-//
-//  PeerBrowserView.swift
-//  MeetingNotes
-//
-//  Created by Joseph Heck on 7/18/23.
-//
-
 import Network
 import SwiftUI
 
@@ -24,11 +17,11 @@ struct PeerBrowserView: View {
             .padding(.horizontal)
             if !peerBrowser.browserResults.isEmpty {
                 List(peerBrowser.browserResults, id: \.hashValue) { result in
-                    // result is type: NWBrowser.Result
-                    Text(String(describing: result))
+                    NWBrowserResultView(result: result)
                 }
             }
         }
+        .frame(maxHeight: 100)
         .padding(.vertical)
         .onReceive(peerBrowser.$browserStatus, perform: { status in
             switch status {
