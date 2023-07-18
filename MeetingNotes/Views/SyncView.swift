@@ -13,7 +13,6 @@ struct SyncView: View {
                 systemName: syncEnabled ? "antenna.radiowaves.left.and.right.slash" :
                     "antenna.radiowaves.left.and.right"
             )
-            // iOS 17/macOS 14 only .contentTransition(.symbolEffect(.replace.downUp.byLayer))
             .font(.title2)
         }
         #if os(macOS)

@@ -34,10 +34,6 @@ struct MergeView: View {
                     case let .failure(oops):
                         print(oops)
                     }
-                    // access the directory URL
-                    // (read templates in the directory, make a bookmark, etc.)
-                    // onTemplatesDirectoryPicked(success)
-                    // release access
                 }
             case let .failure(failure):
                 print(failure)
