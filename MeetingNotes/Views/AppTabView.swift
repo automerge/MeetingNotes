@@ -14,7 +14,7 @@ struct AppTabView: View {
                 TextField("Meeting Title", text: $document.model.title)
                     .onSubmit {
                         undoManager?.registerUndo(withTarget: document) { _ in }
-                        // registering an undo with even an empty handler for re-do marks
+                        // Registering an undo with even an empty handler for re-do marks
                         // the associated document as 'dirty' and causes SwiftUI to invoke
                         // a snapshot to save the file.
                     }
@@ -36,6 +36,8 @@ struct AppTabView: View {
         } detail: {
             if selection != nil {
                 EditableAgendaItemView(document: document, agendaItemId: selection)
+                    // Using .id here is critical to getting views to update
+                    // upon choosing a new selection on macOS
                     .id(selection)
             } else {
                 Text("Select an agenda item")
