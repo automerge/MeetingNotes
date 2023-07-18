@@ -4,18 +4,18 @@ struct SyncView: View {
     @ObservedObject var document: MeetingNotesDocument
 
     @State private var sharingPasscode: String = ""
-    @State private var syncEnabled: Bool = false
+    @State private var syncEnabledIndicator: Bool = false
     @State private var sheetShown: Bool = false
     var body: some View {
         Button {
-            if !syncEnabled {
+            if !syncEnabledIndicator {
                 // Activate the sheet to collect a passcode only on activating sync.
                 sheetShown.toggle()
             }
-            syncEnabled.toggle()
+            syncEnabledIndicator.toggle()
         } label: {
             Image(
-                systemName: syncEnabled ? "antenna.radiowaves.left.and.right.slash" :
+                systemName: syncEnabledIndicator ? "antenna.radiowaves.left.and.right.slash" :
                     "antenna.radiowaves.left.and.right"
             )
             .font(.title2)
@@ -24,15 +24,31 @@ struct SyncView: View {
         .buttonStyle(.borderless)
         #endif
         .sheet(isPresented: $sheetShown) {
+            // If there isn't a sharing passcode set when the sheet
+            // is dismissed, disable the sync enabled indicator.
+            if sharingPasscode.isEmpty {
+                syncEnabledIndicator = false
+            }
+        } content: {
             VStack {
                 Text("Provide a passcode to allow collaboration")
                 TextField("passcode", text: $sharingPasscode)
                     .textFieldStyle(.roundedBorder)
                     .padding()
                     .onSubmit {
-                        sheetShown.toggle()
+                        // Require a passcode to continue
+                        if !sharingPasscode.isEmpty {
+                            sheetShown.toggle()
+                        }
                     }
-            }.padding()
+                Button(role: .cancel) {
+                    sheetShown.toggle()
+                } label: {
+                    Text("Dismiss")
+                }
+            }
+            .padding()
+            .presentationDetents([.medium])
         }
     }
 }
