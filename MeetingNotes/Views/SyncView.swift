@@ -4,6 +4,7 @@ struct SyncView: View {
     @ObservedObject var document: MeetingNotesDocument
 
     @State private var sharingPasscode: String = ""
+    @State private var sharingIdentity: String = ""
     @State private var syncEnabledIndicator: Bool = false
     @State private var sheetShown: Bool = false
     var body: some View {
@@ -30,11 +31,13 @@ struct SyncView: View {
                 syncEnabledIndicator = false
             }
         } content: {
-            VStack {
+            Form {
+                Text("What name should we show for collaboration?")
+                TextField("identity", text: $sharingIdentity)
+                    .textFieldStyle(.roundedBorder)
                 Text("Provide a passcode to allow collaboration")
                 TextField("passcode", text: $sharingPasscode)
                     .textFieldStyle(.roundedBorder)
-                    .padding()
                     .onSubmit {
                         // Require a passcode to continue
                         if !sharingPasscode.isEmpty {
@@ -49,6 +52,13 @@ struct SyncView: View {
             }
             .padding()
             .presentationDetents([.medium])
+        }
+        .onAppear {
+            #if os(iOS)
+            sharingIdentity = UIDevice().name
+            #elseif os(macOS)
+            sharingIdentity = Host.current().localizedName ?? ""
+            #endif
         }
     }
 }
