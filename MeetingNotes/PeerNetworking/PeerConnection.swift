@@ -37,7 +37,7 @@ protocol PeerConnectionDelegate: AnyObject {
     func displayAdvertiseError(_ error: NWError)
 }
 
-class PeerConnection {
+final class PeerConnection {
     let logger = Logger(subsystem: "PeerNetwork", category: "PeerConnection")
     weak var delegate: PeerConnectionDelegate?
     var connection: NWConnection?

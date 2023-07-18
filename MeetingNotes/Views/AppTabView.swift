@@ -23,6 +23,7 @@ struct AppTabView: View {
                 List($document.model.agendas, selection: $selection) { $agendaItem in
                     Label(agendaItem.title, systemImage: "note.text")
                 }
+                PeerBrowserView()
             }
             .navigationSplitViewColumnWidth(250)
             .toolbar {
