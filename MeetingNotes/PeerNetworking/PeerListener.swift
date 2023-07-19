@@ -35,14 +35,8 @@ final class PeerListener {
     // Start listening and advertising.
     func setupBonjourListener() {
         do {
-            // When hosting a game via Bonjour, use the passcode and advertise the automerge sync service.
-            guard let name = name, let passcode = passcode else {
-                Logger.peerlistener.error("Cannot create Bonjour listener without name and passcode")
-                return
-            }
-
             // Create the listener object.
-            let listener = try NWListener(using: NWParameters(passcode: passcode))
+            let listener = try NWListener(using: NWParameters.peerSyncParameters())
             self.listener = listener
 
             // Set the service to advertise.

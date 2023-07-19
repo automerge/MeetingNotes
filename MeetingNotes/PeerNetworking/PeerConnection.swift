@@ -31,19 +31,19 @@ final class PeerConnection {
     let endpoint: NWEndpoint?
     let initiatedConnection: Bool
 
-    // Create an outbound connection when the user initiates a game.
-    init(endpoint: NWEndpoint, interface _: NWInterface?, passcode: String, delegate: PeerConnectionDelegate) {
+    // Create an outbound connection when the user initiates a sync.
+    init(endpoint: NWEndpoint, delegate: PeerConnectionDelegate) {
         self.delegate = delegate
         self.endpoint = nil
         initiatedConnection = true
 
-        let connection = NWConnection(to: endpoint, using: NWParameters(passcode: passcode))
+        let connection = NWConnection(to: endpoint, using: NWParameters.peerSyncParameters())
         self.connection = connection
 
         startConnection()
     }
 
-    // Handle an inbound connection when the user receives a game request.
+    // Handle an inbound connection when the user receives a sync request.
     init(connection: NWConnection, delegate: PeerConnectionDelegate) {
         self.delegate = delegate
         endpoint = nil
