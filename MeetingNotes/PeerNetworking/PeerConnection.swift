@@ -54,7 +54,7 @@ final class PeerConnection {
         startConnection()
     }
 
-    // Handle the user exiting the game.
+    // Handle the user cancelling the connection.
     func cancel() {
         if let connection = connection {
             connection.cancel()
@@ -117,7 +117,7 @@ final class PeerConnection {
 
         // Send the app content along with the message.
         connection.send(
-            content: documentId.data(using: .unicode),
+            content: documentId.data(using: .utf8),
             contentContext: context,
             isComplete: true,
             completion: .idempotent
@@ -154,10 +154,10 @@ final class PeerConnection {
 
         connection.receiveMessage { content, context, _, error in
             // Extract your message type from the received context.
-            if let gameMessage = context?
+            if let syncMessage = context?
                 .protocolMetadata(definition: AutomergeSyncProtocol.definition) as? NWProtocolFramer.Message
             {
-                self.delegate?.receivedMessage(content: content, message: gameMessage)
+                self.delegate?.receivedMessage(content: content, message: syncMessage)
             }
             if error == nil {
                 // Continue to receive more messages until you receive an error.
