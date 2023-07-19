@@ -21,14 +21,14 @@ final class PeerListener {
     weak var delegate: PeerConnectionDelegate?
     var listener: NWListener?
     var name: String?
-    let passcode: String?
+    let documentId: String?
 
     // Create a listener with a name to advertise, a passcode for authentication,
     // and a delegate to handle inbound connections.
-    init(name: String, passcode: String, delegate: PeerConnectionDelegate) {
+    init(name: String, documentId: String, delegate: PeerConnectionDelegate) {
         self.delegate = delegate
         self.name = name
-        self.passcode = passcode
+        self.documentId = documentId
         setupBonjourListener()
     }
 
@@ -40,8 +40,15 @@ final class PeerListener {
             self.listener = listener
 
             // Set the service to advertise.
-            listener.service = NWListener.Service(name: name, type: AutomergeSyncProtocol.bonjourType)
-
+            listener.service = NWListener.Service(
+                name: name,
+                type: AutomergeSyncProtocol.bonjourType,
+                txtRecord: documentId?.data(using: .utf8)
+            )
+            Logger.peerlistener
+                .debug(
+                    "Starting bonjour network listener for document id \(self.documentId ?? "nil", privacy: .public)"
+                )
             startListening()
         } catch {
             Logger.peerlistener.critical("Failed to create bonjour listener")
@@ -52,14 +59,15 @@ final class PeerListener {
     func listenerStateChanged(newState: NWListener.State) {
         switch newState {
         case .ready:
-            Logger.peerlistener.info("Listener ready on \(String(describing: self.listener?.port), privacy: .public)")
+            Logger.peerlistener
+                .info("Bonjour listener ready on \(String(describing: self.listener?.port), privacy: .public)")
         case let .failed(error):
             if error == NWError.dns(DNSServiceErrorType(kDNSServiceErr_DefunctConnection)) {
-                Logger.peerlistener.warning("Listener failed with \(error, privacy: .public), restarting.")
+                Logger.peerlistener.warning("Bonjour listener failed with \(error, privacy: .public), restarting.")
                 listener?.cancel()
                 setupBonjourListener()
             } else {
-                Logger.peerlistener.error("Listener failed with \(error, privacy: .public), stopping.")
+                Logger.peerlistener.error("Bonjour listener failed with \(error, privacy: .public), stopping.")
                 delegate?.displayAdvertiseError(error)
                 listener?.cancel()
             }
@@ -74,7 +82,7 @@ final class PeerListener {
         listener?.stateUpdateHandler = listenerStateChanged
 
         // The system calls this when a new connection arrives at the listener.
-        // Start the connection to accept it, cancel to reject it.
+        // Start the connection to accept it, or cancel to reject it.
         listener?.newConnectionHandler = { newConnection in
             if let delegate = self.delegate {
                 if sharedConnection == nil {
@@ -104,7 +112,15 @@ final class PeerListener {
         self.name = name
         if let listener = listener {
             // Reset the service to advertise.
-            listener.service = NWListener.Service(name: self.name, type: AutomergeSyncProtocol.bonjourType)
+            listener.service = NWListener.Service(
+                name: self.name,
+                type: AutomergeSyncProtocol.bonjourType,
+                txtRecord: documentId?.data(using: .utf8)
+            )
+            Logger.peerlistener
+                .debug(
+                    "Updated bonjour network listener to name \(name, privacy: .sensitive) for document id \(self.documentId ?? "nil", privacy: .public)"
+                )
         }
     }
 }
