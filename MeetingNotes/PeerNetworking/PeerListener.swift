@@ -106,7 +106,7 @@ final class PeerListener {
         }
     }
 
-    // If the user changes their name, update the advertised name.
+    // Update the advertised name on the network.
     func resetName(_ name: String) {
         self.name = name
         if let listener = listener {
