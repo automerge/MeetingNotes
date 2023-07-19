@@ -39,7 +39,7 @@ final class PeerBrowser: ObservableObject {
         )
         self.browser = browser
         browser.stateUpdateHandler = { newState in
-            Logger.peerbrowser.debug("State Update: \(String(describing: newState), privacy: .public)")
+            Logger.peerbrowser.debug("Browser State Update: \(String(describing: newState), privacy: .public)")
             switch newState {
             case let .failed(error):
                 self.browserStatus = .failed(error)

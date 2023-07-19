@@ -6,6 +6,8 @@ extension NWParameters {
         let tcpOptions = NWProtocolTCP.Options()
         tcpOptions.enableKeepalive = true
         tcpOptions.keepaliveIdle = 2
-        return NWParameters(tls: NWProtocolTLS.Options(), tcp: tcpOptions)
+        let params = NWParameters(tls: NWProtocolTLS.Options(), tcp: tcpOptions)
+        params.includePeerToPeer = true
+        return params
     }
 }
