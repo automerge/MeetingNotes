@@ -22,7 +22,6 @@ final class PeerListener {
     var listener: NWListener?
     var name: String?
     let passcode: String?
-    let logger = Logger(subsystem: "PeerNetwork", category: "PeerListener")
 
     // Create a listener with a name to advertise, a passcode for authentication,
     // and a delegate to handle inbound connections.
@@ -38,7 +37,7 @@ final class PeerListener {
         do {
             // When hosting a game via Bonjour, use the passcode and advertise the automerge sync service.
             guard let name = name, let passcode = passcode else {
-                logger.error("Cannot create Bonjour listener without name and passcode")
+                Logger.peerlistener.error("Cannot create Bonjour listener without name and passcode")
                 return
             }
 
@@ -51,7 +50,7 @@ final class PeerListener {
 
             startListening()
         } catch {
-            logger.critical("Failed to create bonjour listener")
+            Logger.peerlistener.critical("Failed to create bonjour listener")
             abort()
         }
     }
@@ -59,14 +58,14 @@ final class PeerListener {
     func listenerStateChanged(newState: NWListener.State) {
         switch newState {
         case .ready:
-            logger.info("Listener ready on \(String(describing: self.listener?.port), privacy: .public)")
+            Logger.peerlistener.info("Listener ready on \(String(describing: self.listener?.port), privacy: .public)")
         case let .failed(error):
             if error == NWError.dns(DNSServiceErrorType(kDNSServiceErr_DefunctConnection)) {
-                logger.warning("Listener failed with \(error, privacy: .public), restarting.")
+                Logger.peerlistener.warning("Listener failed with \(error, privacy: .public), restarting.")
                 listener?.cancel()
                 setupBonjourListener()
             } else {
-                logger.error("Listener failed with \(error, privacy: .public), stopping.")
+                Logger.peerlistener.error("Listener failed with \(error, privacy: .public), stopping.")
                 delegate?.displayAdvertiseError(error)
                 listener?.cancel()
             }

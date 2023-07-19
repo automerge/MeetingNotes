@@ -26,7 +26,6 @@ protocol PeerConnectionDelegate: AnyObject {
 }
 
 final class PeerConnection {
-    let logger = Logger(subsystem: "PeerNetwork", category: "PeerConnection")
     weak var delegate: PeerConnectionDelegate?
     var connection: NWConnection?
     let endpoint: NWEndpoint?
@@ -71,7 +70,7 @@ final class PeerConnection {
         connection.stateUpdateHandler = { [weak self] newState in
             switch newState {
             case .ready:
-                self?.logger.debug("\(String(describing: connection), privacy: .public) established")
+                Logger.peerconnection.debug("\(String(describing: connection), privacy: .public) established")
 
                 // When the connection is ready, start receiving messages.
                 self?.receiveNextMessage()
@@ -81,7 +80,7 @@ final class PeerConnection {
                     delegate.connectionReady()
                 }
             case let .failed(error):
-                self?.logger
+                Logger.peerconnection
                     .warning(
                         "\(String(describing: connection), privacy: .public) failed with \(error, privacy: .public)"
                     )

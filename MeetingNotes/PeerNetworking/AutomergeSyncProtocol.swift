@@ -30,8 +30,6 @@ enum SyncMessageType: UInt32 {
 
 // Create a class that implements a framing protocol.
 class AutomergeSyncProtocol: NWProtocolFramerImplementation {
-    let logger = Logger(subsystem: "PeerNetwork", category: "SyncProtocol")
-
     // Create a global definition of your game protocol to add to connections.
     static let definition = NWProtocolFramer.Definition(implementation: AutomergeSyncProtocol.self)
 
@@ -68,7 +66,7 @@ class AutomergeSyncProtocol: NWProtocolFramerImplementation {
         do {
             try framer.writeOutputNoCopy(length: messageLength)
         } catch {
-            logger.error("Error writing protocol data into frame: \(error, privacy: .public)")
+            Logger.syncprotocol.error("Error writing protocol data into frame: \(error, privacy: .public)")
         }
     }
 
