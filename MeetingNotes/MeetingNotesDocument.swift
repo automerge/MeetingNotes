@@ -44,7 +44,6 @@ enum MergeError: LocalizedError {
 ///
 /// For more information about `CBOR` encoding, see [CBOR specification overview](https://cbor.io).
 final class MeetingNotesDocument: ReferenceFileDocument {
-    let logger = Logger(subsystem: "Document", category: "Serialization")
     let fileEncoder = CBOREncoder()
     let fileDecoder = CBORDecoder()
     let modelEncoder: AutomergeEncoder
@@ -86,10 +85,9 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     required init(configuration: ReadConfiguration) throws {
         guard let filedata = configuration.file.regularFileContents
         else {
-            logger
-                .error(
-                    "Opened file \(String(describing: configuration.file.filename), privacy: .public) has no associated data."
-                )
+            Logger.document.error(
+                "Opened file \(String(describing: configuration.file.filename), privacy: .public) has no associated data."
+            )
             throw CocoaError(.fileReadCorruptFile)
         }
 
@@ -109,12 +107,12 @@ final class MeetingNotesDocument: ReferenceFileDocument {
 
     func snapshot(contentType _: UTType) throws -> Document {
         try modelEncoder.encode(model)
-        print("CREATING SNAPSHOT")
+        Logger.document.trace("Creating document snapshot")
         return doc
     }
 
     func fileWrapper(snapshot: Document, configuration _: WriteConfiguration) throws -> FileWrapper {
-        print("RETURNING FILEWRAPPER WITH WRAPPED DATA")
+        Logger.document.trace("Returning FileWrapper handle with serialized data")
         // Using the updated Automerge document returned from snapshot, create a wrapper
         // with the origin ID from the serialized automerge file.
         let wrappedDocument = WrappedAutomergeFile(id: id, data: snapshot.save())

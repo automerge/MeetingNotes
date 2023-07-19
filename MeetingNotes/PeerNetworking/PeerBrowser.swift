@@ -16,7 +16,6 @@ import Network
 import OSLog
 
 final class PeerBrowser: ObservableObject {
-    let logger = Logger(subsystem: "PeerNetwork", category: "PeerBrowser")
     var browser: NWBrowser?
 
     @Published var browserResults: [NWBrowser.Result] = []
@@ -40,17 +39,17 @@ final class PeerBrowser: ObservableObject {
         )
         self.browser = browser
         browser.stateUpdateHandler = { newState in
-            self.logger.debug("State Update: \(String(describing: newState), privacy: .public)")
+            Logger.peerbrowser.debug("State Update: \(String(describing: newState), privacy: .public)")
             switch newState {
             case let .failed(error):
                 self.browserStatus = .failed(error)
                 // Restart the browser if it loses its connection.
                 if error == NWError.dns(DNSServiceErrorType(kDNSServiceErr_DefunctConnection)) {
-                    self.logger.info("Browser failed with \(error, privacy: .public), restarting")
+                    Logger.peerbrowser.info("Browser failed with \(error, privacy: .public), restarting")
                     browser.cancel()
                     self.startBrowsing()
                 } else {
-                    self.logger.warning("Browser failed with \(error, privacy: .public), stopping")
+                    Logger.peerbrowser.warning("Browser failed with \(error, privacy: .public), stopping")
                     browser.cancel()
                 }
             case .ready:
@@ -66,13 +65,13 @@ final class PeerBrowser: ObservableObject {
 
         // When the list of discovered endpoints changes, refresh the delegate.
         browser.browseResultsChangedHandler = { results, _ in
-            self.logger.debug("\(results.count, privacy: .public) results provided.")
+            Logger.peerbrowser.debug("\(results.count, privacy: .public) results provided.")
             self.browserResults = results.sorted(by: {
                 $0.hashValue < $1.hashValue
             })
         }
 
-        self.logger.debug("Activating NWBrowser \(browser.debugDescription, privacy: .public)")
+        Logger.peerbrowser.debug("Activating NWBrowser \(browser.debugDescription, privacy: .public)")
         // Start browsing and ask for updates on the main queue.
         browser.start(queue: .main)
     }
