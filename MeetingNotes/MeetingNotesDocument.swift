@@ -127,12 +127,12 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         return doc
     }
 
-    func wrappedDocument() -> WrappedAutomergeDocument? {
+    func wrappedDocument() -> WrappedAutomergeDocument {
         do {
             let data = try self.snapshot(contentType: .meetingnote).save()
             return WrappedAutomergeDocument(id: id, data: data)
         } catch {
-            return nil
+            abort()
         }
     }
     
