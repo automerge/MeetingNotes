@@ -38,7 +38,7 @@ struct SyncView: View {
             if sharingPasscode.isEmpty {
                 syncEnabledIndicator = false
             }
-            
+
             if !sharingIdentity.isEmpty {
                 if document.syncController != nil {
                     document.syncController?.resetName(sharingIdentity)
