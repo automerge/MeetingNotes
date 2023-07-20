@@ -14,6 +14,14 @@ struct SyncView: View {
                 sheetShown.toggle()
             }
             syncEnabledIndicator.toggle()
+            if syncEnabledIndicator {
+                // only enable listening if an identity has been chosen
+                if !sharingIdentity.isEmpty {
+                    document.syncController?.startListening()
+                }
+            } else {
+                document.syncController?.stopListening()
+            }
         } label: {
             Image(
                 systemName: syncEnabledIndicator ? "antenna.radiowaves.left.and.right.slash" :
@@ -29,6 +37,14 @@ struct SyncView: View {
             // is dismissed, disable the sync enabled indicator.
             if sharingPasscode.isEmpty {
                 syncEnabledIndicator = false
+            }
+            
+            if !sharingIdentity.isEmpty {
+                if document.syncController != nil {
+                    document.syncController?.resetName(sharingIdentity)
+                } else {
+                    document.enableSyncAs(sharingIdentity)
+                }
             }
         } content: {
             Form {

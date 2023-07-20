@@ -157,6 +157,8 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
                 .trace(
                     "New connection received from \(String(describing: newConnection.endpoint), privacy: .sensitive): \(newConnection.debugDescription, privacy: .public)"
                 )
+            // FIXME: remove after investigation of actual operations
+            dump(newConnection)
             self?.connections.append(newConnection)
             // FIXME: check to see if there's already a connection with the endpoint, and if so -
             // cancel the incoming connection:

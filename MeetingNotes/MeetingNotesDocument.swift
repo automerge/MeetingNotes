@@ -50,7 +50,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     let modelDecoder: AutomergeDecoder
     let id: UUID
     var doc: Document
-    var syncController: DocumentSyncController!
+    var syncController: DocumentSyncController?
 
     @Published
     var model: MeetingNotesModel
@@ -64,19 +64,16 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
         modelDecoder = AutomergeDecoder(doc: doc)
 
-        // #if os(iOS)
-        // sharingIdentity = UIDevice().name
-        // #elseif os(macOS)
-        // sharingIdentity = Host.current().localizedName ?? ""
-        // #endif
-
-        syncController = DocumentSyncController(self, name: "FIXME_PLACEHOLDER")
         do {
             // Establish the schema in the new Automerge document by encoding the model.
             try modelEncoder.encode(model)
         } catch {
             fatalError(error.localizedDescription)
         }
+    }
+    
+    func enableSyncAs(_ name: String) {
+        syncController = DocumentSyncController(self, name: name)
     }
 
     /// Updates the Automerge document with the current value from the model.
