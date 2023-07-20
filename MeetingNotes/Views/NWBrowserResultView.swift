@@ -3,13 +3,7 @@ import SwiftUI
 
 struct NWBrowserResultView: View {
     var result: NWBrowser.Result
-
-    func idFromResultMetadata() -> String {
-        if case let .bonjour(txtrecord) = result.metadata {
-            return txtrecord["id"] ?? ""
-        }
-        return ""
-    }
+    var connection: NWConnection?
 
     func nameFromResultMetadata() -> String {
         if case let .bonjour(txtrecord) = result.metadata {
@@ -23,10 +17,7 @@ struct NWBrowserResultView: View {
             HStack {
                 Text(nameFromResultMetadata())
                 Spacer()
-            }
-            HStack {
-                Text(idFromResultMetadata())
-                Spacer()
+                Image(systemName: connection != nil ? "bolt.horizontal.fill" : "bolt.horizontal")
             }
         }.font(.caption)
     }
