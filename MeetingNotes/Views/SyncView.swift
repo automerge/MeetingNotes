@@ -17,10 +17,10 @@ struct SyncView: View {
             if syncEnabledIndicator {
                 // only enable listening if an identity has been chosen
                 if !sharingIdentity.isEmpty {
-                    document.syncController?.startListening()
+                    document.syncController?.activate()
                 }
             } else {
-                document.syncController?.stopListening()
+                document.syncController?.deactivate()
             }
         } label: {
             Image(
@@ -41,7 +41,7 @@ struct SyncView: View {
 
             if !sharingIdentity.isEmpty {
                 if document.syncController != nil {
-                    document.syncController?.resetName(sharingIdentity)
+                    document.syncController?.name = sharingIdentity
                 } else {
                     document.enableSyncAs(sharingIdentity)
                 }
