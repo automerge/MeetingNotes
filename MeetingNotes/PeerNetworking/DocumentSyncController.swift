@@ -19,11 +19,13 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
     @Published var listenerState: NWListener.State
     @Published var listenerSetupError: Error? = nil
     @Published var listenerStatusError: NWError? = nil
-
+    var txtRecord: NWTXTRecord
+    
     var connections: [NWConnection] = []
 
     init(_ document: MeetingNotesDocument, name: String) {
         self.document = document
+        txtRecord = NWTXTRecord(["id":document.id.uuidString])
         self.name = name
         browserStatus = .setup
         listenerState = .setup
@@ -48,9 +50,8 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
 
         // Browse for the Automerge sync bonjour service type.
         let newNetworkBrowser = NWBrowser(
-            for: .bonjour(type: AutomergeSyncProtocol.bonjourType, domain: nil),
-            using: browserNetworkParameters
-        )
+            for: .bonjourWithTXTRecord(type: AutomergeSyncProtocol.bonjourType, domain: nil),
+            using: browserNetworkParameters)
 
         newNetworkBrowser.stateUpdateHandler = { newState in
             Logger.peerbrowser.debug("Browser State Update: \(String(describing: newState), privacy: .public)")
@@ -79,10 +80,29 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
 
         // When the list of discovered endpoints changes, refresh the delegate.
         newNetworkBrowser.browseResultsChangedHandler = { results, _ in
-            Logger.peerbrowser.debug("\(results.count, privacy: .public) results provided.")
+            Logger.peerbrowser.debug("\(results.count, privacy: .public) result(s):")
+            for res in results {
+                Logger.peerbrowser.trace("  endpoint: \(res.endpoint.debugDescription, privacy: .public)")
+                for interface in res.interfaces {
+                    Logger.peerbrowser.trace("  interface: \(interface.debugDescription, privacy: .public)")
+                }
+                Logger.peerbrowser.trace("  metadata: \(res.metadata.debugDescription, privacy: .public)")
+            }
             self.browserResults = results.sorted(by: {
                 $0.hashValue < $1.hashValue
             })
+            
+            /*
+             1 result(s):
+               endpoint: Sparrow._automergesync._tcplocal.
+               interface: lo0
+               interface: anpi1
+               interface: anpi0
+               interface: en0
+               interface: ap1
+               interface: awdl0
+               metadata: <none>
+             */
         }
 
         Logger.peerbrowser.debug("Activating NWBrowser \(newNetworkBrowser.debugDescription, privacy: .public)")
@@ -111,7 +131,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
             listener.service = NWListener.Service(
                 name: name,
                 type: AutomergeSyncProtocol.bonjourType,
-                txtRecord: document.id.uuidString.data(using: .utf8)
+                txtRecord: txtRecord
             )
             Logger.peerlistener
                 .debug(
@@ -183,7 +203,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
         listener.service = NWListener.Service(
             name: self.name,
             type: AutomergeSyncProtocol.bonjourType,
-            txtRecord: document.id.uuidString.data(using: .utf8)
+            txtRecord: txtRecord
         )
         Logger.peerlistener
             .debug(
