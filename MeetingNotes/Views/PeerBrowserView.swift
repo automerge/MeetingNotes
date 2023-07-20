@@ -2,7 +2,7 @@ import Network
 import SwiftUI
 
 struct PeerBrowserView: View {
-    @EnvironmentObject var peerBrowser: PeerBrowser
+    var syncController: DocumentSyncController
 
     @State var browserActive: Bool = false
     @State var browserStyling: Color = .primary
@@ -15,15 +15,15 @@ struct PeerBrowserView: View {
                 Spacer()
             }
             .padding(.horizontal)
-            if !peerBrowser.browserResults.isEmpty {
-                List(peerBrowser.browserResults, id: \.hashValue) { result in
+            if !syncController.browserResults.isEmpty {
+                List(syncController.browserResults, id: \.hashValue) { result in
                     NWBrowserResultView(result: result)
                 }
             }
         }
         .frame(maxHeight: 100)
         .padding(.vertical)
-        .onReceive(peerBrowser.$browserStatus, perform: { status in
+        .onReceive(syncController.$browserStatus, perform: { status in
             switch status {
             case .cancelled:
                 browserActive = false
@@ -54,10 +54,8 @@ struct PeerBrowserView_Previews: PreviewProvider {
         NavigationView {
             AppTabView(document: MeetingNotesDocument.sample())
         }
-        .environmentObject(PeerBrowser())
         #else
         AppTabView(document: MeetingNotesDocument.sample())
-            .environmentObject(PeerBrowser())
         #endif
     }
 }
