@@ -16,7 +16,8 @@
 		1A0DDC542A464DEB001ECADD /* MeetingNotesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC532A464DEB001ECADD /* MeetingNotesUITests.swift */; };
 		1A0DDC562A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */; };
 		1A2A02A52A50E74B0044064B /* EditableAgendaItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2A02A42A50E74A0044064B /* EditableAgendaItemView.swift */; };
-		1A7700C52A67343800869A4D /* PeerBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C42A67343800869A4D /* PeerBrowserView.swift */; };
+		1A54E5E62A698EA100CE1BEF /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 1A54E5E52A698EA100CE1BEF /* CustomDump */; };
+		1A7700C52A67343800869A4D /* PeerSyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C42A67343800869A4D /* PeerSyncView.swift */; };
 		1A7700C72A67479F00869A4D /* NWBrowserResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C62A67479F00869A4D /* NWBrowserResultView.swift */; };
 		1A8217AD2A6877730071DD38 /* DocumentSyncController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8217AC2A6877730071DD38 /* DocumentSyncController.swift */; };
 		1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD5DA322A464FBD0085DF79 /* Automerge */; };
@@ -64,7 +65,7 @@
 		1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeetingNotes.xctestplan; sourceTree = "<group>"; };
 		1A2A02A42A50E74A0044064B /* EditableAgendaItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableAgendaItemView.swift; sourceTree = "<group>"; };
-		1A7700C42A67343800869A4D /* PeerBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerBrowserView.swift; sourceTree = "<group>"; };
+		1A7700C42A67343800869A4D /* PeerSyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerSyncView.swift; sourceTree = "<group>"; };
 		1A7700C62A67479F00869A4D /* NWBrowserResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NWBrowserResultView.swift; sourceTree = "<group>"; };
 		1A8217AC2A6877730071DD38 /* DocumentSyncController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSyncController.swift; sourceTree = "<group>"; };
 		1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingNotesModel.swift; sourceTree = "<group>"; };
@@ -85,6 +86,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */,
+				1A54E5E62A698EA100CE1BEF /* CustomDump in Frameworks */,
 				1AD7A8E52A4767A1003B6A1E /* PotentCodables in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -177,7 +179,7 @@
 			children = (
 				1A2A02A42A50E74A0044064B /* EditableAgendaItemView.swift */,
 				1AD71E8D2A57622B00B965BF /* AppTabView.swift */,
-				1A7700C42A67343800869A4D /* PeerBrowserView.swift */,
+				1A7700C42A67343800869A4D /* PeerSyncView.swift */,
 				1A7700C62A67479F00869A4D /* NWBrowserResultView.swift */,
 				1AD71E902A57630B00B965BF /* MergeView.swift */,
 				1AD71E922A5765A800B965BF /* SyncView.swift */,
@@ -215,6 +217,7 @@
 			packageProductDependencies = (
 				1AD5DA322A464FBD0085DF79 /* Automerge */,
 				1AD7A8E42A4767A1003B6A1E /* PotentCodables */,
+				1A54E5E52A698EA100CE1BEF /* CustomDump */,
 			);
 			productName = MeetingNotes;
 			productReference = 1A0DDC312A464DEA001ECADD /* MeetingNotes.app */;
@@ -291,6 +294,7 @@
 			packageReferences = (
 				1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */,
 				1AD7A8E32A4767A1003B6A1E /* XCRemoteSwiftPackageReference "PotentCodables" */,
+				1A54E5E42A698EA100CE1BEF /* XCRemoteSwiftPackageReference "swift-custom-dump" */,
 			);
 			productRefGroup = 1A0DDC322A464DEA001ECADD /* Products */;
 			projectDirPath = "";
@@ -347,7 +351,7 @@
 				1A7700C72A67479F00869A4D /* NWBrowserResultView.swift in Sources */,
 				1AD71E932A5765A800B965BF /* SyncView.swift in Sources */,
 				1AD7A8EF2A476801003B6A1E /* PeerConnection.swift in Sources */,
-				1A7700C52A67343800869A4D /* PeerBrowserView.swift in Sources */,
+				1A7700C52A67343800869A4D /* PeerSyncView.swift in Sources */,
 				1AD7A8EB2A476801003B6A1E /* NWParameters+peerSyncParameters.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -720,6 +724,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1A54E5E42A698EA100CE1BEF /* XCRemoteSwiftPackageReference "swift-custom-dump" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-custom-dump";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.0;
+			};
+		};
 		1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/automerge/automerge-swift/";
@@ -739,6 +751,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1A54E5E52A698EA100CE1BEF /* CustomDump */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1A54E5E42A698EA100CE1BEF /* XCRemoteSwiftPackageReference "swift-custom-dump" */;
+			productName = CustomDump;
+		};
 		1AD5DA322A464FBD0085DF79 /* Automerge */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */;
