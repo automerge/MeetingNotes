@@ -35,6 +35,13 @@ struct AppTabView: View {
                 ToolbarItem(id: "sync", placement: .status) {
                     SyncView(document: document)
                 }
+                if let availableWrappedDocument = document.wrappedDocument() {
+                    ToolbarItem(id: "share", placement: .status) {
+                        ShareLink(item: availableWrappedDocument,
+                                  preview: SharePreview(Text("id: \(document.id.uuidString)"),
+                                                        image: Image(systemName: "square.and.arrow.up")))
+                    }
+                }
             }
         } detail: {
             if selection != nil {

@@ -15,9 +15,17 @@ extension UTType {
 ///
 /// The `id` is a unique identifier that provides a "new document" identifier for the purpose of comparing two documents
 /// to determine if they were branched from the same root document.
-struct WrappedAutomergeFile: Codable {
+struct WrappedAutomergeDocument: Codable {
     let id: UUID
     let data: Data
+    static let fileEncoder = CBOREncoder()
+    static let fileDecoder = CBORDecoder()
+}
+
+extension WrappedAutomergeDocument: Transferable {
+    static var transferRepresentation: some TransferRepresentation {
+        CodableRepresentation(contentType: .meetingnote, encoder: fileEncoder, decoder: fileDecoder)
+    }
 }
 
 enum MergeError: LocalizedError {
@@ -27,8 +35,8 @@ enum MergeError: LocalizedError {
 /// The concrete subclass of a reference-based file document.
 ///
 /// The Document subclass includes saving the application model ``MeetingNotesModel`` into a managed Automerge document,
-/// and serializing that document out to the filesystem as a ``WrappedAutomergeFile``.
-/// The `WrappedAutomergeFile` uses `CBOR` encoding to add a document identifier to the file format.
+/// and serializing that document out to the filesystem as a ``WrappedAutomergeDocument``.
+/// The `WrappedAutomergeDocument` uses `CBOR` encoding to add a document identifier to the file format.
 ///
 /// With [Automerge](https://automerge.org) version 2.0, a document doesn't have an internal  document identifier that's
 /// easily available to use for comparison
@@ -103,7 +111,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         // raw automerge document serialization with an 'envelope' that includes an origin ID,
         // so that an application can know if the document stemmed from the same original source
         // or if they're entirely independent.
-        let wrappedDocument = try fileDecoder.decode(WrappedAutomergeFile.self, from: filedata)
+        let wrappedDocument = try fileDecoder.decode(WrappedAutomergeDocument.self, from: filedata)
         // Set the identifier of this document, external from the Automerge document.
         id = wrappedDocument.id
         // Then deserialize the Automerge document from the wrappers data.
@@ -119,11 +127,20 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         return doc
     }
 
+    func wrappedDocument() -> WrappedAutomergeDocument? {
+        do {
+            let data = try self.snapshot(contentType: .meetingnote).save()
+            return WrappedAutomergeDocument(id: id, data: data)
+        } catch {
+            return nil
+        }
+    }
+    
     func fileWrapper(snapshot: Document, configuration _: WriteConfiguration) throws -> FileWrapper {
         Logger.document.trace("Returning FileWrapper handle with serialized data")
         // Using the updated Automerge document returned from snapshot, create a wrapper
         // with the origin ID from the serialized automerge file.
-        let wrappedDocument = WrappedAutomergeFile(id: id, data: snapshot.save())
+        let wrappedDocument = WrappedAutomergeDocument(id: id, data: snapshot.save())
         // Encode that wrapper using CBOR encoding
         let filedata = try fileEncoder.encode(wrappedDocument)
         // And hand that file to the FileWrapper for the operating system to save, transfer, etc.
@@ -135,7 +152,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         precondition(fileURL.isFileURL)
         do {
             let fileData = try Data(contentsOf: fileURL)
-            let newWrappedDocument = try fileDecoder.decode(WrappedAutomergeFile.self, from: fileData)
+            let newWrappedDocument = try fileDecoder.decode(WrappedAutomergeDocument.self, from: fileData)
             if newWrappedDocument.id != self.id {
                 throw MergeError.NoSharedHistory
             }
