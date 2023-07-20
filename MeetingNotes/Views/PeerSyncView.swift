@@ -23,12 +23,16 @@ struct PeerSyncView: View {
                     Spacer()
                 }
                 .padding(.leading)
-                List(syncController.browserResults, id: \.hashValue) { result in
-                    NWBrowserResultView(result: result)
+                LazyVStack {
+                    ForEach(syncController.browserResults, id: \.hashValue) { result in
+                        NWBrowserResultView(result: result)
+                            .padding(4)
+                            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8))
+                            .padding(.horizontal)
+                    }
                 }
             }
         }
-        .frame(maxHeight: 100)
         .padding(.vertical)
         .onReceive(syncController.$browserState, perform: { status in
             switch status {
