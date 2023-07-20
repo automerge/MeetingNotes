@@ -30,7 +30,7 @@ struct PeerSyncView: View {
         }
         .frame(maxHeight: 100)
         .padding(.vertical)
-        .onReceive(syncController.$browserStatus, perform: { status in
+        .onReceive(syncController.$browserState, perform: { status in
             switch status {
             case .cancelled:
                 browserActive = false

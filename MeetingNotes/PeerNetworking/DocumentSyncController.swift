@@ -13,7 +13,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
 
     var browser: NWBrowser?
     @Published var browserResults: [NWBrowser.Result] = []
-    @Published var browserStatus: NWBrowser.State = .setup
+    @Published var browserState: NWBrowser.State = .setup
 
     var listener: NWListener?
     @Published var listenerState: NWListener.State = .setup
@@ -21,7 +21,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
     @Published var listenerStatusError: NWError? = nil
     var txtRecord: NWTXTRecord
 
-    var connections: [NWConnection] = []
+    var connections: [NWEndpoint:NWConnection] = [:]
 
     init(_ document: MeetingNotesDocument, name: String) {
         self.document = document
@@ -32,7 +32,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
     }
 
     func activate() {
-        browserStatus = .setup
+        browserState = .setup
         listenerState = .setup
         startBrowsing()
         setupBonjourListener()
@@ -50,7 +50,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
 
     func receivedMessage(content _: Data?, message _: NWProtocolFramer.Message) {}
 
-    // MARK: NWBrowser related pieces
+    // MARK: NWBrowser
 
     // Start browsing for services.
     fileprivate func startBrowsing() {
@@ -68,7 +68,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
             Logger.peerbrowser.debug("Browser State Update: \(String(describing: newState), privacy: .public)")
             switch newState {
             case let .failed(error):
-                self.browserStatus = .failed(error)
+                self.browserState = .failed(error)
                 // Restart the browser if it loses its connection.
                 if error == NWError.dns(DNSServiceErrorType(kDNSServiceErr_DefunctConnection)) {
                     Logger.peerbrowser.info("Browser failed with \(error, privacy: .public), restarting")
@@ -80,9 +80,9 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
                 }
             case .ready:
                 // Post initial results.
-                self.browserStatus = .ready
+                self.browserState = .ready
             case .cancelled:
-                self.browserStatus = .cancelled
+                self.browserState = .cancelled
                 self.browserResults = []
             default:
                 break
@@ -99,9 +99,19 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
                 }
                 Logger.peerbrowser.trace("  metadata: \(res.metadata.debugDescription, privacy: .public)")
             }
-            self.browserResults = results.sorted(by: {
+            // Only show broadcasting peers with the same document Id
+            let filtered = results.filter { result in
+                if case let .bonjour(txtrecord) = result.metadata,
+                   let uuidString = self.document?.id.uuidString,
+                   txtrecord["id"] == uuidString {
+                        return true
+                }
+                return false
+            }
+            .sorted(by: {
                 $0.hashValue < $1.hashValue
             })
+            self.browserResults = filtered
 
             /*
              1 result(s):
@@ -185,14 +195,15 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
         listener?.newConnectionHandler = { [weak self] newConnection in
             Logger.peerlistener
                 .trace(
-                    "New connection received from \(String(describing: newConnection.endpoint), privacy: .sensitive): \(newConnection.debugDescription, privacy: .public)"
+                    "Attempting to link connection from \(String(describing: newConnection.endpoint), privacy: .sensitive): \(newConnection.debugDescription, privacy: .public)"
                 )
-            // FIXME: remove after investigation of actual operations
-            dump(newConnection)
-            self?.connections.append(newConnection)
-            // FIXME: check to see if there's already a connection with the endpoint, and if so -
-            // cancel the incoming connection:
-            // newConnection.cancel()
+            guard let self else { return }
+            if (self.connections[newConnection.endpoint] == nil) {
+                self.connections[newConnection.endpoint] = newConnection
+            } else {
+                // If we already have a connection to that endpoint, don't add another
+                newConnection.cancel()
+            }
         }
 
         // Start listening, and request updates on the main queue.
