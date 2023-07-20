@@ -13,10 +13,10 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
 
     var browser: NWBrowser?
     @Published var browserResults: [NWBrowser.Result] = []
-    @Published var browserStatus: NWBrowser.State
+    @Published var browserStatus: NWBrowser.State = .setup
 
     var listener: NWListener?
-    @Published var listenerState: NWListener.State
+    @Published var listenerState: NWListener.State = .setup
     @Published var listenerSetupError: Error? = nil
     @Published var listenerStatusError: NWError? = nil
     var txtRecord: NWTXTRecord
@@ -28,10 +28,19 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
         txtRecord = NWTXTRecord(["id": document.id.uuidString])
         txtRecord["name"] = name
         self.name = name
+        self.activate()
+    }
+
+    func activate() {
         browserStatus = .setup
         listenerState = .setup
         startBrowsing()
         setupBonjourListener()
+    }
+
+    func deactivate() {
+        stopBrowsing()
+        stopListening()
     }
 
     // Peer connection delegate functions
@@ -44,7 +53,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
     // MARK: NWBrowser related pieces
 
     // Start browsing for services.
-    func startBrowsing() {
+    fileprivate func startBrowsing() {
         // Create parameters, and allow browsing over a peer-to-peer link.
         let browserNetworkParameters = NWParameters()
         browserNetworkParameters.includePeerToPeer = true
@@ -113,7 +122,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
         newNetworkBrowser.start(queue: .main)
     }
 
-    func stopBrowsing() {
+    fileprivate func stopBrowsing() {
         guard let browser else { return }
         browser.cancel()
         self.browser = nil
@@ -122,7 +131,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
     // MARK: NWListener handlers
 
     // Start listening and advertising.
-    func setupBonjourListener() {
+    fileprivate func setupBonjourListener() {
         guard let document else { return }
         do {
             // Create the listener object.
@@ -168,7 +177,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
         }
     }
 
-    func startListening() {
+    fileprivate func startListening() {
         listener?.stateUpdateHandler = listenerStateChanged
 
         // The system calls this when a new connection arrives at the listener.
@@ -191,14 +200,14 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
     }
 
     // Stop listening.
-    func stopListening() {
+    fileprivate func stopListening() {
         guard let listener else { return }
         listener.cancel()
         self.listener = nil
     }
 
     // Update the advertised name on the network.
-    func resetName(_ name: String) {
+    fileprivate func resetName(_ name: String) {
         guard let document, let listener else { return }
         txtRecord["name"] = name
         // Reset the service to advertise.
