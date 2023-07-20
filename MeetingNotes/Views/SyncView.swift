@@ -3,7 +3,6 @@ import SwiftUI
 struct SyncView: View {
     @ObservedObject var document: MeetingNotesDocument
 
-    @State private var sharingPasscode: String = ""
     @State private var sharingIdentity: String = ""
     @State private var syncEnabledIndicator: Bool = false
     @State private var sheetShown: Bool = false
@@ -33,12 +32,6 @@ struct SyncView: View {
         .buttonStyle(.borderless)
         #endif
         .sheet(isPresented: $sheetShown) {
-            // If there isn't a sharing passcode set when the sheet
-            // is dismissed, disable the sync enabled indicator.
-            if sharingPasscode.isEmpty {
-                syncEnabledIndicator = false
-            }
-
             if !sharingIdentity.isEmpty {
                 if document.syncController != nil {
                     document.syncController?.name = sharingIdentity
@@ -51,12 +44,9 @@ struct SyncView: View {
                 Text("What name should we show for collaboration?")
                 TextField("identity", text: $sharingIdentity)
                     .textFieldStyle(.roundedBorder)
-                Text("Provide a passcode to allow collaboration")
-                TextField("passcode", text: $sharingPasscode)
-                    .textFieldStyle(.roundedBorder)
                     .onSubmit {
-                        // Require a passcode to continue
-                        if !sharingPasscode.isEmpty {
+                        // Require a name to continue
+                        if !sharingIdentity.isEmpty {
                             sheetShown.toggle()
                         }
                     }
