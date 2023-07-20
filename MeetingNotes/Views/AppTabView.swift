@@ -27,7 +27,7 @@ struct AppTabView: View {
                     PeerSyncView(syncController: syncController)
                 }
             }
-            .navigationSplitViewColumnWidth(250)
+            .navigationSplitViewColumnWidth(min: 250, ideal: 250)
             .toolbar {
                 ToolbarItem(id: "merge", placement: .principal) {
                     MergeView(document: document)

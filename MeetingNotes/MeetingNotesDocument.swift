@@ -50,6 +50,8 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     let modelDecoder: AutomergeDecoder
     let id: UUID
     var doc: Document
+
+    @Published
     var syncController: DocumentSyncController?
 
     @Published
@@ -71,7 +73,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
             fatalError(error.localizedDescription)
         }
     }
-    
+
     func enableSyncAs(_ name: String) {
         syncController = DocumentSyncController(self, name: name)
     }

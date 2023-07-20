@@ -20,12 +20,13 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
     @Published var listenerSetupError: Error? = nil
     @Published var listenerStatusError: NWError? = nil
     var txtRecord: NWTXTRecord
-    
+
     var connections: [NWConnection] = []
 
     init(_ document: MeetingNotesDocument, name: String) {
         self.document = document
-        txtRecord = NWTXTRecord(["id":document.id.uuidString])
+        txtRecord = NWTXTRecord(["id": document.id.uuidString])
+        txtRecord["name"] = name
         self.name = name
         browserStatus = .setup
         listenerState = .setup
@@ -51,7 +52,8 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
         // Browse for the Automerge sync bonjour service type.
         let newNetworkBrowser = NWBrowser(
             for: .bonjourWithTXTRecord(type: AutomergeSyncProtocol.bonjourType, domain: nil),
-            using: browserNetworkParameters)
+            using: browserNetworkParameters
+        )
 
         newNetworkBrowser.stateUpdateHandler = { newState in
             Logger.peerbrowser.debug("Browser State Update: \(String(describing: newState), privacy: .public)")
@@ -91,7 +93,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
             self.browserResults = results.sorted(by: {
                 $0.hashValue < $1.hashValue
             })
-            
+
             /*
              1 result(s):
                endpoint: Sparrow._automergesync._tcplocal.
@@ -129,7 +131,6 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
 
             // Set the service to advertise.
             listener.service = NWListener.Service(
-                name: name,
                 type: AutomergeSyncProtocol.bonjourType,
                 txtRecord: txtRecord
             )
@@ -199,9 +200,9 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
     // Update the advertised name on the network.
     func resetName(_ name: String) {
         guard let document, let listener else { return }
+        txtRecord["name"] = name
         // Reset the service to advertise.
         listener.service = NWListener.Service(
-            name: self.name,
             type: AutomergeSyncProtocol.bonjourType,
             txtRecord: txtRecord
         )
