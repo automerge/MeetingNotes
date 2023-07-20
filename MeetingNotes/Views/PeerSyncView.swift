@@ -10,17 +10,19 @@ struct PeerSyncView: View {
     var body: some View {
         VStack {
             HStack {
-                Text("As: \(syncController.name)").font(.headline)
+                Text("Name: \(syncController.name)").font(.headline)
                 Spacer()
                 Image(systemName: browserActive ? "bolt.horizontal.fill" : "bolt.horizontal")
                     .foregroundStyle(browserStyling)
             }
             .padding(.horizontal)
             if !syncController.browserResults.isEmpty {
+                Divider()
                 HStack {
                     Text("Peers").bold()
                     Spacer()
                 }
+                .padding(.leading)
                 List(syncController.browserResults, id: \.hashValue) { result in
                     NWBrowserResultView(result: result)
                 }
