@@ -3,14 +3,11 @@ import SwiftUI
 /// The document-based Meeting Notes application.
 @main
 struct MeetingNotesApp: App {
-    @StateObject private var peerBrowser = PeerBrowser()
-
     var body: some Scene {
         DocumentGroup {
             MeetingNotesDocument()
         } editor: { file in
             AppTabView(document: file.document)
-                .environmentObject(peerBrowser)
         }
         .commands {
 //            CommandMenu("Merge") {

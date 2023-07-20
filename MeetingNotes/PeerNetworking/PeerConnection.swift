@@ -16,25 +16,20 @@ import Foundation
 import Network
 import OSLog
 
-var sharedConnection: PeerConnection?
-
 protocol PeerConnectionDelegate: AnyObject {
     func connectionReady()
     func connectionFailed()
     func receivedMessage(content: Data?, message: NWProtocolFramer.Message)
-    func displayAdvertiseError(_ error: NWError)
 }
 
 final class PeerConnection {
     weak var delegate: PeerConnectionDelegate?
     var connection: NWConnection?
-    let endpoint: NWEndpoint?
     let initiatedConnection: Bool
 
     // Create an outbound connection when the user initiates a sync.
     init(endpoint: NWEndpoint, delegate: PeerConnectionDelegate) {
         self.delegate = delegate
-        self.endpoint = nil
         initiatedConnection = true
 
         let connection = NWConnection(to: endpoint, using: NWParameters.peerSyncParameters())
@@ -46,7 +41,6 @@ final class PeerConnection {
     // Handle an inbound connection when the user receives a sync request.
     init(connection: NWConnection, delegate: PeerConnectionDelegate) {
         self.delegate = delegate
-        endpoint = nil
         self.connection = connection
         initiatedConnection = false
 
