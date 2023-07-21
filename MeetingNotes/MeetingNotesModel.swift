@@ -6,15 +6,15 @@ import Foundation
 struct AgendaItem: Identifiable, Codable, Hashable {
     let id: UUID
     var title: String
-    var discussion: Text
+    var discussion: AutomergeText
 
-    init(title: String, discussion: Text? = nil) {
+    init(title: String, discussion: AutomergeText? = nil) {
         self.id = UUID()
         self.title = title
         if let discussion {
             self.discussion = discussion
         } else {
-            self.discussion = Text("")
+            self.discussion = AutomergeText("")
         }
     }
 }

@@ -172,8 +172,8 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     /// Intended for internal preview usage.
     static func sample() -> MeetingNotesDocument {
         let newDoc = MeetingNotesDocument()
-        newDoc.model.agendas.append(AgendaItem(title: "First topic", discussion: Automerge.Text("")))
-        newDoc.model.agendas.append(AgendaItem(title: "Second topic", discussion: Automerge.Text("")))
+        newDoc.model.agendas.append(AgendaItem(title: "First topic", discussion: AutomergeText("")))
+        newDoc.model.agendas.append(AgendaItem(title: "Second topic", discussion: AutomergeText("")))
         try! newDoc.storeModelUpdates()
         return newDoc
     }
