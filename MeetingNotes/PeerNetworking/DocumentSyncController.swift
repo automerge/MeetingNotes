@@ -1,3 +1,4 @@
+import Automerge
 import Foundation
 import Network
 import OSLog
@@ -21,7 +22,8 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
     @Published var listenerStatusError: NWError? = nil
     var txtRecord: NWTXTRecord
 
-    var connections: [NWEndpoint:NWConnection] = [:]
+    var connections: [NWEndpoint: PeerConnection] = [:]
+    var syncStates: [NWEndpoint: SyncState] = [:]
 
     init(_ document: MeetingNotesDocument, name: String) {
         self.document = document
@@ -44,11 +46,39 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
     }
 
     // Peer connection delegate functions
-    func connectionReady() {}
+    func connectionStateUpdate(_: NWConnection.State, from _: NWEndpoint) {
+        // ?? plug this into visual feedback related to the connection...
+    }
 
-    func connectionFailed() {}
-
-    func receivedMessage(content _: Data?, message _: NWProtocolFramer.Message) {}
+    func receivedMessage(content data: Data?, message: NWProtocolFramer.Message, from endpoint: NWEndpoint) {
+        switch message.syncMessageType {
+        case .invalid:
+            Logger.peerlistener.warning("Invalid message received from \(endpoint.debugDescription, privacy: .public)")
+        case .sync:
+            guard let data else {
+                Logger.peerlistener
+                    .warning("Sync message received without data from \(endpoint.debugDescription, privacy: .public)")
+                return
+            }
+            do {
+                if let syncState = syncStates[endpoint], let connection = connections[endpoint] {
+                    try document?.doc.receiveSyncMessage(state: syncState, message: data)
+                    if let response = document?.doc.generateSyncMessage(state: syncState) {
+                        connection.sendSyncMsg(response)
+                    } else {
+                        Logger.peerlistener.trace("Sync complete for \(endpoint.debugDescription, privacy: .public)")
+                    }
+                }
+            } catch {
+                Logger.peerlistener.error("Error applying sync message: \(error, privacy: .public)")
+            }
+        case .id:
+            Logger.peerlistener.debug("received request for document ID")
+            if let connection = connections[endpoint], let id = self.document?.id.uuidString {
+                connection.sendDocumentId(id)
+            }
+        }
+    }
 
     // MARK: NWBrowser
 
@@ -94,9 +124,6 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
             Logger.peerbrowser.debug("\(results.count, privacy: .public) result(s):")
             for res in results {
                 Logger.peerbrowser.trace("  endpoint: \(res.endpoint.debugDescription, privacy: .public)")
-                for interface in res.interfaces {
-                    Logger.peerbrowser.trace("  interface: \(interface.debugDescription, privacy: .public)")
-                }
                 Logger.peerbrowser.trace("  metadata: \(res.metadata.debugDescription, privacy: .public)")
             }
             // Only show broadcasting peers with the same document Id - that's not this app.
@@ -104,8 +131,9 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
                 if case let .bonjour(txtrecord) = result.metadata,
                    let uuidString = self.document?.id.uuidString,
                    txtrecord["id"] == uuidString,
-                   txtrecord["name"] != self.name {
-                        return true
+                   txtrecord["name"] != self.name
+                {
+                    return true
                 }
                 return false
             }
@@ -113,18 +141,6 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
                 $0.hashValue < $1.hashValue
             })
             self.browserResults = filtered
-
-            /*
-             1 result(s):
-               endpoint: Sparrow._automergesync._tcplocal.
-               interface: lo0
-               interface: anpi1
-               interface: anpi0
-               interface: en0
-               interface: ap1
-               interface: awdl0
-               metadata: <none>
-             */
         }
 
         Logger.peerbrowser.debug("Activating NWBrowser \(newNetworkBrowser.debugDescription, privacy: .public)")
@@ -199,8 +215,9 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
                     "Attempting to link connection from \(String(describing: newConnection.endpoint), privacy: .sensitive): \(newConnection.debugDescription, privacy: .public)"
                 )
             guard let self else { return }
-            if (self.connections[newConnection.endpoint] == nil) {
-                self.connections[newConnection.endpoint] = newConnection
+            if self.connections[newConnection.endpoint] == nil {
+                let peerConnection = PeerConnection(connection: newConnection, delegate: self)
+                self.connections[newConnection.endpoint] = peerConnection
             } else {
                 // If we already have a connection to that endpoint, don't add another
                 newConnection.cancel()

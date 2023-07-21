@@ -33,9 +33,13 @@ struct AppTabView: View {
                     MergeView(document: document)
                 }
                 ToolbarItem(id: "share", placement: .status) {
-                    ShareLink(item: document.wrappedDocument(),
-                              preview: SharePreview(Text("id: \(document.id.uuidString)"),
-                                                    image: Image(systemName: "square.and.arrow.up")))
+                    ShareLink(
+                        item: document.wrappedDocument(),
+                        preview: SharePreview(
+                            Text("id: \(document.id.uuidString)"),
+                            image: Image(systemName: "square.and.arrow.up")
+                        )
+                    )
                 }
                 ToolbarItem(id: "sync", placement: .status) {
                     SyncView(document: document)

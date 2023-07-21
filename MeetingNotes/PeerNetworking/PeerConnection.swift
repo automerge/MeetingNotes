@@ -17,9 +17,8 @@ import Network
 import OSLog
 
 protocol PeerConnectionDelegate: AnyObject {
-    func connectionReady()
-    func connectionFailed()
-    func receivedMessage(content: Data?, message: NWProtocolFramer.Message)
+    func connectionStateUpdate(_ state: NWConnection.State, from: NWEndpoint)
+    func receivedMessage(content: Data?, message: NWProtocolFramer.Message, from: NWEndpoint)
 }
 
 final class PeerConnection {
@@ -71,7 +70,7 @@ final class PeerConnection {
 
                 // Notify the delegate that the connection is ready.
                 if let delegate = self?.delegate {
-                    delegate.connectionReady()
+                    delegate.connectionStateUpdate(newState, from: connection.endpoint)
                 }
             case let .failed(error):
                 Logger.peerconnection
@@ -83,7 +82,7 @@ final class PeerConnection {
 
                 if let delegate = self?.delegate {
                     // Notify the delegate when the connection fails.
-                    delegate.connectionFailed()
+                    delegate.connectionStateUpdate(newState, from: connection.endpoint)
                 }
             default:
                 break
@@ -148,13 +147,16 @@ final class PeerConnection {
         connection.receiveMessage { content, context, _, error in
             // Extract your message type from the received context.
             if let syncMessage = context?
-                .protocolMetadata(definition: AutomergeSyncProtocol.definition) as? NWProtocolFramer.Message
+                .protocolMetadata(definition: AutomergeSyncProtocol.definition) as? NWProtocolFramer.Message,
+                let endpoint = self.connection?.endpoint
             {
-                self.delegate?.receivedMessage(content: content, message: syncMessage)
+                self.delegate?.receivedMessage(content: content, message: syncMessage, from: endpoint)
             }
             if error == nil {
                 // Continue to receive more messages until you receive an error.
                 self.receiveNextMessage()
+            } else {
+                Logger.peerconnection.error("error on received message: \(error)")
             }
         }
     }
