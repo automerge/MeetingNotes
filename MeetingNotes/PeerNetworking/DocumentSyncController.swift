@@ -99,11 +99,12 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
                 }
                 Logger.peerbrowser.trace("  metadata: \(res.metadata.debugDescription, privacy: .public)")
             }
-            // Only show broadcasting peers with the same document Id
+            // Only show broadcasting peers with the same document Id - that's not this app.
             let filtered = results.filter { result in
                 if case let .bonjour(txtrecord) = result.metadata,
                    let uuidString = self.document?.id.uuidString,
-                   txtrecord["id"] == uuidString {
+                   txtrecord["id"] == uuidString,
+                   txtrecord["name"] != self.name {
                         return true
                 }
                 return false
