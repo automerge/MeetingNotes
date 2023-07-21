@@ -135,7 +135,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
             abort()
         }
     }
-    
+
     func fileWrapper(snapshot: Document, configuration _: WriteConfiguration) throws -> FileWrapper {
         Logger.document.trace("Returning FileWrapper handle with serialized data")
         // Using the updated Automerge document returned from snapshot, create a wrapper
