@@ -5,17 +5,25 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
+			<key>CFBundleTypeName</key>
+			<string>Meeting Notes Document</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
-			<string>Default</string>
+			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.github.automerge.meetingnotes</string>
 			</array>
 			<key>NSUbiquitousDocumentUserActivityType</key>
-			<string>$(PRODUCT_BUNDLE_IDENTIFIER).meetingnotes</string>
+			<string>com.github.automerge.meetingnotes</string>
 		</dict>
+	</array>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_automergesync._tcp</string>
 	</array>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
@@ -25,6 +33,8 @@
 				<string>public.content</string>
 				<string>public.data</string>
 			</array>
+			<key>UTTypeDescription</key>
+			<string>Meeting Notes Document</string>
 			<key>UTTypeIcons</key>
 			<dict/>
 			<key>UTTypeIdentifier</key>
