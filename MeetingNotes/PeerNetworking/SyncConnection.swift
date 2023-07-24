@@ -12,41 +12,58 @@
  - https://developer.apple.com/videos/play/wwdc2020/10110/
  */
 
+import Automerge
 import Foundation
 import Network
 import OSLog
 
-protocol PeerConnectionDelegate: AnyObject {
+protocol SyncConnectionDelegate: AnyObject {
     func connectionStateUpdate(_ state: NWConnection.State, from: NWEndpoint)
     func receivedMessage(content: Data?, message: NWProtocolFramer.Message, from: NWEndpoint)
 }
 
-final class PeerConnection {
-    weak var delegate: PeerConnectionDelegate?
+final class SyncConnection {
+    weak var delegate: SyncConnectionDelegate?
     var connection: NWConnection?
+    /// A Boolean value that indicates this app initiated this connection.
     let initiatedConnection: Bool
 
-    // Create an outbound connection when the user initiates a sync.
-    init(endpoint: NWEndpoint, delegate: PeerConnectionDelegate) {
+    // Setting the syncstate within a Connection wrapper binds its lifetime to the
+    // connection, and keeps management of sync state a bit easier than tracking it
+    // separately in the DocumentSyncController.
+
+    /// The synchronisation state associated with this connection.
+    var syncState: SyncState
+
+    /// Initiate a connection to a network endpoint to synchronise an Automerge Document.
+    /// - Parameters:
+    ///   - endpoint: The endpoint to attempt to connect.
+    ///   - delegate: A delegate that can process Automerge sync protocol messages.
+    init(endpoint: NWEndpoint, delegate: SyncConnectionDelegate) {
         self.delegate = delegate
         initiatedConnection = true
 
         let connection = NWConnection(to: endpoint, using: NWParameters.peerSyncParameters())
         self.connection = connection
+        syncState = SyncState()
 
         startConnection()
     }
 
-    // Handle an inbound connection when the user receives a sync request.
-    init(connection: NWConnection, delegate: PeerConnectionDelegate) {
+    /// Accepts and runs a connection from another network endpoint to synchronise an Automerge Document.
+    /// - Parameters:
+    ///   - connection: The connection provided by a listener to accept.
+    ///   - delegate: A delegate that can process Automerge sync protocol messages.
+    init(connection: NWConnection, delegate: SyncConnectionDelegate) {
         self.delegate = delegate
         self.connection = connection
         initiatedConnection = false
+        syncState = SyncState()
 
         startConnection()
     }
 
-    // Handle the user cancelling the connection.
+    /// Cancels the current connection.
     func cancel() {
         if let connection = connection {
             connection.cancel()
@@ -55,7 +72,7 @@ final class PeerConnection {
     }
 
     // Handle starting the peer-to-peer connection for both inbound and outbound connections.
-    func startConnection() {
+    private func startConnection() {
         guard let connection = connection else {
             return
         }
@@ -63,7 +80,7 @@ final class PeerConnection {
         connection.stateUpdateHandler = { [weak self] newState in
             switch newState {
             case .ready:
-                Logger.peerconnection.debug("\(String(describing: connection), privacy: .public) established")
+                Logger.syncconnection.debug("\(String(describing: connection), privacy: .public) established")
 
                 // When the connection is ready, start receiving messages.
                 self?.receiveNextMessage()
@@ -73,7 +90,7 @@ final class PeerConnection {
                     delegate.connectionStateUpdate(newState, from: connection.endpoint)
                 }
             case let .failed(error):
-                Logger.peerconnection
+                Logger.syncconnection
                     .warning(
                         "\(String(describing: connection), privacy: .public) failed with \(error, privacy: .public)"
                     )
@@ -93,7 +110,34 @@ final class PeerConnection {
         connection.start(queue: .main)
     }
 
-    // Handle sending a "document ID" message.
+    /// Receive a message from the sync protocol framing, deliver it to the delegate for processing, and continue
+    /// receiving messages.
+    private func receiveNextMessage() {
+        guard let connection = connection else {
+            return
+        }
+
+        connection.receiveMessage { content, context, _, error in
+            // Extract your message type from the received context.
+            if let syncMessage = context?
+                .protocolMetadata(definition: AutomergeSyncProtocol.definition) as? NWProtocolFramer.Message,
+                let endpoint = self.connection?.endpoint
+            {
+                self.delegate?.receivedMessage(content: content, message: syncMessage, from: endpoint)
+            }
+            if error == nil {
+                // Continue to receive more messages until you receive an error.
+                self.receiveNextMessage()
+            } else {
+                Logger.syncconnection.error("error on received message: \(error)")
+            }
+        }
+    }
+
+    // MARK: Automerge data to Automerge Sync Protocol transforms
+
+    /// Sends an Automerge document Id.
+    /// - Parameter documentId: The document Id to send.
     func sendDocumentId(_ documentId: String) {
         // corresponds to SyncMessageType.id
         guard let connection = connection else {
@@ -116,7 +160,8 @@ final class PeerConnection {
         )
     }
 
-    // Handle sending a "sync" message.
+    /// Sends an Automerge sync data packet.
+    /// - Parameter syncMsg: The data to send.
     func sendSyncMsg(_ syncMsg: Data) {
         guard let connection = connection else {
             return
@@ -136,28 +181,5 @@ final class PeerConnection {
             isComplete: true,
             completion: .idempotent
         )
-    }
-
-    // Receive a message, deliver it to your delegate, and continue receiving more messages.
-    func receiveNextMessage() {
-        guard let connection = connection else {
-            return
-        }
-
-        connection.receiveMessage { content, context, _, error in
-            // Extract your message type from the received context.
-            if let syncMessage = context?
-                .protocolMetadata(definition: AutomergeSyncProtocol.definition) as? NWProtocolFramer.Message,
-                let endpoint = self.connection?.endpoint
-            {
-                self.delegate?.receivedMessage(content: content, message: syncMessage, from: endpoint)
-            }
-            if error == nil {
-                // Continue to receive more messages until you receive an error.
-                self.receiveNextMessage()
-            } else {
-                Logger.peerconnection.error("error on received message: \(error)")
-            }
-        }
     }
 }

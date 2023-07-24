@@ -14,7 +14,7 @@ extension Logger {
     static let peerlistener = Logger(subsystem: subsystem, category: "PeerListener")
 
     /// Logs updates and interaction related to managing connections from external peer systems.
-    static let peerconnection = Logger(subsystem: subsystem, category: "PeerConnection")
+    static let syncconnection = Logger(subsystem: subsystem, category: "SyncConnection")
 
     /// Logs updates and interaction related to the process of synchronization over the network.
     static let syncprotocol = Logger(subsystem: subsystem, category: "SyncProtocol")
