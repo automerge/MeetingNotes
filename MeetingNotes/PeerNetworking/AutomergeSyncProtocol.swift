@@ -66,7 +66,7 @@ class AutomergeSyncProtocol: NWProtocolFramerImplementation {
         do {
             try framer.writeOutputNoCopy(length: messageLength)
         } catch {
-            Logger.syncprotocol.error("Error writing protocol data into frame: \(error, privacy: .public)")
+            Logger.syncController.error("Error writing protocol data into frame: \(error, privacy: .public)")
         }
     }
 

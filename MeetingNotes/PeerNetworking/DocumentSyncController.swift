@@ -1,8 +1,8 @@
 import Automerge
+import Combine
 import Foundation
 import Network
 import OSLog
-import Combine
 
 final class DocumentSyncController: ObservableObject {
     weak var document: MeetingNotesDocument?
@@ -12,14 +12,12 @@ final class DocumentSyncController: ObservableObject {
             resetName(name)
         }
     }
-    
+
     /// A reference to the Automerge document for an initiated Peer Connection to attempt to send sync messages.
     ///
     /// Needed for conformance to ``SyncConnectionDelegate``.
     var automergeDocument: Document? {
-        get {
-            document?.doc
-        }
+        document?.doc
     }
 
     var browser: NWBrowser?
@@ -36,7 +34,7 @@ final class DocumentSyncController: ObservableObject {
     let syncQueue = DispatchQueue(label: "PeerSyncQueue")
     var timerCancellable: Cancellable?
     var syncTrigger: PassthroughSubject<Void, Never> = PassthroughSubject()
-    
+
     init(_ document: MeetingNotesDocument, name: String) {
         self.document = document
         txtRecord = NWTXTRecord(["id": document.id.uuidString])
@@ -51,11 +49,11 @@ final class DocumentSyncController: ObservableObject {
         startBrowsing()
         setupBonjourListener()
         timerCancellable = Timer.publish(every: .milliseconds(100), on: .main, in: .default)
-                .autoconnect()
-                .receive(on: syncQueue)
-                .sink(receiveValue: { [weak self] _ in
-                    self?.syncTrigger.send()
-                })
+            .autoconnect()
+            .receive(on: syncQueue)
+            .sink(receiveValue: { [weak self] _ in
+                self?.syncTrigger.send()
+            })
     }
 
     func deactivate() {
@@ -67,15 +65,17 @@ final class DocumentSyncController: ObservableObject {
     // MARK: NWBrowser
 
     func attemptToPeerConnect(_ endpoint: NWEndpoint) {
-        Logger.peerbrowser.trace("Attempting to establish connection to \(endpoint.debugDescription, privacy: .public)")
+        Logger.syncController
+            .debug("Attempting to establish connection to \(endpoint.debugDescription, privacy: .public)")
         if connections[endpoint] != nil {
             connections[endpoint] = SyncConnection(
                 endpoint: endpoint,
                 trigger: syncTrigger.eraseToAnyPublisher(),
-                delegate: self)
+                delegate: self
+            )
         }
     }
-    
+
     // Start browsing for services.
     fileprivate func startBrowsing() {
         // Create parameters, and allow browsing over a peer-to-peer link.
@@ -89,17 +89,17 @@ final class DocumentSyncController: ObservableObject {
         )
 
         newNetworkBrowser.stateUpdateHandler = { newState in
-            Logger.peerbrowser.debug("Browser State Update: \(String(describing: newState), privacy: .public)")
+            Logger.syncController.debug("Browser State Update: \(String(describing: newState), privacy: .public)")
             switch newState {
             case let .failed(error):
                 self.browserState = .failed(error)
                 // Restart the browser if it loses its connection.
                 if error == NWError.dns(DNSServiceErrorType(kDNSServiceErr_DefunctConnection)) {
-                    Logger.peerbrowser.info("Browser failed with \(error, privacy: .public), restarting")
+                    Logger.syncController.info("Browser failed with \(error, privacy: .public), restarting")
                     newNetworkBrowser.cancel()
                     self.startBrowsing()
                 } else {
-                    Logger.peerbrowser.warning("Browser failed with \(error, privacy: .public), stopping")
+                    Logger.syncController.warning("Browser failed with \(error, privacy: .public), stopping")
                     newNetworkBrowser.cancel()
                 }
             case .ready:
@@ -115,10 +115,12 @@ final class DocumentSyncController: ObservableObject {
 
         // When the list of discovered endpoints changes, refresh the delegate.
         newNetworkBrowser.browseResultsChangedHandler = { results, _ in
-            Logger.peerbrowser.debug("browser shows \(results.count, privacy: .public) result(s):")
+            Logger.syncController.debug("browser update shows \(results.count, privacy: .public) result(s):")
             for res in results {
-                Logger.peerbrowser.trace("  endpoint: \(res.endpoint.debugDescription, privacy: .public)")
-                Logger.peerbrowser.trace("  metadata: \(res.metadata.debugDescription, privacy: .public)")
+                Logger.syncController
+                    .debug(
+                        "  \(res.endpoint.debugDescription, privacy: .public) \(res.metadata.debugDescription, privacy: .public)"
+                    )
             }
             // Only show broadcasting peers with the same document Id
             // - and that doesn't have the name provided by this app.
@@ -135,23 +137,26 @@ final class DocumentSyncController: ObservableObject {
             .sorted(by: {
                 $0.hashValue < $1.hashValue
             })
-            
+
             // check list of current connections, if not in it - enqueue for connecting
             for potentialPeer in filtered {
                 if self.connections[potentialPeer.endpoint] != nil {
                     Task {
-                        let delay = Int.random(in: 50...250)
-                        Logger.peerbrowser.trace("Delaying \(delay, privacy: .public) ms before attempting connect to \(potentialPeer.endpoint.debugDescription, privacy: .public)")
+                        let delay = Int.random(in: 50 ... 250)
+                        Logger.syncController
+                            .debug(
+                                "Delaying \(delay, privacy: .public) ms before attempting connect to \(potentialPeer.endpoint.debugDescription, privacy: .public)"
+                            )
                         try await Task.sleep(until: .now + .milliseconds(delay), clock: .continuous)
                         self.attemptToPeerConnect(potentialPeer.endpoint)
                     }
                 }
             }
-            
+
             self.browserResults = filtered
         }
 
-        Logger.peerbrowser.debug("Activating NWBrowser \(newNetworkBrowser.debugDescription, privacy: .public)")
+        Logger.syncController.info("Activating NWBrowser \(newNetworkBrowser.debugDescription, privacy: .public)")
         self.browser = newNetworkBrowser
         // Start browsing and ask for updates on the main queue.
         newNetworkBrowser.start(queue: .main)
@@ -178,14 +183,13 @@ final class DocumentSyncController: ObservableObject {
                 type: AutomergeSyncProtocol.bonjourType,
                 txtRecord: txtRecord
             )
-            Logger.peerlistener
+            Logger.syncController
                 .debug(
                     "Starting bonjour network listener for document id \(document.id.uuidString, privacy: .public)"
                 )
-            Logger.peerlistener.debug("listener: \(listener.debugDescription, privacy: .public)")
             startListening()
         } catch {
-            Logger.peerlistener.critical("Failed to create bonjour listener: \(error, privacy: .public)")
+            Logger.syncController.critical("Failed to create bonjour listener: \(error, privacy: .public)")
             listenerSetupError = error
         }
     }
@@ -194,16 +198,16 @@ final class DocumentSyncController: ObservableObject {
         listenerState = newState
         switch newState {
         case .ready:
-            Logger.peerlistener
+            Logger.syncController
                 .info("Bonjour listener ready on \(String(describing: self.listener?.port), privacy: .public)")
             listenerStatusError = nil
         case let .failed(error):
             if error == NWError.dns(DNSServiceErrorType(kDNSServiceErr_DefunctConnection)) {
-                Logger.peerlistener.warning("Bonjour listener failed with \(error, privacy: .public), restarting.")
+                Logger.syncController.warning("Bonjour listener failed with \(error, privacy: .public), restarting.")
                 listener?.cancel()
                 setupBonjourListener()
             } else {
-                Logger.peerlistener.error("Bonjour listener failed with \(error, privacy: .public), stopping.")
+                Logger.syncController.error("Bonjour listener failed with \(error, privacy: .public), stopping.")
                 listenerStatusError = error
                 listener?.cancel()
             }
@@ -218,13 +222,19 @@ final class DocumentSyncController: ObservableObject {
         // The system calls this when a new connection arrives at the listener.
         // Start the connection to accept it, or cancel to reject it.
         listener?.newConnectionHandler = { [weak self] newConnection in
-            Logger.peerlistener
-                .trace(
+            Logger.syncController
+                .debug(
                     "Attempting to link connection from \(String(describing: newConnection.endpoint), privacy: .sensitive): \(newConnection.debugDescription, privacy: .public)"
                 )
             guard let self else { return }
             if self.connections[newConnection.endpoint] == nil {
-                let peerConnection = SyncConnection(connection: newConnection, delegate: self)
+                Logger.syncController
+                    .info("Accepting connection from \(newConnection.endpoint.debugDescription, privacy: .public)")
+                let peerConnection = SyncConnection(
+                    connection: newConnection,
+                    trigger: syncTrigger.eraseToAnyPublisher(),
+                    delegate: self
+                )
                 self.connections[newConnection.endpoint] = peerConnection
             } else {
                 // If we already have a connection to that endpoint, don't add another
@@ -252,7 +262,7 @@ final class DocumentSyncController: ObservableObject {
             type: AutomergeSyncProtocol.bonjourType,
             txtRecord: txtRecord
         )
-        Logger.peerlistener
+        Logger.syncController
             .debug(
                 "Updated bonjour network listener to name \(name, privacy: .sensitive) for document id \(document.id.uuidString, privacy: .public)"
             )
@@ -262,17 +272,40 @@ final class DocumentSyncController: ObservableObject {
 extension DocumentSyncController: SyncConnectionDelegate {
     // MARK: SyncConnectionDelegate functions
 
-    func connectionStateUpdate(_: NWConnection.State, from _: NWEndpoint) {
+    func connectionStateUpdate(_ state: NWConnection.State, from endpoint: NWEndpoint) {
         // ?? plug this into visual feedback related to the connection...
+        switch state {
+        case .setup:
+            Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection setup.")
+        case let .waiting(nWError):
+            Logger.syncController
+                .debug(
+                    "\(endpoint.debugDescription, privacy: .public) connection waiting: \(nWError.debugDescription, privacy: .public)."
+                )
+        case .preparing:
+            Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection preparing.")
+        case .ready:
+            Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection ready.")
+        case let .failed(nWError):
+            Logger.syncController
+                .debug(
+                    "\(endpoint.debugDescription, privacy: .public) connection failed: \(nWError.debugDescription, privacy: .public)."
+                )
+        case .cancelled:
+            Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection cancelled.")
+        @unknown default:
+            fatalError()
+        }
     }
 
     func receivedMessage(content data: Data?, message: NWProtocolFramer.Message, from endpoint: NWEndpoint) {
         switch message.syncMessageType {
         case .invalid:
-            Logger.peerlistener.warning("Invalid message received from \(endpoint.debugDescription, privacy: .public)")
+            Logger.syncController
+                .warning("Invalid message received from \(endpoint.debugDescription, privacy: .public)")
         case .sync:
             guard let data else {
-                Logger.peerlistener
+                Logger.syncController
                     .warning("Sync message received without data from \(endpoint.debugDescription, privacy: .public)")
                 return
             }
@@ -280,9 +313,21 @@ extension DocumentSyncController: SyncConnectionDelegate {
                 if let connection = connections[endpoint] {
                     // When we receive a complete sync message from the underlying transport,
                     // update our automerge document, and the associated SyncState.
-                    // If we needed/wanted to inspect the changes, we could use
-                    // `receiveSyncMessageWithPatches(state: SyncState, message: Data)` instead.
-                    try document?.doc.receiveSyncMessage(state: connection.syncState, message: data)
+                    let patches = try document?.doc.receiveSyncMessageWithPatches(
+                        state: connection.syncState,
+                        message: data
+                    )
+                    if let patches {
+                        Logger.syncController
+                            .info(
+                                "Received \(patches.count, privacy: .public) patches in \(data.count, privacy: .public) bytes"
+                            )
+                    } else {
+                        Logger.syncController
+                            .info("Received sync state update in \(data.count, privacy: .public) bytes")
+                    }
+                    self.refreshModel()
+
                     // Once the Automerge doc is updated, check (using the SyncState) to see if
                     // we believe we need to send additional messages to the peer to keep it in sync.
                     if let response = document?.doc.generateSyncMessage(state: connection.syncState) {
@@ -290,17 +335,25 @@ extension DocumentSyncController: SyncConnectionDelegate {
                     } else {
                         // When generateSyncMessage returns nil, the remote endpoint represented by
                         // SyncState should be up to date.
-                        Logger.peerlistener.trace("Sync complete for \(endpoint.debugDescription, privacy: .public)")
+                        Logger.syncController.debug("Sync complete for \(endpoint.debugDescription, privacy: .public)")
                     }
                 }
             } catch {
-                Logger.peerlistener.error("Error applying sync message: \(error, privacy: .public)")
+                Logger.syncController.error("Error applying sync message: \(error, privacy: .public)")
             }
         case .id:
-            Logger.peerlistener.debug("received request for document ID")
+            Logger.syncController.info("received request for document ID")
             if let connection = connections[endpoint], let id = self.document?.id.uuidString {
                 connection.sendDocumentId(id)
             }
+        }
+    }
+
+    func refreshModel() {
+        do {
+            try self.document?.getModelUpdates()
+        } catch {
+            Logger.document.error("Failure in regenerating model from Automerge document: \(error, privacy: .public)")
         }
     }
 }
