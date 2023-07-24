@@ -3,7 +3,7 @@ import Foundation
 import Network
 import OSLog
 
-final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
+final class DocumentSyncController: ObservableObject {
     weak var document: MeetingNotesDocument?
     var name: String {
         didSet {
@@ -22,8 +22,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
     @Published var listenerStatusError: NWError? = nil
     var txtRecord: NWTXTRecord
 
-    var connections: [NWEndpoint: PeerConnection] = [:]
-    var syncStates: [NWEndpoint: SyncState] = [:]
+    var connections: [NWEndpoint: SyncConnection] = [:]
 
     init(_ document: MeetingNotesDocument, name: String) {
         self.document = document
@@ -43,41 +42,6 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
     func deactivate() {
         stopBrowsing()
         stopListening()
-    }
-
-    // Peer connection delegate functions
-    func connectionStateUpdate(_: NWConnection.State, from _: NWEndpoint) {
-        // ?? plug this into visual feedback related to the connection...
-    }
-
-    func receivedMessage(content data: Data?, message: NWProtocolFramer.Message, from endpoint: NWEndpoint) {
-        switch message.syncMessageType {
-        case .invalid:
-            Logger.peerlistener.warning("Invalid message received from \(endpoint.debugDescription, privacy: .public)")
-        case .sync:
-            guard let data else {
-                Logger.peerlistener
-                    .warning("Sync message received without data from \(endpoint.debugDescription, privacy: .public)")
-                return
-            }
-            do {
-                if let syncState = syncStates[endpoint], let connection = connections[endpoint] {
-                    try document?.doc.receiveSyncMessage(state: syncState, message: data)
-                    if let response = document?.doc.generateSyncMessage(state: syncState) {
-                        connection.sendSyncMsg(response)
-                    } else {
-                        Logger.peerlistener.trace("Sync complete for \(endpoint.debugDescription, privacy: .public)")
-                    }
-                }
-            } catch {
-                Logger.peerlistener.error("Error applying sync message: \(error, privacy: .public)")
-            }
-        case .id:
-            Logger.peerlistener.debug("received request for document ID")
-            if let connection = connections[endpoint], let id = self.document?.id.uuidString {
-                connection.sendDocumentId(id)
-            }
-        }
     }
 
     // MARK: NWBrowser
@@ -216,7 +180,7 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
                 )
             guard let self else { return }
             if self.connections[newConnection.endpoint] == nil {
-                let peerConnection = PeerConnection(connection: newConnection, delegate: self)
+                let peerConnection = SyncConnection(connection: newConnection, delegate: self)
                 self.connections[newConnection.endpoint] = peerConnection
             } else {
                 // If we already have a connection to that endpoint, don't add another
@@ -248,5 +212,43 @@ final class DocumentSyncController: ObservableObject, PeerConnectionDelegate {
             .debug(
                 "Updated bonjour network listener to name \(name, privacy: .sensitive) for document id \(document.id.uuidString, privacy: .public)"
             )
+    }
+}
+
+extension DocumentSyncController: SyncConnectionDelegate {
+    // MARK: SyncConnectionDelegate functions
+
+    func connectionStateUpdate(_: NWConnection.State, from _: NWEndpoint) {
+        // ?? plug this into visual feedback related to the connection...
+    }
+
+    func receivedMessage(content data: Data?, message: NWProtocolFramer.Message, from endpoint: NWEndpoint) {
+        switch message.syncMessageType {
+        case .invalid:
+            Logger.peerlistener.warning("Invalid message received from \(endpoint.debugDescription, privacy: .public)")
+        case .sync:
+            guard let data else {
+                Logger.peerlistener
+                    .warning("Sync message received without data from \(endpoint.debugDescription, privacy: .public)")
+                return
+            }
+            do {
+                if let connection = connections[endpoint] {
+                    try document?.doc.receiveSyncMessage(state: connection.syncState, message: data)
+                    if let response = document?.doc.generateSyncMessage(state: connection.syncState) {
+                        connection.sendSyncMsg(response)
+                    } else {
+                        Logger.peerlistener.trace("Sync complete for \(endpoint.debugDescription, privacy: .public)")
+                    }
+                }
+            } catch {
+                Logger.peerlistener.error("Error applying sync message: \(error, privacy: .public)")
+            }
+        case .id:
+            Logger.peerlistener.debug("received request for document ID")
+            if let connection = connections[endpoint], let id = self.document?.id.uuidString {
+                connection.sendDocumentId(id)
+            }
+        }
     }
 }
