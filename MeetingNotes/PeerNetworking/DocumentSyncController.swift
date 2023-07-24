@@ -2,6 +2,7 @@ import Automerge
 import Foundation
 import Network
 import OSLog
+import Combine
 
 final class DocumentSyncController: ObservableObject {
     weak var document: MeetingNotesDocument?
@@ -9,6 +10,15 @@ final class DocumentSyncController: ObservableObject {
         didSet {
             // update a listener, if running, with the new name.
             resetName(name)
+        }
+    }
+    
+    /// A reference to the Automerge document for an initiated Peer Connection to attempt to send sync messages.
+    ///
+    /// Needed for conformance to ``SyncConnectionDelegate``.
+    var automergeDocument: Document? {
+        get {
+            document?.doc
         }
     }
 
@@ -23,7 +33,10 @@ final class DocumentSyncController: ObservableObject {
     var txtRecord: NWTXTRecord
 
     var connections: [NWEndpoint: SyncConnection] = [:]
-
+    let syncQueue = DispatchQueue(label: "PeerSyncQueue")
+    var timerCancellable: Cancellable?
+    var syncTrigger: PassthroughSubject<Void, Never> = PassthroughSubject()
+    
     init(_ document: MeetingNotesDocument, name: String) {
         self.document = document
         txtRecord = NWTXTRecord(["id": document.id.uuidString])
@@ -37,15 +50,31 @@ final class DocumentSyncController: ObservableObject {
         listenerState = .setup
         startBrowsing()
         setupBonjourListener()
+        timerCancellable = Timer.publish(every: 1, on: .main, in: .default)
+                .autoconnect()
+                .receive(on: syncQueue)
+                .sink(receiveValue: { [weak self] _ in
+                    self?.syncTrigger.send()
+                })
     }
 
     func deactivate() {
+        timerCancellable?.cancel()
         stopBrowsing()
         stopListening()
     }
 
     // MARK: NWBrowser
 
+    func attemptToPeerConnect(_ endpoint: NWEndpoint) {
+        if connections[endpoint] != nil {
+            connections[endpoint] = SyncConnection(
+                endpoint: endpoint,
+                trigger: syncTrigger.eraseToAnyPublisher(),
+                delegate: self)
+        }
+    }
+    
     // Start browsing for services.
     fileprivate func startBrowsing() {
         // Create parameters, and allow browsing over a peer-to-peer link.
@@ -85,12 +114,13 @@ final class DocumentSyncController: ObservableObject {
 
         // When the list of discovered endpoints changes, refresh the delegate.
         newNetworkBrowser.browseResultsChangedHandler = { results, _ in
-            Logger.peerbrowser.debug("\(results.count, privacy: .public) result(s):")
+            Logger.peerbrowser.debug("browser shows \(results.count, privacy: .public) result(s):")
             for res in results {
                 Logger.peerbrowser.trace("  endpoint: \(res.endpoint.debugDescription, privacy: .public)")
                 Logger.peerbrowser.trace("  metadata: \(res.metadata.debugDescription, privacy: .public)")
             }
-            // Only show broadcasting peers with the same document Id - that's not this app.
+            // Only show broadcasting peers with the same document Id
+            // - and that doesn't have the name provided by this app.
             let filtered = results.filter { result in
                 if case let .bonjour(txtrecord) = result.metadata,
                    let uuidString = self.document?.id.uuidString,
@@ -104,6 +134,19 @@ final class DocumentSyncController: ObservableObject {
             .sorted(by: {
                 $0.hashValue < $1.hashValue
             })
+            
+            // check list of current connections, if not in it - enqueue for connecting
+            for potentialPeer in filtered {
+                if self.connections[potentialPeer.endpoint] != nil {
+                    Task {
+                        let delay = Int.random(in: 50...250)
+                        Logger.peerbrowser.trace("Delaying \(delay, privacy: .public) ms before attempting connect to \(potentialPeer.endpoint.debugDescription, privacy: .public)")
+                        try await Task.sleep(until: .now + .milliseconds(delay), clock: .continuous)
+                        self.attemptToPeerConnect(potentialPeer.endpoint)
+                    }
+                }
+            }
+            
             self.browserResults = filtered
         }
 
@@ -234,10 +277,18 @@ extension DocumentSyncController: SyncConnectionDelegate {
             }
             do {
                 if let connection = connections[endpoint] {
+                    // When we receive a complete sync message from the underlying transport,
+                    // update our automerge document, and the associated SyncState.
+                    // If we needed/wanted to inspect the changes, we could use
+                    // `receiveSyncMessageWithPatches(state: SyncState, message: Data)` instead.
                     try document?.doc.receiveSyncMessage(state: connection.syncState, message: data)
+                    // Once the Automerge doc is updated, check (using the SyncState) to see if
+                    // we believe we need to send additional messages to the peer to keep it in sync.
                     if let response = document?.doc.generateSyncMessage(state: connection.syncState) {
                         connection.sendSyncMsg(response)
                     } else {
+                        // When generateSyncMessage returns nil, the remote endpoint represented by
+                        // SyncState should be up to date.
                         Logger.peerlistener.trace("Sync complete for \(endpoint.debugDescription, privacy: .public)")
                     }
                 }
