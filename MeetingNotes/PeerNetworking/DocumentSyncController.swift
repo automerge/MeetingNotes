@@ -50,7 +50,7 @@ final class DocumentSyncController: ObservableObject {
         listenerState = .setup
         startBrowsing()
         setupBonjourListener()
-        timerCancellable = Timer.publish(every: 1, on: .main, in: .default)
+        timerCancellable = Timer.publish(every: .milliseconds(100), on: .main, in: .default)
                 .autoconnect()
                 .receive(on: syncQueue)
                 .sink(receiveValue: { [weak self] _ in
@@ -67,6 +67,7 @@ final class DocumentSyncController: ObservableObject {
     // MARK: NWBrowser
 
     func attemptToPeerConnect(_ endpoint: NWEndpoint) {
+        Logger.peerbrowser.trace("Attempting to establish connection to \(endpoint.debugDescription, privacy: .public)")
         if connections[endpoint] != nil {
             connections[endpoint] = SyncConnection(
                 endpoint: endpoint,
