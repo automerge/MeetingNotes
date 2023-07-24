@@ -94,6 +94,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
 
     /// Updates the model document with any changed values in the Automerge document.
     func getModelUpdates() throws {
+        Logger.document.debug("Updating model from Automerge document.")
         self.objectWillChange.send()
         model = try modelDecoder.decode(MeetingNotesModel.self)
     }
@@ -123,7 +124,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
 
     func snapshot(contentType _: UTType) throws -> Document {
         try modelEncoder.encode(model)
-        Logger.document.trace("Creating document snapshot")
+        Logger.document.debug("Writing the model back into the Automerge document")
         return doc
     }
 
@@ -137,7 +138,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     }
 
     func fileWrapper(snapshot: Document, configuration _: WriteConfiguration) throws -> FileWrapper {
-        Logger.document.trace("Returning FileWrapper handle with serialized data")
+        Logger.document.debug("Returning FileWrapper handle with serialized data")
         // Using the updated Automerge document returned from snapshot, create a wrapper
         // with the origin ID from the serialized automerge file.
         let wrappedDocument = WrappedAutomergeDocument(id: id, data: snapshot.save())

@@ -20,6 +20,7 @@ import OSLog
 
 protocol SyncConnectionDelegate: AnyObject {
     var automergeDocument: Document? { get }
+    func refreshModel()
     func connectionStateUpdate(_ state: NWConnection.State, from: NWEndpoint)
     func receivedMessage(content: Data?, message: NWProtocolFramer.Message, from: NWEndpoint)
 }
@@ -37,7 +38,7 @@ final class SyncConnection {
     /// The synchronisation state associated with this connection.
     var syncState: SyncState
     var syncTriggerCancellable: Cancellable?
-    
+
     /// Initiate a connection to a network endpoint to synchronise an Automerge Document.
     /// - Parameters:
     ///   - endpoint: The endpoint to attempt to connect.
@@ -46,15 +47,18 @@ final class SyncConnection {
         self.delegate = delegate
         initiatedConnection = true
 
-        Logger.syncconnection.trace("Initiating connection to \(endpoint.debugDescription, privacy: .public)")
+        Logger.syncController.debug("Initiating connection to \(endpoint.debugDescription, privacy: .public)")
         syncState = SyncState()
         let connection = NWConnection(to: endpoint, using: NWParameters.peerSyncParameters())
         self.connection = connection
 
         startConnection()
         syncTriggerCancellable = trigger.sink(receiveValue: { _ in
-            Logger.syncconnection.trace("Driving sync, sending to \(endpoint.debugDescription, privacy: .public)")
             if let syncData = delegate.automergeDocument?.generateSyncMessage(state: self.syncState) {
+                Logger.syncController
+                    .debug(
+                        "Syncing \(syncData.count, privacy: .public) bytes to \(endpoint.debugDescription, privacy: .public)"
+                    )
                 self.sendSyncMsg(syncData)
             }
         })
@@ -64,20 +68,33 @@ final class SyncConnection {
     /// - Parameters:
     ///   - connection: The connection provided by a listener to accept.
     ///   - delegate: A delegate that can process Automerge sync protocol messages.
-    init(connection: NWConnection, delegate: SyncConnectionDelegate) {
+    init(connection: NWConnection, trigger: AnyPublisher<Void, Never>, delegate: SyncConnectionDelegate) {
         self.delegate = delegate
         self.connection = connection
         initiatedConnection = false
         syncState = SyncState()
-        Logger.syncconnection.trace("Receiving connection from \(connection.endpoint.debugDescription, privacy: .public)")
+        Logger.syncController
+            .info("Receiving connection from \(connection.endpoint.debugDescription, privacy: .public)")
         startConnection()
+        syncTriggerCancellable = trigger.sink(receiveValue: { _ in
+            Logger.syncController
+                .debug("Driving sync, sending to \(connection.endpoint.debugDescription, privacy: .public)")
+            if let syncData = delegate.automergeDocument?.generateSyncMessage(state: self.syncState) {
+                Logger.syncController
+                    .info(
+                        "Syncing \(syncData.count, privacy: .public) bytes to \(connection.endpoint.debugDescription, privacy: .public)"
+                    )
+                self.sendSyncMsg(syncData)
+            }
+        })
     }
 
     /// Cancels the current connection.
     func cancel() {
         if let connection = connection {
             connection.cancel()
-            Logger.syncconnection.trace("Cancelling connection to \(connection.endpoint.debugDescription, privacy: .public)")
+            Logger.syncController
+                .debug("Cancelling connection to \(connection.endpoint.debugDescription, privacy: .public)")
             syncTriggerCancellable?.cancel()
             self.connection = nil
         }
@@ -92,7 +109,7 @@ final class SyncConnection {
         connection.stateUpdateHandler = { [weak self] newState in
             switch newState {
             case .ready:
-                Logger.syncconnection.debug("\(String(describing: connection), privacy: .public) established")
+                Logger.syncController.info("\(String(describing: connection), privacy: .public) established")
 
                 // When the connection is ready, start receiving messages.
                 self?.receiveNextMessage()
@@ -102,7 +119,7 @@ final class SyncConnection {
                     delegate.connectionStateUpdate(newState, from: connection.endpoint)
                 }
             case let .failed(error):
-                Logger.syncconnection
+                Logger.syncController
                     .warning(
                         "\(String(describing: connection), privacy: .public) failed with \(error, privacy: .public)"
                     )
@@ -141,7 +158,7 @@ final class SyncConnection {
                 // Continue to receive more messages until you receive an error.
                 self.receiveNextMessage()
             } else {
-                Logger.syncconnection.error("error on received message: \(error)")
+                Logger.syncController.error("error on received message: \(error)")
             }
         }
     }

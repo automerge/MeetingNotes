@@ -24,3 +24,11 @@ xcodebuild clean build -scheme 'MeetingNotes' -destination 'platform=macOS' -sdk
 ```
 
 If you're building from within Xcode, use the build targets `Any Mac (Apple Silicon, Intel)` and `Any iOS Simulator Device (arm64, x86_64)` to verify the projects builds for all relevant targets.
+
+## Logging
+
+Default logging displays at INFO level and higher by default.
+
+To enable debug logging, run the following command:
+
+    sudo log config --subsystem com.github.automerge.MeetingNotes --mode level:debug
