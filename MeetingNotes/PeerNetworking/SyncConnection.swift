@@ -46,12 +46,14 @@ final class SyncConnection {
         self.delegate = delegate
         initiatedConnection = true
 
+        Logger.syncconnection.trace("Initiating connection to \(endpoint.debugDescription, privacy: .public)")
         syncState = SyncState()
         let connection = NWConnection(to: endpoint, using: NWParameters.peerSyncParameters())
         self.connection = connection
 
         startConnection()
         syncTriggerCancellable = trigger.sink(receiveValue: { _ in
+            Logger.syncconnection.trace("Driving sync, sending to \(endpoint.debugDescription, privacy: .public)")
             if let syncData = delegate.automergeDocument?.generateSyncMessage(state: self.syncState) {
                 self.sendSyncMsg(syncData)
             }
@@ -67,15 +69,16 @@ final class SyncConnection {
         self.connection = connection
         initiatedConnection = false
         syncState = SyncState()
-
+        Logger.syncconnection.trace("Receiving connection from \(connection.endpoint.debugDescription, privacy: .public)")
         startConnection()
     }
 
     /// Cancels the current connection.
     func cancel() {
-        syncTriggerCancellable?.cancel()
         if let connection = connection {
             connection.cancel()
+            Logger.syncconnection.trace("Cancelling connection to \(connection.endpoint.debugDescription, privacy: .public)")
+            syncTriggerCancellable?.cancel()
             self.connection = nil
         }
     }
