@@ -13,11 +13,13 @@
  */
 
 import Automerge
+import Combine
 import Foundation
 import Network
 import OSLog
 
 protocol SyncConnectionDelegate: AnyObject {
+    var automergeDocument: Document? { get }
     func connectionStateUpdate(_ state: NWConnection.State, from: NWEndpoint)
     func receivedMessage(content: Data?, message: NWProtocolFramer.Message, from: NWEndpoint)
 }
@@ -34,20 +36,26 @@ final class SyncConnection {
 
     /// The synchronisation state associated with this connection.
     var syncState: SyncState
-
+    var syncTriggerCancellable: Cancellable?
+    
     /// Initiate a connection to a network endpoint to synchronise an Automerge Document.
     /// - Parameters:
     ///   - endpoint: The endpoint to attempt to connect.
     ///   - delegate: A delegate that can process Automerge sync protocol messages.
-    init(endpoint: NWEndpoint, delegate: SyncConnectionDelegate) {
+    init(endpoint: NWEndpoint, trigger: AnyPublisher<Void, Never>, delegate: SyncConnectionDelegate) {
         self.delegate = delegate
         initiatedConnection = true
 
+        syncState = SyncState()
         let connection = NWConnection(to: endpoint, using: NWParameters.peerSyncParameters())
         self.connection = connection
-        syncState = SyncState()
 
         startConnection()
+        syncTriggerCancellable = trigger.sink(receiveValue: { _ in
+            if let syncData = delegate.automergeDocument?.generateSyncMessage(state: self.syncState) {
+                self.sendSyncMsg(syncData)
+            }
+        })
     }
 
     /// Accepts and runs a connection from another network endpoint to synchronise an Automerge Document.
@@ -65,6 +73,7 @@ final class SyncConnection {
 
     /// Cancels the current connection.
     func cancel() {
+        syncTriggerCancellable?.cancel()
         if let connection = connection {
             connection.cancel()
             self.connection = nil
