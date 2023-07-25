@@ -77,8 +77,6 @@ final class SyncConnection {
             .info("Receiving connection from \(connection.endpoint.debugDescription, privacy: .public)")
         startConnection()
         syncTriggerCancellable = trigger.sink(receiveValue: { _ in
-            Logger.syncController
-                .debug("Driving sync, sending to \(connection.endpoint.debugDescription, privacy: .public)")
             if let syncData = delegate.automergeDocument?.generateSyncMessage(state: self.syncState) {
                 Logger.syncController
                     .info(
