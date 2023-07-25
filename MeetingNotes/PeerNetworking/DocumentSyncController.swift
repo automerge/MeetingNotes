@@ -4,6 +4,12 @@ import Foundation
 import Network
 import OSLog
 
+enum TXTRecordKeys {
+    static var doc_id = "doc_id"
+    static var peer_id = "peer_id"
+    static var name = "name"
+}
+
 final class DocumentSyncController: ObservableObject {
     weak var document: MeetingNotesDocument?
     var name: String {
@@ -49,14 +55,16 @@ final class DocumentSyncController: ObservableObject {
         }
     }
 
+    let peerId = UUID()
     let syncQueue = DispatchQueue(label: "PeerSyncQueue")
     var timerCancellable: Cancellable?
     var syncTrigger: PassthroughSubject<Void, Never> = PassthroughSubject()
 
     init(_ document: MeetingNotesDocument, name: String) {
         self.document = document
-        txtRecord = NWTXTRecord(["id": document.id.uuidString])
-        txtRecord["name"] = name
+        txtRecord = NWTXTRecord([TXTRecordKeys.doc_id: document.id.uuidString])
+        txtRecord[TXTRecordKeys.name] = name
+        txtRecord[TXTRecordKeys.peer_id] = self.peerId.uuidString
         self.name = name
         self.activate()
     }
@@ -155,8 +163,8 @@ final class DocumentSyncController: ObservableObject {
             let filtered = results.filter { result in
                 if case let .bonjour(txtrecord) = result.metadata,
                    let uuidString = self.document?.id.uuidString,
-                   txtrecord["id"] == uuidString,
-                   txtrecord["name"] != self.name
+                   txtrecord[TXTRecordKeys.doc_id] == uuidString,
+                   txtrecord[TXTRecordKeys.peer_id] != self.peerId.uuidString
                 {
                     return true
                 }
@@ -300,7 +308,7 @@ final class DocumentSyncController: ObservableObject {
     // Update the advertised name on the network.
     fileprivate func resetName(_ name: String) {
         guard let document, let listener else { return }
-        txtRecord["name"] = name
+        txtRecord[TXTRecordKeys.name] = name
         // Reset the service to advertise.
         listener.service = NWListener.Service(
             type: AutomergeSyncProtocol.bonjourType,
