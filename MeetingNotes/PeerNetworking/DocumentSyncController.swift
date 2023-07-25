@@ -91,6 +91,7 @@ final class DocumentSyncController: ObservableObject {
     }
 
     func activate() {
+        Logger.syncController.info("I AM PEER \(self.peerId, privacy: .public)")
         browserState = .setup
         listenerState = .setup
         startBrowsing()
@@ -107,12 +108,6 @@ final class DocumentSyncController: ObservableObject {
         timerCancellable?.cancel()
         stopBrowsing()
         stopListening()
-        for (ep, conn) in outboundConnections {
-            conn.cancel()
-            Logger.syncController
-                .debug("Cancelling stored connection to endpoint \(ep.debugDescription, privacy: .public)")
-        }
-        outboundConnections = [:]
         timerCancellable = nil
     }
 
@@ -241,6 +236,12 @@ final class DocumentSyncController: ObservableObject {
     fileprivate func stopBrowsing() {
         guard let browser else { return }
         browser.cancel()
+        for (peerId, conn) in outboundConnections {
+            conn.cancel()
+            Logger.syncController
+                .debug("Cancelling stored outbound connection to peer \(peerId, privacy: .public)")
+        }
+        outboundConnections = [:]
         self.browser = nil
     }
 
@@ -341,6 +342,12 @@ final class DocumentSyncController: ObservableObject {
         listener.cancel()
         for connect in inboundConnections.values {
             connect.connection?.cancel()
+            if let connection = connect.connection {
+                Logger.syncController
+                    .debug(
+                        "Cancelling stored inbound connection to endpoint \(connection.endpoint.debugDescription, privacy: .public)"
+                    )
+            }
         }
         self.listener = nil
         inboundConnections = [:]
