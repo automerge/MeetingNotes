@@ -100,13 +100,14 @@ final class DocumentSyncController: ObservableObject {
     func attemptToPeerConnect(_ endpoint: NWEndpoint) {
         Logger.syncController
             .debug("Attempting to establish connection to \(endpoint.debugDescription, privacy: .public)")
-        if connections[endpoint] == nil {
+        if connections[endpoint] == nil, let docId = document?.id.uuidString {
             Logger.syncController
                 .debug("No connection stored for \(endpoint.debugDescription, privacy: .public)")
             let newConnection = SyncConnection(
                 endpoint: endpoint,
                 trigger: syncTrigger.eraseToAnyPublisher(),
-                delegate: self
+                delegate: self,
+                docId: docId
             )
             connections[endpoint] = newConnection
         }
@@ -217,7 +218,7 @@ final class DocumentSyncController: ObservableObject {
         guard let document else { return }
         do {
             // Create the listener object.
-            let listener = try NWListener(using: NWParameters.peerSyncParameters())
+            let listener = try NWListener(using: NWParameters.peerSyncParameters(documentId: document.id.uuidString))
             self.listener = listener
 
             // Set the service to advertise.
