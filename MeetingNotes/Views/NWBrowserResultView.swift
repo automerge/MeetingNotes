@@ -7,7 +7,7 @@ struct NWBrowserResultView: View {
 
     func nameFromResultMetadata() -> String {
         if case let .bonjour(txtrecord) = result.metadata {
-            return txtrecord["name"] ?? ""
+            return txtrecord[TXTRecordKeys.name] ?? ""
         }
         return ""
     }
