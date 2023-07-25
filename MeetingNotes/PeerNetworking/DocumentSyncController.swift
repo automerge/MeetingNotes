@@ -32,19 +32,20 @@ final class DocumentSyncController: ObservableObject {
 
     var connections: [NWEndpoint: SyncConnection] = [:] {
         willSet(newDictionary) {
-            Logger.syncController.debug("Setting \(newDictionary.count, privacy: .public) connections")
-            for ep in newDictionary.keys {
-                if connections.contains(where: { (key: NWEndpoint, _: SyncConnection) in
-                    key == ep
-                }) {
-                    Logger.syncController.debug("  - Updating \(ep.debugDescription, privacy: .public)")
-                } else {
-                    Logger.syncController.debug("  - Adding \(ep.debugDescription, privacy: .public)")
+            #if DEBUG
+            Logger.syncController.debug("Updating connections to \(newDictionary.count, privacy: .public) values")
+            let newkeys = Array(newDictionary.keys)
+            let oldkeys = Array(connections.keys)
+            let diff = newkeys.difference(from: oldkeys)
+            for change in diff {
+                if case let .insert(_, ep, _) = change {
+                    Logger.syncController.debug(" - inserting \(ep.debugDescription, privacy: .public)")
+                }
+                if case let .remove(_, ep, _) = change {
+                    Logger.syncController.debug(" - removing \(ep.debugDescription, privacy: .public)")
                 }
             }
-        }
-        didSet {
-            // oldValue implicit
+            #endif
         }
     }
 
@@ -58,22 +59,6 @@ final class DocumentSyncController: ObservableObject {
         txtRecord["name"] = name
         self.name = name
         self.activate()
-
-        Logger.document.trace("document - trace")
-        Logger.document.debug("document - debug")
-        Logger.document.info("document - info") // blue flag
-        Logger.document.notice("document - notice")
-        Logger.document.warning("document - warning") // yellow
-        Logger.document.error("document - error") // yellow
-        Logger.document.fault("document - fault") // red
-
-        Logger.syncController.trace("syncController - trace")
-        Logger.syncController.debug("syncController - debug")
-        Logger.syncController.info("syncController - info") // blue flag
-        Logger.syncController.notice("syncController - notice")
-        Logger.syncController.warning("syncController - warning") // yellow
-        Logger.syncController.error("syncController - error") // yellow
-        Logger.syncController.fault("syncController - fault") // red
     }
 
     func activate() {
@@ -93,6 +78,12 @@ final class DocumentSyncController: ObservableObject {
         timerCancellable?.cancel()
         stopBrowsing()
         stopListening()
+        for (ep,conn) in connections {
+            conn.cancel()
+            Logger.syncController.debug("Cancelling stored connection to endpoint \(ep.debugDescription, privacy: .public)")
+        }
+        connections = [:]
+        timerCancellable = nil
     }
 
     // MARK: NWBrowser
@@ -344,8 +335,11 @@ extension DocumentSyncController: SyncConnectionDelegate {
                 .debug(
                     "\(endpoint.debugDescription, privacy: .public) connection failed: \(nWError.debugDescription, privacy: .public)."
                 )
+            self.connections.removeValue(forKey: endpoint)
+            
         case .cancelled:
             Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection cancelled.")
+            self.connections.removeValue(forKey: endpoint)
         @unknown default:
             fatalError()
         }
