@@ -193,6 +193,7 @@ final class SyncConnection {
     /// - Parameter syncMsg: The data to send.
     func sendSyncMsg(_ syncMsg: Data) {
         guard let connection = connection else {
+            Logger.syncController.error("PeerConnection doesn't have an active connection!")
             return
         }
 
