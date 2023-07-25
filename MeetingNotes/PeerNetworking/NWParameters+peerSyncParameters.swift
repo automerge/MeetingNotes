@@ -1,5 +1,5 @@
-import Network
 import CryptoKit
+import Network
 
 extension NWParameters {
     /// Returns listener and connection network parameters using default TLS for peer to peer connections.
@@ -11,24 +11,30 @@ extension NWParameters {
         params.includePeerToPeer = true
         return params
     }
-    
-    
+
     // Create TLS options using a passcode to derive a preshared key.
     private static func tlsOptions(passcode: String) -> NWProtocolTLS.Options {
         let tlsOptions = NWProtocolTLS.Options()
 
         let authenticationKey = SymmetricKey(data: passcode.data(using: .utf8)!)
-        let authenticationCode = HMAC<SHA256>.authenticationCode(for: "MeetingNotes".data(using: .utf8)!, using: authenticationKey)
+        let authenticationCode = HMAC<SHA256>.authenticationCode(
+            for: "MeetingNotes".data(using: .utf8)!,
+            using: authenticationKey
+        )
 
         let authenticationDispatchData = authenticationCode.withUnsafeBytes {
             DispatchData(bytes: $0)
         }
 
-        sec_protocol_options_add_pre_shared_key(tlsOptions.securityProtocolOptions,
-                                                authenticationDispatchData as __DispatchData,
-                                                stringToDispatchData("MeetingNotes")! as __DispatchData)
-        sec_protocol_options_append_tls_ciphersuite(tlsOptions.securityProtocolOptions,
-                                                    tls_ciphersuite_t(rawValue: TLS_PSK_WITH_AES_128_GCM_SHA256)!)
+        sec_protocol_options_add_pre_shared_key(
+            tlsOptions.securityProtocolOptions,
+            authenticationDispatchData as __DispatchData,
+            stringToDispatchData("MeetingNotes")! as __DispatchData
+        )
+        sec_protocol_options_append_tls_ciphersuite(
+            tlsOptions.securityProtocolOptions,
+            tls_ciphersuite_t(rawValue: TLS_PSK_WITH_AES_128_GCM_SHA256)!
+        )
         return tlsOptions
     }
 
@@ -43,4 +49,3 @@ extension NWParameters {
         return dispatchData
     }
 }
-
