@@ -43,13 +43,15 @@ final class SyncConnection {
     /// - Parameters:
     ///   - endpoint: The endpoint to attempt to connect.
     ///   - delegate: A delegate that can process Automerge sync protocol messages.
-    init(endpoint: NWEndpoint, trigger: AnyPublisher<Void, Never>, delegate: SyncConnectionDelegate) {
+    ///   - trigger: A publisher that provides a recurring signal to trigger a sync request.
+    ///   - docId: The document Id to use as a pre-shared key in TLS establishment of the connection.
+    init(endpoint: NWEndpoint, trigger: AnyPublisher<Void, Never>, delegate: SyncConnectionDelegate, docId: String) {
         self.delegate = delegate
         initiatedConnection = true
 
         Logger.syncController.debug("Initiating connection to \(endpoint.debugDescription, privacy: .public)")
         syncState = SyncState()
-        let connection = NWConnection(to: endpoint, using: NWParameters.peerSyncParameters())
+        let connection = NWConnection(to: endpoint, using: NWParameters.peerSyncParameters(documentId: docId))
         self.connection = connection
 
         startConnection()
