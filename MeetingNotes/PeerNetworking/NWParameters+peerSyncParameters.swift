@@ -7,7 +7,11 @@ extension NWParameters {
         let tcpOptions = NWProtocolTCP.Options()
         tcpOptions.enableKeepalive = true
         tcpOptions.keepaliveIdle = 2
+
         let params = NWParameters(tls: tlsOptions(passcode: documentId), tcp: tcpOptions)
+        let syncOptions = NWProtocolFramer.Options(definition: AutomergeSyncProtocol.definition)
+        params.defaultProtocolStack.applicationProtocols.insert(syncOptions, at: 0)
+
         params.includePeerToPeer = true
         return params
     }
