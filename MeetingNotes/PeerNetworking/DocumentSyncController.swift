@@ -11,7 +11,14 @@ enum TXTRecordKeys {
 }
 
 final class DocumentSyncController: ObservableObject {
-    weak var document: MeetingNotesDocument?
+    weak var document: MeetingNotesDocument? {
+        didSet {
+            if let document {
+                self.txtRecord[TXTRecordKeys.doc_id] = document.id.uuidString
+            }
+        }
+    }
+
     var name: String {
         didSet {
             // update a listener, if running, with the new name.
@@ -81,13 +88,11 @@ final class DocumentSyncController: ObservableObject {
     var timerCancellable: Cancellable?
     var syncTrigger: PassthroughSubject<Void, Never> = PassthroughSubject()
 
-    init(_ document: MeetingNotesDocument, name: String) {
-        self.document = document
-        txtRecord = NWTXTRecord([TXTRecordKeys.doc_id: document.id.uuidString])
+    init(name: String) {
+        txtRecord = NWTXTRecord()
         txtRecord[TXTRecordKeys.name] = name
         txtRecord[TXTRecordKeys.peer_id] = self.peerId.uuidString
         self.name = name
-        self.activate()
     }
 
     func activate() {

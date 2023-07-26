@@ -4,6 +4,12 @@ import PotentCBOR
 import SwiftUI
 import UniformTypeIdentifiers
 
+/// A collection of User Default keys for the app.
+enum MeetingNotesDefaultKeys {
+    /// The key to the string that the app broadcasts to represent you when sharing and syncing MeetingNotes.
+    static let sharingIdentity = "sharingIdentity"
+}
+
 extension UTType {
     /// An Automerge document that is CBOR encoded with a document identifier.
     static var meetingnote: UTType {
@@ -58,14 +64,22 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     let modelDecoder: AutomergeDecoder
     let id: UUID
     var doc: Document
+    var sharingIdentity: String
 
-    @Published
-    var syncController: DocumentSyncController?
+    let syncController: DocumentSyncController
 
     @Published
     var model: MeetingNotesModel
 
     static var readableContentTypes: [UTType] { [.meetingnote] }
+
+    static func defaultSharingIdentity() -> String {
+        #if os(iOS)
+        UIDevice().name
+        #elseif os(macOS)
+        Host.current().localizedName ?? "MeetingNotes User"
+        #endif
+    }
 
     init() {
         id = UUID()
@@ -73,6 +87,9 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         model = MeetingNotesModel(title: "Untitled")
         modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
         modelDecoder = AutomergeDecoder(doc: doc)
+        sharingIdentity = UserDefaults.standard
+            .string(forKey: MeetingNotesDefaultKeys.sharingIdentity) ?? MeetingNotesDocument.defaultSharingIdentity()
+        syncController = DocumentSyncController(name: sharingIdentity)
 
         do {
             // Establish the schema in the new Automerge document by encoding the model.
@@ -80,10 +97,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         } catch {
             fatalError(error.localizedDescription)
         }
-    }
-
-    func enableSyncAs(_ name: String) {
-        syncController = DocumentSyncController(self, name: name)
+        syncController.document = self
     }
 
     /// Updates the Automerge document with the current value from the model.
@@ -94,7 +108,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
 
     /// Updates the model document with any changed values in the Automerge document.
     func getModelUpdates() throws {
-        Logger.document.debug("Updating model from Automerge document.")
+        // Logger.document.debug("Updating model from Automerge document.")
         self.objectWillChange.send()
         model = try modelDecoder.decode(MeetingNotesModel.self)
     }
@@ -120,11 +134,16 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
         modelDecoder = AutomergeDecoder(doc: doc)
         model = try modelDecoder.decode(MeetingNotesModel.self)
+
+        sharingIdentity = UserDefaults.standard
+            .string(forKey: MeetingNotesDefaultKeys.sharingIdentity) ?? MeetingNotesDocument.defaultSharingIdentity()
+        syncController = DocumentSyncController(name: sharingIdentity)
+        syncController.document = self
     }
 
     func snapshot(contentType _: UTType) throws -> Document {
         try modelEncoder.encode(model)
-        Logger.document.debug("Writing the model back into the Automerge document")
+        // Logger.document.debug("Writing the model back into the Automerge document")
         return doc
     }
 
@@ -138,7 +157,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     }
 
     func fileWrapper(snapshot: Document, configuration _: WriteConfiguration) throws -> FileWrapper {
-        Logger.document.debug("Returning FileWrapper handle with serialized data")
+        // Logger.document.debug("Returning FileWrapper handle with serialized data")
         // Using the updated Automerge document returned from snapshot, create a wrapper
         // with the origin ID from the serialized automerge file.
         let wrappedDocument = WrappedAutomergeDocument(id: id, data: snapshot.save())
