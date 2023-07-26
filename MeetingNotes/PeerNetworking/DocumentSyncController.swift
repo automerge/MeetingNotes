@@ -19,7 +19,7 @@ final class DocumentSyncController: ObservableObject {
         }
     }
 
-    var name: String {
+    @Published var name: String {
         didSet {
             // update a listener, if running, with the new name.
             resetName(name)
