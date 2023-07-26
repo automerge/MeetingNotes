@@ -23,9 +23,7 @@ struct AppTabView: View {
                 List($document.model.agendas, selection: $selection) { $agendaItem in
                     Label(agendaItem.title, systemImage: "note.text")
                 }
-                if let syncController = document.syncController {
-                    PeerSyncView(syncController: syncController)
-                }
+                PeerSyncView(syncController: document.syncController)
             }
             .navigationSplitViewColumnWidth(min: 250, ideal: 250)
             .toolbar {
