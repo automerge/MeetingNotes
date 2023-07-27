@@ -25,7 +25,7 @@ protocol SyncConnectionDelegate: AnyObject {
     func receivedMessage(content: Data?, message: NWProtocolFramer.Message, from: NWEndpoint)
 }
 
-final class SyncConnection: Identifiable {
+final class SyncConnection: Identifiable, ObservableObject {
     weak var delegate: SyncConnectionDelegate?
     var connection: NWConnection?
     /// A Boolean value that indicates this app initiated this connection.
@@ -147,7 +147,13 @@ final class SyncConnection: Identifiable {
             return
         }
 
-        connection.receiveMessage { content, context, _, error in
+        connection.receiveMessage { content, context, isComplete, error in
+            Logger.syncController.debug("Received \(isComplete ? "complete" : "incomplete") msg on connection")
+            if let content {
+                Logger.syncController.debug("  - received \(content.count) bytes")
+            } else {
+                Logger.syncController.debug("  - received no data with msg")
+            }
             // Extract your message type from the received context.
             if let syncMessage = context?
                 .protocolMetadata(definition: AutomergeSyncProtocol.definition) as? NWProtocolFramer.Message,

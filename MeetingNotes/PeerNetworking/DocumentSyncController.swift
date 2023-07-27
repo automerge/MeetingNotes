@@ -38,7 +38,7 @@ final class DocumentSyncController: ObservableObject {
     @Published var browserState: NWBrowser.State = .setup
     var autoconnect: Bool = false
 
-    var outboundConnections: [String: SyncConnection] = [:] {
+    @Published var outboundConnections: [String: SyncConnection] = [:] {
         willSet(newDictionary) {
             #if DEBUG
             Logger.syncController
@@ -68,7 +68,7 @@ final class DocumentSyncController: ObservableObject {
     @Published var listenerStatusError: NWError? = nil
     var txtRecord: NWTXTRecord
 
-    var inboundConnections: [NWEndpoint: SyncConnection] = [:] {
+    @Published var inboundConnections: [NWEndpoint: SyncConnection] = [:] {
         willSet(newDictionary) {
             #if DEBUG
             Logger.syncController
