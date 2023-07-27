@@ -36,12 +36,7 @@ final class DocumentSyncController: ObservableObject {
     var browser: NWBrowser?
     @Published var browserResults: [NWBrowser.Result] = []
     @Published var browserState: NWBrowser.State = .setup
-
-    var listener: NWListener?
-    @Published var listenerState: NWListener.State = .setup
-    @Published var listenerSetupError: Error? = nil
-    @Published var listenerStatusError: NWError? = nil
-    var txtRecord: NWTXTRecord
+    var autoconnect: Bool = false
 
     var outboundConnections: [String: SyncConnection] = [:] {
         willSet(newDictionary) {
@@ -62,6 +57,15 @@ final class DocumentSyncController: ObservableObject {
             #endif
         }
     }
+    var outboundConnectionKeys: [String] {
+        outboundConnections.map{$0.key}
+    }
+
+    var listener: NWListener?
+    @Published var listenerState: NWListener.State = .setup
+    @Published var listenerSetupError: Error? = nil
+    @Published var listenerStatusError: NWError? = nil
+    var txtRecord: NWTXTRecord
 
     var inboundConnections: [NWEndpoint: SyncConnection] = [:] {
         willSet(newDictionary) {
@@ -119,12 +123,6 @@ final class DocumentSyncController: ObservableObject {
     // MARK: NWBrowser
 
     func attemptToPeerConnect(_ endpoint: NWEndpoint, forPeer peerId: String) {
-//        guard let peerId = endpoint.txtRecord?[TXTRecordKeys.peer_id] else {
-//            Logger.syncController
-//                .warning("Endpoint \(endpoint.debugDescription, privacy: .public) doesn't have a peer ID tag, not
-//                connecting.")
-//            return
-//        }
         Logger.syncController
             .debug(
                 "Attempting to establish connection to \(peerId, privacy: .public) through \(endpoint.debugDescription, privacy: .public) "
@@ -142,6 +140,22 @@ final class DocumentSyncController: ObservableObject {
         }
     }
 
+    func delayAndAttemptToConnect(_ endpoint: NWEndpoint, forPeer peerId: String) {
+        Logger.syncController
+            .debug(
+                "\(peerId, privacy: .public) at \(endpoint.debugDescription, privacy: .public) doesn't have a connection, enqueuing a task to connection."
+            )
+        Task {
+            let delay = Int.random(in: 250 ... 1000)
+            Logger.syncController
+                .debug(
+                    "Delaying \(delay, privacy: .public) ms before attempting connect to \(peerId, privacy: .public) at \(endpoint.debugDescription, privacy: .public)"
+                )
+            try await Task.sleep(until: .now + .milliseconds(delay), clock: .continuous)
+            self.attemptToPeerConnect(endpoint, forPeer: peerId)
+        }
+    }
+    
     // Start browsing for services.
     fileprivate func startBrowsing() {
         // Create parameters, and allow browsing over a peer-to-peer link.
@@ -180,7 +194,7 @@ final class DocumentSyncController: ObservableObject {
         }
 
         // When the list of discovered endpoints changes, refresh the delegate.
-        newNetworkBrowser.browseResultsChangedHandler = { results, _ in
+        newNetworkBrowser.browseResultsChangedHandler = { [weak self] results, _ in
             Logger.syncController.debug("browser update shows \(results.count, privacy: .public) result(s):")
             for res in results {
                 Logger.syncController
@@ -192,9 +206,9 @@ final class DocumentSyncController: ObservableObject {
             // - and that doesn't have the name provided by this app.
             let filtered = results.filter { result in
                 if case let .bonjour(txtrecord) = result.metadata,
-                   let uuidString = self.document?.id.uuidString,
+                   let uuidString = self?.document?.id.uuidString,
                    txtrecord[TXTRecordKeys.doc_id] == uuidString,
-                   txtrecord[TXTRecordKeys.peer_id] != self.peerId.uuidString
+                   txtrecord[TXTRecordKeys.peer_id] != self?.peerId.uuidString
                 {
                     return true
                 }
@@ -204,32 +218,22 @@ final class DocumentSyncController: ObservableObject {
                 $0.hashValue < $1.hashValue
             })
 
-            // check list of current connections, if not in it - enqueue for connecting
-            for potentialPeer in filtered {
-                Logger.syncController
-                    .debug("Checking potential peer \(potentialPeer.endpoint.debugDescription, privacy: .public)")
-                if case let .bonjour(txtrecord) = potentialPeer.metadata {
-                    if let peerId = txtrecord[TXTRecordKeys.peer_id] {
-                        if self.outboundConnections[peerId] == nil {
-                            Logger.syncController
-                                .debug(
-                                    "\(peerId, privacy: .public) at \(potentialPeer.endpoint.debugDescription, privacy: .public) doesn't have a connection, enqueuing a task to connection."
-                                )
-                            Task {
-                                let delay = Int.random(in: 250 ... 1000)
-                                Logger.syncController
-                                    .debug(
-                                        "Delaying \(delay, privacy: .public) ms before attempting connect to \(peerId, privacy: .public) at \(potentialPeer.endpoint.debugDescription, privacy: .public)"
-                                    )
-                                try await Task.sleep(until: .now + .milliseconds(delay), clock: .continuous)
-                                self.attemptToPeerConnect(potentialPeer.endpoint, forPeer: peerId)
+            self?.browserResults = filtered
+
+            if let autoconnect_enabled = self?.autoconnect, autoconnect_enabled {
+                // check list of current connections, if not in it - enqueue for connecting
+                for potentialPeer in filtered {
+                    Logger.syncController
+                        .debug("Checking potential peer \(potentialPeer.endpoint.debugDescription, privacy: .public)")
+                    if case let .bonjour(txtrecord) = potentialPeer.metadata {
+                        if let peerId = txtrecord[TXTRecordKeys.peer_id] {
+                            if self?.outboundConnections[peerId] == nil {
+                                self?.delayAndAttemptToConnect(potentialPeer.endpoint, forPeer: peerId)
                             }
                         }
                     }
                 }
             }
-
-            self.browserResults = filtered
         }
 
         Logger.syncController.info("Activating NWBrowser \(newNetworkBrowser.debugDescription, privacy: .public)")

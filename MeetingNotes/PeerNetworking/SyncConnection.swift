@@ -25,11 +25,12 @@ protocol SyncConnectionDelegate: AnyObject {
     func receivedMessage(content: Data?, message: NWProtocolFramer.Message, from: NWEndpoint)
 }
 
-final class SyncConnection {
+final class SyncConnection: Identifiable {
     weak var delegate: SyncConnectionDelegate?
     var connection: NWConnection?
     /// A Boolean value that indicates this app initiated this connection.
     let initiatedConnection: Bool
+    var id = UUID()
 
     // Setting the syncstate within a Connection wrapper binds its lifetime to the
     // connection, and keeps management of sync state a bit easier than tracking it
