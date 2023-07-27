@@ -57,8 +57,9 @@ final class DocumentSyncController: ObservableObject {
             #endif
         }
     }
+
     var outboundConnectionKeys: [String] {
-        outboundConnections.map{$0.key}
+        outboundConnections.map(\.key)
     }
 
     var listener: NWListener?
@@ -155,7 +156,7 @@ final class DocumentSyncController: ObservableObject {
             self.attemptToPeerConnect(endpoint, forPeer: peerId)
         }
     }
-    
+
     // Start browsing for services.
     fileprivate func startBrowsing() {
         // Create parameters, and allow browsing over a peer-to-peer link.

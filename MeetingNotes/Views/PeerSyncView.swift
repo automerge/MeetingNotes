@@ -10,7 +10,7 @@ struct PeerSyncView: View {
     @State private var editNamePopoverShown: Bool = false
     @AppStorage(MeetingNotesDefaultKeys.sharingIdentity) private var sharingIdentity: String = MeetingNotesDocument
         .defaultSharingIdentity()
-    
+
     var body: some View {
         VStack {
             HStack {
@@ -77,13 +77,13 @@ struct PeerSyncView: View {
                                 switch connection.state {
                                 case .setup:
                                     Text("setup")
-                                case .waiting(let nWError):
+                                case let .waiting(nWError):
                                     Text("waiting: \(nWError.localizedDescription)")
                                 case .preparing:
                                     Text("preparing")
                                 case .ready:
                                     Text("ready")
-                                case .failed(let nWError):
+                                case let .failed(nWError):
                                     Text("failed: \(nWError.localizedDescription)")
                                 case .cancelled:
                                     Text("cancelled")
@@ -94,8 +94,6 @@ struct PeerSyncView: View {
                         }
                     }
                 }
-                
-
             }
         }
         .padding(.vertical)
