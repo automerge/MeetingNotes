@@ -10,7 +10,7 @@ struct PeerSyncView: View {
     @State private var editNamePopoverShown: Bool = false
     @AppStorage(MeetingNotesDefaultKeys.sharingIdentity) private var sharingIdentity: String = MeetingNotesDocument
         .defaultSharingIdentity()
-
+    
     var body: some View {
         VStack {
             HStack {
@@ -56,12 +56,46 @@ struct PeerSyncView: View {
                 .padding(.leading)
                 LazyVStack {
                     ForEach(syncController.browserResults, id: \.hashValue) { result in
-                        NWBrowserResultView(result: result)
+                        NWBrowserResultItemView(syncController: syncController, result: result)
                             .padding(4)
                             .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8))
                             .padding(.horizontal)
                     }
                 }
+            }
+            if !syncController.outboundConnections.isEmpty {
+                HStack {
+                    Text("Outbound").bold()
+                    Spacer()
+                }
+                LazyVStack {
+                    ForEach(syncController.outboundConnectionKeys, id: \.self) { key in
+                        HStack {
+                            Text(key).font(.caption)
+                            if let connection = syncController.outboundConnections[key]?.connection {
+                                Text(connection.endpoint.debugDescription)
+                                switch connection.state {
+                                case .setup:
+                                    Text("setup")
+                                case .waiting(let nWError):
+                                    Text("waiting: \(nWError.localizedDescription)")
+                                case .preparing:
+                                    Text("preparing")
+                                case .ready:
+                                    Text("ready")
+                                case .failed(let nWError):
+                                    Text("failed: \(nWError.localizedDescription)")
+                                case .cancelled:
+                                    Text("cancelled")
+                                }
+                            } else {
+                                Text("nil")
+                            }
+                        }
+                    }
+                }
+                
+
             }
         }
         .padding(.vertical)
