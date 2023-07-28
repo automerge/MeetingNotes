@@ -66,7 +66,6 @@ struct SyncConnectionView: View {
         .padding(4)
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8))
         .padding(.horizontal)
-
     }
 }
 
