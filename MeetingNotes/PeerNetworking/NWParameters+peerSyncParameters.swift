@@ -35,9 +35,13 @@ extension NWParameters {
             authenticationDispatchData as __DispatchData,
             stringToDispatchData("MeetingNotes")! as __DispatchData
         )
+        // Forcing non-standard cipher suite value to UInt16 because for
+        // whatever reason, it can get returned as UInt32 - such as in
+        // GitHub actions CI.
+        let ciphersuiteValue = UInt16(TLS_PSK_WITH_AES_128_GCM_SHA256)
         sec_protocol_options_append_tls_ciphersuite(
             tlsOptions.securityProtocolOptions,
-            tls_ciphersuite_t(rawValue: TLS_PSK_WITH_AES_128_GCM_SHA256)!
+            tls_ciphersuite_t(rawValue: ciphersuiteValue)!
         )
         return tlsOptions
     }
