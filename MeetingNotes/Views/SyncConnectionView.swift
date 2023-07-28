@@ -7,29 +7,66 @@ struct SyncConnectionView: View {
     func stateRepresentationView() -> some View {
         switch syncConnection.connectionState {
         case .setup:
-            return Text("setup")
+            return Label {
+                Text("")
+            } icon: {
+                Image(systemName: "arrow.up.circle").foregroundColor(.gray)
+            }
         case let .waiting(nWError):
-            return Text("waiting: \(nWError.localizedDescription)")
+            return Label {
+                Text("waiting: \(nWError.localizedDescription)")
+            } icon: {
+                Image(systemName: "exclamationmark.triangle").foregroundColor(.yellow)
+            }
         case .preparing:
-            return Text("preparing")
+            return Label {
+                Text("")
+            } icon: {
+                Image(systemName: "arrow.up.circle").foregroundColor(.yellow)
+            }
         case .ready:
-            return Text("ready")
+            return Label {
+                Text("")
+            } icon: {
+                Image(systemName: "arrow.up.circle").foregroundColor(.blue)
+            }
         case let .failed(nWError):
-            return Text("failed: \(nWError.localizedDescription)")
+            return Label {
+                Text("waiting: \(nWError.localizedDescription)")
+            } icon: {
+                Image(systemName: "x.square").foregroundColor(.red)
+            }
         case .cancelled:
-            return Text("cancelled")
+            return Label {
+                Text("")
+            } icon: {
+                Image(systemName: "x.square").foregroundColor(.gray)
+            }
         default:
-            return Text("?")
+            return Label {
+                Text("")
+            } icon: {
+                Image(systemName: "questionmark.square.dashed").foregroundColor(.primary)
+            }
         }
     }
 
     var body: some View {
         HStack {
-            Text(syncConnection.connectionId.uuidString).font(.caption)
-            Text(syncConnection.endpoint?.debugDescription ?? "nil")
+            if let txtRecord = syncConnection.endpoint?.txtRecord {
+                Text(txtRecord[TXTRecordKeys.name] ?? "unknown")
+            } else {
+                Text(syncConnection.connectionId.uuidString)
+            }
+            Text(syncConnection.endpoint?.interface?.name ?? "")
             Spacer()
             stateRepresentationView()
-        }.font(.caption)
+        }
+        .font(.caption)
+        .padding(4)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8))
+        .padding(.horizontal)
+
     }
 }
 
