@@ -32,7 +32,7 @@ final class SyncConnection: ObservableObject {
 
     /// The synchronisation state associated with this connection.
     var syncState: SyncState
-    
+
     /// The cancellable subscription to the trigger mechanism that attempts sync updates.
     var syncTriggerCancellable: Cancellable?
 
@@ -72,10 +72,10 @@ final class SyncConnection: ObservableObject {
         syncState = SyncState()
         Logger.syncController
             .info("Receiving connection from \(connection.endpoint.debugDescription, privacy: .public)")
-        
+
         startConnection(trigger)
     }
-    
+
     /// Cancels the current connection.
     func cancel() {
         if let connection = connection {
@@ -132,13 +132,13 @@ final class SyncConnection: ObservableObject {
                 self.syncTriggerCancellable?.cancel()
                 self.syncController?.removeConnection(self.connectionId)
                 self.syncTriggerCancellable = nil
-                
+
             case .cancelled:
                 Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection cancelled.")
                 self.syncTriggerCancellable?.cancel()
                 self.syncController?.removeConnection(self.connectionId)
                 self.syncTriggerCancellable = nil
-                
+
             case let .waiting(nWError):
                 // from Network headers
                 // `Waiting connections have not yet been started, or do not have a viable network`
@@ -176,7 +176,8 @@ final class SyncConnection: ObservableObject {
         }
 
         connection.receiveMessage { content, context, isComplete, error in
-            Logger.syncController.debug("Received a \(isComplete ? "complete" : "incomplete", privacy: .public) msg on connection")
+            Logger.syncController
+                .debug("Received a \(isComplete ? "complete" : "incomplete", privacy: .public) msg on connection")
             if let content {
                 Logger.syncController.debug("  - received \(content.count) bytes")
             } else {
