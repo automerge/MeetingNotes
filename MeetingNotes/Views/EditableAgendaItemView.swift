@@ -1,4 +1,5 @@
 import Automerge
+import OSLog
 import SwiftUI
 
 struct EditableAgendaItemView: View {
@@ -22,57 +23,77 @@ struct EditableAgendaItemView: View {
     private var titleIsFocused: Bool
 
     var body: some View {
-        VStack {
-            HStack {
-                Image(systemName: "note.text")
-                TextField(text: $agendaTitle) {
-                    Text("Enter a title for the agenda item.")
+        if agendaItemId != nil {
+            VStack {
+                HStack {
+                    Image(systemName: "note.text")
+                    TextField(text: $agendaTitle) {
+                        Text("Enter a title for the agenda item.")
+                    }
+                    .padding(2)
+                    .border(.gray)
+                }.padding(.horizontal)
+
+                TextEditor(text: $agendaDetail)
+                    .padding(2)
+                    .border(Color.black)
+                    .padding()
+
+                if !errorMsg.isEmpty {
+                    Text(errorMsg)
+                        .font(.callout)
+                        .foregroundStyle(Color.red)
                 }
-                .padding(2)
-                .border(.gray)
-            }.padding(.horizontal)
-
-            TextEditor(text: $agendaDetail)
-                .padding(2)
-                .border(Color.black)
-                .padding()
-
-            if !errorMsg.isEmpty {
-                Text(errorMsg)
-                    .font(.callout)
-                    .foregroundStyle(Color.red)
+                HStack {
+                    Spacer()
+                    Button(role: .destructive) {
+                        document.model.agendas.removeAll {
+                            $0.id == agendaItemId
+                        }
+                        do {
+                            try document.storeModelUpdates()
+                        } catch {
+                            Logger.document.error("Error when storing model updates: \(error, privacy: .public)")
+                        }
+                    } label: {
+                        Text("Delete")
+                    }
+                    .buttonStyle(.borderedProminent)
+                }.padding([.horizontal, .bottom])
             }
+            .focused($titleIsFocused)
+            .onAppear(perform: {
+                if let agendaItem = document.model.agendas.first(where: {
+                    $0.id == agendaItemId
+                }) {
+                    agendaTitle = agendaItem.title
+                    agendaDetail = agendaItem.discussion.value
+                }
+            })
+            .onReceive(document.objectWillChange, perform: { _ in
+                if let agendaItem = document.model.agendas.first(where: {
+                    $0.id == agendaItemId
+                }) {
+                    agendaTitle = agendaItem.title
+                    agendaDetail = agendaItem.discussion.value
+                }
+            })
+            .onChange(of: agendaDetail, perform: { _ in
+                updateAgendaItem()
+            })
+            .onChange(of: agendaTitle, perform: { _ in
+                updateAgendaItem()
+            })
+            .autocorrectionDisabled()
+            #if os(iOS)
+                .textInputAutocapitalization(.never)
+                // hides the extra space at the top of the view that comes
+                // from the default navigation title.
+                .navigationBarTitleDisplayMode(.inline)
+            #endif
+        } else {
+            Text("Select an agenda item")
         }
-        .focused($titleIsFocused)
-        .onAppear(perform: {
-            if let agendaItem = document.model.agendas.first(where: {
-                $0.id == agendaItemId
-            }) {
-                agendaTitle = agendaItem.title
-                agendaDetail = agendaItem.discussion.value
-            }
-        })
-        .onReceive(document.objectWillChange, perform: { _ in
-            if let agendaItem = document.model.agendas.first(where: {
-                $0.id == agendaItemId
-            }) {
-                agendaTitle = agendaItem.title
-                agendaDetail = agendaItem.discussion.value
-            }
-        })
-        .onChange(of: agendaDetail, perform: { _ in
-            updateAgendaItem()
-        })
-        .onChange(of: agendaTitle, perform: { _ in
-            updateAgendaItem()
-        })
-        .autocorrectionDisabled()
-        #if os(iOS)
-            .textInputAutocapitalization(.never)
-            // hides the extra space at the top of the view that comes
-            // from the default navigation title.
-            .navigationBarTitleDisplayMode(.inline)
-        #endif
     }
 
     private func updateAgendaItem() {

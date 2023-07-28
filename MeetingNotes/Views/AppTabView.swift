@@ -1,3 +1,4 @@
+import OSLog
 import SwiftUI
 
 struct AppTabView: View {
@@ -20,8 +21,34 @@ struct AppTabView: View {
                     }
                     .autocorrectionDisabled()
                     .padding(.horizontal)
+                HStack {
+                    Spacer()
+                    Button {
+                        document.model.agendas.append(AgendaItem(title: ""))
+                    } label: {
+                        Image(systemName: "plus.circle")
+                    }
+                    .buttonStyle(.borderless)
+                    .help("Add a new agenda item")
+                }
+                .padding(.horizontal)
                 List($document.model.agendas, selection: $selection) { $agendaItem in
                     Label(agendaItem.title, systemImage: "note.text")
+                        .contextMenu {
+                            Button {
+                                document.model.agendas.removeAll {
+                                    $0.id == agendaItem.id
+                                }
+                                do {
+                                    try document.storeModelUpdates()
+                                } catch {
+                                    Logger.document
+                                        .error("Error when storing model updates: \(error, privacy: .public)")
+                                }
+                            } label: {
+                                Label("Delete", systemImage: "delete.left.fill")
+                            }
+                        }
                 }
                 PeerSyncView(syncController: document.syncController)
             }
@@ -29,30 +56,39 @@ struct AppTabView: View {
             .toolbar {
                 ToolbarItem(id: "merge", placement: .principal) {
                     MergeView(document: document)
+                        .help("Merge a document into this one")
                 }
-                ToolbarItem(id: "share", placement: .status) {
-                    ShareLink(
-                        item: document.wrappedDocument(),
-                        preview: SharePreview(
-                            Text("id: \(document.id.uuidString)"),
-                            image: Image(systemName: "square.and.arrow.up")
-                        )
-                    )
-                }
+
+//                ToolbarItem(id: "share", placement: .status) {
+//                    ShareLink(
+//                        item: document.wrappedDocument(),
+//                        preview: SharePreview(
+//                            Text("id: \(document.id.uuidString)"),
+//                            image: Image(systemName: "square.and.arrow.up")
+//                        )
+//                    )
+//                }
                 ToolbarItem(id: "sync", placement: .status) {
                     SyncView(document: document)
+                        .help("Enable peer to peer syncing")
                 }
             }
         } detail: {
-            if let selection {
-                EditableAgendaItemView(document: document, agendaItemId: selection)
-                    // Using .id here is critical to getting views to update
-                    // upon choosing a new selection on macOS
-                    .id(selection)
-            } else {
-                Text("Select an agenda item")
-            }
+            EditableAgendaItemView(document: document, agendaItemId: selection)
+                // Using .id here is critical to getting views to update
+                // upon choosing a new selection on macOS
+                .id(selection)
         }
+        .onAppear {
+            selection = document.model.agendas.first?.id
+        }
+        .onReceive(document.objectWillChange, perform: { _ in
+            if !document.model.agendas.contains(where: { agendaItem in
+                agendaItem.id == selection
+            }) {
+                selection = nil
+            }
+        })
         #if os(iOS)
         // hides the additional navigation stacks that iOS imposes on a document-based app
         .toolbar(.hidden, for: .navigationBar)
