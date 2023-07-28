@@ -19,7 +19,7 @@ import Network
 import OSLog
 
 final class SyncConnection: ObservableObject {
-    weak var syncController: DocumentSyncController?
+    weak var syncController: DocumentSyncCoordinator?
     var connection: NWConnection?
     /// A Boolean value that indicates this app initiated this connection.
 
@@ -46,7 +46,7 @@ final class SyncConnection: ObservableObject {
         endpoint: NWEndpoint,
         peerId: String,
         trigger: AnyPublisher<Void, Never>,
-        controller: DocumentSyncController,
+        controller: DocumentSyncCoordinator,
         docId: String
     ) {
         self.syncController = controller
@@ -76,7 +76,7 @@ final class SyncConnection: ObservableObject {
     /// - Parameters:
     ///   - connection: The connection provided by a listener to accept.
     ///   - delegate: A delegate that can process Automerge sync protocol messages.
-    init(connection: NWConnection, trigger: AnyPublisher<Void, Never>, controller: DocumentSyncController) {
+    init(connection: NWConnection, trigger: AnyPublisher<Void, Never>, controller: DocumentSyncCoordinator) {
         self.syncController = controller
         self.connection = connection
         self.endpoint = connection.endpoint

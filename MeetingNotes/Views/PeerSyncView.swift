@@ -2,7 +2,7 @@ import Network
 import SwiftUI
 
 struct PeerSyncView: View {
-    @ObservedObject var syncController: DocumentSyncController
+    @ObservedObject var syncController: DocumentSyncCoordinator
 
     @State var browserActive: Bool = false
     @State var browserStyling: Color = .primary

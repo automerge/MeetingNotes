@@ -2,7 +2,7 @@ import Network
 import SwiftUI
 
 struct NWBrowserResultItemView: View {
-    @ObservedObject var syncController: DocumentSyncController
+    @ObservedObject var syncController: DocumentSyncCoordinator
     var result: NWBrowser.Result
 
     func nameFromResultMetadata() -> String {

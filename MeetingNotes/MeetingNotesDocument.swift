@@ -66,7 +66,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     var doc: Document
     var sharingIdentity: String
 
-    let syncController: DocumentSyncController
+    let syncController: DocumentSyncCoordinator
 
     @Published
     var model: MeetingNotesModel
@@ -89,7 +89,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         modelDecoder = AutomergeDecoder(doc: doc)
         sharingIdentity = UserDefaults.standard
             .string(forKey: MeetingNotesDefaultKeys.sharingIdentity) ?? MeetingNotesDocument.defaultSharingIdentity()
-        syncController = DocumentSyncController(name: sharingIdentity)
+        syncController = DocumentSyncCoordinator(name: sharingIdentity)
 
         do {
             // Establish the schema in the new Automerge document by encoding the model.
@@ -137,7 +137,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
 
         sharingIdentity = UserDefaults.standard
             .string(forKey: MeetingNotesDefaultKeys.sharingIdentity) ?? MeetingNotesDocument.defaultSharingIdentity()
-        syncController = DocumentSyncController(name: sharingIdentity)
+        syncController = DocumentSyncCoordinator(name: sharingIdentity)
         syncController.document = self
     }
 
