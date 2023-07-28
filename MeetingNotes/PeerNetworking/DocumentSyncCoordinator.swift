@@ -4,9 +4,13 @@ import Foundation
 import Network
 import OSLog
 
+/// A type that provides type-safe strings for TXTRecord publications with Bonjour
 enum TXTRecordKeys {
+    /// The document identifier.
     static var doc_id = "doc_id"
+    /// The peer identifier.
     static var peer_id = "peer_id"
+    /// The human-readable name for the peer.
     static var name = "name"
 }
 
@@ -27,8 +31,6 @@ final class DocumentSyncCoordinator: ObservableObject {
     }
 
     /// A reference to the Automerge document for an initiated Peer Connection to attempt to send sync messages.
-    ///
-    /// Needed for conformance to ``SyncConnectionDelegate``.
     var automergeDocument: Document? {
         document?.doc
     }
@@ -38,7 +40,7 @@ final class DocumentSyncCoordinator: ObservableObject {
     @Published var browserState: NWBrowser.State = .setup
     var autoconnect: Bool = false
 
-    @Published var connections: [SyncConnection]  = []
+    @Published var connections: [SyncConnection] = []
 
     func removeConnection(_ connectionId: UUID) {
         connections.removeAll { $0.connectionId == connectionId }
@@ -63,7 +65,6 @@ final class DocumentSyncCoordinator: ObservableObject {
     }
 
     func activate() {
-        Logger.syncController.info("I AM PEER \(self.peerId, privacy: .public)")
         browserState = .setup
         listenerState = .setup
         startBrowsing()
@@ -108,14 +109,10 @@ final class DocumentSyncCoordinator: ObservableObject {
     }
 
     func delayAndAttemptToConnect(_ endpoint: NWEndpoint, forPeer peerId: String) {
-        Logger.syncController
-            .debug(
-                "\(peerId, privacy: .public) at \(endpoint.debugDescription, privacy: .public) doesn't have a connection, enqueuing a task to connection."
-            )
         Task {
             let delay = Int.random(in: 250 ... 1000)
             Logger.syncController
-                .debug(
+                .info(
                     "Delaying \(delay, privacy: .public) ms before attempting connect to \(peerId, privacy: .public) at \(endpoint.debugDescription, privacy: .public)"
                 )
             try await Task.sleep(until: .now + .milliseconds(delay), clock: .continuous)
@@ -136,7 +133,6 @@ final class DocumentSyncCoordinator: ObservableObject {
         )
 
         newNetworkBrowser.stateUpdateHandler = { newState in
-            Logger.syncController.debug("Browser State Update: \(String(describing: newState), privacy: .public)")
             switch newState {
             case let .failed(error):
                 self.browserState = .failed(error)
@@ -150,7 +146,6 @@ final class DocumentSyncCoordinator: ObservableObject {
                     newNetworkBrowser.cancel()
                 }
             case .ready:
-                // Post initial results.
                 self.browserState = .ready
             case .cancelled:
                 self.browserState = .cancelled
@@ -160,15 +155,14 @@ final class DocumentSyncCoordinator: ObservableObject {
             }
         }
 
-        // When the list of discovered endpoints changes, refresh the delegate.
         newNetworkBrowser.browseResultsChangedHandler = { [weak self] results, _ in
-            Logger.syncController.debug("browser update shows \(results.count, privacy: .public) result(s):")
-            for res in results {
-                Logger.syncController
-                    .debug(
-                        "  \(res.endpoint.debugDescription, privacy: .public) \(res.metadata.debugDescription, privacy: .public)"
-                    )
-            }
+//            Logger.syncController.debug("browser update shows \(results.count, privacy: .public) result(s):")
+//            for res in results {
+//                Logger.syncController
+//                    .debug(
+//                        "  \(res.endpoint.debugDescription, privacy: .public) \(res.metadata.debugDescription, privacy: .public)"
+//                    )
+//            }
             // Only show broadcasting peers with the same document Id
             // - and that doesn't have the name provided by this app.
             let filtered = results.filter { result in
@@ -304,7 +298,7 @@ final class DocumentSyncCoordinator: ObservableObject {
             } else {
                 Logger.syncController
                     .info(
-                        "Inbound connection already recorded for \(newConnection.endpoint.debugDescription, privacy: .public), cancelling the connection request."
+                        "Inbound connection already exists for \(newConnection.endpoint.debugDescription, privacy: .public), cancelling the connection request."
                     )
                 // If we already have a connection to that endpoint, don't add another
                 newConnection.cancel()

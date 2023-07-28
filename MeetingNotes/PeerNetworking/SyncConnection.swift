@@ -20,20 +20,20 @@ import OSLog
 
 final class SyncConnection: ObservableObject {
     weak var syncController: DocumentSyncCoordinator?
+    /// A unique identifier to track the connections for comparison against existing connections.
+    var connectionId = UUID()
     var connection: NWConnection?
     /// A Boolean value that indicates this app initiated this connection.
 
-    var connectionId = UUID()
     @Published var connectionState: NWConnection.State = .setup
     @Published var endpoint: NWEndpoint?
+    /// The peer Id for the connection endpoint, only set on outbound connections.
     var peerId: String?
-
-    // Setting the syncstate within a Connection wrapper binds its lifetime to the
-    // connection, and keeps management of sync state a bit easier than tracking it
-    // separately in the DocumentSyncController.
 
     /// The synchronisation state associated with this connection.
     var syncState: SyncState
+    
+    /// The cancellable subscription to the trigger mechanism that attempts sync updates.
     var syncTriggerCancellable: Cancellable?
 
     /// Initiate a connection to a network endpoint to synchronise an Automerge Document.
@@ -58,18 +58,7 @@ final class SyncConnection: ObservableObject {
         self.endpoint = endpoint
         self.peerId = peerId
 
-        startConnection()
-        syncTriggerCancellable = trigger.sink(receiveValue: { _ in
-            if let automergeDoc = self.syncController?.automergeDocument,
-               let syncData = automergeDoc.generateSyncMessage(state: self.syncState)
-            {
-                Logger.syncController
-                    .debug(
-                        "Syncing \(syncData.count, privacy: .public) bytes to \(endpoint.debugDescription, privacy: .public)"
-                    )
-                self.sendSyncMsg(syncData)
-            }
-        })
+        startConnection(trigger)
     }
 
     /// Accepts and runs a connection from another network endpoint to synchronise an Automerge Document.
@@ -83,20 +72,10 @@ final class SyncConnection: ObservableObject {
         syncState = SyncState()
         Logger.syncController
             .info("Receiving connection from \(connection.endpoint.debugDescription, privacy: .public)")
-        startConnection()
-        syncTriggerCancellable = trigger.sink(receiveValue: { _ in
-            if let automergeDoc = self.syncController?.automergeDocument,
-               let syncData = automergeDoc.generateSyncMessage(state: self.syncState)
-            {
-                Logger.syncController
-                    .info(
-                        "Syncing \(syncData.count, privacy: .public) bytes to \(connection.endpoint.debugDescription, privacy: .public)"
-                    )
-                self.sendSyncMsg(syncData)
-            }
-        })
+        
+        startConnection(trigger)
     }
-
+    
     /// Cancels the current connection.
     func cancel() {
         if let connection = connection {
@@ -116,10 +95,22 @@ final class SyncConnection: ObservableObject {
     }
 
     // Handle starting the peer-to-peer connection for both inbound and outbound connections.
-    private func startConnection() {
+    private func startConnection(_ trigger: AnyPublisher<Void, Never>) {
         guard let connection = connection else {
             return
         }
+
+        syncTriggerCancellable = trigger.sink(receiveValue: { _ in
+            if let automergeDoc = self.syncController?.automergeDocument,
+               let syncData = automergeDoc.generateSyncMessage(state: self.syncState)
+            {
+                Logger.syncController
+                    .info(
+                        "Syncing \(syncData.count, privacy: .public) bytes to \(connection.endpoint.debugDescription, privacy: .public)"
+                    )
+                self.sendSyncMsg(syncData)
+            }
+        })
 
         connection.stateUpdateHandler = { [weak self] newState in
             guard let self else { return }
@@ -138,18 +129,29 @@ final class SyncConnection: ObservableObject {
                     )
                 // Cancel the connection upon a failure.
                 connection.cancel()
+                self.syncTriggerCancellable?.cancel()
                 self.syncController?.removeConnection(self.connectionId)
-
+                self.syncTriggerCancellable = nil
+                
             case .cancelled:
                 Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection cancelled.")
+                self.syncTriggerCancellable?.cancel()
                 self.syncController?.removeConnection(self.connectionId)
-
+                self.syncTriggerCancellable = nil
+                
             case let .waiting(nWError):
+                // from Network headers
+                // `Waiting connections have not yet been started, or do not have a viable network`
+                // So if we drop into this state, it's likely the network has shifted to non-viable
+                // (for example, the wifi was disabled or dropped).
+                //
+                // Unclear if this is something we should retry ourselves when the associated network
+                // path is again viable, or if this is something that the Network framework does on our
+                // behalf.
                 Logger.syncController
-                    .debug(
+                    .warning(
                         "\(endpoint.debugDescription, privacy: .public) connection waiting: \(nWError.debugDescription, privacy: .public)."
                     )
-                // FIXME: restart() or remove() connection - other leaves this as a terminal state.
 
             case .preparing:
                 Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection preparing.")
@@ -174,7 +176,7 @@ final class SyncConnection: ObservableObject {
         }
 
         connection.receiveMessage { content, context, isComplete, error in
-            Logger.syncController.debug("Received \(isComplete ? "complete" : "incomplete") msg on connection")
+            Logger.syncController.debug("Received a \(isComplete ? "complete" : "incomplete", privacy: .public) msg on connection")
             if let content {
                 Logger.syncController.debug("  - received \(content.count) bytes")
             } else {
@@ -247,35 +249,30 @@ final class SyncConnection: ObservableObject {
     }
 
     func receivedMessage(content data: Data?, message: NWProtocolFramer.Message, from endpoint: NWEndpoint) {
-        Logger.syncController.info("received protocol message")
         switch message.syncMessageType {
         case .invalid:
             Logger.syncController
-                .warning("Invalid message received from \(endpoint.debugDescription, privacy: .public)")
+                .error("Invalid message received from \(endpoint.debugDescription, privacy: .public)")
         case .sync:
             guard let data else {
                 Logger.syncController
-                    .warning("Sync message received without data from \(endpoint.debugDescription, privacy: .public)")
+                    .error("Sync message received without data from \(endpoint.debugDescription, privacy: .public)")
                 return
             }
             do {
-                Logger.syncController.info("received sync message")
-
                 // When we receive a complete sync message from the underlying transport,
                 // update our automerge document, and the associated SyncState.
-
-                let patches = try self.syncController?.automergeDocument?.receiveSyncMessageWithPatches(
+                if let patches = try self.syncController?.automergeDocument?.receiveSyncMessageWithPatches(
                     state: syncState,
                     message: data
-                )
-                if let patches {
+                ) {
                     Logger.syncController
-                        .info(
+                        .debug(
                             "Received \(patches.count, privacy: .public) patches in \(data.count, privacy: .public) bytes"
                         )
                 } else {
                     Logger.syncController
-                        .info("Received sync state update in \(data.count, privacy: .public) bytes")
+                        .debug("Received sync state update in \(data.count, privacy: .public) bytes")
                 }
                 self.refreshModel()
 
@@ -286,9 +283,8 @@ final class SyncConnection: ObservableObject {
                 } else {
                     // When generateSyncMessage returns nil, the remote endpoint represented by
                     // SyncState should be up to date.
-                    Logger.syncController.debug("Sync complete for \(endpoint.debugDescription, privacy: .public)")
+                    Logger.syncController.debug("Sync complete with \(endpoint.debugDescription, privacy: .public)")
                 }
-
             } catch {
                 Logger.syncController.error("Error applying sync message: \(error, privacy: .public)")
             }
