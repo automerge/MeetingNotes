@@ -1,3 +1,4 @@
+import OSLog
 import SwiftUI
 
 struct MergeView: View {
@@ -30,9 +31,12 @@ struct MergeView: View {
                     let filename = success.lastPathComponent
                     switch document.mergeFile(success) {
                     case .success:
-                        print("MERGED \(filename)")
-                    case let .failure(oops):
-                        print(oops)
+                        Logger.document.info("Merged external file \(filename, privacy: .public)")
+                    case let .failure(mergeError):
+                        Logger.document
+                            .error(
+                                "Error attempting to merge file: \(mergeError.localizedDescription, privacy: .public)"
+                            )
                     }
                 }
             case let .failure(failure):
