@@ -43,6 +43,7 @@ struct EditableAgendaItemView: View {
                     .foregroundStyle(Color.red)
             }
         }
+        .focused($titleIsFocused)
         .onAppear(perform: {
             if let agendaItem = document.model.agendas.first(where: {
                 $0.id == agendaItemId
@@ -51,7 +52,14 @@ struct EditableAgendaItemView: View {
                 agendaDetail = agendaItem.discussion.value
             }
         })
-        .focused($titleIsFocused)
+        .onReceive(document.objectWillChange, perform: { _ in
+            if let agendaItem = document.model.agendas.first(where: {
+                $0.id == agendaItemId
+            }) {
+                agendaTitle = agendaItem.title
+                agendaDetail = agendaItem.discussion.value
+            }
+        })
         .onChange(of: agendaDetail, perform: { _ in
             updateAgendaItem()
         })

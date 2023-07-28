@@ -44,11 +44,11 @@ struct AppTabView: View {
                 }
             }
         } detail: {
-            if selection != nil {
+            if let selection {
                 EditableAgendaItemView(document: document, agendaItemId: selection)
                     // Using .id here is critical to getting views to update
                     // upon choosing a new selection on macOS
-                    .id(document.id.hashValue + (selection?.hashValue ?? 0))
+                    .id(selection)
             } else {
                 Text("Select an agenda item")
             }

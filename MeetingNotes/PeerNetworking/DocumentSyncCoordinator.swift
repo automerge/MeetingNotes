@@ -104,7 +104,9 @@ final class DocumentSyncCoordinator: ObservableObject {
                 controller: self,
                 docId: docId
             )
-            connections.append(newConnection)
+            DispatchQueue.main.async {
+                self.connections.append(newConnection)
+            }
         }
     }
 
