@@ -63,36 +63,9 @@ struct PeerSyncView: View {
                     }
                 }
             }
-            if !syncController.outboundConnections.isEmpty {
-                HStack {
-                    Text("Outbound").bold()
-                    Spacer()
-                }
-                LazyVStack {
-                    ForEach(syncController.outboundConnectionKeys, id: \.self) { key in
-                        HStack {
-                            Text(key).font(.caption)
-                            if let connection = syncController.outboundConnections[key]?.connection {
-                                Text(connection.endpoint.debugDescription)
-                                switch connection.state {
-                                case .setup:
-                                    Text("setup")
-                                case let .waiting(nWError):
-                                    Text("waiting: \(nWError.localizedDescription)")
-                                case .preparing:
-                                    Text("preparing")
-                                case .ready:
-                                    Text("ready")
-                                case let .failed(nWError):
-                                    Text("failed: \(nWError.localizedDescription)")
-                                case .cancelled:
-                                    Text("cancelled")
-                                }
-                            } else {
-                                Text("nil")
-                            }
-                        }
-                    }
+            LazyVStack {
+                ForEach(syncController.connections) { connection in
+                    SyncConnectionView(syncConnection: connection)
                 }
             }
         }

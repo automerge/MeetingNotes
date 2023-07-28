@@ -38,13 +38,13 @@ final class DocumentSyncController: ObservableObject {
     @Published var browserState: NWBrowser.State = .setup
     var autoconnect: Bool = false
 
-    @Published var outboundConnections: [String: SyncConnection] = [:] {
+    @Published var _connections: [UUID: SyncConnection] = [:] {
         willSet(newDictionary) {
             #if DEBUG
             Logger.syncController
                 .debug("Updating outbound connections to \(newDictionary.count, privacy: .public) values")
             let newkeys = Array(newDictionary.keys)
-            let oldkeys = Array(outboundConnections.keys)
+            let oldkeys = Array(_connections.keys)
             let diff = newkeys.difference(from: oldkeys)
             for change in diff {
                 if case let .insert(_, ep, _) = change {
@@ -58,8 +58,14 @@ final class DocumentSyncController: ObservableObject {
         }
     }
 
-    var outboundConnectionKeys: [String] {
-        outboundConnections.map(\.key)
+    var connections: [SyncConnection] {
+        _connections.map { _, syncConn in
+            syncConn
+        }
+    }
+
+    func removeConnection(_ connectionId: UUID) {
+        self._connections.removeValue(forKey: connectionId)
     }
 
     var listener: NWListener?
@@ -67,26 +73,6 @@ final class DocumentSyncController: ObservableObject {
     @Published var listenerSetupError: Error? = nil
     @Published var listenerStatusError: NWError? = nil
     var txtRecord: NWTXTRecord
-
-    @Published var inboundConnections: [NWEndpoint: SyncConnection] = [:] {
-        willSet(newDictionary) {
-            #if DEBUG
-            Logger.syncController
-                .debug("Updating inbound connections to \(newDictionary.count, privacy: .public) values")
-            let newkeys = Array(newDictionary.keys)
-            let oldkeys = Array(inboundConnections.keys)
-            let diff = newkeys.difference(from: oldkeys)
-            for change in diff {
-                if case let .insert(_, ep, _) = change {
-                    Logger.syncController.debug(" - inserting \(ep.debugDescription, privacy: .public)")
-                }
-                if case let .remove(_, ep, _) = change {
-                    Logger.syncController.debug(" - removing \(ep.debugDescription, privacy: .public)")
-                }
-            }
-            #endif
-        }
-    }
 
     let peerId = UUID()
     let syncQueue = DispatchQueue(label: "PeerSyncQueue")
@@ -118,26 +104,30 @@ final class DocumentSyncController: ObservableObject {
         timerCancellable?.cancel()
         stopBrowsing()
         stopListening()
+        cancelAllConnections()
         timerCancellable = nil
     }
 
     // MARK: NWBrowser
 
-    func attemptToPeerConnect(_ endpoint: NWEndpoint, forPeer peerId: String) {
+    func attemptToConnectToPeer(_ endpoint: NWEndpoint, forPeer peerId: String) {
         Logger.syncController
             .debug(
                 "Attempting to establish connection to \(peerId, privacy: .public) through \(endpoint.debugDescription, privacy: .public) "
             )
-        if outboundConnections[peerId] == nil, let docId = document?.id.uuidString {
+        if connections.filter({ conn in
+            conn.peerId == peerId
+        }).isEmpty, let docId = document?.id.uuidString {
             Logger.syncController
                 .debug("No connection stored for \(peerId, privacy: .public)")
             let newConnection = SyncConnection(
                 endpoint: endpoint,
+                peerId: peerId,
                 trigger: syncTrigger.eraseToAnyPublisher(),
-                delegate: self,
+                controller: self,
                 docId: docId
             )
-            outboundConnections[peerId] = newConnection
+            _connections[newConnection.connectionId] = newConnection
         }
     }
 
@@ -153,7 +143,7 @@ final class DocumentSyncController: ObservableObject {
                     "Delaying \(delay, privacy: .public) ms before attempting connect to \(peerId, privacy: .public) at \(endpoint.debugDescription, privacy: .public)"
                 )
             try await Task.sleep(until: .now + .milliseconds(delay), clock: .continuous)
-            self.attemptToPeerConnect(endpoint, forPeer: peerId)
+            self.attemptToConnectToPeer(endpoint, forPeer: peerId)
         }
     }
 
@@ -228,7 +218,9 @@ final class DocumentSyncController: ObservableObject {
                         .debug("Checking potential peer \(potentialPeer.endpoint.debugDescription, privacy: .public)")
                     if case let .bonjour(txtrecord) = potentialPeer.metadata {
                         if let peerId = txtrecord[TXTRecordKeys.peer_id] {
-                            if self?.outboundConnections[peerId] == nil {
+                            if let connectionsForPeerId = self?.connections.filter({ conn in
+                                conn.peerId == peerId
+                            }), connectionsForPeerId.isEmpty {
                                 self?.delayAndAttemptToConnect(potentialPeer.endpoint, forPeer: peerId)
                             }
                         }
@@ -246,13 +238,14 @@ final class DocumentSyncController: ObservableObject {
     fileprivate func stopBrowsing() {
         guard let browser else { return }
         browser.cancel()
-        for (peerId, conn) in outboundConnections {
-            conn.cancel()
-            Logger.syncController
-                .debug("Cancelling stored outbound connection to peer \(peerId, privacy: .public)")
-        }
-        outboundConnections = [:]
         self.browser = nil
+    }
+
+    fileprivate func cancelAllConnections() {
+        for conn in connections {
+            conn.cancel()
+        }
+        _connections = [:]
     }
 
     // MARK: NWListener handlers
@@ -310,7 +303,6 @@ final class DocumentSyncController: ObservableObject {
         // The system calls this when a new connection arrives at the listener.
         // Start the connection to accept it, or cancel to reject it.
         listener?.newConnectionHandler = { [weak self] newConnection in
-//            let foo: NWConnection = newConnection
             Logger.syncController
                 .debug(
                     "Received connection request from \(newConnection.endpoint.debugDescription, privacy: .public)"
@@ -321,17 +313,19 @@ final class DocumentSyncController: ObservableObject {
                 )
             guard let self else { return }
 
-            if self.inboundConnections[newConnection.endpoint] == nil {
+            if connections.filter({ conn in
+                conn.endpoint == newConnection.endpoint
+            }).isEmpty {
                 Logger.syncController
                     .info(
-                        "Endpoint not yet recorded, accepting connection from \(peerId, privacy: .public) at \(newConnection.endpoint.debugDescription, privacy: .public)"
+                        "Endpoint not yet recorded, accepting connection from \(newConnection.endpoint.debugDescription, privacy: .public)"
                     )
                 let peerConnection = SyncConnection(
                     connection: newConnection,
                     trigger: syncTrigger.eraseToAnyPublisher(),
-                    delegate: self
+                    controller: self
                 )
-                self.inboundConnections[newConnection.endpoint] = peerConnection
+                self._connections[peerConnection.connectionId] = peerConnection
             } else {
                 Logger.syncController
                     .info(
@@ -350,17 +344,7 @@ final class DocumentSyncController: ObservableObject {
     fileprivate func stopListening() {
         guard let listener else { return }
         listener.cancel()
-        for connect in inboundConnections.values {
-            connect.connection?.cancel()
-            if let connection = connect.connection {
-                Logger.syncController
-                    .debug(
-                        "Cancelling stored inbound connection to endpoint \(connection.endpoint.debugDescription, privacy: .public)"
-                    )
-            }
-        }
         self.listener = nil
-        inboundConnections = [:]
     }
 
     // Update the advertised name on the network.
@@ -376,119 +360,5 @@ final class DocumentSyncController: ObservableObject {
             .debug(
                 "Updated bonjour network listener to name \(name, privacy: .public) for document id \(document.id.uuidString, privacy: .public)"
             )
-    }
-}
-
-extension DocumentSyncController: SyncConnectionDelegate {
-    // MARK: SyncConnectionDelegate functions
-
-    func connectionStateUpdate(_ state: NWConnection.State, from endpoint: NWEndpoint) {
-        // ?? plug this into visual feedback related to the connection...
-        switch state {
-        case .setup:
-            Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection setup.")
-        case let .waiting(nWError):
-            Logger.syncController
-                .debug(
-                    "\(endpoint.debugDescription, privacy: .public) connection waiting: \(nWError.debugDescription, privacy: .public)."
-                )
-        // FIXME: restart() or remove() connection - other leaves this as a terminal state.
-        case .preparing:
-            Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection preparing.")
-        case .ready:
-            Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection ready.")
-        case let .failed(nWError):
-            Logger.syncController
-                .debug(
-                    "\(endpoint.debugDescription, privacy: .public) connection failed: \(nWError.debugDescription, privacy: .public)."
-                )
-            guard let peerId = endpoint.txtRecord?[TXTRecordKeys.peer_id] else {
-                Logger.syncController
-                    .debug(
-                        "Missing peer ID for \(endpoint.debugDescription, privacy: .public)."
-                    )
-                return
-            }
-            self.outboundConnections.removeValue(forKey: peerId)
-
-        case .cancelled:
-            Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection cancelled.")
-            guard let peerId = endpoint.txtRecord?[TXTRecordKeys.peer_id] else {
-                Logger.syncController
-                    .debug(
-                        "Missing peer ID for \(endpoint.debugDescription, privacy: .public)."
-                    )
-                return
-            }
-            self.outboundConnections.removeValue(forKey: peerId)
-        @unknown default:
-            fatalError()
-        }
-    }
-
-    func receivedMessage(content data: Data?, message: NWProtocolFramer.Message, from endpoint: NWEndpoint) {
-        Logger.syncController.info("received protocol message")
-        switch message.syncMessageType {
-        case .invalid:
-            Logger.syncController
-                .warning("Invalid message received from \(endpoint.debugDescription, privacy: .public)")
-        case .sync:
-            guard let data else {
-                Logger.syncController
-                    .warning("Sync message received without data from \(endpoint.debugDescription, privacy: .public)")
-                return
-            }
-            do {
-                Logger.syncController.info("received sync message")
-                if let peerId = endpoint.txtRecord?[TXTRecordKeys.peer_id],
-                   let connection = outboundConnections[peerId]
-                {
-                    // When we receive a complete sync message from the underlying transport,
-                    // update our automerge document, and the associated SyncState.
-                    let patches = try document?.doc.receiveSyncMessageWithPatches(
-                        state: connection.syncState,
-                        message: data
-                    )
-                    if let patches {
-                        Logger.syncController
-                            .info(
-                                "Received \(patches.count, privacy: .public) patches in \(data.count, privacy: .public) bytes"
-                            )
-                    } else {
-                        Logger.syncController
-                            .info("Received sync state update in \(data.count, privacy: .public) bytes")
-                    }
-                    self.refreshModel()
-
-                    // Once the Automerge doc is updated, check (using the SyncState) to see if
-                    // we believe we need to send additional messages to the peer to keep it in sync.
-                    if let response = document?.doc.generateSyncMessage(state: connection.syncState) {
-                        connection.sendSyncMsg(response)
-                    } else {
-                        // When generateSyncMessage returns nil, the remote endpoint represented by
-                        // SyncState should be up to date.
-                        Logger.syncController.debug("Sync complete for \(endpoint.debugDescription, privacy: .public)")
-                    }
-                }
-            } catch {
-                Logger.syncController.error("Error applying sync message: \(error, privacy: .public)")
-            }
-        case .id:
-            Logger.syncController.info("received request for document ID")
-            if let peerId = endpoint.txtRecord?[TXTRecordKeys.peer_id],
-               let connection = outboundConnections[peerId],
-               let id = self.document?.id.uuidString
-            {
-                connection.sendDocumentId(id)
-            }
-        }
-    }
-
-    func refreshModel() {
-        do {
-            try self.document?.getModelUpdates()
-        } catch {
-            Logger.document.error("Failure in regenerating model from Automerge document: \(error, privacy: .public)")
-        }
     }
 }

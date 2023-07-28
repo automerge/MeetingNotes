@@ -1,5 +1,4 @@
 import Network
-import OSLog
 import SwiftUI
 
 struct NWBrowserResultItemView: View {
@@ -26,11 +25,10 @@ struct NWBrowserResultItemView: View {
                 Text(nameFromResultMetadata())
                 Spacer()
                 Button {
-                    Logger.syncController.info("CLICK ON CONNECT")
-                    syncController.attemptToPeerConnect(result.endpoint, forPeer: peerIdFromResultMetadata())
+                    syncController.attemptToConnectToPeer(result.endpoint, forPeer: peerIdFromResultMetadata())
                 } label: {
                     Image(systemName: "bolt.horizontal.fill")
-                }.border(.red)
+                }
             }
         }.font(.caption)
     }
