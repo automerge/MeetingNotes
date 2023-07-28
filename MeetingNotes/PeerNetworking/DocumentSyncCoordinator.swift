@@ -38,7 +38,7 @@ final class DocumentSyncCoordinator: ObservableObject {
     var browser: NWBrowser?
     @Published var browserResults: [NWBrowser.Result] = []
     @Published var browserState: NWBrowser.State = .setup
-    var autoconnect: Bool = false
+    var autoconnect: Bool = true
 
     @Published var connections: [SyncConnection] = []
 
@@ -160,7 +160,8 @@ final class DocumentSyncCoordinator: ObservableObject {
 //            for res in results {
 //                Logger.syncController
 //                    .debug(
-//                        "  \(res.endpoint.debugDescription, privacy: .public) \(res.metadata.debugDescription, privacy: .public)"
+//                        "  \(res.endpoint.debugDescription, privacy: .public) \(res.metadata.debugDescription,
+//                        privacy: .public)"
 //                    )
 //            }
             // Only show broadcasting peers with the same document Id
