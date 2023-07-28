@@ -10,7 +10,7 @@ enum TXTRecordKeys {
     static var name = "name"
 }
 
-final class DocumentSyncController: ObservableObject {
+final class DocumentSyncCoordinator: ObservableObject {
     weak var document: MeetingNotesDocument? {
         didSet {
             if let document {
@@ -38,34 +38,10 @@ final class DocumentSyncController: ObservableObject {
     @Published var browserState: NWBrowser.State = .setup
     var autoconnect: Bool = false
 
-    @Published var _connections: [UUID: SyncConnection] = [:] {
-        willSet(newDictionary) {
-            #if DEBUG
-            Logger.syncController
-                .debug("Updating outbound connections to \(newDictionary.count, privacy: .public) values")
-            let newkeys = Array(newDictionary.keys)
-            let oldkeys = Array(_connections.keys)
-            let diff = newkeys.difference(from: oldkeys)
-            for change in diff {
-                if case let .insert(_, ep, _) = change {
-                    Logger.syncController.debug(" - inserting \(ep.debugDescription, privacy: .public)")
-                }
-                if case let .remove(_, ep, _) = change {
-                    Logger.syncController.debug(" - removing \(ep.debugDescription, privacy: .public)")
-                }
-            }
-            #endif
-        }
-    }
-
-    var connections: [SyncConnection] {
-        _connections.map { _, syncConn in
-            syncConn
-        }
-    }
+    @Published var connections: [SyncConnection]  = []
 
     func removeConnection(_ connectionId: UUID) {
-        self._connections.removeValue(forKey: connectionId)
+        connections.removeAll { $0.connectionId == connectionId }
     }
 
     var listener: NWListener?
@@ -127,7 +103,7 @@ final class DocumentSyncController: ObservableObject {
                 controller: self,
                 docId: docId
             )
-            _connections[newConnection.connectionId] = newConnection
+            connections.append(newConnection)
         }
     }
 
@@ -245,7 +221,6 @@ final class DocumentSyncController: ObservableObject {
         for conn in connections {
             conn.cancel()
         }
-        _connections = [:]
     }
 
     // MARK: NWListener handlers
@@ -325,7 +300,7 @@ final class DocumentSyncController: ObservableObject {
                     trigger: syncTrigger.eraseToAnyPublisher(),
                     controller: self
                 )
-                self._connections[peerConnection.connectionId] = peerConnection
+                connections.append(peerConnection)
             } else {
                 Logger.syncController
                     .info(

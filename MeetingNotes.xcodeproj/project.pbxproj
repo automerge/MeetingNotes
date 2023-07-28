@@ -21,7 +21,7 @@
 		1A54E5E62A698EA100CE1BEF /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 1A54E5E52A698EA100CE1BEF /* CustomDump */; };
 		1A7700C52A67343800869A4D /* PeerSyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C42A67343800869A4D /* PeerSyncView.swift */; };
 		1A7700C72A67479F00869A4D /* NWBrowserResultItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C62A67479F00869A4D /* NWBrowserResultItemView.swift */; };
-		1A8217AD2A6877730071DD38 /* DocumentSyncController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8217AC2A6877730071DD38 /* DocumentSyncController.swift */; };
+		1A8217AD2A6877730071DD38 /* DocumentSyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */; };
 		1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD5DA322A464FBD0085DF79 /* Automerge */; };
 		1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */; };
 		1AD71E8E2A57622B00B965BF /* AppTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E8D2A57622B00B965BF /* AppTabView.swift */; };
@@ -71,7 +71,7 @@
 		1A4A610B2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+milliseconds.swift"; sourceTree = "<group>"; };
 		1A7700C42A67343800869A4D /* PeerSyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerSyncView.swift; sourceTree = "<group>"; };
 		1A7700C62A67479F00869A4D /* NWBrowserResultItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NWBrowserResultItemView.swift; sourceTree = "<group>"; };
-		1A8217AC2A6877730071DD38 /* DocumentSyncController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSyncController.swift; sourceTree = "<group>"; };
+		1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSyncCoordinator.swift; sourceTree = "<group>"; };
 		1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingNotesModel.swift; sourceTree = "<group>"; };
 		1AD71E8D2A57622B00B965BF /* AppTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabView.swift; sourceTree = "<group>"; };
 		1AD71E902A57630B00B965BF /* MergeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MergeView.swift; sourceTree = "<group>"; };
@@ -199,7 +199,7 @@
 				1A4A610B2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift */,
 				1AD7A8E82A476801003B6A1E /* AutomergeSyncProtocol.swift */,
 				1AD7A8EA2A476801003B6A1E /* SyncConnection.swift */,
-				1A8217AC2A6877730071DD38 /* DocumentSyncController.swift */,
+				1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */,
 			);
 			path = PeerNetworking;
 			sourceTree = "<group>";
@@ -354,7 +354,7 @@
 				1AD71E912A57630B00B965BF /* MergeView.swift in Sources */,
 				1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */,
 				1AD71E8E2A57622B00B965BF /* AppTabView.swift in Sources */,
-				1A8217AD2A6877730071DD38 /* DocumentSyncController.swift in Sources */,
+				1A8217AD2A6877730071DD38 /* DocumentSyncCoordinator.swift in Sources */,
 				1A7700C72A67479F00869A4D /* NWBrowserResultItemView.swift in Sources */,
 				1AD71E932A5765A800B965BF /* SyncView.swift in Sources */,
 				1AD7A8EF2A476801003B6A1E /* SyncConnection.swift in Sources */,
