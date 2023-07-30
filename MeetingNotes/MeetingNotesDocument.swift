@@ -102,8 +102,8 @@ final class MeetingNotesDocument: ReferenceFileDocument {
 
     /// Updates the Automerge document with the current value from the model.
     func storeModelUpdates() throws {
-        self.objectWillChange.send()
         try modelEncoder.encode(model)
+        self.objectWillChange.send()
     }
 
     /// Updates the model document with any changed values in the Automerge document.
