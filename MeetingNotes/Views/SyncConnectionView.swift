@@ -52,15 +52,20 @@ struct SyncConnectionView: View {
     }
 
     var body: some View {
-        HStack {
+        HStack(alignment: .firstTextBaseline) {
             if let txtRecord = syncConnection.endpoint?.txtRecord {
                 Text(txtRecord[TXTRecordKeys.name] ?? "unknown")
             } else {
-                Text(syncConnection.connectionId.uuidString)
+                Text(syncConnection.shortId)
             }
             Text(syncConnection.endpoint?.interface?.name ?? "")
             Spacer()
             stateRepresentationView()
+            Button {
+                syncConnection.cancel()
+            } label: {
+                Image(systemName: "xmark.square")
+            }
         }
         .font(.caption)
         .padding(4)

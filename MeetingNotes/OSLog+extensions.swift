@@ -11,7 +11,7 @@ extension Logger {
     static let syncController = Logger(subsystem: subsystem, category: "SyncController")
 
     /// Logs updates and interaction related to the process of synchronization over the network.
-//    static let syncprotocol = Logger(subsystem: subsystem, category: "SyncProtocol")
+    static let syncConnection = Logger(subsystem: subsystem, category: "SyncConnection")
 
     /// All logs related to tracking and analytics.
 //    static let statistics = Logger(subsystem: subsystem, category: "statistics")

@@ -38,7 +38,7 @@ final class DocumentSyncCoordinator: ObservableObject {
     var browser: NWBrowser?
     @Published var browserResults: [NWBrowser.Result] = []
     @Published var browserState: NWBrowser.State = .setup
-    var autoconnect: Bool = true
+    var autoconnect: Bool = false
 
     @Published var connections: [SyncConnection] = []
 
@@ -62,9 +62,11 @@ final class DocumentSyncCoordinator: ObservableObject {
         txtRecord[TXTRecordKeys.name] = name
         txtRecord[TXTRecordKeys.peer_id] = self.peerId.uuidString
         self.name = name
+        Logger.syncController.debug("SYNC CONTROLLER INIT, peer \(self.peerId.uuidString, privacy: .public)")
     }
 
     func activate() {
+        Logger.syncController.debug("SYNC PEER  \(self.peerId.uuidString, privacy: .public): ACTIVATE")
         browserState = .setup
         listenerState = .setup
         startBrowsing()
@@ -78,6 +80,7 @@ final class DocumentSyncCoordinator: ObservableObject {
     }
 
     func deactivate() {
+        Logger.syncController.debug("SYNC PEER  \(self.peerId.uuidString, privacy: .public): CANCEL")
         timerCancellable?.cancel()
         stopBrowsing()
         stopListening()
@@ -158,21 +161,23 @@ final class DocumentSyncCoordinator: ObservableObject {
         }
 
         newNetworkBrowser.browseResultsChangedHandler = { [weak self] results, _ in
-//            Logger.syncController.debug("browser update shows \(results.count, privacy: .public) result(s):")
-//            for res in results {
-//                Logger.syncController
-//                    .debug(
-//                        "  \(res.endpoint.debugDescription, privacy: .public) \(res.metadata.debugDescription,
-//                        privacy: .public)"
-//                    )
-//            }
+            Logger.syncController.debug("browser update shows \(results.count, privacy: .public) result(s):")
+            for res in results {
+                Logger.syncController
+                    .debug(
+                        "  \(res.endpoint.debugDescription, privacy: .public) \(res.metadata.debugDescription, privacy: .public)"
+                    )
+            }
+            guard let self else {
+                return
+            }
             // Only show broadcasting peers with the same document Id
             // - and that doesn't have the name provided by this app.
             let filtered = results.filter { result in
                 if case let .bonjour(txtrecord) = result.metadata,
-                   let uuidString = self?.document?.id.uuidString,
+                   let uuidString = self.document?.id.uuidString,
                    txtrecord[TXTRecordKeys.doc_id] == uuidString,
-                   txtrecord[TXTRecordKeys.peer_id] != self?.peerId.uuidString
+                   txtrecord[TXTRecordKeys.peer_id] != self.peerId.uuidString
                 {
                     return true
                 }
@@ -182,19 +187,17 @@ final class DocumentSyncCoordinator: ObservableObject {
                 $0.hashValue < $1.hashValue
             })
 
-            self?.browserResults = filtered
+            self.browserResults = filtered
 
-            if let autoconnect_enabled = self?.autoconnect, autoconnect_enabled {
+            if self.autoconnect {
                 // check list of current connections, if not in it - enqueue for connecting
                 for potentialPeer in filtered {
                     Logger.syncController
                         .debug("Checking potential peer \(potentialPeer.endpoint.debugDescription, privacy: .public)")
                     if case let .bonjour(txtrecord) = potentialPeer.metadata {
                         if let peerId = txtrecord[TXTRecordKeys.peer_id] {
-                            if let connectionsForPeerId = self?.connections.filter({ conn in
-                                conn.peerId == peerId
-                            }), connectionsForPeerId.isEmpty {
-                                self?.delayAndAttemptToConnect(potentialPeer.endpoint, forPeer: peerId)
+                            if self.connections.filter({ $0.peerId == peerId }).isEmpty {
+                                self.delayAndAttemptToConnect(potentialPeer.endpoint, forPeer: peerId)
                             }
                         }
                     }
@@ -210,6 +213,7 @@ final class DocumentSyncCoordinator: ObservableObject {
 
     fileprivate func stopBrowsing() {
         guard let browser else { return }
+        Logger.syncController.info("Terminating NWBrowser")
         browser.cancel()
         self.browser = nil
     }
@@ -250,8 +254,13 @@ final class DocumentSyncCoordinator: ObservableObject {
         listenerState = newState
         switch newState {
         case .ready:
-            Logger.syncController
-                .info("Bonjour listener ready on \(String(describing: self.listener?.port), privacy: .public)")
+            if let port = self.listener?.port {
+                Logger.syncController
+                    .info("Bonjour listener ready on \(port.rawValue, privacy: .public)")
+            } else {
+                Logger.syncController
+                    .info("Bonjour listener ready (no port listed)")
+            }
             listenerStatusError = nil
         case let .failed(error):
             if error == NWError.dns(DNSServiceErrorType(kDNSServiceErr_DefunctConnection)) {
@@ -277,11 +286,11 @@ final class DocumentSyncCoordinator: ObservableObject {
         listener?.newConnectionHandler = { [weak self] newConnection in
             Logger.syncController
                 .debug(
-                    "Received connection request from \(newConnection.endpoint.debugDescription, privacy: .public)"
+                    "Receiving connection request from \(newConnection.endpoint.debugDescription, privacy: .public)"
                 )
             Logger.syncController
                 .debug(
-                    "  Attempted connection details \(newConnection.debugDescription, privacy: .public)"
+                    "  Connection details: \(newConnection.debugDescription, privacy: .public)"
                 )
             guard let self else { return }
 
@@ -315,6 +324,7 @@ final class DocumentSyncCoordinator: ObservableObject {
     // Stop listening.
     fileprivate func stopListening() {
         guard let listener else { return }
+        Logger.syncController.debug("Terminating NWListener")
         listener.cancel()
         self.listener = nil
     }

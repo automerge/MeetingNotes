@@ -22,6 +22,11 @@ final class SyncConnection: ObservableObject {
     weak var syncController: DocumentSyncCoordinator?
     /// A unique identifier to track the connections for comparison against existing connections.
     var connectionId = UUID()
+    var shortId: String {
+        //  "41ee739d-c827-4be8-9a4f-c44a492e76cf"
+        String(connectionId.uuidString.lowercased().suffix(8))
+    }
+
     var connection: NWConnection?
     /// A Boolean value that indicates this app initiated this connection.
 
@@ -51,12 +56,15 @@ final class SyncConnection: ObservableObject {
     ) {
         self.syncController = controller
 
-        Logger.syncController.debug("Initiating connection to \(endpoint.debugDescription, privacy: .public)")
         syncState = SyncState()
         let connection = NWConnection(to: endpoint, using: NWParameters.peerSyncParameters(documentId: docId))
         self.connection = connection
         self.endpoint = endpoint
         self.peerId = peerId
+        Logger.syncConnection
+            .debug(
+                "\(self.shortId, privacy: .public): Initiating connection to \(endpoint.debugDescription, privacy: .public)"
+            )
 
         startConnection(trigger)
     }
@@ -70,8 +78,10 @@ final class SyncConnection: ObservableObject {
         self.connection = connection
         self.endpoint = connection.endpoint
         syncState = SyncState()
-        Logger.syncController
-            .info("Receiving connection from \(connection.endpoint.debugDescription, privacy: .public)")
+        Logger.syncConnection
+            .info(
+                "\(self.shortId, privacy: .public): Receiving connection from \(connection.endpoint.debugDescription, privacy: .public)"
+            )
 
         startConnection(trigger)
     }
@@ -79,17 +89,20 @@ final class SyncConnection: ObservableObject {
     /// Cancels the current connection.
     func cancel() {
         if let connection = connection {
-            connection.cancel()
+            syncTriggerCancellable?.cancel()
             if let peerId {
-                Logger.syncController
-                    .debug("Cancelling outbound connection to peer \(peerId, privacy: .public)")
-            } else {
-                Logger.syncController
+                Logger.syncConnection
                     .debug(
-                        "Cancelling inbound connection from endpoint \(connection.endpoint.debugDescription, privacy: .public)"
+                        "\(self.shortId, privacy: .public): Cancelling outbound connection to peer \(peerId, privacy: .public)"
+                    )
+            } else {
+                Logger.syncConnection
+                    .debug(
+                        "\(self.shortId, privacy: .public): Cancelling inbound connection from endpoint \(connection.endpoint.debugDescription, privacy: .public)"
                     )
             }
-            syncTriggerCancellable?.cancel()
+            connection.cancel()
+            self.connectionState = .cancelled
             self.connection = nil
         }
     }
@@ -102,11 +115,12 @@ final class SyncConnection: ObservableObject {
 
         syncTriggerCancellable = trigger.sink(receiveValue: { _ in
             if let automergeDoc = self.syncController?.automergeDocument,
-               let syncData = automergeDoc.generateSyncMessage(state: self.syncState)
+               let syncData = automergeDoc.generateSyncMessage(state: self.syncState),
+               self.connectionState == .ready
             {
-                Logger.syncController
+                Logger.syncConnection
                     .info(
-                        "Syncing \(syncData.count, privacy: .public) bytes to \(connection.endpoint.debugDescription, privacy: .public)"
+                        "\(self.shortId, privacy: .public): Syncing \(syncData.count, privacy: .public) bytes to \(connection.endpoint.debugDescription, privacy: .public)"
                     )
                 self.sendSyncMsg(syncData)
             }
@@ -116,16 +130,24 @@ final class SyncConnection: ObservableObject {
             guard let self else { return }
 
             self.connectionState = newState
+
             switch newState {
             case .ready:
-                Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection ready.")
+                if let endpoint = self.connection?.endpoint {
+                    Logger.syncConnection
+                        .debug(
+                            "\(self.shortId, privacy: .public): connection to \(endpoint.debugDescription, privacy: .public) ready."
+                        )
+                } else {
+                    Logger.syncConnection.warning("\(self.shortId, privacy: .public): connection ready (no endpoint)")
+                }
                 // When the connection is ready, start receiving messages.
                 self.receiveNextMessage()
 
             case let .failed(error):
-                Logger.syncController
+                Logger.syncConnection
                     .warning(
-                        "\(String(describing: connection), privacy: .public) failed with \(error, privacy: .public)"
+                        "\(self.shortId, privacy: .public): FAILED \(String(describing: connection), privacy: .public) : \(error, privacy: .public)"
                     )
                 // Cancel the connection upon a failure.
                 connection.cancel()
@@ -134,7 +156,10 @@ final class SyncConnection: ObservableObject {
                 self.syncTriggerCancellable = nil
 
             case .cancelled:
-                Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection cancelled.")
+                Logger.syncConnection
+                    .debug(
+                        "\(self.shortId, privacy: .public): CANCEL \(endpoint.debugDescription, privacy: .public) connection."
+                    )
                 self.syncTriggerCancellable?.cancel()
                 self.syncController?.removeConnection(self.connectionId)
                 self.syncTriggerCancellable = nil
@@ -148,17 +173,34 @@ final class SyncConnection: ObservableObject {
                 // Unclear if this is something we should retry ourselves when the associated network
                 // path is again viable, or if this is something that the Network framework does on our
                 // behalf.
-                Logger.syncController
-                    .warning(
-                        "\(endpoint.debugDescription, privacy: .public) connection waiting: \(nWError.debugDescription, privacy: .public)."
-                    )
+                if let endpoint = self.connection?.endpoint {
+                    Logger.syncConnection
+                        .warning(
+                            "\(self.shortId, privacy: .public): connection to \(endpoint.debugDescription, privacy: .public) waiting: \(nWError.debugDescription, privacy: .public)."
+                        )
+                } else {
+                    Logger.syncConnection.debug("\(self.shortId, privacy: .public): connection waiting (no endpoint)")
+                }
 
             case .preparing:
-                Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection preparing.")
+                if let endpoint = self.connection?.endpoint {
+                    Logger.syncConnection
+                        .debug(
+                            "\(self.shortId, privacy: .public): connection to \(endpoint.debugDescription, privacy: .public) preparing."
+                        )
+                } else {
+                    Logger.syncConnection.debug("\(self.shortId, privacy: .public): connection preparing (no endpoint)")
+                }
 
             case .setup:
-                Logger.syncController.debug("\(endpoint.debugDescription, privacy: .public) connection setup.")
-
+                if let endpoint = self.connection?.endpoint {
+                    Logger.syncConnection
+                        .debug(
+                            "\(self.shortId, privacy: .public): connection to \(endpoint.debugDescription, privacy: .public) in setup."
+                        )
+                } else {
+                    Logger.syncConnection.debug("\(self.shortId, privacy: .public): connection setup (no endpoint)")
+                }
             default:
                 break
             }
@@ -176,12 +218,14 @@ final class SyncConnection: ObservableObject {
         }
 
         connection.receiveMessage { content, context, isComplete, error in
-            Logger.syncController
-                .debug("Received a \(isComplete ? "complete" : "incomplete", privacy: .public) msg on connection")
+            Logger.syncConnection
+                .debug(
+                    "\(self.shortId, privacy: .public): Received a \(isComplete ? "complete" : "incomplete", privacy: .public) msg on connection"
+                )
             if let content {
-                Logger.syncController.debug("  - received \(content.count) bytes")
+                Logger.syncConnection.debug("  - received \(content.count) bytes")
             } else {
-                Logger.syncController.debug("  - received no data with msg")
+                Logger.syncConnection.debug("  - received no data with msg")
             }
             // Extract your message type from the received context.
             if let syncMessage = context?
@@ -194,7 +238,8 @@ final class SyncConnection: ObservableObject {
                 // Continue to receive more messages until you receive an error.
                 self.receiveNextMessage()
             } else {
-                Logger.syncController.error("error on received message: \(error)")
+                Logger.syncConnection.error("  - error on received message: \(error)")
+                self.cancel()
             }
         }
     }
@@ -229,7 +274,8 @@ final class SyncConnection: ObservableObject {
     /// - Parameter syncMsg: The data to send.
     func sendSyncMsg(_ syncMsg: Data) {
         guard let connection = connection else {
-            Logger.syncController.error("PeerConnection doesn't have an active connection!")
+            Logger.syncConnection
+                .error("\(self.shortId, privacy: .public): PeerConnection doesn't have an active connection!")
             return
         }
 
@@ -252,12 +298,16 @@ final class SyncConnection: ObservableObject {
     func receivedMessage(content data: Data?, message: NWProtocolFramer.Message, from endpoint: NWEndpoint) {
         switch message.syncMessageType {
         case .invalid:
-            Logger.syncController
-                .error("Invalid message received from \(endpoint.debugDescription, privacy: .public)")
+            Logger.syncConnection
+                .error(
+                    "\(self.shortId, privacy: .public): Invalid message received from \(endpoint.debugDescription, privacy: .public)"
+                )
         case .sync:
             guard let data else {
-                Logger.syncController
-                    .error("Sync message received without data from \(endpoint.debugDescription, privacy: .public)")
+                Logger.syncConnection
+                    .error(
+                        "\(self.shortId, privacy: .public): Sync message received without data from \(endpoint.debugDescription, privacy: .public)"
+                    )
                 return
             }
             do {
@@ -267,13 +317,15 @@ final class SyncConnection: ObservableObject {
                     state: syncState,
                     message: data
                 ) {
-                    Logger.syncController
+                    Logger.syncConnection
                         .debug(
-                            "Received \(patches.count, privacy: .public) patches in \(data.count, privacy: .public) bytes"
+                            "\(self.shortId, privacy: .public): Received \(patches.count, privacy: .public) patches in \(data.count, privacy: .public) bytes"
                         )
                 } else {
-                    Logger.syncController
-                        .debug("Received sync state update in \(data.count, privacy: .public) bytes")
+                    Logger.syncConnection
+                        .debug(
+                            "\(self.shortId, privacy: .public): Received sync state update in \(data.count, privacy: .public) bytes"
+                        )
                 }
                 self.refreshModel()
 
@@ -284,13 +336,17 @@ final class SyncConnection: ObservableObject {
                 } else {
                     // When generateSyncMessage returns nil, the remote endpoint represented by
                     // SyncState should be up to date.
-                    Logger.syncController.debug("Sync complete with \(endpoint.debugDescription, privacy: .public)")
+                    Logger.syncConnection
+                        .debug(
+                            "\(self.shortId, privacy: .public): Sync complete with \(endpoint.debugDescription, privacy: .public)"
+                        )
                 }
             } catch {
-                Logger.syncController.error("Error applying sync message: \(error, privacy: .public)")
+                Logger.syncConnection
+                    .error("\(self.shortId, privacy: .public): Error applying sync message: \(error, privacy: .public)")
             }
         case .id:
-            Logger.syncController.info("received request for document ID")
+            Logger.syncConnection.info("\(self.shortId, privacy: .public): received request for document ID")
             if let documentId = self.syncController?.document?.id.uuidString {
                 sendDocumentId(documentId)
             }
