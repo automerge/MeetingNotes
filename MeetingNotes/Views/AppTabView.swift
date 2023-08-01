@@ -49,7 +49,7 @@ struct AppTabView: View {
                             }
                         }
                 }
-                PeerSyncView(syncController: document.syncController)
+                PeerSyncView(documentId: document.id, syncController: sharedSyncCoordinator)
             }
             .navigationSplitViewColumnWidth(min: 250, ideal: 250)
             .toolbar {
@@ -68,6 +68,13 @@ struct AppTabView: View {
                 // upon choosing a new selection on macOS
                 .id(selection)
         }
+        .onAppear() {
+            // SwiftUI controls the lifecycle of MeetingNoteDocument instances,
+            // including sometimes regenerating them when disk contents are updated
+            // in the background, so register the current instance with the
+            // sync coordinator as they become visible.
+            sharedSyncCoordinator.registerDocument(document)
+        }
         .onReceive(document.objectWillChange, perform: { _ in
             if !document.model.agendas.contains(where: { agendaItem in
                 agendaItem.id == selection
@@ -76,7 +83,7 @@ struct AppTabView: View {
             }
         })
         #if os(iOS)
-        // hides the additional navigation stacks that iOS imposes on a document-based app
+        // Hides the additional navigation stacks that iOS imposes on a document-based app
         .toolbar(.hidden, for: .navigationBar)
         #endif
     }

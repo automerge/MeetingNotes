@@ -4,12 +4,6 @@ import PotentCBOR
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// A collection of User Default keys for the app.
-enum MeetingNotesDefaultKeys {
-    /// The key to the string that the app broadcasts to represent you when sharing and syncing MeetingNotes.
-    static let sharingIdentity = "sharingIdentity"
-}
-
 extension UTType {
     /// An Automerge document that is CBOR encoded with a document identifier.
     static var meetingnote: UTType {
@@ -64,42 +58,28 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     let modelDecoder: AutomergeDecoder
     let id: UUID
     var doc: Document
-    var sharingIdentity: String
-
-    let syncController: DocumentSyncCoordinator
 
     @Published
     var model: MeetingNotesModel
 
     static var readableContentTypes: [UTType] { [.meetingnote] }
 
-    static func defaultSharingIdentity() -> String {
-        #if os(iOS)
-        UIDevice().name
-        #elseif os(macOS)
-        Host.current().localizedName ?? "MeetingNotes User"
-        #endif
-    }
 
     init() {
         Logger.document.debug("INITIALIZING NEW DOCUMENT")
-
         id = UUID()
         doc = Document()
-        model = MeetingNotesModel(title: "Untitled")
+        let newModel = MeetingNotesModel(title: "Untitled")
+        model = newModel
         modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
         modelDecoder = AutomergeDecoder(doc: doc)
-        sharingIdentity = UserDefaults.standard
-            .string(forKey: MeetingNotesDefaultKeys.sharingIdentity) ?? MeetingNotesDocument.defaultSharingIdentity()
-        syncController = DocumentSyncCoordinator(name: sharingIdentity)
 
         do {
             // Establish the schema in the new Automerge document by encoding the model.
-            try modelEncoder.encode(model)
+            try modelEncoder.encode(newModel)
         } catch {
             fatalError(error.localizedDescription)
         }
-        syncController.document = self
     }
 
     required init(configuration: ReadConfiguration) throws {
@@ -124,15 +104,10 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
         modelDecoder = AutomergeDecoder(doc: doc)
         model = try modelDecoder.decode(MeetingNotesModel.self)
-
-        sharingIdentity = UserDefaults.standard
-            .string(forKey: MeetingNotesDefaultKeys.sharingIdentity) ?? MeetingNotesDocument.defaultSharingIdentity()
-        syncController = DocumentSyncCoordinator(name: sharingIdentity)
-        syncController.document = self
     }
 
     deinit {
-        syncController.deactivate()
+        Logger.document.debug("DEINIT of MeetingNotesDocument, documentId: \(self.id.uuidString, privacy: .public)")
     }
 
     func snapshot(contentType _: UTType) throws -> Document {

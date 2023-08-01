@@ -9,9 +9,9 @@ struct SyncView: View {
             syncEnabledIndicator.toggle()
             if syncEnabledIndicator {
                 // only enable listening if an identity has been chosen
-                document.syncController.activate()
+                sharedSyncCoordinator.activate()
             } else {
-                document.syncController.deactivate()
+                sharedSyncCoordinator.deactivate()
             }
         } label: {
             Image(

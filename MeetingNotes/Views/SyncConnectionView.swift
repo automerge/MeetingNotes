@@ -7,52 +7,25 @@ struct SyncConnectionView: View {
     func stateRepresentationView() -> some View {
         switch syncConnection.connectionState {
         case .setup:
-            return Label {
-                Text("")
-            } icon: {
-                Image(systemName: "arrow.up.circle").foregroundColor(.gray)
-            }
-        case let .waiting(nWError):
-            return Label {
-                Text("waiting: \(nWError.localizedDescription)")
-            } icon: {
-                Image(systemName: "exclamationmark.triangle").foregroundColor(.yellow)
-            }
+            return Image(systemName: "arrow.up.circle").foregroundColor(.gray)
+        case .waiting(_):
+            return Image(systemName: "exclamationmark.triangle").foregroundColor(.yellow)
         case .preparing:
-            return Label {
-                Text("")
-            } icon: {
-                Image(systemName: "arrow.up.circle").foregroundColor(.yellow)
-            }
+            return Image(systemName: "arrow.up.circle").foregroundColor(.yellow)
         case .ready:
-            return Label {
-                Text("")
-            } icon: {
-                Image(systemName: "arrow.up.circle").foregroundColor(.blue)
-            }
-        case let .failed(nWError):
-            return Label {
-                Text("waiting: \(nWError.localizedDescription)")
-            } icon: {
-                Image(systemName: "x.square").foregroundColor(.red)
-            }
+            return Image(systemName: "arrow.up.circle").foregroundColor(.blue)
+        case .failed(_):
+            return Image(systemName: "x.square").foregroundColor(.red)
         case .cancelled:
-            return Label {
-                Text("")
-            } icon: {
-                Image(systemName: "x.square").foregroundColor(.gray)
-            }
+            return Image(systemName: "x.square").foregroundColor(.gray)
         default:
-            return Label {
-                Text("")
-            } icon: {
-                Image(systemName: "questionmark.square.dashed").foregroundColor(.primary)
-            }
+            return Image(systemName: "questionmark.square.dashed").foregroundColor(.primary)
         }
     }
 
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
+            stateRepresentationView()
             if let txtRecord = syncConnection.endpoint?.txtRecord {
                 Text(txtRecord[TXTRecordKeys.name] ?? "unknown")
             } else {
@@ -60,7 +33,6 @@ struct SyncConnectionView: View {
             }
             Text(syncConnection.endpoint?.interface?.name ?? "")
             Spacer()
-            stateRepresentationView()
             Button {
                 syncConnection.cancel()
             } label: {
