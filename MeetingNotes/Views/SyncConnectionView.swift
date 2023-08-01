@@ -8,13 +8,13 @@ struct SyncConnectionView: View {
         switch syncConnection.connectionState {
         case .setup:
             return Image(systemName: "arrow.up.circle").foregroundColor(.gray)
-        case .waiting(_):
+        case .waiting:
             return Image(systemName: "exclamationmark.triangle").foregroundColor(.yellow)
         case .preparing:
             return Image(systemName: "arrow.up.circle").foregroundColor(.yellow)
         case .ready:
             return Image(systemName: "arrow.up.circle").foregroundColor(.blue)
-        case .failed(_):
+        case .failed:
             return Image(systemName: "x.square").foregroundColor(.red)
         case .cancelled:
             return Image(systemName: "x.square").foregroundColor(.gray)

@@ -25,21 +25,21 @@ enum MeetingNotesDefaultKeys {
 
 final class DocumentSyncCoordinator: ObservableObject {
     // support multiple documents
-    var documents: [UUID:MeetingNotesDocument] = [:]
-    var txtRecords: [UUID:NWTXTRecord] = [:]
-    var listeners: [UUID:NWListener] = [:]
-    @Published var listenerState: [UUID:NWListener.State] = [:]
-    
+    var documents: [UUID: MeetingNotesDocument] = [:]
+    var txtRecords: [UUID: NWTXTRecord] = [:]
+    var listeners: [UUID: NWListener] = [:]
+    @Published var listenerState: [UUID: NWListener.State] = [:]
+
     /// Looks up and returns a reference for a document for an initiated Peer Connection
     ///
     /// Primarily in order to attempt to send and receive sync updates.
     func automergeDocument(for docId: UUID) -> Document? {
         documents[docId]?.doc
     }
-    
+
     func registerDocument(_ document: MeetingNotesDocument) {
         documents[document.id] = document
-        
+
         var txtRecord = NWTXTRecord()
         txtRecord[TXTRecordKeys.name] = name
         txtRecord[TXTRecordKeys.peer_id] = peerId.uuidString
@@ -64,7 +64,7 @@ final class DocumentSyncCoordinator: ObservableObject {
     func removeConnection(_ connectionId: UUID) {
         connections.removeAll { $0.connectionId == connectionId }
     }
-    
+
     @Published var listenerSetupError: Error? = nil
     @Published var listenerStatusError: NWError? = nil
 
@@ -249,7 +249,10 @@ final class DocumentSyncCoordinator: ObservableObject {
     // Start listening and advertising.
     fileprivate func setupBonjourListener(for documentId: UUID) {
         guard let txtRecordForDoc = txtRecords[documentId] else {
-            Logger.syncController.warning("Attempting to establish listener for unregistered document: \(documentId.uuidString, privacy: .public)")
+            Logger.syncController
+                .warning(
+                    "Attempting to establish listener for unregistered document: \(documentId.uuidString, privacy: .public)"
+                )
             return
         }
         do {
@@ -274,12 +277,14 @@ final class DocumentSyncCoordinator: ObservableObject {
                     self?.listenerStatusError = nil
                 case let .failed(error):
                     if error == NWError.dns(DNSServiceErrorType(kDNSServiceErr_DefunctConnection)) {
-                        Logger.syncController.warning("Bonjour listener failed with \(error, privacy: .public), restarting.")
+                        Logger.syncController
+                            .warning("Bonjour listener failed with \(error, privacy: .public), restarting.")
                         listener.cancel()
                         self?.listeners.removeValue(forKey: documentId)
                         self?.setupBonjourListener(for: documentId)
                     } else {
-                        Logger.syncController.error("Bonjour listener failed with \(error, privacy: .public), stopping.")
+                        Logger.syncController
+                            .error("Bonjour listener failed with \(error, privacy: .public), stopping.")
                         self?.listenerStatusError = error
                         listener.cancel()
                     }
@@ -287,7 +292,7 @@ final class DocumentSyncCoordinator: ObservableObject {
                     self?.listenerStatusError = nil
                 }
             }
-            
+
             // The system calls this when a new connection arrives at the listener.
             // Start the connection to accept it, or cancel to reject it.
             listener.newConnectionHandler = { [weak self] newConnection in
@@ -333,7 +338,10 @@ final class DocumentSyncCoordinator: ObservableObject {
                 )
 
         } catch {
-            Logger.syncController.critical("Failed to create bonjour listener for document id \(documentId.uuidString, privacy: .public): \(error, privacy: .public)")
+            Logger.syncController
+                .critical(
+                    "Failed to create bonjour listener for document id \(documentId.uuidString, privacy: .public): \(error, privacy: .public)"
+                )
             listenerSetupError = error
         }
     }
@@ -351,10 +359,10 @@ final class DocumentSyncCoordinator: ObservableObject {
     // Update the advertised name on the network.
     fileprivate func resetName(_ name: String) {
         for documentId in documents.keys {
-            if var txtRecord = txtRecords[documentId]{
+            if var txtRecord = txtRecords[documentId] {
                 txtRecord[TXTRecordKeys.name] = name
                 txtRecords[documentId] = txtRecord
-                
+
                 // Reset the service to advertise.
                 listeners[documentId]?.service = NWListener.Service(
                     type: AutomergeSyncProtocol.bonjourType,
@@ -365,7 +373,10 @@ final class DocumentSyncCoordinator: ObservableObject {
                         "Updated bonjour network listener to name \(name, privacy: .public) for document id \(documentId.uuidString, privacy: .public)"
                     )
             } else {
-                Logger.syncController.error("Unable to find TXTRecord for the registered Document: \(documentId.uuidString, privacy: .public)")
+                Logger.syncController
+                    .error(
+                        "Unable to find TXTRecord for the registered Document: \(documentId.uuidString, privacy: .public)"
+                    )
             }
         }
     }

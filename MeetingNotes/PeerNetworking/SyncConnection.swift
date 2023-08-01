@@ -28,7 +28,7 @@ final class SyncConnection: ObservableObject {
 
     /// The document to which this connection is linked
     var documentId: UUID
-    
+
     var connection: NWConnection?
     /// A Boolean value that indicates this app initiated this connection.
 
@@ -57,7 +57,10 @@ final class SyncConnection: ObservableObject {
     ) {
         self.documentId = documentId
         syncState = SyncState()
-        let connection = NWConnection(to: endpoint, using: NWParameters.peerSyncParameters(documentId: documentId.uuidString))
+        let connection = NWConnection(
+            to: endpoint,
+            using: NWParameters.peerSyncParameters(documentId: documentId.uuidString)
+        )
         self.connection = connection
         self.endpoint = endpoint
         self.peerId = peerId

@@ -68,7 +68,7 @@ struct AppTabView: View {
                 // upon choosing a new selection on macOS
                 .id(selection)
         }
-        .onAppear() {
+        .onAppear {
             // SwiftUI controls the lifecycle of MeetingNoteDocument instances,
             // including sometimes regenerating them when disk contents are updated
             // in the background, so register the current instance with the
