@@ -64,7 +64,6 @@ final class MeetingNotesDocument: ReferenceFileDocument {
 
     static var readableContentTypes: [UTType] { [.meetingnote] }
 
-
     init() {
         Logger.document.debug("INITIALIZING NEW DOCUMENT")
         id = UUID()

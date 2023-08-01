@@ -26,7 +26,11 @@ struct NWBrowserResultItemView: View {
                 Text(nameFromResultMetadata())
                 Spacer()
                 Button {
-                    syncController.attemptToConnectToPeer(result.endpoint, forPeer: peerIdFromResultMetadata(), withDoc: documentId)
+                    syncController.attemptToConnectToPeer(
+                        result.endpoint,
+                        forPeer: peerIdFromResultMetadata(),
+                        withDoc: documentId
+                    )
                 } label: {
                     Text("Connect")
                 }

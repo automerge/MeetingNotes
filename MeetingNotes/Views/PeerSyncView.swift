@@ -9,7 +9,8 @@ struct PeerSyncView: View {
     @State var browserStyling: Color = .primary
 
     @State private var editNamePopoverShown: Bool = false
-    @AppStorage(MeetingNotesDefaultKeys.sharingIdentity) private var sharingIdentity: String = DocumentSyncCoordinator.defaultSharingIdentity()
+    @AppStorage(MeetingNotesDefaultKeys.sharingIdentity) private var sharingIdentity: String = DocumentSyncCoordinator
+        .defaultSharingIdentity()
 
     var body: some View {
         VStack {
