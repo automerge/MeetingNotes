@@ -27,7 +27,7 @@ struct NWBrowserResultItemView: View {
                 Button {
                     syncController.attemptToConnectToPeer(result.endpoint, forPeer: peerIdFromResultMetadata())
                 } label: {
-                    Image(systemName: "bolt.horizontal.fill")
+                    Image(systemName: "app.connected.to.app.below.fill")
                 }
             }
         }.font(.caption)

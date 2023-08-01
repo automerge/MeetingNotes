@@ -58,16 +58,6 @@ struct AppTabView: View {
                     MergeView(document: document)
                         .help("Merge a document into this one")
                 }
-
-//                ToolbarItem(id: "share", placement: .status) {
-//                    ShareLink(
-//                        item: document.wrappedDocument(),
-//                        preview: SharePreview(
-//                            Text("id: \(document.id.uuidString)"),
-//                            image: Image(systemName: "square.and.arrow.up")
-//                        )
-//                    )
-//                }
                 ToolbarItem(id: "sync", placement: .status) {
                     SyncView(document: document)
                         .help("Enable peer to peer syncing")
@@ -78,9 +68,6 @@ struct AppTabView: View {
                 // Using .id here is critical to getting views to update
                 // upon choosing a new selection on macOS
                 .id(selection)
-        }
-        .onAppear {
-            selection = document.model.agendas.first?.id
         }
         .onReceive(document.objectWillChange, perform: { _ in
             if !document.model.agendas.contains(where: { agendaItem in
