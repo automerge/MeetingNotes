@@ -3,6 +3,9 @@ import Combine
 import Foundation
 import Network
 import OSLog
+#if os(iOS)
+import UIKit // for UIDevice.name access
+#endif
 
 /// A type that provides type-safe strings for TXTRecord publications with Bonjour
 enum TXTRecordKeys {
@@ -14,13 +17,34 @@ enum TXTRecordKeys {
     static var name = "name"
 }
 
+/// A collection of User Default keys for the app.
+enum MeetingNotesDefaultKeys {
+    /// The key to the string that the app broadcasts to represent you when sharing and syncing MeetingNotes.
+    static let sharingIdentity = "sharingIdentity"
+}
+
 final class DocumentSyncCoordinator: ObservableObject {
-    weak var document: MeetingNotesDocument? {
-        didSet {
-            if let document {
-                self.txtRecord[TXTRecordKeys.doc_id] = document.id.uuidString
-            }
-        }
+    // support multiple documents
+    var documents: [UUID:MeetingNotesDocument] = [:]
+    var txtRecords: [UUID:NWTXTRecord] = [:]
+    var listeners: [UUID:NWListener] = [:]
+    @Published var listenerState: [UUID:NWListener.State] = [:]
+    
+    /// Looks up and returns a reference for a document for an initiated Peer Connection
+    ///
+    /// Primarily in order to attempt to send and receive sync updates.
+    func automergeDocument(for docId: UUID) -> Document? {
+        documents[docId]?.doc
+    }
+    
+    func registerDocument(_ document: MeetingNotesDocument) {
+        documents[document.id] = document
+        
+        var txtRecord = NWTXTRecord()
+        txtRecord[TXTRecordKeys.name] = name
+        txtRecord[TXTRecordKeys.peer_id] = peerId.uuidString
+        txtRecord[TXTRecordKeys.doc_id] = document.id.uuidString
+        txtRecords[document.id] = txtRecord
     }
 
     @Published var name: String {
@@ -28,11 +52,6 @@ final class DocumentSyncCoordinator: ObservableObject {
             // update a listener, if running, with the new name.
             resetName(name)
         }
-    }
-
-    /// A reference to the Automerge document for an initiated Peer Connection to attempt to send sync messages.
-    var automergeDocument: Document? {
-        document?.doc
     }
 
     var browser: NWBrowser?
@@ -45,32 +64,37 @@ final class DocumentSyncCoordinator: ObservableObject {
     func removeConnection(_ connectionId: UUID) {
         connections.removeAll { $0.connectionId == connectionId }
     }
-
-    var listener: NWListener?
-    @Published var listenerState: NWListener.State = .setup
+    
     @Published var listenerSetupError: Error? = nil
     @Published var listenerStatusError: NWError? = nil
-    var txtRecord: NWTXTRecord
 
     let peerId = UUID()
     let syncQueue = DispatchQueue(label: "PeerSyncQueue")
     var timerCancellable: Cancellable?
     var syncTrigger: PassthroughSubject<Void, Never> = PassthroughSubject()
 
-    init(name: String) {
-        txtRecord = NWTXTRecord()
-        txtRecord[TXTRecordKeys.name] = name
-        txtRecord[TXTRecordKeys.peer_id] = self.peerId.uuidString
-        self.name = name
+    static func defaultSharingIdentity() -> String {
+        #if os(iOS)
+        UIDevice().name
+        #elseif os(macOS)
+        Host.current().localizedName ?? "MeetingNotes User"
+        #endif
+    }
+
+    init() {
+        self.name = UserDefaults.standard
+            .string(forKey: MeetingNotesDefaultKeys.sharingIdentity) ?? DocumentSyncCoordinator.defaultSharingIdentity()
         Logger.syncController.debug("SYNC CONTROLLER INIT, peer \(self.peerId.uuidString, privacy: .public)")
     }
 
     func activate() {
         Logger.syncController.debug("SYNC PEER  \(self.peerId.uuidString, privacy: .public): ACTIVATE")
         browserState = .setup
-        listenerState = .setup
         startBrowsing()
-        setupBonjourListener()
+        for documentId in documents.keys {
+            listenerState[documentId] = .setup
+            setupBonjourListener(for: documentId)
+        }
         timerCancellable = Timer.publish(every: .milliseconds(100), on: .main, in: .default)
             .autoconnect()
             .receive(on: syncQueue)
@@ -90,22 +114,21 @@ final class DocumentSyncCoordinator: ObservableObject {
 
     // MARK: NWBrowser
 
-    func attemptToConnectToPeer(_ endpoint: NWEndpoint, forPeer peerId: String) {
+    func attemptToConnectToPeer(_ endpoint: NWEndpoint, forPeer peerId: String, withDoc documentId: UUID) {
         Logger.syncController
             .debug(
                 "Attempting to establish connection to \(peerId, privacy: .public) through \(endpoint.debugDescription, privacy: .public) "
             )
         if connections.filter({ conn in
             conn.peerId == peerId
-        }).isEmpty, let docId = document?.id.uuidString {
+        }).isEmpty {
             Logger.syncController
                 .debug("No connection stored for \(peerId, privacy: .public)")
             let newConnection = SyncConnection(
                 endpoint: endpoint,
                 peerId: peerId,
                 trigger: syncTrigger.eraseToAnyPublisher(),
-                controller: self,
-                docId: docId
+                documentId: documentId
             )
             DispatchQueue.main.async {
                 self.connections.append(newConnection)
@@ -113,7 +136,7 @@ final class DocumentSyncCoordinator: ObservableObject {
         }
     }
 
-    func delayAndAttemptToConnect(_ endpoint: NWEndpoint, forPeer peerId: String) {
+    func delayAndAttemptToConnect(_ endpoint: NWEndpoint, forPeer peerId: String, withDoc documentId: UUID) {
         Task {
             let delay = Int.random(in: 250 ... 1000)
             Logger.syncController
@@ -121,7 +144,7 @@ final class DocumentSyncCoordinator: ObservableObject {
                     "Delaying \(delay, privacy: .public) ms before attempting connect to \(peerId, privacy: .public) at \(endpoint.debugDescription, privacy: .public)"
                 )
             try await Task.sleep(until: .now + .milliseconds(delay), clock: .continuous)
-            self.attemptToConnectToPeer(endpoint, forPeer: peerId)
+            self.attemptToConnectToPeer(endpoint, forPeer: peerId, withDoc: documentId)
         }
     }
 
@@ -171,12 +194,9 @@ final class DocumentSyncCoordinator: ObservableObject {
             guard let self else {
                 return
             }
-            // Only show broadcasting peers with the same document Id
-            // - and that doesn't have the name provided by this app.
+            // Only show broadcasting peers that doesn't have the name provided by this app.
             let filtered = results.filter { result in
                 if case let .bonjour(txtrecord) = result.metadata,
-                   let uuidString = self.document?.id.uuidString,
-                   txtrecord[TXTRecordKeys.doc_id] == uuidString,
                    txtrecord[TXTRecordKeys.peer_id] != self.peerId.uuidString
                 {
                     return true
@@ -189,20 +209,20 @@ final class DocumentSyncCoordinator: ObservableObject {
 
             self.browserResults = filtered
 
-            if self.autoconnect {
-                // check list of current connections, if not in it - enqueue for connecting
-                for potentialPeer in filtered {
-                    Logger.syncController
-                        .debug("Checking potential peer \(potentialPeer.endpoint.debugDescription, privacy: .public)")
-                    if case let .bonjour(txtrecord) = potentialPeer.metadata {
-                        if let peerId = txtrecord[TXTRecordKeys.peer_id] {
-                            if self.connections.filter({ $0.peerId == peerId }).isEmpty {
-                                self.delayAndAttemptToConnect(potentialPeer.endpoint, forPeer: peerId)
-                            }
-                        }
-                    }
-                }
-            }
+//            if self.autoconnect {
+//                // check list of current connections, if not in it - enqueue for connecting
+//                for potentialPeer in filtered {
+//                    Logger.syncController
+//                        .debug("Checking potential peer \(potentialPeer.endpoint.debugDescription, privacy: .public)")
+//                    if case let .bonjour(txtrecord) = potentialPeer.metadata {
+//                        if let peerId = txtrecord[TXTRecordKeys.peer_id] {
+//                            if self.connections.filter({ $0.peerId == peerId }).isEmpty {
+//                                self.delayAndAttemptToConnect(potentialPeer.endpoint, forPeer: peerId)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
 
         Logger.syncController.info("Activating NWBrowser \(newNetworkBrowser.debugDescription, privacy: .public)")
@@ -227,120 +247,126 @@ final class DocumentSyncCoordinator: ObservableObject {
     // MARK: NWListener handlers
 
     // Start listening and advertising.
-    fileprivate func setupBonjourListener() {
-        guard let document else { return }
+    fileprivate func setupBonjourListener(for documentId: UUID) {
+        guard let txtRecordForDoc = txtRecords[documentId] else {
+            Logger.syncController.warning("Attempting to establish listener for unregistered document: \(documentId.uuidString, privacy: .public)")
+            return
+        }
         do {
             // Create the listener object.
-            let listener = try NWListener(using: NWParameters.peerSyncParameters(documentId: document.id.uuidString))
-            self.listener = listener
-
+            let listener = try NWListener(using: NWParameters.peerSyncParameters(documentId: documentId.uuidString))
             // Set the service to advertise.
             listener.service = NWListener.Service(
                 type: AutomergeSyncProtocol.bonjourType,
-                txtRecord: txtRecord
+                txtRecord: txtRecordForDoc
             )
+            listener.stateUpdateHandler = { [weak self] newState in
+                self?.listenerState[documentId] = newState
+                switch newState {
+                case .ready:
+                    if let port = listener.port {
+                        Logger.syncController
+                            .info("Bonjour listener ready on \(port.rawValue, privacy: .public)")
+                    } else {
+                        Logger.syncController
+                            .info("Bonjour listener ready (no port listed)")
+                    }
+                    self?.listenerStatusError = nil
+                case let .failed(error):
+                    if error == NWError.dns(DNSServiceErrorType(kDNSServiceErr_DefunctConnection)) {
+                        Logger.syncController.warning("Bonjour listener failed with \(error, privacy: .public), restarting.")
+                        listener.cancel()
+                        self?.listeners.removeValue(forKey: documentId)
+                        self?.setupBonjourListener(for: documentId)
+                    } else {
+                        Logger.syncController.error("Bonjour listener failed with \(error, privacy: .public), stopping.")
+                        self?.listenerStatusError = error
+                        listener.cancel()
+                    }
+                default:
+                    self?.listenerStatusError = nil
+                }
+            }
+            
+            // The system calls this when a new connection arrives at the listener.
+            // Start the connection to accept it, or cancel to reject it.
+            listener.newConnectionHandler = { [weak self] newConnection in
+                Logger.syncController
+                    .debug(
+                        "Receiving connection request from \(newConnection.endpoint.debugDescription, privacy: .public)"
+                    )
+                Logger.syncController
+                    .debug(
+                        "  Connection details: \(newConnection.debugDescription, privacy: .public)"
+                    )
+                guard let self else { return }
+
+                if connections.filter({ conn in
+                    conn.endpoint == newConnection.endpoint
+                }).isEmpty {
+                    Logger.syncController
+                        .info(
+                            "Endpoint not yet recorded, accepting connection from \(newConnection.endpoint.debugDescription, privacy: .public)"
+                        )
+                    let peerConnection = SyncConnection(
+                        connection: newConnection,
+                        trigger: syncTrigger.eraseToAnyPublisher(),
+                        documentId: documentId
+                    )
+                    connections.append(peerConnection)
+                } else {
+                    Logger.syncController
+                        .info(
+                            "Inbound connection already exists for \(newConnection.endpoint.debugDescription, privacy: .public), cancelling the connection request."
+                        )
+                    // If we already have a connection to that endpoint, don't add another
+                    newConnection.cancel()
+                }
+            }
+
+            // Start listening, and request updates on the main queue.
+            listener.start(queue: .main)
+            listeners[documentId] = listener
             Logger.syncController
                 .debug(
-                    "Starting bonjour network listener for document id \(document.id.uuidString, privacy: .public)"
+                    "Starting bonjour network listener for document id \(documentId.uuidString, privacy: .public)"
                 )
-            startListening()
+
         } catch {
-            Logger.syncController.critical("Failed to create bonjour listener: \(error, privacy: .public)")
+            Logger.syncController.critical("Failed to create bonjour listener for document id \(documentId.uuidString, privacy: .public): \(error, privacy: .public)")
             listenerSetupError = error
         }
     }
 
-    func listenerStateChanged(newState: NWListener.State) {
-        listenerState = newState
-        switch newState {
-        case .ready:
-            if let port = self.listener?.port {
-                Logger.syncController
-                    .info("Bonjour listener ready on \(port.rawValue, privacy: .public)")
-            } else {
-                Logger.syncController
-                    .info("Bonjour listener ready (no port listed)")
-            }
-            listenerStatusError = nil
-        case let .failed(error):
-            if error == NWError.dns(DNSServiceErrorType(kDNSServiceErr_DefunctConnection)) {
-                Logger.syncController.warning("Bonjour listener failed with \(error, privacy: .public), restarting.")
-                listener?.cancel()
-                listener = nil
-                setupBonjourListener()
-            } else {
-                Logger.syncController.error("Bonjour listener failed with \(error, privacy: .public), stopping.")
-                listenerStatusError = error
-                listener?.cancel()
-            }
-        default:
-            listenerStatusError = nil
-        }
-    }
-
-    fileprivate func startListening() {
-        listener?.stateUpdateHandler = listenerStateChanged
-
-        // The system calls this when a new connection arrives at the listener.
-        // Start the connection to accept it, or cancel to reject it.
-        listener?.newConnectionHandler = { [weak self] newConnection in
-            Logger.syncController
-                .debug(
-                    "Receiving connection request from \(newConnection.endpoint.debugDescription, privacy: .public)"
-                )
-            Logger.syncController
-                .debug(
-                    "  Connection details: \(newConnection.debugDescription, privacy: .public)"
-                )
-            guard let self else { return }
-
-            if connections.filter({ conn in
-                conn.endpoint == newConnection.endpoint
-            }).isEmpty {
-                Logger.syncController
-                    .info(
-                        "Endpoint not yet recorded, accepting connection from \(newConnection.endpoint.debugDescription, privacy: .public)"
-                    )
-                let peerConnection = SyncConnection(
-                    connection: newConnection,
-                    trigger: syncTrigger.eraseToAnyPublisher(),
-                    controller: self
-                )
-                connections.append(peerConnection)
-            } else {
-                Logger.syncController
-                    .info(
-                        "Inbound connection already exists for \(newConnection.endpoint.debugDescription, privacy: .public), cancelling the connection request."
-                    )
-                // If we already have a connection to that endpoint, don't add another
-                newConnection.cancel()
-            }
-        }
-
-        // Start listening, and request updates on the main queue.
-        listener?.start(queue: .main)
-    }
-
-    // Stop listening.
+    // Stop all listeners.
     fileprivate func stopListening() {
-        guard let listener else { return }
-        Logger.syncController.debug("Terminating NWListener")
-        listener.cancel()
-        self.listener = nil
+        for (documentId, listener) in listeners {
+            Logger.syncController.debug("Terminating NWListener for \(documentId.uuidString, privacy: .public)")
+            listener.cancel()
+            listeners.removeValue(forKey: documentId)
+        }
+        listeners = [:]
     }
 
     // Update the advertised name on the network.
     fileprivate func resetName(_ name: String) {
-        guard let document, let listener else { return }
-        txtRecord[TXTRecordKeys.name] = name
-        // Reset the service to advertise.
-        listener.service = NWListener.Service(
-            type: AutomergeSyncProtocol.bonjourType,
-            txtRecord: txtRecord
-        )
-        Logger.syncController
-            .debug(
-                "Updated bonjour network listener to name \(name, privacy: .public) for document id \(document.id.uuidString, privacy: .public)"
-            )
+        for documentId in documents.keys {
+            if var txtRecord = txtRecords[documentId]{
+                txtRecord[TXTRecordKeys.name] = name
+                txtRecords[documentId] = txtRecord
+                
+                // Reset the service to advertise.
+                listeners[documentId]?.service = NWListener.Service(
+                    type: AutomergeSyncProtocol.bonjourType,
+                    txtRecord: txtRecord
+                )
+                Logger.syncController
+                    .debug(
+                        "Updated bonjour network listener to name \(name, privacy: .public) for document id \(documentId.uuidString, privacy: .public)"
+                    )
+            } else {
+                Logger.syncController.error("Unable to find TXTRecord for the registered Document: \(documentId.uuidString, privacy: .public)")
+            }
+        }
     }
 }

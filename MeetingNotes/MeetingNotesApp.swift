@@ -1,5 +1,7 @@
 import SwiftUI
 
+let sharedSyncCoordinator = DocumentSyncCoordinator()
+
 /// The document-based Meeting Notes application.
 @main
 struct MeetingNotesApp: App {

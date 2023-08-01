@@ -2,6 +2,7 @@ import Network
 import SwiftUI
 
 struct NWBrowserResultItemView: View {
+    var documentId: UUID
     @ObservedObject var syncController: DocumentSyncCoordinator
     var result: NWBrowser.Result
 
@@ -25,7 +26,7 @@ struct NWBrowserResultItemView: View {
                 Text(nameFromResultMetadata())
                 Spacer()
                 Button {
-                    syncController.attemptToConnectToPeer(result.endpoint, forPeer: peerIdFromResultMetadata())
+                    syncController.attemptToConnectToPeer(result.endpoint, forPeer: peerIdFromResultMetadata(), withDoc: documentId)
                 } label: {
                     Text("Connect")
                 }

@@ -2,17 +2,16 @@ import Network
 import SwiftUI
 
 struct PeerSyncView: View {
+    var documentId: UUID
     @ObservedObject var syncController: DocumentSyncCoordinator
 
     @State var browserActive: Bool = false
     @State var browserStyling: Color = .primary
 
     @State private var editNamePopoverShown: Bool = false
-    @AppStorage(MeetingNotesDefaultKeys.sharingIdentity) private var sharingIdentity: String = MeetingNotesDocument
-        .defaultSharingIdentity()
+    @AppStorage(MeetingNotesDefaultKeys.sharingIdentity) private var sharingIdentity: String = DocumentSyncCoordinator.defaultSharingIdentity()
 
     var body: some View {
-        let _ = Self._printChanges()
         VStack {
             HStack {
                 Text("Name: ")
@@ -57,7 +56,7 @@ struct PeerSyncView: View {
                 .padding(.leading)
                 LazyVStack {
                     ForEach(syncController.browserResults, id: \.hashValue) { result in
-                        NWBrowserResultItemView(syncController: syncController, result: result)
+                        NWBrowserResultItemView(documentId: documentId, syncController: syncController, result: result)
                             .padding(4)
                             .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8))
                             .padding(.horizontal)
@@ -67,6 +66,7 @@ struct PeerSyncView: View {
             LazyVStack {
                 ForEach(syncController.connections) { connection in
                     SyncConnectionView(syncConnection: connection)
+                        .padding(.leading, 4)
                 }
             }
         }
