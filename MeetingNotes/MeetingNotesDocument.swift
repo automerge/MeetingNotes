@@ -82,6 +82,8 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     }
 
     init() {
+        Logger.document.debug("INITIALIZING NEW DOCUMENT")
+
         id = UUID()
         doc = Document()
         model = MeetingNotesModel(title: "Untitled")
@@ -100,18 +102,6 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         syncController.document = self
     }
 
-    /// Updates the Automerge document with the current value from the model.
-    func storeModelUpdates() throws {
-        try modelEncoder.encode(model)
-        self.objectWillChange.send()
-    }
-
-    /// Updates the model document with any changed values in the Automerge document.
-    func getModelUpdates() throws {
-        // Logger.document.debug("Updating model from Automerge document.")
-        model = try modelDecoder.decode(MeetingNotesModel.self)
-    }
-
     required init(configuration: ReadConfiguration) throws {
         guard let filedata = configuration.file.regularFileContents
         else {
@@ -121,6 +111,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
             throw CocoaError(.fileReadCorruptFile)
         }
 
+        Logger.document.debug("LOADING DOCUMENT FROM file data")
         // The binary format of the document is a CBOR encoded file. The goal being to wrap the
         // raw automerge document serialization with an 'envelope' that includes an origin ID,
         // so that an application can know if the document stemmed from the same original source
@@ -138,6 +129,10 @@ final class MeetingNotesDocument: ReferenceFileDocument {
             .string(forKey: MeetingNotesDefaultKeys.sharingIdentity) ?? MeetingNotesDocument.defaultSharingIdentity()
         syncController = DocumentSyncCoordinator(name: sharingIdentity)
         syncController.document = self
+    }
+
+    deinit {
+        syncController.deactivate()
     }
 
     func snapshot(contentType _: UTType) throws -> Document {
@@ -165,6 +160,18 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         // And hand that file to the FileWrapper for the operating system to save, transfer, etc.
         let fileWrapper = FileWrapper(regularFileWithContents: filedata)
         return fileWrapper
+    }
+
+    /// Updates the Automerge document with the current value from the model.
+    func storeModelUpdates() throws {
+        try modelEncoder.encode(model)
+        self.objectWillChange.send()
+    }
+
+    /// Updates the model document with any changed values in the Automerge document.
+    func getModelUpdates() throws {
+        // Logger.document.debug("Updating model from Automerge document.")
+        model = try modelDecoder.decode(MeetingNotesModel.self)
     }
 
     func mergeFile(_ fileURL: URL) -> Result<Bool, Error> {

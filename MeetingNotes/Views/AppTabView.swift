@@ -13,12 +13,16 @@ struct AppTabView: View {
         NavigationSplitView {
             VStack {
                 TextField("Meeting Title", text: $document.model.title)
-                    .onSubmit {
+                    // Normally, I'd likely make this `.onSubmit`, but with
+                    // onChange, I can see live sync effects on each character update
+                    // in the text field.
+                    .onChange(of: document.model.title, perform: { _ in
                         undoManager?.registerUndo(withTarget: document) { _ in }
                         // Registering an undo with even an empty handler for re-do marks
                         // the associated document as 'dirty' and causes SwiftUI to invoke
                         // a snapshot to save the file.
-                    }
+                        updateDoc()
+                    })
                     .autocorrectionDisabled()
                     .padding(.horizontal)
                 HStack {
@@ -39,12 +43,7 @@ struct AppTabView: View {
                                 document.model.agendas.removeAll {
                                     $0.id == agendaItem.id
                                 }
-                                do {
-                                    try document.storeModelUpdates()
-                                } catch {
-                                    Logger.document
-                                        .error("Error when storing model updates: \(error, privacy: .public)")
-                                }
+                                updateDoc()
                             } label: {
                                 Label("Delete", systemImage: "delete.left.fill")
                             }
@@ -80,6 +79,15 @@ struct AppTabView: View {
         // hides the additional navigation stacks that iOS imposes on a document-based app
         .toolbar(.hidden, for: .navigationBar)
         #endif
+    }
+
+    private func updateDoc() {
+        do {
+            try document.storeModelUpdates()
+        } catch {
+            Logger.document
+                .error("Error when storing model updates: \(error, privacy: .public)")
+        }
     }
 }
 
