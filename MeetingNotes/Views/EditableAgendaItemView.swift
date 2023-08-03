@@ -13,14 +13,25 @@ struct EditableAgendaItemView: View {
 
     @State
     private var agendaTitle: String = ""
-    @State
-    private var agendaDetail: String = ""
 
     @State
     private var errorMsg: String = ""
 
     @FocusState
     private var titleIsFocused: Bool
+
+    init(document: MeetingNotesDocument, agendaItemId: UUID?) {
+        self.document = document
+        self.agendaItemId = agendaItemId
+    }
+
+    func bindingForAgendaItem() -> Binding<String> {
+        if let indexPosition = document.model.agendas.firstIndex(where: { $0.id == agendaItemId }) {
+            return document.model.agendas[indexPosition].discussion.textBinding()
+        } else {
+            return .constant("")
+        }
+    }
 
     var body: some View {
         if agendaItemId != nil {
@@ -34,7 +45,7 @@ struct EditableAgendaItemView: View {
                     .border(.gray)
                 }.padding(.horizontal)
 
-                TextEditor(text: $agendaDetail)
+                TextEditor(text: bindingForAgendaItem())
                     .padding(2)
                     .border(Color.black)
                     .padding()
@@ -63,26 +74,17 @@ struct EditableAgendaItemView: View {
             }
             .focused($titleIsFocused)
             .onAppear(perform: {
-                if let agendaItem = document.model.agendas.first(where: {
-                    $0.id == agendaItemId
-                }) {
-                    agendaTitle = agendaItem.title
-                    agendaDetail = agendaItem.discussion.value
+                if let indexPosition = document.model.agendas.firstIndex(where: { $0.id == agendaItemId }) {
+                    agendaTitle = document.model.agendas[indexPosition].title
                 }
             })
             .onReceive(document.objectWillChange, perform: { _ in
-                if let agendaItem = document.model.agendas.first(where: {
-                    $0.id == agendaItemId
-                }) {
-                    agendaTitle = agendaItem.title
-                    agendaDetail = agendaItem.discussion.value
+                if let indexPosition = document.model.agendas.firstIndex(where: { $0.id == agendaItemId }) {
+                    agendaTitle = document.model.agendas[indexPosition].title
                 }
             })
-            .onChange(of: agendaDetail, perform: { _ in
-                updateAgendaItem()
-            })
             .onChange(of: agendaTitle, perform: { _ in
-                updateAgendaItem()
+                updateAgendaItemTitle()
             })
             .autocorrectionDisabled()
             #if os(iOS)
@@ -96,15 +98,11 @@ struct EditableAgendaItemView: View {
         }
     }
 
-    private func updateAgendaItem() {
+    private func updateAgendaItemTitle() {
         var store = false
         if let indexPosition = document.model.agendas.firstIndex(where: { $0.id == agendaItemId }) {
             if document.model.agendas[indexPosition].title != agendaTitle {
                 document.model.agendas[indexPosition].title = agendaTitle
-                store = true
-            }
-            if document.model.agendas[indexPosition].discussion.value != agendaDetail {
-                document.model.agendas[indexPosition].discussion.value = agendaDetail
                 store = true
             }
             // Encode the model back into the Automerge document if the values changed.
@@ -119,6 +117,15 @@ struct EditableAgendaItemView: View {
                 // the associated document as 'dirty' and causes SwiftUI to invoke
                 // a snapshot to save the file - on iOS.
                 undoManager?.registerUndo(withTarget: document) { _ in }
+            }
+        } else {
+            if let localId = agendaItemId {
+                Logger.document
+                    .warning(
+                        "Displaying an AgendaItem page with no matching UUID: \(localId.uuidString, privacy: .public)"
+                    )
+            } else {
+                Logger.document.warning("Displaying an AgendaItem page with no matching UUID: nil")
             }
         }
     }
