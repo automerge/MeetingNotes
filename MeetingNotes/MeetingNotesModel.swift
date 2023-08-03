@@ -14,7 +14,7 @@ struct AgendaItem: Identifiable, Codable, Hashable {
         if let discussion {
             self.discussion = discussion
         } else {
-            self.discussion = AutomergeText("")
+            self.discussion = AutomergeText()
         }
     }
 }

@@ -95,14 +95,45 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         // raw automerge document serialization with an 'envelope' that includes an origin ID,
         // so that an application can know if the document stemmed from the same original source
         // or if they're entirely independent.
+        Logger.document.debug("Starting to CBOR decode from \(filedata.count, privacy: .public) bytes")
         let wrappedDocument = try fileDecoder.decode(WrappedAutomergeDocument.self, from: filedata)
         // Set the identifier of this document, external from the Automerge document.
         id = wrappedDocument.id
         // Then deserialize the Automerge document from the wrappers data.
         doc = try Document(wrappedDocument.data)
+        Logger.document
+            .debug(
+                "Created Automerge doc of ID \(self.id.uuidString, privacy: .public) from CBOR encoded data of \(wrappedDocument.data.count, privacy: .public) bytes"
+            )
         modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
         modelDecoder = AutomergeDecoder(doc: doc)
-        model = try modelDecoder.decode(MeetingNotesModel.self)
+        do {
+            model = try modelDecoder.decode(MeetingNotesModel.self)
+        } catch let DecodingError.dataCorrupted(context) {
+            Logger.document.error("\(context.debugDescription, privacy: .public)")
+            fatalError()
+        } catch let DecodingError.keyNotFound(key, context) {
+            Logger.document
+                .error(
+                    "Key '\(key.debugDescription, privacy: .public)' not found: \(context.debugDescription, privacy: .public)"
+                )
+            Logger.document.error("codingPath: \(context.codingPath.debugDescription, privacy: .public)")
+            fatalError()
+        } catch let DecodingError.valueNotFound(value, context) {
+            Logger.document
+                .error("Value '\(value, privacy: .public)' not found: \(context.debugDescription, privacy: .public)")
+            Logger.document.error("codingPath: \(context.codingPath.debugDescription, privacy: .public)")
+            fatalError()
+        } catch let DecodingError.typeMismatch(type, context) {
+            Logger.document.error("Type '\(type)' mismatch: \(context.debugDescription, privacy: .public)")
+            Logger.document.error("codingPath: \(context.codingPath, privacy: .public)")
+            fatalError()
+        } catch {
+            Logger.document.error("error: \(error, privacy: .public)")
+            fatalError()
+        }
+        Logger.document
+            .debug("finished loading from \(String(describing: configuration.file.filename), privacy: .public)")
     }
 
     deinit {
