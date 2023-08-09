@@ -9,7 +9,7 @@ struct MeetingNotesApp: App {
         DocumentGroup {
             MeetingNotesDocument()
         } editor: { file in
-            AppTabView(document: file.document)
+            MeetingNotesDocumentView(document: file.document)
         }
         .commands {
             CommandGroup(replacing: CommandGroupPlacement.toolbar) {
