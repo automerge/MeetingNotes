@@ -1,7 +1,7 @@
 import OSLog
 import SwiftUI
 
-struct AppTabView: View {
+struct MeetingNotesDocumentView: View {
     @ObservedObject var document: MeetingNotesDocument
     // The undo manager triggers serializations and saving changes to the model
     // back into the automerge document (as a part of it's "save to disk"
@@ -96,10 +96,10 @@ struct AppTabView_Previews: PreviewProvider {
     static var previews: some View {
         #if os(iOS)
         NavigationView {
-            AppTabView(document: MeetingNotesDocument.sample())
+            MeetingNotesDocumentView(document: MeetingNotesDocument.sample())
         }
         #else
-        AppTabView(document: MeetingNotesDocument.sample())
+        MeetingNotesDocumentView(document: MeetingNotesDocument.sample())
         #endif
     }
 }

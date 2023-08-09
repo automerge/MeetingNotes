@@ -1,6 +1,6 @@
 # Contributing
 
-Issues for this library are tracked on GitHub: [https://github.com/heckj/meetingnotes/issues](https://github.com/heckj/meetingnotes/issues)
+Issues for this library are tracked on GitHub: [https://github.com/automerge/meetingnotes/issues](https://github.com/automerge/meetingnotes/issues)
 
 ## Consistency
 

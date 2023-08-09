@@ -101,10 +101,10 @@ struct PeerBrowserView_Previews: PreviewProvider {
     static var previews: some View {
         #if os(iOS)
         NavigationView {
-            AppTabView(document: MeetingNotesDocument.sample())
+            MeetingNotesDocumentView(document: MeetingNotesDocument.sample())
         }
         #else
-        AppTabView(document: MeetingNotesDocument.sample())
+        MeetingNotesDocumentView(document: MeetingNotesDocument.sample())
         #endif
     }
 }
