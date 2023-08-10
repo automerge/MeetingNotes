@@ -29,12 +29,10 @@ xcodebuild docbuild -scheme MeetingNotes \
 
 # $(xcrun --find docc) process-archive transform-for-static-hosting --help
 
-mv ~/MeetingNotesBuild/Build/Products/Debug/MeetingNotes.doccarchive/* docs/
-
-# $(xcrun --find docc) process-archive \
-# transform-for-static-hosting ~/MeetingNotesBuild/Build/Products/Debug/MeetingNotes.doccarchive \
-# --output-path ${PACKAGE_PATH}/docs \
-# --hosting-base-path MeetingNotes
+$(xcrun --find docc) process-archive \
+transform-for-static-hosting ~/MeetingNotesBuild/Build/Products/Debug/MeetingNotes.doccarchive \
+--output-path ${PACKAGE_PATH}/docs \
+--hosting-base-path MeetingNotes
 
 # expecting resulting (hosted) docs at
 #   https://automerge.org/MeetingNotes/documentation/meetingnotes/
