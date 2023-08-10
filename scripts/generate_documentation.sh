@@ -7,8 +7,10 @@ PACKAGE_PATH=$THIS_SCRIPT_DIR/../
 
 export DOCC_JSON_PRETTYPRINT=YES
 export DOCC_HOSTING_BASE_PATH=MeetingNotes
-export DOCUMENTATION_FOLDER_PATH=${PACKAGE_PATH}/docs
-export OTHER_DOCC_FLAGS="--source-service github --source-service-base-url https://github.com/automerge/meetingnotes/tree/main --checkout-path ${PACKAGE_PATH}"
+# export DOCUMENTATION_FOLDER_PATH=${PACKAGE_PATH}/docs # doesn't appear to be having a notable effect through Xcodebuild (Xcode 15b5)
+
+# export OTHER_DOCC_FLAGS="--source-service github --source-service-base-url https://github.com/automerge/meetingnotes/tree/main --checkout-path ${PACKAGE_PATH}"
+# ^^^ also not taking effect in `xcodebuild docbuild`, may be invoking this parameter incorrectly...
 
 rm -rf ~/MeetingNotesBuild
 mkdir -p ${PACKAGE_PATH}/docs

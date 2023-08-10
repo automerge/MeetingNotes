@@ -299,8 +299,8 @@
         "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppWalkthrough",
         "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesModel",
         "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/UniformTypeIdentifiers\/UTType\/meetingnote",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument"
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/UniformTypeIdentifiers\/UTType\/meetingnote"
       ],
       "title" : "Document Model"
     }

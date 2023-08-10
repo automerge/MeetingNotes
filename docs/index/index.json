@@ -261,11 +261,6 @@
             "type" : "class"
           },
           {
-            "path" : "\/documentation\/meetingnotes\/uniformtypeidentifiers\/uttype\/meetingnote",
-            "title" : "static var meetingnote: UTType",
-            "type" : "property"
-          },
-          {
             "children" : [
               {
                 "title" : "Initializers",
@@ -333,6 +328,11 @@
             "path" : "\/documentation\/meetingnotes\/wrappedautomergedocument",
             "title" : "WrappedAutomergeDocument",
             "type" : "struct"
+          },
+          {
+            "path" : "\/documentation\/meetingnotes\/uniformtypeidentifiers\/uttype\/meetingnote",
+            "title" : "static var meetingnote: UTType",
+            "type" : "property"
           },
           {
             "title" : "Core Application",

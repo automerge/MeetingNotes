@@ -19,8 +19,8 @@ The source for the MeetingNotes app is [available on Github](https://github.com/
 - ``AgendaItem``
 
 - ``MeetingNotes/MeetingNotesDocument``
-- ``MeetingNotes/UniformTypeIdentifiers/UTType/meetingnote``
 - ``MeetingNotes/WrappedAutomergeDocument``
+- ``MeetingNotes/UniformTypeIdentifiers/UTType/meetingnote``
 
 ### Core Application
 
