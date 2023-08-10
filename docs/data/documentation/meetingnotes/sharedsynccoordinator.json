@@ -1,4 +1,10 @@
 {
+  "abstract" : [
+    {
+      "text" : "A shared instance of a document sync coordinator.",
+      "type" : "text"
+    }
+  ],
   "hierarchy" : {
     "paths" : [
       [
@@ -93,6 +99,17 @@
   "sections" : [
 
   ],
+  "seeAlsoSections" : [
+    {
+      "generated" : true,
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDefaultKeys",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError"
+      ],
+      "title" : "Core Application"
+    }
+  ],
   "variants" : [
     {
       "paths" : [
@@ -123,7 +140,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator": {
   "abstract" : [
-
+    {
+      "text" : "A application-shared sync controller that supports coordinates documents and network connections with peers.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {
@@ -152,9 +172,114 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/documentsynccoordinator"
 },
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp": {
+  "abstract" : [
+    {
+      "text" : "The document-based Meeting Notes application.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesApp"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesApp"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MeetingNotesApp",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/meetingnotesapp"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDefaultKeys": {
+  "abstract" : [
+    {
+      "text" : "A collection of User Default keys for the app.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "enum"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDefaultKeys"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDefaultKeys",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDefaultKeys"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MeetingNotesDefaultKeys",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/meetingnotesdefaultkeys"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeError": {
+  "abstract" : [
+    {
+      "text" : "Document merging errors",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "enum"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MergeError"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MergeError"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MergeError",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/mergeerror"
+},
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/sharedSyncCoordinator": {
   "abstract" : [
-
+    {
+      "text" : "A shared instance of a document sync coordinator.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

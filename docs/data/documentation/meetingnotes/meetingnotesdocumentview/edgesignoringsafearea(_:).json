@@ -272,7 +272,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView": {
   "abstract" : [
-
+    {
+      "text" : "The primary document view for a MeetingNotes document.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

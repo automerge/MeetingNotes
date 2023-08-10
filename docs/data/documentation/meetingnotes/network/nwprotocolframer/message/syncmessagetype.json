@@ -1,4 +1,10 @@
 {
+  "abstract" : [
+    {
+      "text" : "The type of sync message.",
+      "type" : "text"
+    }
+  ],
   "hierarchy" : {
     "paths" : [
       [
@@ -211,7 +217,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/Network/NWProtocolFramer/Message/syncMessageType": {
   "abstract" : [
-
+    {
+      "text" : "The type of sync message.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {
@@ -245,7 +254,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncMessageType": {
   "abstract" : [
-
+    {
+      "text" : "The type of sync message for the Automerge network sync protocol.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

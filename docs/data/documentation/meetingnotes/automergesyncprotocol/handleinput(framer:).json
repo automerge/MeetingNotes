@@ -189,7 +189,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AutomergeSyncProtocol": {
   "abstract" : [
-
+    {
+      "text" : "The definition of the Automerge network sync protocol.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

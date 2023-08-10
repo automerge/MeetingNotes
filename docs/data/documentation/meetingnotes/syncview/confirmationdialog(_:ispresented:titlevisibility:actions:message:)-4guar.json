@@ -476,7 +476,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncView": {
   "abstract" : [
-
+    {
+      "text" : "A toolbar button for activating sync for a document.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

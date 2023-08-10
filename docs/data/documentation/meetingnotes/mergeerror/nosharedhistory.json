@@ -1,4 +1,10 @@
 {
+  "abstract" : [
+    {
+      "text" : "The documents don’t have a shared history.",
+      "type" : "text"
+    }
+  ],
   "hierarchy" : {
     "paths" : [
       [
@@ -105,7 +111,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeError": {
   "abstract" : [
-
+    {
+      "text" : "Document merging errors",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {
@@ -136,7 +145,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeError/NoSharedHistory": {
   "abstract" : [
-
+    {
+      "text" : "The documents don’t have a shared history.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

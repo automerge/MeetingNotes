@@ -214,7 +214,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeError": {
   "abstract" : [
-
+    {
+      "text" : "Document merging errors",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

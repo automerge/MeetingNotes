@@ -68,7 +68,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemListView_Previews": {
   "abstract" : [
-
+    {
+      "text" : "Preview of an editable agenda item view.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

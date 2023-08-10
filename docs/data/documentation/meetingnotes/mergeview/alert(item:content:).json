@@ -361,7 +361,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeView": {
   "abstract" : [
-
+    {
+      "text" : "A toolbar button to coordinate merging documents.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

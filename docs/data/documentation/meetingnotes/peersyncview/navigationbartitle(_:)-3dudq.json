@@ -273,7 +273,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView": {
   "abstract" : [
-
+    {
+      "text" : "A view that shows the status of peers and network syncing.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

@@ -34,12 +34,6 @@
   "topicSections" : [
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network\/NWParameters"
-      ],
-      "title" : "Extended Classes"
-    },
-    {
-      "identifiers" : [
         "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network\/NWProtocolFramer"
       ],
       "title" : "Extended Types"
@@ -83,38 +77,6 @@
   "title" : "Network",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/network"
-},
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/Network/NWParameters": {
-  "abstract" : [
-
-  ],
-  "fragments" : [
-    {
-      "kind" : "keyword",
-      "text" : "extension"
-    },
-    {
-      "kind" : "text",
-      "text" : " "
-    },
-    {
-      "kind" : "identifier",
-      "preciseIdentifier" : "s:7Network12NWParametersC",
-      "text" : "NWParameters"
-    }
-  ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network\/NWParameters",
-  "kind" : "symbol",
-  "navigatorTitle" : [
-    {
-      "kind" : "identifier",
-      "text" : "NWParameters"
-    }
-  ],
-  "role" : "symbol",
-  "title" : "NWParameters",
-  "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/network\/nwparameters"
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/Network/NWProtocolFramer": {
   "abstract" : [

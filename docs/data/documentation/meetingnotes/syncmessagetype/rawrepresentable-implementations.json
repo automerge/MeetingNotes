@@ -75,7 +75,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncMessageType": {
   "abstract" : [
-
+    {
+      "text" : "The type of sync message for the Automerge network sync protocol.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

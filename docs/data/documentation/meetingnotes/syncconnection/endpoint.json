@@ -160,7 +160,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncConnection": {
   "abstract" : [
-
+    {
+      "text" : "A peer to peer sync connection to receive and send sync messages.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

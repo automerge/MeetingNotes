@@ -1,4 +1,10 @@
 {
+  "abstract" : [
+    {
+      "text" : "A peer to peer sync connection to receive and send sync messages.",
+      "type" : "text"
+    }
+  ],
   "hierarchy" : {
     "paths" : [
       [
@@ -99,6 +105,16 @@
   "sections" : [
 
   ],
+  "seeAlsoSections" : [
+    {
+      "generated" : true,
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/TXTRecordKeys"
+      ],
+      "title" : "Shared Peer Networking Components"
+    }
+  ],
   "topicSections" : [
     {
       "identifiers" : [
@@ -172,9 +188,46 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator": {
+  "abstract" : [
+    {
+      "text" : "A application-shared sync controller that supports coordinates documents and network connections with peers.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "class"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "DocumentSyncCoordinator"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "DocumentSyncCoordinator"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "DocumentSyncCoordinator",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator"
+},
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncConnection": {
   "abstract" : [
-
+    {
+      "text" : "A peer to peer sync connection to receive and send sync messages.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {
@@ -979,6 +1032,40 @@
   "title" : "syncTriggerCancellable",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/syncconnection\/synctriggercancellable"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/TXTRecordKeys": {
+  "abstract" : [
+    {
+      "text" : "A type that provides type-safe strings for TXTRecord publications with Bonjour",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "enum"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "TXTRecordKeys"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/TXTRecordKeys",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "TXTRecordKeys"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "TXTRecordKeys",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/txtrecordkeys"
 },
 "doc://com.github.automerge.MeetingNotes/s12IdentifiableP": {
   "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/s12IdentifiableP",

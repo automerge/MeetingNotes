@@ -181,7 +181,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncView_Previews": {
   "abstract" : [
-
+    {
+      "text" : "Preview of the sync toolbar button.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

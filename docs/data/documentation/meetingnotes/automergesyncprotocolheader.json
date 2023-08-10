@@ -1,4 +1,10 @@
 {
+  "abstract" : [
+    {
+      "text" : "The Automerge network sync protcol header structure.",
+      "type" : "text"
+    }
+  ],
   "hierarchy" : {
     "paths" : [
       [
@@ -97,7 +103,8 @@
       "generated" : true,
       "identifiers" : [
         "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AutomergeSyncProtocol",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncMessageType"
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncMessageType",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network\/NWParameters\/peerSyncParameters(documentId:)"
       ],
       "title" : "Peer to Peer Syncing Protocol"
     }
@@ -166,7 +173,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AutomergeSyncProtocol": {
   "abstract" : [
-
+    {
+      "text" : "The definition of the Automerge network sync protocol.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {
@@ -197,7 +207,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AutomergeSyncProtocolHeader": {
   "abstract" : [
-
+    {
+      "text" : "The Automerge network sync protcol header structure.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {
@@ -497,9 +510,74 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/automergesyncprotocolheader\/type"
 },
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/Network/NWParameters/peerSyncParameters(documentId:)": {
+  "abstract" : [
+    {
+      "text" : "Returns listener and connection network parameters using default TLS for peer to peer connections.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "static"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "keyword",
+      "text" : "func"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "peerSyncParameters"
+    },
+    {
+      "kind" : "text",
+      "text" : "("
+    },
+    {
+      "kind" : "externalParam",
+      "text" : "documentId"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:SS",
+      "text" : "String"
+    },
+    {
+      "kind" : "text",
+      "text" : ") -> "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network12NWParametersC",
+      "text" : "NWParameters"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network\/NWParameters\/peerSyncParameters(documentId:)",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "peerSyncParameters(documentId:)",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/network\/nwparameters\/peersyncparameters(documentid:)"
+},
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncMessageType": {
   "abstract" : [
-
+    {
+      "text" : "The type of sync message for the Automerge network sync protocol.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

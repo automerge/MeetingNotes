@@ -174,7 +174,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator": {
   "abstract" : [
-
+    {
+      "text" : "A application-shared sync controller that supports coordinates documents and network connections with peers.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

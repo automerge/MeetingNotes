@@ -143,7 +143,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncConnectionView": {
   "abstract" : [
-
+    {
+      "text" : "A view that displays a sync connection and its state.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

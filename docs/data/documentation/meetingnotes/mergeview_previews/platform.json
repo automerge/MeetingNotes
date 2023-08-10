@@ -217,7 +217,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeView_Previews": {
   "abstract" : [
-
+    {
+      "text" : "Preview of the merge toolbar button.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

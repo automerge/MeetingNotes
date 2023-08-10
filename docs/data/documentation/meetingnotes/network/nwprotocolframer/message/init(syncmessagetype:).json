@@ -1,4 +1,10 @@
 {
+  "abstract" : [
+    {
+      "text" : "Create a new protocol-framed message for the Automerge network sync protocol.",
+      "type" : "text"
+    }
+  ],
   "hierarchy" : {
     "paths" : [
       [
@@ -106,6 +112,25 @@
         }
       ],
       "kind" : "declarations"
+    },
+    {
+      "kind" : "parameters",
+      "parameters" : [
+        {
+          "content" : [
+            {
+              "inlineContent" : [
+                {
+                  "text" : "<#syncMessageType description#>",
+                  "type" : "text"
+                }
+              ],
+              "type" : "paragraph"
+            }
+          ],
+          "name" : "syncMessageType"
+        }
+      ]
     }
   ],
   "schemaVersion" : {
@@ -215,7 +240,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/Network/NWProtocolFramer/Message/init(syncMessageType:)": {
   "abstract" : [
-
+    {
+      "text" : "Create a new protocol-framed message for the Automerge network sync protocol.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {
@@ -253,7 +281,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncMessageType": {
   "abstract" : [
-
+    {
+      "text" : "The type of sync message for the Automerge network sync protocol.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

@@ -123,7 +123,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AutomergeSyncProtocolHeader": {
   "abstract" : [
-
+    {
+      "text" : "The Automerge network sync protcol header structure.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

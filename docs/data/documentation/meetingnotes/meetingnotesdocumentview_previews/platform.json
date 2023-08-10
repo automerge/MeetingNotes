@@ -17,19 +17,19 @@
     "paths" : [
       [
         "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppTabView_Previews",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppTabView_Previews\/PreviewProvider-Implementations"
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView_Previews",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView_Previews\/PreviewProvider-Implementations"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppTabView_Previews\/platform"
+    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView_Previews\/platform"
   },
   "kind" : "symbol",
   "metadata" : {
     "extendedModule" : "SwiftUI",
-    "externalID" : "s:7SwiftUI15PreviewProviderPAAE8platformAA0C8PlatformOSgvpZ::SYNTHESIZED::s:12MeetingNotes19AppTabView_PreviewsV",
+    "externalID" : "s:7SwiftUI15PreviewProviderPAAE8platformAA0C8PlatformOSgvpZ::SYNTHESIZED::s:12MeetingNotes0aB21DocumentView_PreviewsV",
     "fragments" : [
       {
         "kind" : "keyword",
@@ -190,7 +190,7 @@
   "variants" : [
     {
       "paths" : [
-        "\/documentation\/meetingnotes\/apptabview_previews\/platform"
+        "\/documentation\/meetingnotes\/meetingnotesdocumentview_previews\/platform"
       ],
       "traits" : [
         {
@@ -215,9 +215,12 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AppTabView_Previews": {
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView_Previews": {
   "abstract" : [
-
+    {
+      "text" : "Preview of the MeetingNotes document view.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {
@@ -230,34 +233,34 @@
     },
     {
       "kind" : "identifier",
-      "text" : "AppTabView_Previews"
+      "text" : "MeetingNotesDocumentView_Previews"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppTabView_Previews",
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView_Previews",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
       "kind" : "identifier",
-      "text" : "AppTabView_Previews"
+      "text" : "MeetingNotesDocumentView_Previews"
     }
   ],
   "role" : "symbol",
-  "title" : "AppTabView_Previews",
+  "title" : "MeetingNotesDocumentView_Previews",
   "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/apptabview_previews"
+  "url" : "\/documentation\/meetingnotes\/meetingnotesdocumentview_previews"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AppTabView_Previews/PreviewProvider-Implementations": {
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView_Previews/PreviewProvider-Implementations": {
   "abstract" : [
 
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppTabView_Previews\/PreviewProvider-Implementations",
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView_Previews\/PreviewProvider-Implementations",
   "kind" : "article",
   "role" : "collectionGroup",
   "title" : "PreviewProvider Implementations",
   "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/apptabview_previews\/previewprovider-implementations"
+  "url" : "\/documentation\/meetingnotes\/meetingnotesdocumentview_previews\/previewprovider-implementations"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AppTabView_Previews/platform": {
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView_Previews/platform": {
   "abstract" : [
 
   ],
@@ -296,12 +299,12 @@
       "text" : "?"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppTabView_Previews\/platform",
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView_Previews\/platform",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "platform",
   "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/apptabview_previews\/platform"
+  "url" : "\/documentation\/meetingnotes\/meetingnotesdocumentview_previews\/platform"
 }
 }
 }

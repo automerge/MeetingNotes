@@ -1,0 +1,2690 @@
+{
+  "abstract" : [
+    {
+      "text" : "A guided tour of MeetingNotes, a sample iOS and macOS SwiftUI app that uses Automerge for syncing and collaboration.",
+      "type" : "text"
+    }
+  ],
+  "hierarchy" : {
+    "paths" : [
+      [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes"
+      ]
+    ]
+  },
+  "identifier" : {
+    "interfaceLanguage" : "swift",
+    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppWalkthrough"
+  },
+  "kind" : "article",
+  "metadata" : {
+    "modules" : [
+      {
+        "name" : "MeetingNotes"
+      }
+    ],
+    "role" : "article",
+    "roleHeading" : "Article",
+    "title" : "Meeting Notes, a Document-based SwiftUI app using Automerge."
+  },
+  "primaryContentSections" : [
+    {
+      "content" : [
+        {
+          "anchor" : "Overview",
+          "level" : 2,
+          "text" : "Overview",
+          "type" : "heading"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The source for the MeetingNotes app is ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The Document-based SwiftUI app illustrates storing and loading a ",
+              "type" : "text"
+            },
+            {
+              "code" : "Codable",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " model and integrating Automerge backed models with the SwiftUI controls.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The app includes file merging capabilities and interactive peer-to-peer syncing of updates in near real time.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "anchor" : "Using-Automerge-in-a-Document-based-app",
+          "level" : 3,
+          "text" : "Using Automerge in a Document-based app",
+          "type" : "heading"
+        },
+        {
+          "inlineContent" : [
+            {
+              "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/MeetingNotesDocument.swift",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : " contains most of the swift code related to being a Document-based SwiftUI app.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "MeetingNotes is a document-based SwiftUI app, meaning that it defines a file type, reads and edits files stored on device, focusing on a document to store relevant information.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The file type that the MeetingNotes defines is defined in the projects Info.plist and in code as a Universal Type Identifier.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The identifier the app defines is ",
+              "type" : "text"
+            },
+            {
+              "code" : "com.github.automerge.meetingnotes",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "extension UTType {",
+            "    \/\/\/ An Automerge document that is CBOR encoded with ",
+            "    \/\/\/ a document identifier.",
+            "    static var meetingnote: UTType {",
+            "        UTType(exportedAs: \"com.github.automerge.meetingnotes\")",
+            "    }",
+            "}"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "In the project ",
+              "type" : "text"
+            },
+            {
+              "code" : "Info.plist",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " file, the app exports the type using the file extension ",
+              "type" : "text"
+            },
+            {
+              "code" : ".meetingnotes",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " and conforms to the more general Uniform Type Identifiers of ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/uniformtypeidentifiers\/uttype\/3551481-content",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : " and ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/uniformtypeidentifiers\/uttype\/3551482-data",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "MeetingNotes does not use the raw bytes that an Automerge document provides.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "Instead it wraps those bytes in order to track a unique document identifier that is created with any new document.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "This provides MeetingNotes with a convenient way to determine if two documents represent are intended to represent copies of the same document, or if they were generated independently.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "While Automerge supports merging any two document structures, the seamless updates of changes between copies relies on the documents having a shared based history.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "MeetingNotes uses the document identifier to constrain what Automerge documents it will merge or synchronize.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "MeetingNotes uses the Codable struct ",
+              "type" : "text"
+            },
+            {
+              "code" : "WrappedAutomergeDocument",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " attach the document identifier, and encodes the result using ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/cbor.io",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "struct WrappedAutomergeDocument: Codable {",
+            "    let id: UUID",
+            "    let data: Data",
+            "    static let fileEncoder = CBOREncoder()",
+            "    static let fileDecoder = CBORDecoder()",
+            "}"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The CBOR encoding and decoding is provided by the dependency ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/swiftpackageindex.com\/outfoxx\/PotentCodables",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "To integrate with the SwiftUI document-based app structure, MeetingNotes defines ",
+              "type" : "text"
+            },
+            {
+              "code" : "MeetingNotesDocument",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : ", a subclass of ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/swiftui\/referencefiledocument",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "In the create-a-new-document initializer, MeetingNotes creates a new Automerge document along with a new document identifier to go along with this document.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The initializer goes on to create a new, empty model instance and seeds the schema of the model into Automerge using ",
+              "type" : "text"
+            },
+            {
+              "code" : "AutomergeEncoder",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "init() {",
+            "    id = UUID()",
+            "    doc = Document()",
+            "    let newModel = MeetingNotesModel(title: \"Untitled\")",
+            "    model = newModel",
+            "    modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)",
+            "    modelDecoder = AutomergeDecoder(doc: doc)",
+            "",
+            "    do {",
+            "        \/\/ Establish the schema in the new Automerge document by ",
+            "        \/\/ encoding the model.",
+            "        try modelEncoder.encode(newModel)",
+            "    } catch {",
+            "        fatalError(error.localizedDescription)",
+            "    }",
+            "}"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "In the read-a-document-from-data initializer (",
+              "type" : "text"
+            },
+            {
+              "code" : "init(configuration: ReadConfiguration)",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : "), MeetingNotes attempts to decode the wrapper from the bytes provided by the system, followed by initializing an Automerge document using the bytes embedded within the wrapped document.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "If this process succeeds, the initializer uses ",
+              "type" : "text"
+            },
+            {
+              "code" : "AutomergeDecoder",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " to decode an instance of the model from the Automerge document.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "required init(configuration: ReadConfiguration) throws {",
+            "    guard let filedata = configuration.file.regularFileContents",
+            "    else {",
+            "        Logger.document.error(",
+            "            \"Opened file \\(String(describing: configuration.file.filename), privacy: .public) has no associated data.\"",
+            "        )",
+            "        throw CocoaError(.fileReadCorruptFile)",
+            "    }",
+            "",
+            "    \/\/ The binary format of the document is a CBOR encoded file. The goal ",
+            "    \/\/ being to wrap the raw automerge document serialization with an ",
+            "    \/\/ 'envelope' that includes an origin ID, so that an application can ",
+            "    \/\/ know if the document stemmed from the same original source or if ",
+            "    \/\/ they're entirely independent.",
+            "    let wrappedDocument = try fileDecoder.decode(",
+            "        WrappedAutomergeDocument.self, ",
+            "        from: filedata)",
+            "",
+            "    \/\/ Set the identifier of this document.",
+            "    id = wrappedDocument.id",
+            "",
+            "    \/\/ Deserialize the Automerge document from the wrappers data.",
+            "    doc = try Document(wrappedDocument.data)",
+            "",
+            "    modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)",
+            "    modelDecoder = AutomergeDecoder(doc: doc)",
+            "    do {",
+            "        model = try modelDecoder.decode(MeetingNotesModel.self)",
+            "    } catch {",
+            "        Logger.document.error(\"error: \\(error, privacy: .public)\")",
+            "        fatalError()",
+            "    }",
+            "}"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The required save-the-document method (",
+              "type" : "text"
+            },
+            {
+              "code" : "snapshot(contentType _: UTType)",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : ") encodes any updates from the model back into the Automerge document.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The SwiftUI system calls this method at different times, depending on the app platform.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "On macOS, it is invoked when the person using MeetingNotes invokes a “save” through the menu or keyboard shortcut.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "However, on iOS, the method is invoked more automatically, frequently driven by updating the UndoManager to let the system know the Document is dirty and an update can be saved.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "func snapshot(contentType _: UTType) throws -> Document {",
+            "    try modelEncoder.encode(model)",
+            "    return doc",
+            "}"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "That, in turn, is used by ",
+              "type" : "text"
+            },
+            {
+              "code" : "fileWrapper(snapshot: Document, configuration _: WriteConfiguration)",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " to new wrapped document with the updated bytes, and serializes that to provide the final bytes to store on device.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "func fileWrapper(",
+            "    snapshot: Document, ",
+            "    configuration _: WriteConfiguration) throws -> FileWrapper {",
+            "    \/\/ Using the updated Automerge document returned from snapshot, create",
+            "    \/\/ a wrapper with the origin ID from the serialized automerge file.",
+            "    let wrappedDocument = WrappedAutomergeDocument(",
+            "        id: id, ",
+            "        data: snapshot.save())",
+            "",
+            "    \/\/ Encode that wrapper using CBOR encoding",
+            "    let filedata = try fileEncoder.encode(wrappedDocument)",
+            "",
+            "    \/\/ And hand that file to the FileWrapper for the operating system ",
+            "    \/\/ to save, transfer, etc.",
+            "    let fileWrapper = FileWrapper(regularFileWithContents: filedata)",
+            "    return fileWrapper",
+            "}"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The Document subclass defines two additional helper methods: ",
+              "type" : "text"
+            },
+            {
+              "code" : "storeModelUpdates()",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " and ",
+              "type" : "text"
+            },
+            {
+              "code" : "getModelUpdates",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " to provide a convenient interface point for later updates from synchornization, merging files, or updates to from SwiftUI views.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "\/\/\/ Updates the Automerge document with the current value from the model.",
+            "func storeModelUpdates() throws {",
+            "    try modelEncoder.encode(model)",
+            "    self.objectWillChange.send()",
+            "}",
+            "",
+            "\/\/\/ Updates the model document with any changed values in the ",
+            "\/\/\/ Automerge document.",
+            "func getModelUpdates() throws {",
+            "    \/\/ Logger.document.debug(\"Updating model from Automerge document.\")",
+            "    model = try modelDecoder.decode(MeetingNotesModel.self)",
+            "}"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "For more information on building document-based app with SwiftUI, see ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/swiftui\/building_a_document-based_app_with_swiftui",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "anchor" : "Encoding-and-Decoding-the-model",
+          "level" : 3,
+          "text" : "Encoding and Decoding the model",
+          "type" : "heading"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The model for the app is defined in ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/MeetingNotesModel.swift",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ", with the top level of the model exposing a ",
+              "type" : "text"
+            },
+            {
+              "code" : "Codable",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " struct that includes ",
+              "type" : "text"
+            },
+            {
+              "code" : "title",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " and a list of ",
+              "type" : "text"
+            },
+            {
+              "code" : "AgendaItem",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "code" : "AgendaItem",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " is another ",
+              "type" : "text"
+            },
+            {
+              "code" : "Codable",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " struct that includes it’s own ",
+              "type" : "text"
+            },
+            {
+              "code" : "title",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " and an instance of ",
+              "type" : "text"
+            },
+            {
+              "code" : "AutomergeText",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "This model illustrates the Codable encoding of both structs and arrays, as well as the special Automerge type ",
+              "type" : "text"
+            },
+            {
+              "code" : "AutomergeText",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : ", which dynamically reads and updates values from ",
+              "type" : "text"
+            },
+            {
+              "code" : "ObjType\/Text",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " objects within an Automerge document.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "For any updates to the model ",
+              "type" : "text"
+            },
+            {
+              "inlineContent" : [
+                {
+                  "text" : "other",
+                  "type" : "text"
+                }
+              ],
+              "type" : "emphasis"
+            },
+            {
+              "text" : " than the text updates, the app needs to call ",
+              "type" : "text"
+            },
+            {
+              "code" : "storeModelUpdates()",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " on the instance of ",
+              "type" : "text"
+            },
+            {
+              "code" : "ModelNotesDocument",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " to use an AutomergeEncoder to write the updates back into the Automerge ",
+              "type" : "text"
+            },
+            {
+              "code" : "Document",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " instance.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "anchor" : "Integrating-with-SwiftUI-Controls-and-Views",
+          "level" : 3,
+          "text" : "Integrating with SwiftUI Controls and Views",
+          "type" : "heading"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The primary content view for the app is provided by ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/Views\/MeetingNotesDocumentView.swift",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "This view defines a two-column (list and detail) split view using ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/swiftui\/navigationsplitview",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The view contains a reference to the ",
+              "type" : "text"
+            },
+            {
+              "code" : "MeetingNotesDocument",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " as the property ",
+              "type" : "text"
+            },
+            {
+              "code" : "document",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "code" : "document",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " is used in the view to display the overall document title as an editable field:",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "TextField(\"Meeting Title\", text: $document.model.title)",
+            "    .onSubmit {",
+            "        undoManager?.registerUndo(withTarget: document) { _ in }",
+            "        updateDoc()",
+            "    }"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "On any updates to that field, the view calls ",
+              "type" : "text"
+            },
+            {
+              "code" : "storeModelUpdates()",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " on the document and notifies the Undo manager that a change has happened.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The Undo manager isn’t used to build up a queue of changes that could be reversed, instead being the means to notify the SwiftUI document-based app framework that a change ",
+              "type" : "text"
+            },
+            {
+              "inlineContent" : [
+                {
+                  "text" : "has",
+                  "type" : "text"
+                }
+              ],
+              "type" : "emphasis"
+            },
+            {
+              "text" : " occured, so that it can mark the document as dirty.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "In the macOS app, this provides a visual affordance to let the person using the app know that the document has been updated and can be saved. In the iOS app, this automatically saves the document.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "This main document view also provides a list of each of the ",
+              "type" : "text"
+            },
+            {
+              "code" : "AgendaItem",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " instances from our model, includes a button to add new, emtpy item, and a contextual menu option to delete an item.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The detail view is provided by ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/Views\/EditableAgendaItemView.swift",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "Like the main document view, it maintains a reference to ",
+              "type" : "text"
+            },
+            {
+              "code" : "MeetingNotesDocument",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " as the property ",
+              "type" : "text"
+            },
+            {
+              "code" : "document",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " to write changes back into the Automerge document, and maintains its own ",
+              "type" : "text"
+            },
+            {
+              "code" : "@State",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " value for the agenda item’s title.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The view is also passed a unique, stable identifier for each agenda item, which is used to handle selection from the list view, using ",
+              "type" : "text"
+            },
+            {
+              "code" : "id()",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " to identify the detail view with it’s ID.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The state of the view is set up using ",
+              "type" : "text"
+            },
+            {
+              "code" : ".onAppear()",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " and is refreshed when the view sees an update to the Document’s objectWillChange publisher.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            ".onAppear(perform: {",
+            "    if let indexPosition = document.model.agendas.firstIndex(",
+            "        where: { $0.id == agendaItemId }) {",
+            "        agendaTitle = document.model.agendas[indexPosition].title",
+            "    }",
+            "})",
+            ".onReceive(document.objectWillChange, perform: { _ in",
+            "    if let indexPosition = document.model.agendas.firstIndex(",
+            "        where: { $0.id == agendaItemId }) {",
+            "        agendaTitle = document.model.agendas[indexPosition].title",
+            "    }",
+            "})",
+            ".onChange(of: agendaTitle, perform: { _ in",
+            "    updateAgendaItemTitle()",
+            "})"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "When the @State value of ",
+              "type" : "text"
+            },
+            {
+              "code" : "agendaTitle",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " changes, the view writes an updated value back to the Automerge document if the values of the state and document differ.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "private func updateAgendaItemTitle() {",
+            "    var store = false",
+            "    if let indexPosition = document.model.agendas.firstIndex(",
+            "        where: { $0.id == agendaItemId }",
+            "    ) {",
+            "        if document.model.agendas[indexPosition].title != agendaTitle {",
+            "            document.model.agendas[indexPosition].title = agendaTitle",
+            "            store = true",
+            "        }",
+            "        \/\/ Encode the model back into the Automerge document if the ",
+            "        \/\/ values changed.",
+            "        if store {",
+            "            do {",
+            "                \/\/ Serialize the changes into the internal ",
+            "                \/\/ Automerge document.",
+            "                try document.storeModelUpdates()",
+            "            } catch {",
+            "                errorMsg = error.localizedDescription",
+            "            }",
+            "            \/\/ Registering an undo with even an empty handler for ",
+            "            \/\/ re-do marks the associated document as 'dirty' and ",
+            "            \/\/ causes SwiftUI to invoke a snapshot to save the file",
+            "            \/\/ - at least on iOS.",
+            "            undoManager?.registerUndo(withTarget: document) { _ in }",
+            "        }",
+            "    } ",
+            "}"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The discussion property of the agenda item is linked to a binding provided by ",
+              "type" : "text"
+            },
+            {
+              "code" : "AutomergeText\/textBinding()",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : ", the reference to the text instance looked up from the model using the agenda item’s identifier.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "TextEditor(text: bindingForAgendaItem())"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "Each keystroke that updates the discussion is immediately written back to the Automerge document.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "By using the ",
+              "type" : "text"
+            },
+            {
+              "code" : "Binding<String>",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " vended from ",
+              "type" : "text"
+            },
+            {
+              "code" : "AutomergeText",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " the app directly reads and updates the view from changes to the Automerge document without having to necessarily rebuild the entire view.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "func bindingForAgendaItem() -> Binding<String> {",
+            "    if let indexPosition = document.model.agendas.firstIndex(",
+            "        where: { $0.id == agendaItemId }",
+            "    ) {",
+            "        return document",
+            "            .model",
+            "            .agendas[indexPosition]",
+            "            .discussion",
+            "            .textBinding()",
+            "    } else {",
+            "        return .constant(\"\")",
+            "    }",
+            "}"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "anchor" : "Model-Update-Patterns",
+          "level" : 3,
+          "text" : "Model Update Patterns",
+          "type" : "heading"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "This example app shows two different patterns of working with data stored within Automerge.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The first uses ",
+              "type" : "text"
+            },
+            {
+              "code" : "Codable",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " value types, which sets an expectation of decoding the model to read from Automerge, and encoding the model to store any updates.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "This pattern is reasonably fast, but does update the entire model - and doing so triggers SwiftUI view rebuilds when those value types are updated.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "On a broad scale, this may be inconvenient or untenable for app performance.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The second pattern leverages ",
+              "type" : "text"
+            },
+            {
+              "code" : "Codable",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : ", but does so with a special reference type that provides a reference that directly reads from and writes to the Automerge document.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "By using a ",
+              "type" : "text"
+            },
+            {
+              "code" : "Codable",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " reference type, the app can leverage the capability of ",
+              "type" : "text"
+            },
+            {
+              "code" : "AutomergeEncoder",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " to establish the needed objects within a new Automerge document, effecting “seeding the schema”.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "Beyond that, it is the reposibility of the ",
+              "type" : "text"
+            },
+            {
+              "code" : "AutomergeText",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " object to notify of changes to ensure SwiftUI views are refreshed as appropriate.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The ",
+              "type" : "text"
+            },
+            {
+              "code" : "AutomergeText",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " source provides an example of how you can structure your own reference types to achieve this sort of performance, if that need is critical to you.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "In practice, doing this extra work correlates well to wanting to expose live-collaboration capabilities, where one or more people are doing frequent updates and the documents are likewise frequently synchronizing.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "In MeetingNotes, by using a ",
+              "type" : "text"
+            },
+            {
+              "code" : "Codable",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " reference type of ",
+              "type" : "text"
+            },
+            {
+              "code" : "AutomergeText",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : ", the app gets a notable performance increase when collaboratively editing a ",
+              "type" : "text"
+            },
+            {
+              "code" : "discussion",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " property while live-syncing with another peer.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "anchor" : "Merging-documents",
+          "level" : 3,
+          "text" : "Merging documents",
+          "type" : "heading"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The main app view includes a toolbar button displaying ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/Views\/MergeView.swift",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "code" : "MergeView",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " provides a button that uses ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/swiftui\/view\/fileimporter(ispresented:allowedcontenttypes:allowsmultipleselection:oncompletion:)",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : " to attempt to load another instance of the MeetingNotes document type from device storage.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "This button illustrates how to seamlessly merge in updates from a copy made of the original document.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "Upon loading the document, it calls the helper method ",
+              "type" : "text"
+            },
+            {
+              "code" : "mergeDocument",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " on ",
+              "type" : "text"
+            },
+            {
+              "code" : "MeetingNotesDocument",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " to decode the document identifier, and if identical to the current document, merges any updates using ",
+              "type" : "text"
+            },
+            {
+              "code" : "Document\/merge(other:)",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "func mergeFile(_ fileURL: URL) -> Result<Bool, Error> {",
+            "    precondition(fileURL.isFileURL)",
+            "    do {",
+            "        let fileData = try Data(contentsOf: fileURL)",
+            "        let newWrappedDocument = try fileDecoder.decode(",
+            "            WrappedAutomergeDocument.self, ",
+            "            from: fileData)",
+            "        if newWrappedDocument.id != self.id {",
+            "            throw MergeError.NoSharedHistory",
+            "        }",
+            "        let newAutomergeDoc = try Document(newWrappedDocument.data)",
+            "        try doc.merge(other: newAutomergeDoc)",
+            "        model = try modelDecoder.decode(MeetingNotesModel.self)",
+            "        return .success(true)",
+            "    } catch {",
+            "        return .failure(error)",
+            "    }",
+            "}"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "anchor" : "Syncing-Documents",
+          "level" : 3,
+          "text" : "Syncing Documents",
+          "type" : "heading"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "With a document-based SwiftUI app, the SwiftUI app framework owns the lifetime of a ReferenceFileDocument subclass.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "If the file saved from the Document based app is stored in iCloud, the operating system may destroy an existing instance and re-create it from the contents on device - most notably after having replicated the file with iCloud.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "There may be other instances of where the document can be rebuilt, but the important aspect is that SwiftUI is in control of that instance’s lifecycle.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "To provide peer to peer syncing, MeetingNotes handles that detail by enabling an app-level sync coordinator: ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/PeerNetworking\/DocumentSyncCoordinator.swift",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "This coordinator has properties for tracking Documents open by the app, as well as identifiers that represent those documents and identifiers that represent the various peers it syncs with.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The sync coordinator presents itself as an Observable object to enable use within SwiftUI views, providing information about peers, connections, and the capability for establishing a new connection.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "When MeetingNotes enables sync, it registers a document with the SyncCoordinator, which builds up a ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/network\/nwtxtrecord",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : " instance to use in advertising that the document is available for sync.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "func registerDocument(_ document: MeetingNotesDocument) {",
+            "    documents[document.id] = document",
+            "",
+            "    var txtRecord = NWTXTRecord()",
+            "    txtRecord[TXTRecordKeys.name] = name",
+            "    txtRecord[TXTRecordKeys.peer_id] = peerId.uuidString",
+            "    txtRecord[TXTRecordKeys.doc_id] = document.id.uuidString",
+            "    txtRecords[document.id] = txtRecord",
+            "}"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "On activating sync, the coordinator activates both an ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/network\/nwbrowser",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : " and ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/network\/nwlistener",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : " instance.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "In addition to activating the network services, the coordinator starts a timer that is used to drive checks for documents to determine if they should send a network sync message as a publisher.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "When established, connections subscribe to the timer to drive checks of the referenced Automerge document to synchronize it.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "anchor" : "Network-Browser",
+          "level" : 4,
+          "text" : "Network Browser",
+          "type" : "heading"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The browser looks for nearby peers that the app can sync documents with, while the listener provides the means to accept network connections from a peer.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The actual sync connection can be initiated by either peer, and only one needs to be initiated to support sync.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The browser filters results by the type of network protocol it is initialized with: ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/PeerNetworking\/AutomergeSyncProtocol.swift",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The handler provide to the browser additionally filters the results to only forward the results from other peers on the network.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The ",
+              "type" : "text"
+            },
+            {
+              "code" : "NWBrowser",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " instance sees all available, local listeners including itself when the listener is active.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "\/\/ Only show broadcasting peers that doesn't have the name ",
+            "\/\/ provided by this app.",
+            "let filtered = results.filter { result in",
+            "    if case let .bonjour(txtrecord) = result.metadata,",
+            "       txtrecord[TXTRecordKeys.peer_id] != self.peerId.uuidString",
+            "    {",
+            "        return true",
+            "    }",
+            "    return false",
+            "}",
+            ".sorted(by: {",
+            "    $0.hashValue < $1.hashValue",
+            "})"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "MeetingNotes includes both a heuristic for automatically connecting when running on iOS and integration with a ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/network\/nwbrowser\/result",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ", through a SwiftUI control, to establish a new connection.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The heuristic for an auto-connect waits for a random period of time before establishing an automatic connection.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "anchor" : "Network-Listener",
+          "level" : 4,
+          "text" : "Network Listener",
+          "type" : "heading"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "To accept a connection the coordinator activates a bonjour listener for the document being shared.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "Within MeetingNotes, the listener is configured with the sync network, the ",
+              "type" : "text"
+            },
+            {
+              "code" : "NWTxtRecord",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " that describes the document to another browser, and network parameters to configure TCP and TLS.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "MeetingNotes uses the document identifier as a pre-shared TLS secret, which both enables encryption and constraints sync connections to other instances that are also using this same convention.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "content" : [
+            {
+              "inlineContent" : [
+                {
+                  "text" : "Using a pre-shared secret is ",
+                  "type" : "text"
+                },
+                {
+                  "inlineContent" : [
+                    {
+                      "text" : "not",
+                      "type" : "text"
+                    }
+                  ],
+                  "type" : "emphasis"
+                },
+                {
+                  "text" : " a recommended security practice, and this example makes no attestations of being a secure means of encrypting the communications.",
+                  "type" : "text"
+                }
+              ],
+              "type" : "paragraph"
+            }
+          ],
+          "name" : "Warning",
+          "style" : "warning",
+          "type" : "aside"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "While the browser receives the published TXTRecord of the peer with the Bonjour notifications, the Listener only knows that it has received a connection.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "Because of this, at the start, who initiated the connection is unknown.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "MeetingNotes accepts any full connections that get fully established with TLS, using the document identifier as a shared key.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "A more fully developed application might also track and determine acceptability of connections using additional information - either embedded within the network sync protocol or passed as parameters within the protocol.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "Once MeetingNotes accepts a connection, it creates an instance of ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/PeerNetworking\/SyncConnection.swift",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "anchor" : "Syncing-over-a-connection",
+          "level" : 4,
+          "text" : "Syncing over a connection",
+          "type" : "heading"
+        },
+        {
+          "inlineContent" : [
+            {
+              "code" : "SyncConnection",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " is initialized with an ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/network\/nwconnection",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ", the identifier for a document, and maintains its own identifier for convenience.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "It also establishes an instance of ",
+              "type" : "text"
+            },
+            {
+              "code" : "SyncState",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : ", which tracks the state of the peer on the other side of the connection.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "Upon initialization, the connection wrapper subscribes to the sync coordinators timer and uses that timer signal to drive a check to determine if a sync message should be sent.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "syncTriggerCancellable = trigger.sink(receiveValue: { _ in",
+            "    if let automergeDoc = sharedSyncCoordinator",
+            "        .documents[self.documentId]?.doc,",
+            "       let syncData = automergeDoc.generateSyncMessage(",
+            "            state: self.syncState),",
+            "       self.connectionState == .ready",
+            "    {",
+            "        Logger.syncConnection",
+            "            .info(",
+            "                \"\\(self.shortId, privacy: .public): Syncing \\(syncData.count, privacy: .public) bytes to \\(connection.endpoint.debugDescription, privacy: .public)\"",
+            "            )",
+            "        self.sendSyncMsg(syncData)",
+            "    }",
+            "})"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The underlying network protocol only sends an event if the call to ",
+              "type" : "text"
+            },
+            {
+              "code" : "Document\/generateSyncMessage(state:)",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " returns non-nil data.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The heart of the synchronization happens when connection receives a network protocol sync message.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "This message is structured wrapper around the sync bytes from another Automerge document along with a minimal type-of-message identifier, taking advantage of the ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/network",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : " to frame and establish the messages being transfered.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "Once received, the connection uses ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/network\/nwprotocolframer",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : " to retrieve the message from the bytes sent over the network, and delegates receiving the message to be processed if complete, before waiting for the next message on the network.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "private func receiveNextMessage() {",
+            "    guard let connection = connection else {",
+            "        return",
+            "    }",
+            "",
+            "    connection.receiveMessage { content, context, isComplete, error in",
+            "        Logger.syncConnection",
+            "            .debug(",
+            "                \"\\(self.shortId, privacy: .public): Received a \\(isComplete ? \"complete\" : \"incomplete\", privacy: .public) msg on connection\"",
+            "            )",
+            "        if let content {",
+            "            Logger.syncConnection.debug(\"  - received \\(content.count) bytes\")",
+            "        } else {",
+            "            Logger.syncConnection.debug(\"  - received no data with msg\")",
+            "        }",
+            "        \/\/ Extract your message type from the received context.",
+            "        if let syncMessage = context?",
+            "            .protocolMetadata(",
+            "                definition: AutomergeSyncProtocol.definition",
+            "            ) as? NWProtocolFramer.Message,",
+            "            let endpoint = self.connection?.endpoint",
+            "        {",
+            "            self.receivedMessage(",
+            "                content: content, ",
+            "                message: syncMessage, ",
+            "                from: endpoint)",
+            "        }",
+            "        if error == nil {",
+            "            \/\/ Continue to receive more messages until we receive",
+            "            \/\/ an error.",
+            "            self.receiveNextMessage()",
+            "        } else {",
+            "            Logger.syncConnection.error(\"  - error on received message: \\(error)\")",
+            "            self.cancel()",
+            "        }",
+            "    }",
+            "}"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The connection processes the received protocol message with the ",
+              "type" : "text"
+            },
+            {
+              "code" : "receivedMessage",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " function, which uses the identifier of the associated of document stored with the connection to retrieve a reference to the instance of the Automerge document.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "Neither the connection, nor the sync coordinator object, can maintain a stable reference to the Automerge document instance because SwiftUI owns the life-cycle of the app’s ReferenceFileDocument subclass.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "To work around SwiftUI replacing this class, the coordinator maintains and updates references as Document subclasses register themselves, in order to provide a quick lookup by the document’s identifier.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "With a reference the relevant document, the method invokes ",
+              "type" : "text"
+            },
+            {
+              "code" : "Document\/receiveSyncMessageWithPatches(state:message:)",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " to receive any provided changes, and uses the returns array of ",
+              "type" : "text"
+            },
+            {
+              "code" : "Patch",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " only to log how many patches were returned.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "Immediately after receiving an update, the function calls ",
+              "type" : "text"
+            },
+            {
+              "code" : "Document\/generateSyncMessage(state:)",
+              "type" : "codeVoice"
+            },
+            {
+              "text" : " to determine if the additional sync messages are needed, and sends a return sync message if the function returns any data.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "code" : [
+            "func receivedMessage(",
+            "    content data: Data?, ",
+            "    message: NWProtocolFramer.Message, ",
+            "    from endpoint: NWEndpoint) {",
+            "",
+            "    guard let document = sharedSyncCoordinator.documents[self.documentId] else {",
+            "        \/\/ ...",
+            "        return",
+            "    }",
+            "    switch message.syncMessageType {",
+            "    case .invalid:",
+            "        \/\/ ...",
+            "    case .sync:",
+            "        guard let data else {",
+            "            \/\/ ...",
+            "            return",
+            "        }",
+            "        do {",
+            "            \/\/ When we receive a complete sync message from the ",
+            "            \/\/ underlying transport, update our automerge document, ",
+            "            \/\/ and the associated SyncState.",
+            "            let patches = try document.doc.receiveSyncMessageWithPatches(",
+            "                state: syncState,",
+            "                message: data",
+            "            )",
+            "            Logger.syncConnection",
+            "                .debug(",
+            "                    \"\\(self.shortId, privacy: .public): Received \\(patches.count, privacy: .public) patches in \\(data.count, privacy: .public) bytes\"",
+            "                )",
+            "            try document.getModelUpdates()",
+            "",
+            "            \/\/ Once the Automerge doc is updated, check (using the ",
+            "            \/\/ SyncState) to see if we believe we need to send additional",
+            "            \/\/ messages to the peer to keep it in sync.",
+            "            if let response = document.doc.generateSyncMessage(state: syncState) {",
+            "                sendSyncMsg(response)",
+            "            } else {",
+            "                \/\/ When generateSyncMessage returns nil, the remote ",
+            "                \/\/ endpoint represented by SyncState should be up to date.",
+            "                Logger.syncConnection",
+            "                    .debug(",
+            "                        \"\\(self.shortId, privacy: .public): Sync complete with \\(endpoint.debugDescription, privacy: .public)\"",
+            "                    )",
+            "            }",
+            "        } catch {",
+            "            Logger.syncConnection",
+            "                .error(\"\\(self.shortId, privacy: .public): Error applying sync message: \\(error, privacy: .public)\")",
+            "        }",
+            "    case .id:",
+            "        Logger.syncConnection.info(\"\\(self.shortId, privacy: .public): received request for document ID\")",
+            "        sendDocumentId(document.id.uuidString)",
+            "    }",
+            "}"
+          ],
+          "syntax" : "swift",
+          "type" : "codeListing"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "With this established on both sides of a Bonjour connection, once a sync process is initiated, the functions send messages back and forth until a sync is complete.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The timer, provided from the sync coordinator, is only needed to drive sync messages when changes have occurred locally.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "content" : [
+            {
+              "inlineContent" : [
+                {
+                  "text" : "The messages that contain changes to sync generated by Automerge are ",
+                  "type" : "text"
+                },
+                {
+                  "inlineContent" : [
+                    {
+                      "text" : "not",
+                      "type" : "text"
+                    }
+                  ],
+                  "type" : "emphasis"
+                },
+                {
+                  "text" : " guaranteed to have all the updates needed within a single round trip.",
+                  "type" : "text"
+                },
+                {
+                  "text" : " ",
+                  "type" : "text"
+                },
+                {
+                  "text" : "The underlying mechanism optimizes for sharing the state of heads initially, resulting in a small initial message, followed by sets of changes from either side.",
+                  "type" : "text"
+                },
+                {
+                  "text" : " ",
+                  "type" : "text"
+                },
+                {
+                  "text" : "The full sync process is iterative, which allows for efficient sync even when the two peers may be concurrently syncing with other, unseen or unknown, peers.",
+                  "type" : "text"
+                }
+              ],
+              "type" : "paragraph"
+            }
+          ],
+          "name" : "Note",
+          "style" : "note",
+          "type" : "aside"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The timer frequency in MeetingNotes is set intentionally low to drive sync updates frequently enough to appear to “sync with each keystoke” for the purpose of showing interactively visible collaboration possibilities.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "Your own app may not need, or want, to drive a network sync this frequently.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        }
+      ],
+      "kind" : "content"
+    }
+  ],
+  "schemaVersion" : {
+    "major" : 0,
+    "minor" : 3,
+    "patch" : 0
+  },
+  "sections" : [
+
+  ],
+  "seeAlsoSections" : [
+    {
+      "generated" : true,
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesModel",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/UniformTypeIdentifiers\/UTType\/meetingnote",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument"
+      ],
+      "title" : "Document Model"
+    }
+  ],
+  "variants" : [
+    {
+      "paths" : [
+        "\/documentation\/meetingnotes\/appwalkthrough"
+      ],
+      "traits" : [
+        {
+          "interfaceLanguage" : "swift"
+        }
+      ]
+    }
+  ]
+, 
+"references": {
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+  "abstract" : [
+    {
+      "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
+      "type" : "text"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "kind" : "symbol",
+  "role" : "collection",
+  "title" : "MeetingNotes",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AgendaItem": {
+  "abstract" : [
+    {
+      "text" : "An individual agenda item tracked by meeting notes.",
+      "type" : "text"
+    },
+    {
+      "text" : " ",
+      "type" : "text"
+    },
+    {
+      "text" : "The ",
+      "type" : "text"
+    },
+    {
+      "code" : "discussion",
+      "type" : "codeVoice"
+    },
+    {
+      "text" : " property is the type ",
+      "type" : "text"
+    },
+    {
+      "code" : "Text",
+      "type" : "codeVoice"
+    },
+    {
+      "text" : " is from Automerge, and represents a collaboratively edited string.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "AgendaItem"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "AgendaItem"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "AgendaItem",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/agendaitem"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument": {
+  "abstract" : [
+    {
+      "text" : "The concrete subclass of a reference-based file document.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "class"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDocument"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDocument"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MeetingNotesDocument",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/meetingnotesdocument"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesModel": {
+  "abstract" : [
+    {
+      "text" : "The top-level application model for Meeting Notes.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesModel"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesModel",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesModel"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MeetingNotesModel",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/meetingnotesmodel"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/UniformTypeIdentifiers/UTType/meetingnote": {
+  "abstract" : [
+    {
+      "text" : "An Automerge document that is CBOR encoded with a document identifier.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "static"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "meetingnote"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:22UniformTypeIdentifiers6UTTypeV",
+      "text" : "UTType"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/UniformTypeIdentifiers\/UTType\/meetingnote",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "meetingnote",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/uniformtypeidentifiers\/uttype\/meetingnote"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument": {
+  "abstract" : [
+    {
+      "text" : "A CBOR encoded wrapper around a serialized Automerge document.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "WrappedAutomergeDocument"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "WrappedAutomergeDocument"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "WrappedAutomergeDocument",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/wrappedautomergedocument"
+},
+"https://cbor.io": {
+  "identifier" : "https:\/\/cbor.io",
+  "title" : "CBOR encoding",
+  "titleInlineContent" : [
+    {
+      "text" : "CBOR encoding",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/cbor.io"
+},
+"https://developer.apple.com/documentation/network": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/network",
+  "title" : "Network framework",
+  "titleInlineContent" : [
+    {
+      "text" : "Network framework",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/network"
+},
+"https://developer.apple.com/documentation/network/nwbrowser": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/network\/nwbrowser",
+  "title" : "NWBrowser",
+  "titleInlineContent" : [
+    {
+      "text" : "NWBrowser",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/network\/nwbrowser"
+},
+"https://developer.apple.com/documentation/network/nwbrowser/result": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/network\/nwbrowser\/result",
+  "title" : "NWBrowser.Result",
+  "titleInlineContent" : [
+    {
+      "text" : "NWBrowser.Result",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/network\/nwbrowser\/result"
+},
+"https://developer.apple.com/documentation/network/nwconnection": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/network\/nwconnection",
+  "title" : "NWConnection",
+  "titleInlineContent" : [
+    {
+      "text" : "NWConnection",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/network\/nwconnection"
+},
+"https://developer.apple.com/documentation/network/nwlistener": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/network\/nwlistener",
+  "title" : "NWListener",
+  "titleInlineContent" : [
+    {
+      "text" : "NWListener",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/network\/nwlistener"
+},
+"https://developer.apple.com/documentation/network/nwprotocolframer": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/network\/nwprotocolframer",
+  "title" : "NWProtocolFramer",
+  "titleInlineContent" : [
+    {
+      "text" : "NWProtocolFramer",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/network\/nwprotocolframer"
+},
+"https://developer.apple.com/documentation/network/nwtxtrecord": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/network\/nwtxtrecord",
+  "title" : "NWTextRecord",
+  "titleInlineContent" : [
+    {
+      "text" : "NWTextRecord",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/network\/nwtxtrecord"
+},
+"https://developer.apple.com/documentation/swiftui/building_a_document-based_app_with_swiftui": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/swiftui\/building_a_document-based_app_with_swiftui",
+  "title" : "Building a Document-Based App with SwiftUI",
+  "titleInlineContent" : [
+    {
+      "text" : "Building a Document-Based App with SwiftUI",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/swiftui\/building_a_document-based_app_with_swiftui"
+},
+"https://developer.apple.com/documentation/swiftui/navigationsplitview": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/swiftui\/navigationsplitview",
+  "title" : "NavigationSplitView",
+  "titleInlineContent" : [
+    {
+      "text" : "NavigationSplitView",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/swiftui\/navigationsplitview"
+},
+"https://developer.apple.com/documentation/swiftui/referencefiledocument": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/swiftui\/referencefiledocument",
+  "title" : "ReferenceFileDocument",
+  "titleInlineContent" : [
+    {
+      "text" : "ReferenceFileDocument",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/swiftui\/referencefiledocument"
+},
+"https://developer.apple.com/documentation/swiftui/view/fileimporter(ispresented:allowedcontenttypes:allowsmultipleselection:oncompletion:)": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/swiftui\/view\/fileimporter(ispresented:allowedcontenttypes:allowsmultipleselection:oncompletion:)",
+  "title" : "fileImporter",
+  "titleInlineContent" : [
+    {
+      "code" : "fileImporter",
+      "type" : "codeVoice"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/swiftui\/view\/fileimporter(ispresented:allowedcontenttypes:allowsmultipleselection:oncompletion:)"
+},
+"https://developer.apple.com/documentation/uniformtypeidentifiers/uttype/3551481-content": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/uniformtypeidentifiers\/uttype\/3551481-content",
+  "title" : "public.content",
+  "titleInlineContent" : [
+    {
+      "code" : "public.content",
+      "type" : "codeVoice"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/uniformtypeidentifiers\/uttype\/3551481-content"
+},
+"https://developer.apple.com/documentation/uniformtypeidentifiers/uttype/3551482-data": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/uniformtypeidentifiers\/uttype\/3551482-data",
+  "title" : "public.data",
+  "titleInlineContent" : [
+    {
+      "code" : "public.data",
+      "type" : "codeVoice"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/uniformtypeidentifiers\/uttype\/3551482-data"
+},
+"https://github.com/automerge/MeetingNotes": {
+  "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes",
+  "title" : "available on Github",
+  "titleInlineContent" : [
+    {
+      "text" : "available on Github",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/github.com\/automerge\/MeetingNotes"
+},
+"https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/MeetingNotesDocument.swift": {
+  "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/MeetingNotesDocument.swift",
+  "title" : "MeetingNotesDocument.swift",
+  "titleInlineContent" : [
+    {
+      "text" : "MeetingNotesDocument.swift",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/MeetingNotesDocument.swift"
+},
+"https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/MeetingNotesModel.swift": {
+  "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/MeetingNotesModel.swift",
+  "title" : "MeetingNotesModel.swift",
+  "titleInlineContent" : [
+    {
+      "text" : "MeetingNotesModel.swift",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/MeetingNotesModel.swift"
+},
+"https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/PeerNetworking/AutomergeSyncProtocol.swift": {
+  "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/PeerNetworking\/AutomergeSyncProtocol.swift",
+  "title" : "AutomergeSyncProtocol",
+  "titleInlineContent" : [
+    {
+      "text" : "AutomergeSyncProtocol",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/PeerNetworking\/AutomergeSyncProtocol.swift"
+},
+"https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/PeerNetworking/DocumentSyncCoordinator.swift": {
+  "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/PeerNetworking\/DocumentSyncCoordinator.swift",
+  "title" : "DocumentSyncCoordinator.swift",
+  "titleInlineContent" : [
+    {
+      "text" : "DocumentSyncCoordinator.swift",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/PeerNetworking\/DocumentSyncCoordinator.swift"
+},
+"https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/PeerNetworking/SyncConnection.swift": {
+  "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/PeerNetworking\/SyncConnection.swift",
+  "title" : "SyncConnection",
+  "titleInlineContent" : [
+    {
+      "text" : "SyncConnection",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/PeerNetworking\/SyncConnection.swift"
+},
+"https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/Views/EditableAgendaItemView.swift": {
+  "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/Views\/EditableAgendaItemView.swift",
+  "title" : "EditableAgendaItemView",
+  "titleInlineContent" : [
+    {
+      "text" : "EditableAgendaItemView",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/Views\/EditableAgendaItemView.swift"
+},
+"https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/Views/MeetingNotesDocumentView.swift": {
+  "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/Views\/MeetingNotesDocumentView.swift",
+  "title" : "MeetingNotesDocumentView",
+  "titleInlineContent" : [
+    {
+      "text" : "MeetingNotesDocumentView",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/Views\/MeetingNotesDocumentView.swift"
+},
+"https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/Views/MergeView.swift": {
+  "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/Views\/MergeView.swift",
+  "title" : "MergeView.swift",
+  "titleInlineContent" : [
+    {
+      "text" : "MergeView.swift",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/github.com\/automerge\/MeetingNotes\/blob\/main\/MeetingNotes\/Views\/MergeView.swift"
+},
+"https://swiftpackageindex.com/outfoxx/PotentCodables": {
+  "identifier" : "https:\/\/swiftpackageindex.com\/outfoxx\/PotentCodables",
+  "title" : "PotentCodables",
+  "titleInlineContent" : [
+    {
+      "text" : "PotentCodables",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/swiftpackageindex.com\/outfoxx\/PotentCodables"
+}
+}
+}

@@ -1,4 +1,10 @@
 {
+  "abstract" : [
+    {
+      "text" : "Preview of the sync toolbar button.",
+      "type" : "text"
+    }
+  ],
   "hierarchy" : {
     "paths" : [
       [
@@ -91,6 +97,18 @@
   "sections" : [
 
   ],
+  "seeAlsoSections" : [
+    {
+      "generated" : true,
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView_Previews",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerBrowserView_Previews",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews"
+      ],
+      "title" : "Previews"
+    }
+  ],
   "topicSections" : [
     {
       "identifiers" : [
@@ -145,9 +163,145 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncView_Previews": {
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemListView_Previews": {
+  "abstract" : [
+    {
+      "text" : "Preview of an editable agenda item view.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "EditableAgendaItemListView_Previews"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "EditableAgendaItemListView_Previews"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "EditableAgendaItemListView_Previews",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/editableagendaitemlistview_previews"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView_Previews": {
+  "abstract" : [
+    {
+      "text" : "Preview of the MeetingNotes document view.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDocumentView_Previews"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView_Previews",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDocumentView_Previews"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MeetingNotesDocumentView_Previews",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/meetingnotesdocumentview_previews"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeView_Previews": {
+  "abstract" : [
+    {
+      "text" : "Preview of the merge toolbar button.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MergeView_Previews"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MergeView_Previews"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MergeView_Previews",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/mergeview_previews"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerBrowserView_Previews": {
   "abstract" : [
 
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "PeerBrowserView_Previews"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerBrowserView_Previews",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "PeerBrowserView_Previews"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "PeerBrowserView_Previews",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/peerbrowserview_previews"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncView_Previews": {
+  "abstract" : [
+    {
+      "text" : "Preview of the sync toolbar button.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

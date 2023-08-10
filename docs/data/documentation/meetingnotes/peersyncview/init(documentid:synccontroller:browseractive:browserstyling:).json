@@ -234,7 +234,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator": {
   "abstract" : [
-
+    {
+      "text" : "A application-shared sync controller that supports coordinates documents and network connections with peers.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {
@@ -265,7 +268,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView": {
   "abstract" : [
-
+    {
+      "text" : "A view that shows the status of peers and network syncing.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {

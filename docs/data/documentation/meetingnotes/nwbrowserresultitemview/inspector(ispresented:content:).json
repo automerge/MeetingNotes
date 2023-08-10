@@ -316,7 +316,10 @@
 },
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/NWBrowserResultItemView": {
   "abstract" : [
-
+    {
+      "text" : "A view that shows nearby peers available for sync.",
+      "type" : "text"
+    }
   ],
   "fragments" : [
     {
