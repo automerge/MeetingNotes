@@ -25,7 +25,10 @@ mkdir -p ${PACKAGE_PATH}/docs
 $(xcrun --find docc) process-archive \
 transform-for-static-hosting ~/MeetingNotesBuild/Build/Products/Debug/MeetingNotes.doccarchive \
 --output-path ${PACKAGE_PATH}/docs \
---hosting-base-path MeetingNotes \
+--hosting-base-path meetingnotes
 # --source-service github \
 # --source-service-base-url https://github.com/automerge/meetingnotes/blob/main \
 # --checkout-path ${PACKAGE_PATH}
+
+# expecting resulting (hosted) docs at
+#   https://automerge.org/meetingnotes/documentation/meetingnotes/
