@@ -39,13 +39,11 @@ enum MergeError: LocalizedError {
 /// The `WrappedAutomergeDocument` uses `CBOR` encoding to add a document identifier to the file format.
 ///
 /// With [Automerge](https://automerge.org) version 2.0, a document doesn't have an internal  document identifier that's
-/// easily available to use for comparison
-/// to determine if documents have a "shared origin".
+/// easily available to use for comparison to determine if documents have a "shared origin".
 /// With Automerge (and other CRDTs), merging of documents is predicated on having a shared history that the algorithms
 /// can use to merge the causal history in an expected format.
 /// It is possible to merge without that shared history, but the results of the merging during the sync "appear" to be
-/// far more random;
-/// one peer consistently "winning" over the other with conflicting causal data points.
+/// far more random; one peer consistently "winning" over the other with conflicting causal data points.
 ///
 /// The upstream project is working around this by wrapping the data stream from "core" Automerge with a simple wrapper
 /// (using `CBOR` encoding) and tacking on an automatically generated `UUID` as that identifier.

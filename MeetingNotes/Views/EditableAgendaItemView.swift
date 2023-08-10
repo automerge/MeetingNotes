@@ -108,7 +108,7 @@ struct EditableAgendaItemView: View {
             // Encode the model back into the Automerge document if the values changed.
             if store {
                 do {
-                    // serialize the changes into the internal Automerge document
+                    // Serialize the changes into the internal Automerge document.
                     try document.storeModelUpdates()
                 } catch {
                     errorMsg = error.localizedDescription

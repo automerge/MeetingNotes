@@ -23,6 +23,7 @@ struct MeetingNotesDocumentView: View {
                     Spacer()
                     Button {
                         document.model.agendas.append(AgendaItem(title: ""))
+                        updateDoc()
                     } label: {
                         Image(systemName: "plus.circle")
                     }
