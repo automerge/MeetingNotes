@@ -1,0 +1,317 @@
+{
+  "abstract" : [
+    {
+      "text" : "Create a new protocol-framed message for the Automerge network sync protocol.",
+      "type" : "text"
+    }
+  ],
+  "hierarchy" : {
+    "paths" : [
+      [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network\/NWProtocolFramer",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network\/NWProtocolFramer\/Message"
+      ]
+    ]
+  },
+  "identifier" : {
+    "interfaceLanguage" : "swift",
+    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network\/NWProtocolFramer\/Message\/init(syncMessageType:)"
+  },
+  "kind" : "symbol",
+  "metadata" : {
+    "extendedModule" : "Network",
+    "externalID" : "s:7Network16NWProtocolFramerC7MessageC12MeetingNotesE04syncD4TypeAeF04SyncdH0O_tcfc",
+    "fragments" : [
+      {
+        "kind" : "identifier",
+        "text" : "init"
+      },
+      {
+        "kind" : "text",
+        "text" : "("
+      },
+      {
+        "kind" : "externalParam",
+        "text" : "syncMessageType"
+      },
+      {
+        "kind" : "text",
+        "text" : ": "
+      },
+      {
+        "kind" : "typeIdentifier",
+        "preciseIdentifier" : "s:12MeetingNotes15SyncMessageTypeO",
+        "text" : "SyncMessageType"
+      },
+      {
+        "kind" : "text",
+        "text" : ")"
+      }
+    ],
+    "modules" : [
+      {
+        "name" : "MeetingNotes",
+        "relatedModules" : [
+          "Network"
+        ]
+      }
+    ],
+    "role" : "symbol",
+    "roleHeading" : "Initializer",
+    "symbolKind" : "init",
+    "title" : "init(syncMessageType:)"
+  },
+  "primaryContentSections" : [
+    {
+      "declarations" : [
+        {
+          "languages" : [
+            "swift"
+          ],
+          "platforms" : [
+            "macOS"
+          ],
+          "tokens" : [
+            {
+              "kind" : "keyword",
+              "text" : "convenience"
+            },
+            {
+              "kind" : "text",
+              "text" : " "
+            },
+            {
+              "kind" : "keyword",
+              "text" : "init"
+            },
+            {
+              "kind" : "text",
+              "text" : "("
+            },
+            {
+              "kind" : "externalParam",
+              "text" : "syncMessageType"
+            },
+            {
+              "kind" : "text",
+              "text" : ": "
+            },
+            {
+              "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncMessageType",
+              "kind" : "typeIdentifier",
+              "preciseIdentifier" : "s:12MeetingNotes15SyncMessageTypeO",
+              "text" : "SyncMessageType"
+            },
+            {
+              "kind" : "text",
+              "text" : ")"
+            }
+          ]
+        }
+      ],
+      "kind" : "declarations"
+    },
+    {
+      "kind" : "parameters",
+      "parameters" : [
+        {
+          "content" : [
+            {
+              "inlineContent" : [
+                {
+                  "text" : "<#syncMessageType description#>",
+                  "type" : "text"
+                }
+              ],
+              "type" : "paragraph"
+            }
+          ],
+          "name" : "syncMessageType"
+        }
+      ]
+    }
+  ],
+  "schemaVersion" : {
+    "major" : 0,
+    "minor" : 3,
+    "patch" : 0
+  },
+  "sections" : [
+
+  ],
+  "variants" : [
+    {
+      "paths" : [
+        "\/documentation\/meetingnotes\/network\/nwprotocolframer\/message\/init(syncmessagetype:)"
+      ],
+      "traits" : [
+        {
+          "interfaceLanguage" : "swift"
+        }
+      ]
+    }
+  ]
+, 
+"references": {
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+  "abstract" : [
+    {
+      "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
+      "type" : "text"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "kind" : "symbol",
+  "role" : "collection",
+  "title" : "MeetingNotes",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/Network": {
+  "abstract" : [
+
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network",
+  "kind" : "symbol",
+  "role" : "collection",
+  "title" : "Network",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/network"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/Network/NWProtocolFramer": {
+  "abstract" : [
+
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network\/NWProtocolFramer",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "NWProtocolFramer"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "NWProtocolFramer",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/network\/nwprotocolframer"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/Network/NWProtocolFramer/Message": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "extension"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "preciseIdentifier" : "s:7Network16NWProtocolFramerC",
+      "text" : "NWProtocolFramer"
+    },
+    {
+      "kind" : "text",
+      "text" : "."
+    },
+    {
+      "kind" : "identifier",
+      "preciseIdentifier" : "s:7Network16NWProtocolFramerC7MessageC",
+      "text" : "Message"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network\/NWProtocolFramer\/Message",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "Message"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "NWProtocolFramer.Message",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/network\/nwprotocolframer\/message"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/Network/NWProtocolFramer/Message/init(syncMessageType:)": {
+  "abstract" : [
+    {
+      "text" : "Create a new protocol-framed message for the Automerge network sync protocol.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "identifier",
+      "text" : "init"
+    },
+    {
+      "kind" : "text",
+      "text" : "("
+    },
+    {
+      "kind" : "externalParam",
+      "text" : "syncMessageType"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:12MeetingNotes15SyncMessageTypeO",
+      "text" : "SyncMessageType"
+    },
+    {
+      "kind" : "text",
+      "text" : ")"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network\/NWProtocolFramer\/Message\/init(syncMessageType:)",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "init(syncMessageType:)",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/network\/nwprotocolframer\/message\/init(syncmessagetype:)"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncMessageType": {
+  "abstract" : [
+    {
+      "text" : "The type of sync message for the Automerge network sync protocol.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "enum"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "SyncMessageType"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncMessageType",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "SyncMessageType"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "SyncMessageType",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/syncmessagetype"
+}
+}
+}

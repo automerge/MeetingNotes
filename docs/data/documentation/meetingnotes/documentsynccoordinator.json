@@ -1,0 +1,1386 @@
+{
+  "abstract" : [
+    {
+      "text" : "A application-shared sync controller that supports coordinates documents and network connections with peers.",
+      "type" : "text"
+    }
+  ],
+  "hierarchy" : {
+    "paths" : [
+      [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes"
+      ]
+    ]
+  },
+  "identifier" : {
+    "interfaceLanguage" : "swift",
+    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator"
+  },
+  "kind" : "symbol",
+  "metadata" : {
+    "externalID" : "s:12MeetingNotes23DocumentSyncCoordinatorC",
+    "fragments" : [
+      {
+        "kind" : "keyword",
+        "text" : "class"
+      },
+      {
+        "kind" : "text",
+        "text" : " "
+      },
+      {
+        "kind" : "identifier",
+        "text" : "DocumentSyncCoordinator"
+      }
+    ],
+    "modules" : [
+      {
+        "name" : "MeetingNotes"
+      }
+    ],
+    "navigatorTitle" : [
+      {
+        "kind" : "identifier",
+        "text" : "DocumentSyncCoordinator"
+      }
+    ],
+    "role" : "symbol",
+    "roleHeading" : "Class",
+    "symbolKind" : "class",
+    "title" : "DocumentSyncCoordinator"
+  },
+  "primaryContentSections" : [
+    {
+      "declarations" : [
+        {
+          "languages" : [
+            "swift"
+          ],
+          "platforms" : [
+            "macOS"
+          ],
+          "tokens" : [
+            {
+              "kind" : "keyword",
+              "text" : "final"
+            },
+            {
+              "kind" : "text",
+              "text" : " "
+            },
+            {
+              "kind" : "keyword",
+              "text" : "class"
+            },
+            {
+              "kind" : "text",
+              "text" : " "
+            },
+            {
+              "kind" : "identifier",
+              "text" : "DocumentSyncCoordinator"
+            }
+          ]
+        }
+      ],
+      "kind" : "declarations"
+    }
+  ],
+  "relationshipsSections" : [
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/7Combine16ObservableObjectP"
+      ],
+      "kind" : "relationships",
+      "title" : "Conforms To",
+      "type" : "conformsTo"
+    }
+  ],
+  "schemaVersion" : {
+    "major" : 0,
+    "minor" : 3,
+    "patch" : 0
+  },
+  "sections" : [
+
+  ],
+  "seeAlsoSections" : [
+    {
+      "generated" : true,
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncConnection",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/TXTRecordKeys"
+      ],
+      "title" : "Shared Peer Networking Components"
+    }
+  ],
+  "topicSections" : [
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/init()"
+      ],
+      "title" : "Initializers"
+    },
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/autoconnect",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/browser",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/browserResults",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/browserState",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/connections",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/documents",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/listenerSetupError",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/listenerState",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/listenerStatusError",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/listeners",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/name",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/peerId",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/syncQueue",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/syncTrigger",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/timerCancellable",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/txtRecords"
+      ],
+      "title" : "Instance Properties"
+    },
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/activate()",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/attemptToConnectToPeer(_:forPeer:withDoc:)",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/automergeDocument(for:)",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/deactivate()",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/delayAndAttemptToConnect(_:forPeer:withDoc:)",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/registerDocument(_:)",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/removeConnection(_:)"
+      ],
+      "title" : "Instance Methods"
+    },
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/defaultSharingIdentity()"
+      ],
+      "title" : "Type Methods"
+    },
+    {
+      "generated" : true,
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/ObservableObject-Implementations"
+      ],
+      "title" : "Default Implementations"
+    }
+  ],
+  "variants" : [
+    {
+      "paths" : [
+        "\/documentation\/meetingnotes\/documentsynccoordinator"
+      ],
+      "traits" : [
+        {
+          "interfaceLanguage" : "swift"
+        }
+      ]
+    }
+  ]
+, 
+"references": {
+"doc://com.github.automerge.MeetingNotes/7Combine16ObservableObjectP": {
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/7Combine16ObservableObjectP",
+  "title" : "Combine.ObservableObject",
+  "type" : "unresolvable"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+  "abstract" : [
+    {
+      "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
+      "type" : "text"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "kind" : "symbol",
+  "role" : "collection",
+  "title" : "MeetingNotes",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator": {
+  "abstract" : [
+    {
+      "text" : "A application-shared sync controller that supports coordinates documents and network connections with peers.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "class"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "DocumentSyncCoordinator"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "DocumentSyncCoordinator"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "DocumentSyncCoordinator",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/ObservableObject-Implementations": {
+  "abstract" : [
+
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/ObservableObject-Implementations",
+  "kind" : "article",
+  "role" : "collectionGroup",
+  "title" : "ObservableObject Implementations",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/observableobject-implementations"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/activate()": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "func"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "activate"
+    },
+    {
+      "kind" : "text",
+      "text" : "()"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/activate()",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "activate()",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/activate()"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/attemptToConnectToPeer(_:forPeer:withDoc:)": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "func"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "attemptToConnectToPeer"
+    },
+    {
+      "kind" : "text",
+      "text" : "("
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network10NWEndpointO",
+      "text" : "NWEndpoint"
+    },
+    {
+      "kind" : "text",
+      "text" : ", "
+    },
+    {
+      "kind" : "externalParam",
+      "text" : "forPeer"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:SS",
+      "text" : "String"
+    },
+    {
+      "kind" : "text",
+      "text" : ", "
+    },
+    {
+      "kind" : "externalParam",
+      "text" : "withDoc"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:10Foundation4UUIDV",
+      "text" : "UUID"
+    },
+    {
+      "kind" : "text",
+      "text" : ")"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/attemptToConnectToPeer(_:forPeer:withDoc:)",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "attemptToConnectToPeer(_:forPeer:withDoc:)",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/attempttoconnecttopeer(_:forpeer:withdoc:)"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/autoconnect": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "autoconnect"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:Sb",
+      "text" : "Bool"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/autoconnect",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "autoconnect",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/autoconnect"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/automergeDocument(for:)": {
+  "abstract" : [
+    {
+      "text" : "Looks up and returns a reference for a document for an initiated Peer Connection",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "func"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "automergeDocument"
+    },
+    {
+      "kind" : "text",
+      "text" : "("
+    },
+    {
+      "kind" : "externalParam",
+      "text" : "for"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:10Foundation4UUIDV",
+      "text" : "UUID"
+    },
+    {
+      "kind" : "text",
+      "text" : ") -> "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:9Automerge8DocumentC",
+      "text" : "Document"
+    },
+    {
+      "kind" : "text",
+      "text" : "?"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/automergeDocument(for:)",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "automergeDocument(for:)",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/automergedocument(for:)"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/browser": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "browser"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network9NWBrowserC",
+      "text" : "NWBrowser"
+    },
+    {
+      "kind" : "text",
+      "text" : "?"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/browser",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "browser",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/browser"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/browserResults": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "browserResults"
+    },
+    {
+      "kind" : "text",
+      "text" : ": ["
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network9NWBrowserC",
+      "text" : "NWBrowser"
+    },
+    {
+      "kind" : "text",
+      "text" : "."
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network9NWBrowserC6ResultV",
+      "text" : "Result"
+    },
+    {
+      "kind" : "text",
+      "text" : "]"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/browserResults",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "browserResults",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/browserresults"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/browserState": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "browserState"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network9NWBrowserC",
+      "text" : "NWBrowser"
+    },
+    {
+      "kind" : "text",
+      "text" : "."
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network9NWBrowserC5StateO",
+      "text" : "State"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/browserState",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "browserState",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/browserstate"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/connections": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "connections"
+    },
+    {
+      "kind" : "text",
+      "text" : ": ["
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:12MeetingNotes14SyncConnectionC",
+      "text" : "SyncConnection"
+    },
+    {
+      "kind" : "text",
+      "text" : "]"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/connections",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "connections",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/connections"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/deactivate()": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "func"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "deactivate"
+    },
+    {
+      "kind" : "text",
+      "text" : "()"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/deactivate()",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "deactivate()",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/deactivate()"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/defaultSharingIdentity()": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "static"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "keyword",
+      "text" : "func"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "defaultSharingIdentity"
+    },
+    {
+      "kind" : "text",
+      "text" : "() -> "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:SS",
+      "text" : "String"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/defaultSharingIdentity()",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "defaultSharingIdentity()",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/defaultsharingidentity()"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/delayAndAttemptToConnect(_:forPeer:withDoc:)": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "func"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "delayAndAttemptToConnect"
+    },
+    {
+      "kind" : "text",
+      "text" : "("
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network10NWEndpointO",
+      "text" : "NWEndpoint"
+    },
+    {
+      "kind" : "text",
+      "text" : ", "
+    },
+    {
+      "kind" : "externalParam",
+      "text" : "forPeer"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:SS",
+      "text" : "String"
+    },
+    {
+      "kind" : "text",
+      "text" : ", "
+    },
+    {
+      "kind" : "externalParam",
+      "text" : "withDoc"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:10Foundation4UUIDV",
+      "text" : "UUID"
+    },
+    {
+      "kind" : "text",
+      "text" : ")"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/delayAndAttemptToConnect(_:forPeer:withDoc:)",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "delayAndAttemptToConnect(_:forPeer:withDoc:)",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/delayandattempttoconnect(_:forpeer:withdoc:)"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/documents": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "documents"
+    },
+    {
+      "kind" : "text",
+      "text" : ": ["
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:10Foundation4UUIDV",
+      "text" : "UUID"
+    },
+    {
+      "kind" : "text",
+      "text" : " : "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:12MeetingNotes0aB8DocumentC",
+      "text" : "MeetingNotesDocument"
+    },
+    {
+      "kind" : "text",
+      "text" : "]"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/documents",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "documents",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/documents"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/init()": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "identifier",
+      "text" : "init"
+    },
+    {
+      "kind" : "text",
+      "text" : "()"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/init()",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "init()",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/init()"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/listenerSetupError": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "listenerSetupError"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:s5ErrorP",
+      "text" : "Error"
+    },
+    {
+      "kind" : "text",
+      "text" : "?"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/listenerSetupError",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "listenerSetupError",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/listenersetuperror"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/listenerState": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "listenerState"
+    },
+    {
+      "kind" : "text",
+      "text" : ": ["
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:10Foundation4UUIDV",
+      "text" : "UUID"
+    },
+    {
+      "kind" : "text",
+      "text" : " : "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network10NWListenerC",
+      "text" : "NWListener"
+    },
+    {
+      "kind" : "text",
+      "text" : "."
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network10NWListenerC5StateO",
+      "text" : "State"
+    },
+    {
+      "kind" : "text",
+      "text" : "]"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/listenerState",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "listenerState",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/listenerstate"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/listenerStatusError": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "listenerStatusError"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network7NWErrorO",
+      "text" : "NWError"
+    },
+    {
+      "kind" : "text",
+      "text" : "?"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/listenerStatusError",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "listenerStatusError",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/listenerstatuserror"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/listeners": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "listeners"
+    },
+    {
+      "kind" : "text",
+      "text" : ": ["
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:10Foundation4UUIDV",
+      "text" : "UUID"
+    },
+    {
+      "kind" : "text",
+      "text" : " : "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network10NWListenerC",
+      "text" : "NWListener"
+    },
+    {
+      "kind" : "text",
+      "text" : "]"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/listeners",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "listeners",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/listeners"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/name": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "name"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:SS",
+      "text" : "String"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/name",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "name",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/name"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/peerId": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "let"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "peerId"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:10Foundation4UUIDV",
+      "text" : "UUID"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/peerId",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "peerId",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/peerid"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/registerDocument(_:)": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "func"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "registerDocument"
+    },
+    {
+      "kind" : "text",
+      "text" : "("
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:12MeetingNotes0aB8DocumentC",
+      "text" : "MeetingNotesDocument"
+    },
+    {
+      "kind" : "text",
+      "text" : ")"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/registerDocument(_:)",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "registerDocument(_:)",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/registerdocument(_:)"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/removeConnection(_:)": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "func"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "removeConnection"
+    },
+    {
+      "kind" : "text",
+      "text" : "("
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:10Foundation4UUIDV",
+      "text" : "UUID"
+    },
+    {
+      "kind" : "text",
+      "text" : ")"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/removeConnection(_:)",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "removeConnection(_:)",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/removeconnection(_:)"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/syncQueue": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "let"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "syncQueue"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "c:objc(cs)OS_dispatch_queue",
+      "text" : "DispatchQueue"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/syncQueue",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "syncQueue",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/syncqueue"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/syncTrigger": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "syncTrigger"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Combine18PassthroughSubjectC",
+      "text" : "PassthroughSubject"
+    },
+    {
+      "kind" : "text",
+      "text" : "<"
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:s4Voida",
+      "text" : "Void"
+    },
+    {
+      "kind" : "text",
+      "text" : ", "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:s5NeverO",
+      "text" : "Never"
+    },
+    {
+      "kind" : "text",
+      "text" : ">"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/syncTrigger",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "syncTrigger",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/synctrigger"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/timerCancellable": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "timerCancellable"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Combine11CancellableP",
+      "text" : "Cancellable"
+    },
+    {
+      "kind" : "text",
+      "text" : "?"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/timerCancellable",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "timerCancellable",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/timercancellable"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator/txtRecords": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "txtRecords"
+    },
+    {
+      "kind" : "text",
+      "text" : ": ["
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:10Foundation4UUIDV",
+      "text" : "UUID"
+    },
+    {
+      "kind" : "text",
+      "text" : " : "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network11NWTXTRecordV",
+      "text" : "NWTXTRecord"
+    },
+    {
+      "kind" : "text",
+      "text" : "]"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator\/txtRecords",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "txtRecords",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator\/txtrecords"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncConnection": {
+  "abstract" : [
+    {
+      "text" : "A peer to peer sync connection to receive and send sync messages.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "class"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "SyncConnection"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncConnection",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "SyncConnection"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "SyncConnection",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/syncconnection"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/TXTRecordKeys": {
+  "abstract" : [
+    {
+      "text" : "A type that provides type-safe strings for TXTRecord publications with Bonjour",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "enum"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "TXTRecordKeys"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/TXTRecordKeys",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "TXTRecordKeys"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "TXTRecordKeys",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/txtrecordkeys"
+}
+}
+}

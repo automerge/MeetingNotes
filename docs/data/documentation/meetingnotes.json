@@ -1,0 +1,1570 @@
+{
+  "abstract" : [
+    {
+      "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
+      "type" : "text"
+    }
+  ],
+  "hierarchy" : {
+    "paths" : [
+      [
+
+      ]
+    ]
+  },
+  "identifier" : {
+    "interfaceLanguage" : "swift",
+    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes"
+  },
+  "kind" : "symbol",
+  "metadata" : {
+    "externalID" : "MeetingNotes",
+    "modules" : [
+      {
+        "name" : "MeetingNotes"
+      }
+    ],
+    "role" : "collection",
+    "roleHeading" : "Application",
+    "symbolKind" : "module",
+    "title" : "MeetingNotes"
+  },
+  "primaryContentSections" : [
+    {
+      "content" : [
+        {
+          "anchor" : "Overview",
+          "level" : 2,
+          "text" : "Overview",
+          "type" : "heading"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "The Document-based SwiftUI app illustrates storing and loading a ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/developer.apple.com\/documentation\/swift\/codable",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : " model and integrating ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/automerge.org\/",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : " backed models with the SwiftUI controls.",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The app illustrates the file merging capabilities with an Automerge-backed document and interactive peer-to-peer syncing of documents in near real time.",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        },
+        {
+          "inlineContent" : [
+            {
+              "text" : "For a walk-through of the highlights of how the application functions, and how it uses the ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/automerge.org\/automerge-swift\/documentation\/automerge\/",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : " in coordination with Bonjour networking and SwiftUI, read ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppWalkthrough",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            },
+            {
+              "text" : " ",
+              "type" : "text"
+            },
+            {
+              "text" : "The source for the MeetingNotes app is ",
+              "type" : "text"
+            },
+            {
+              "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes",
+              "isActive" : true,
+              "type" : "reference"
+            },
+            {
+              "text" : ".",
+              "type" : "text"
+            }
+          ],
+          "type" : "paragraph"
+        }
+      ],
+      "kind" : "content"
+    }
+  ],
+  "schemaVersion" : {
+    "major" : 0,
+    "minor" : 3,
+    "patch" : 0
+  },
+  "sections" : [
+
+  ],
+  "topicSections" : [
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppWalkthrough",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesModel",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/UniformTypeIdentifiers\/UTType\/meetingnote"
+      ],
+      "title" : "Document Model"
+    },
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/sharedSyncCoordinator",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDefaultKeys",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError"
+      ],
+      "title" : "Core Application"
+    },
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/document",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/syncController",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/syncConnection"
+      ],
+      "title" : "Logger extensions"
+    },
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/NWBrowserResultItemView",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncConnectionView",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView"
+      ],
+      "title" : "Views"
+    },
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView_Previews",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerBrowserView_Previews",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView_Previews"
+      ],
+      "title" : "Previews"
+    },
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncConnection",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/TXTRecordKeys"
+      ],
+      "title" : "Shared Peer Networking Components"
+    },
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AutomergeSyncProtocol",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncMessageType",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AutomergeSyncProtocolHeader",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network\/NWParameters\/peerSyncParameters(documentId:)"
+      ],
+      "title" : "Peer to Peer Syncing Protocol"
+    },
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/ColorResource",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/ImageResource"
+      ],
+      "title" : "Application Resources"
+    },
+    {
+      "identifiers" : [
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppKit",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Swift",
+        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI"
+      ],
+      "title" : "Extended Modules"
+    }
+  ],
+  "variants" : [
+    {
+      "paths" : [
+        "\/documentation\/meetingnotes"
+      ],
+      "traits" : [
+        {
+          "interfaceLanguage" : "swift"
+        }
+      ]
+    }
+  ]
+, 
+"references": {
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+  "abstract" : [
+    {
+      "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
+      "type" : "text"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "kind" : "symbol",
+  "role" : "collection",
+  "title" : "MeetingNotes",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AgendaItem": {
+  "abstract" : [
+    {
+      "text" : "An individual agenda item tracked by meeting notes.",
+      "type" : "text"
+    },
+    {
+      "text" : " ",
+      "type" : "text"
+    },
+    {
+      "text" : "The ",
+      "type" : "text"
+    },
+    {
+      "code" : "discussion",
+      "type" : "codeVoice"
+    },
+    {
+      "text" : " property is the type ",
+      "type" : "text"
+    },
+    {
+      "code" : "Text",
+      "type" : "codeVoice"
+    },
+    {
+      "text" : " is from Automerge, and represents a collaboratively edited string.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "AgendaItem"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "AgendaItem"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "AgendaItem",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/agendaitem"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AppKit": {
+  "abstract" : [
+
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppKit",
+  "kind" : "symbol",
+  "role" : "collection",
+  "title" : "AppKit",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/appkit"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AppWalkthrough": {
+  "abstract" : [
+    {
+      "text" : "A guided tour of MeetingNotes, a sample iOS and macOS SwiftUI app that uses Automerge for syncing and collaboration.",
+      "type" : "text"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppWalkthrough",
+  "kind" : "article",
+  "role" : "article",
+  "title" : "Meeting Notes, a Document-based SwiftUI app using Automerge.",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/appwalkthrough"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AutomergeSyncProtocol": {
+  "abstract" : [
+    {
+      "text" : "The definition of the Automerge network sync protocol.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "class"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "AutomergeSyncProtocol"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AutomergeSyncProtocol",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "AutomergeSyncProtocol"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "AutomergeSyncProtocol",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/automergesyncprotocol"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AutomergeSyncProtocolHeader": {
+  "abstract" : [
+    {
+      "text" : "The Automerge network sync protcol header structure.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "AutomergeSyncProtocolHeader"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AutomergeSyncProtocolHeader",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "AutomergeSyncProtocolHeader"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "AutomergeSyncProtocolHeader",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/automergesyncprotocolheader"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/ColorResource": {
+  "abstract" : [
+    {
+      "text" : "A color resource.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "ColorResource"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/ColorResource",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "ColorResource"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "ColorResource",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/colorresource"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/DocumentSyncCoordinator": {
+  "abstract" : [
+    {
+      "text" : "A application-shared sync controller that supports coordinates documents and network connections with peers.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "class"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "DocumentSyncCoordinator"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/DocumentSyncCoordinator",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "DocumentSyncCoordinator"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "DocumentSyncCoordinator",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/documentsynccoordinator"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemListView_Previews": {
+  "abstract" : [
+    {
+      "text" : "Preview of an editable agenda item view.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "EditableAgendaItemListView_Previews"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "EditableAgendaItemListView_Previews"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "EditableAgendaItemListView_Previews",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/editableagendaitemlistview_previews"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView": {
+  "abstract" : [
+    {
+      "text" : "A view that provides an editable view of an agenda item.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "EditableAgendaItemView"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "EditableAgendaItemView"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "EditableAgendaItemView",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/editableagendaitemview"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/ImageResource": {
+  "abstract" : [
+    {
+      "text" : "An image resource.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "ImageResource"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/ImageResource",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "ImageResource"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "ImageResource",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/imageresource"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp": {
+  "abstract" : [
+    {
+      "text" : "The document-based Meeting Notes application.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesApp"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesApp"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MeetingNotesApp",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/meetingnotesapp"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDefaultKeys": {
+  "abstract" : [
+    {
+      "text" : "A collection of User Default keys for the app.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "enum"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDefaultKeys"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDefaultKeys",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDefaultKeys"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MeetingNotesDefaultKeys",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/meetingnotesdefaultkeys"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument": {
+  "abstract" : [
+    {
+      "text" : "The concrete subclass of a reference-based file document.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "class"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDocument"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDocument"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MeetingNotesDocument",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/meetingnotesdocument"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView": {
+  "abstract" : [
+    {
+      "text" : "The primary document view for a MeetingNotes document.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDocumentView"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDocumentView"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MeetingNotesDocumentView",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/meetingnotesdocumentview"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView_Previews": {
+  "abstract" : [
+    {
+      "text" : "Preview of the MeetingNotes document view.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDocumentView_Previews"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView_Previews",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesDocumentView_Previews"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MeetingNotesDocumentView_Previews",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/meetingnotesdocumentview_previews"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesModel": {
+  "abstract" : [
+    {
+      "text" : "The top-level application model for Meeting Notes.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesModel"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesModel",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesModel"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MeetingNotesModel",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/meetingnotesmodel"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeError": {
+  "abstract" : [
+    {
+      "text" : "Document merging errors",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "enum"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MergeError"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MergeError"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MergeError",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/mergeerror"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeView": {
+  "abstract" : [
+    {
+      "text" : "A toolbar button to coordinate merging documents.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MergeView"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MergeView"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MergeView",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/mergeview"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeView_Previews": {
+  "abstract" : [
+    {
+      "text" : "Preview of the merge toolbar button.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MergeView_Previews"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MergeView_Previews"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MergeView_Previews",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/mergeview_previews"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/NWBrowserResultItemView": {
+  "abstract" : [
+    {
+      "text" : "A view that shows nearby peers available for sync.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "NWBrowserResultItemView"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/NWBrowserResultItemView",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "NWBrowserResultItemView"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "NWBrowserResultItemView",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/nwbrowserresultitemview"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/Network": {
+  "abstract" : [
+
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network",
+  "kind" : "symbol",
+  "role" : "collection",
+  "title" : "Network",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/network"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/Network/NWParameters/peerSyncParameters(documentId:)": {
+  "abstract" : [
+    {
+      "text" : "Returns listener and connection network parameters using default TLS for peer to peer connections.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "static"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "keyword",
+      "text" : "func"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "peerSyncParameters"
+    },
+    {
+      "kind" : "text",
+      "text" : "("
+    },
+    {
+      "kind" : "externalParam",
+      "text" : "documentId"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:SS",
+      "text" : "String"
+    },
+    {
+      "kind" : "text",
+      "text" : ") -> "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network12NWParametersC",
+      "text" : "NWParameters"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Network\/NWParameters\/peerSyncParameters(documentId:)",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "peerSyncParameters(documentId:)",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/network\/nwparameters\/peersyncparameters(documentid:)"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerBrowserView_Previews": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "PeerBrowserView_Previews"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerBrowserView_Previews",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "PeerBrowserView_Previews"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "PeerBrowserView_Previews",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/peerbrowserview_previews"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView": {
+  "abstract" : [
+    {
+      "text" : "A view that shows the status of peers and network syncing.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "PeerSyncView"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "PeerSyncView"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "PeerSyncView",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/peersyncview"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/Swift": {
+  "abstract" : [
+
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/Swift",
+  "kind" : "symbol",
+  "role" : "collection",
+  "title" : "Swift",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/swift"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SwiftUI": {
+  "abstract" : [
+
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI",
+  "kind" : "symbol",
+  "role" : "collection",
+  "title" : "SwiftUI",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/swiftui"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncConnection": {
+  "abstract" : [
+    {
+      "text" : "A peer to peer sync connection to receive and send sync messages.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "class"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "SyncConnection"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncConnection",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "SyncConnection"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "SyncConnection",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/syncconnection"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncConnectionView": {
+  "abstract" : [
+    {
+      "text" : "A view that displays a sync connection and its state.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "SyncConnectionView"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncConnectionView",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "SyncConnectionView"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "SyncConnectionView",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/syncconnectionview"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncMessageType": {
+  "abstract" : [
+    {
+      "text" : "The type of sync message for the Automerge network sync protocol.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "enum"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "SyncMessageType"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncMessageType",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "SyncMessageType"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "SyncMessageType",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/syncmessagetype"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncView": {
+  "abstract" : [
+    {
+      "text" : "A toolbar button for activating sync for a document.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "SyncView"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "SyncView"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "SyncView",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/syncview"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncView_Previews": {
+  "abstract" : [
+    {
+      "text" : "Preview of the sync toolbar button.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "SyncView_Previews"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView_Previews",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "SyncView_Previews"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "SyncView_Previews",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/syncview_previews"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/TXTRecordKeys": {
+  "abstract" : [
+    {
+      "text" : "A type that provides type-safe strings for TXTRecord publications with Bonjour",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "enum"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "TXTRecordKeys"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/TXTRecordKeys",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "TXTRecordKeys"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "TXTRecordKeys",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/txtrecordkeys"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/UniformTypeIdentifiers/UTType/meetingnote": {
+  "abstract" : [
+    {
+      "text" : "An Automerge document that is CBOR encoded with a document identifier.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "static"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "meetingnote"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:22UniformTypeIdentifiers6UTTypeV",
+      "text" : "UTType"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/UniformTypeIdentifiers\/UTType\/meetingnote",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "meetingnote",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/uniformtypeidentifiers\/uttype\/meetingnote"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument": {
+  "abstract" : [
+    {
+      "text" : "A CBOR encoded wrapper around a serialized Automerge document.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "WrappedAutomergeDocument"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "WrappedAutomergeDocument"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "WrappedAutomergeDocument",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/wrappedautomergedocument"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/os/Logger/document": {
+  "abstract" : [
+    {
+      "text" : "Logs the Document interactions, such as saving and loading.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "static"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "keyword",
+      "text" : "let"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "document"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:2os6LoggerV",
+      "text" : "Logger"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/document",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "document",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/os\/logger\/document"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/os/Logger/syncConnection": {
+  "abstract" : [
+    {
+      "text" : "Logs updates and interaction related to the process of synchronization over the network.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "static"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "keyword",
+      "text" : "let"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "syncConnection"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:2os6LoggerV",
+      "text" : "Logger"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/syncConnection",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "syncConnection",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/os\/logger\/syncconnection"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/os/Logger/syncController": {
+  "abstract" : [
+    {
+      "text" : "Logs updates and interaction related to watching for external peer systems.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "static"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "keyword",
+      "text" : "let"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "syncController"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:2os6LoggerV",
+      "text" : "Logger"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/syncController",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "syncController",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/os\/logger\/synccontroller"
+},
+"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/sharedSyncCoordinator": {
+  "abstract" : [
+    {
+      "text" : "A shared instance of a document sync coordinator.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "let"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "sharedSyncCoordinator"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:12MeetingNotes23DocumentSyncCoordinatorC",
+      "text" : "DocumentSyncCoordinator"
+    }
+  ],
+  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/sharedSyncCoordinator",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "sharedSyncCoordinator",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/sharedsynccoordinator"
+},
+"https://automerge.org/": {
+  "identifier" : "https:\/\/automerge.org\/",
+  "title" : "Automerge",
+  "titleInlineContent" : [
+    {
+      "text" : "Automerge",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/automerge.org\/"
+},
+"https://automerge.org/automerge-swift/documentation/automerge/": {
+  "identifier" : "https:\/\/automerge.org\/automerge-swift\/documentation\/automerge\/",
+  "title" : "automerge-swift library",
+  "titleInlineContent" : [
+    {
+      "text" : "automerge-swift library",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/automerge.org\/automerge-swift\/documentation\/automerge\/"
+},
+"https://developer.apple.com/documentation/swift/codable": {
+  "identifier" : "https:\/\/developer.apple.com\/documentation\/swift\/codable",
+  "title" : "Codable",
+  "titleInlineContent" : [
+    {
+      "text" : "Codable",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/developer.apple.com\/documentation\/swift\/codable"
+},
+"https://github.com/automerge/MeetingNotes": {
+  "identifier" : "https:\/\/github.com\/automerge\/MeetingNotes",
+  "title" : "available on Github",
+  "titleInlineContent" : [
+    {
+      "text" : "available on Github",
+      "type" : "text"
+    }
+  ],
+  "type" : "link",
+  "url" : "https:\/\/github.com\/automerge\/MeetingNotes"
+}
+}
+}
