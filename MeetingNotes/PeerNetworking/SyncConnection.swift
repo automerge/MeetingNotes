@@ -18,6 +18,7 @@ import Foundation
 import Network
 import OSLog
 
+/// A peer to peer sync connection to receive and send sync messages.
 final class SyncConnection: ObservableObject {
     /// A unique identifier to track the connections for comparison against existing connections.
     var connectionId = UUID()

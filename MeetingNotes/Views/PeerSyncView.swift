@@ -1,6 +1,7 @@
 import Network
 import SwiftUI
 
+/// A view that shows the status of peers and network syncing.
 struct PeerSyncView: View {
     var documentId: UUID
     @ObservedObject var syncController: DocumentSyncCoordinator

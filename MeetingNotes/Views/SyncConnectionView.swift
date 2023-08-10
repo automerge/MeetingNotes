@@ -1,6 +1,7 @@
 import Network
 import SwiftUI
 
+/// A view that displays a sync connection and its state.
 struct SyncConnectionView: View {
     @ObservedObject var syncConnection: SyncConnection
 

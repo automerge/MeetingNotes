@@ -1,6 +1,7 @@
 import Network
 import SwiftUI
 
+/// A view that shows nearby peers available for sync.
 struct NWBrowserResultItemView: View {
     var documentId: UUID
     @ObservedObject var syncController: DocumentSyncCoordinator

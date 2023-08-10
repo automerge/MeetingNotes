@@ -28,7 +28,9 @@ extension WrappedAutomergeDocument: Transferable {
     }
 }
 
+/// Document merging errors
 enum MergeError: LocalizedError {
+    /// The documents don't have a shared history.
     case NoSharedHistory
 }
 

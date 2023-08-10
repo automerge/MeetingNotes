@@ -2,6 +2,7 @@ import Automerge
 import OSLog
 import SwiftUI
 
+/// A view that provides an editable view of an agenda item.
 struct EditableAgendaItemView: View {
     // Document is needed within this file to link to the undo manager.
     @ObservedObject var document: MeetingNotesDocument
@@ -131,6 +132,7 @@ struct EditableAgendaItemView: View {
     }
 }
 
+/// Preview of an editable agenda item view.
 struct EditableAgendaItemListView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {

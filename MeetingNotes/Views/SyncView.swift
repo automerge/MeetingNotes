@@ -1,5 +1,6 @@
 import SwiftUI
 
+/// A toolbar button for activating sync for a document.
 struct SyncView: View {
     @ObservedObject var document: MeetingNotesDocument
 
@@ -26,6 +27,7 @@ struct SyncView: View {
     }
 }
 
+/// Preview of the sync toolbar button.
 struct SyncView_Previews: PreviewProvider {
     static var previews: some View {
         SyncView(document: MeetingNotesDocument.sample())
