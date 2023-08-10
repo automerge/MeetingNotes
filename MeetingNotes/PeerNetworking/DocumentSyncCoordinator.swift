@@ -23,6 +23,7 @@ enum MeetingNotesDefaultKeys {
     static let sharingIdentity = "sharingIdentity"
 }
 
+/// A application-shared sync controller that supports coordinates documents and network connections with peers.
 final class DocumentSyncCoordinator: ObservableObject {
     // support multiple documents
     var documents: [UUID: MeetingNotesDocument] = [:]

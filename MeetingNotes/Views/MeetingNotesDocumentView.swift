@@ -1,6 +1,7 @@
 import OSLog
 import SwiftUI
 
+/// The primary document view for a MeetingNotes document.
 struct MeetingNotesDocumentView: View {
     @ObservedObject var document: MeetingNotesDocument
     // The undo manager triggers serializations and saving changes to the model
@@ -93,7 +94,8 @@ struct MeetingNotesDocumentView: View {
     }
 }
 
-struct AppTabView_Previews: PreviewProvider {
+/// Preview of the MeetingNotes document view.
+struct MeetingNotesDocumentView_Previews: PreviewProvider {
     static var previews: some View {
         #if os(iOS)
         NavigationView {

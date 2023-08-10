@@ -1,6 +1,7 @@
 import OSLog
 import SwiftUI
 
+/// A toolbar button to coordinate merging documents.
 struct MergeView: View {
     @ObservedObject var document: MeetingNotesDocument
 
@@ -46,6 +47,7 @@ struct MergeView: View {
     }
 }
 
+/// Preview of the merge toolbar button.
 struct MergeView_Previews: PreviewProvider {
     static var previews: some View {
         MergeView(document: MeetingNotesDocument.sample())

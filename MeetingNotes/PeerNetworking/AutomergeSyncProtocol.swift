@@ -17,7 +17,7 @@ import Foundation
 import Network
 import OSLog
 
-// Define the types of commands for your app to use.
+/// The type of sync message for the Automerge network sync protocol.
 enum SyncMessageType: UInt32 {
     // TODO(heckj): is there benefit to dropping this down to a UInt8? Or does 4 bytes
     // fit some other optimization that's not as obvious?
@@ -28,7 +28,7 @@ enum SyncMessageType: UInt32 {
     // case document = 3 // msg is the entirety of the document as a byte stream
 }
 
-// Create a class that implements a framing protocol.
+/// The definition of the Automerge network sync protocol.
 class AutomergeSyncProtocol: NWProtocolFramerImplementation {
     // Create a global definition of your game protocol to add to connections.
     static let definition = NWProtocolFramer.Definition(implementation: AutomergeSyncProtocol.self)
@@ -113,11 +113,14 @@ class AutomergeSyncProtocol: NWProtocolFramerImplementation {
 
 // Extend framer messages to handle storing your command types in the message metadata.
 extension NWProtocolFramer.Message {
+    /// Create a new protocol-framed message for the Automerge network sync protocol.
+    /// - Parameter syncMessageType: <#syncMessageType description#>
     convenience init(syncMessageType: SyncMessageType) {
         self.init(definition: AutomergeSyncProtocol.definition)
         self["SyncMessageType"] = syncMessageType
     }
 
+    /// The type of sync message.
     var syncMessageType: SyncMessageType {
         if let type = self["SyncMessageType"] as? SyncMessageType {
             return type
@@ -128,6 +131,8 @@ extension NWProtocolFramer.Message {
 }
 
 // Define a protocol header structure to help encode and decode bytes.
+
+/// The Automerge network sync protcol header structure.
 struct AutomergeSyncProtocolHeader: Codable {
     let type: UInt32
     let length: UInt32
