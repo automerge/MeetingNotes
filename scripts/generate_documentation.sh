@@ -29,6 +29,5 @@ OTHER_DOCC_FLAGS="--source-service github --source-service-base-url https://gith
 
 mv ~/MeetingNotesBuild/Build/Products/Debug/MeetingNotes.doccarchive/* ${PACKAGE_PATH}/docs/
 
-
 # expecting resulting (hosted) docs at
 #   https://automerge.org/MeetingNotes/documentation/meetingnotes/
