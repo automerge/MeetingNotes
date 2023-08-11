@@ -44,6 +44,10 @@
         "text" : "SyncView"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "SyncView.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/SyncView.swift#L4"
+    },
     "role" : "symbol",
     "roleHeading" : "Structure",
     "symbolKind" : "struct",

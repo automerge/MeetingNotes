@@ -13,28 +13,22 @@ export DOCC_HOSTING_BASE_PATH=MeetingNotes
 # ^^^ also not taking effect in `xcodebuild docbuild`, may be invoking this parameter incorrectly...
 
 rm -rf ~/MeetingNotesBuild
+rm -rf ${PACKAGE_PATH}/docs
 mkdir -p ${PACKAGE_PATH}/docs
 
 pushd ${PACKAGE_PATH}
 # xcodebuild -list -project MeetingNotes.xcodeproj // -json
 # xcodebuild -showsdks
 xcodebuild docbuild -scheme MeetingNotes \
--derivedDataPath ~/MeetingNotesBuild
-# DOCC_HOSTING_BASE_PATH=MeetingNotes \
-# DOCUMENTATION_FOLDER_PATH=${PACKAGE_PATH}/docs \
-# OTHER_DOCC_FLAGS="--source-service github --source-service-base-url https://github.com/automerge/meetingnotes/tree/main --checkout-path ${PACKAGE_PATH}"
+-derivedDataPath ~/MeetingNotesBuild \
+DOCC_HOSTING_BASE_PATH=MeetingNotes \
+OTHER_DOCC_FLAGS="--source-service github --source-service-base-url https://github.com/automerge/meetingnotes/tree/main --checkout-path \$(SOURCE_ROOT)"
 
 # find ~/Desktop/MeetingNotesBuild -type d -name '*.doccarchive`
 # /Users/heckj/Desktop/MeetingNotesBuild/Build/Products/Debug/MeetingNotes.doccarchive
 
-# mkdir -p ${PACKAGE_PATH}/docs
+mv ~/MeetingNotesBuild/Build/Products/Debug/MeetingNotes.doccarchive/* ${PACKAGE_PATH}/docs/
 
-# $(xcrun --find docc) process-archive transform-for-static-hosting --help
-
-$(xcrun --find docc) process-archive \
-transform-for-static-hosting ~/MeetingNotesBuild/Build/Products/Debug/MeetingNotes.doccarchive \
---output-path ${PACKAGE_PATH}/docs \
---hosting-base-path MeetingNotes
 
 # expecting resulting (hosted) docs at
 #   https://automerge.org/MeetingNotes/documentation/meetingnotes/

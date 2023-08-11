@@ -44,6 +44,10 @@
         "text" : "MergeView"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "MergeView.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/MergeView.swift#L5"
+    },
     "role" : "symbol",
     "roleHeading" : "Structure",
     "symbolKind" : "struct",

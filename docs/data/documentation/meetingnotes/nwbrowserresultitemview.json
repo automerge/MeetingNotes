@@ -44,6 +44,10 @@
         "text" : "NWBrowserResultItemView"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "NWBrowserResultItemView.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/NWBrowserResultItemView.swift#L5"
+    },
     "role" : "symbol",
     "roleHeading" : "Structure",
     "symbolKind" : "struct",

@@ -44,6 +44,10 @@
         "text" : "DocumentSyncCoordinator"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "DocumentSyncCoordinator.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/PeerNetworking\/DocumentSyncCoordinator.swift#L27"
+    },
     "role" : "symbol",
     "roleHeading" : "Class",
     "symbolKind" : "class",

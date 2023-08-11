@@ -47,6 +47,10 @@
         "name" : "MeetingNotes"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "MeetingNotesApp.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/MeetingNotesApp.swift#L4"
+    },
     "role" : "symbol",
     "roleHeading" : "Global Variable",
     "symbolKind" : "var",

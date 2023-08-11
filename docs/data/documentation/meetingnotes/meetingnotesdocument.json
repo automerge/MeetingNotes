@@ -44,6 +44,10 @@
         "text" : "MeetingNotesDocument"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "MeetingNotesDocument.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/MeetingNotesDocument.swift#L54"
+    },
     "role" : "symbol",
     "roleHeading" : "Class",
     "symbolKind" : "class",
