@@ -19,10 +19,9 @@ pushd ${PACKAGE_PATH}
 # xcodebuild -list -project MeetingNotes.xcodeproj // -json
 # xcodebuild -showsdks
 xcodebuild docbuild -scheme MeetingNotes \
--derivedDataPath ~/MeetingNotesBuild
-# DOCC_HOSTING_BASE_PATH=MeetingNotes \
-# DOCUMENTATION_FOLDER_PATH=${PACKAGE_PATH}/docs \
-# OTHER_DOCC_FLAGS="--source-service github --source-service-base-url https://github.com/automerge/meetingnotes/tree/main --checkout-path ${PACKAGE_PATH}"
+-derivedDataPath ~/MeetingNotesBuild \
+DOCC_HOSTING_BASE_PATH=MeetingNotes \
+OTHER_DOCC_FLAGS="--source-service github --source-service-base-url https://github.com/automerge/meetingnotes/tree/main --checkout-path ${PACKAGE_PATH}"
 
 # find ~/Desktop/MeetingNotesBuild -type d -name '*.doccarchive`
 # /Users/heckj/Desktop/MeetingNotesBuild/Build/Products/Debug/MeetingNotes.doccarchive
