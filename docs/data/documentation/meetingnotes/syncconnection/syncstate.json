@@ -48,6 +48,10 @@
         "name" : "MeetingNotes"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "SyncConnection.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/PeerNetworking\/SyncConnection.swift#L42"
+    },
     "role" : "symbol",
     "roleHeading" : "Instance Property",
     "symbolKind" : "property",

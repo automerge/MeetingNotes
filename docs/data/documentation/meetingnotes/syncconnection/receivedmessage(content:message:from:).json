@@ -97,6 +97,10 @@
         "name" : "MeetingNotes"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "SyncConnection.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/PeerNetworking\/SyncConnection.swift#L302"
+    },
     "role" : "symbol",
     "roleHeading" : "Instance Method",
     "symbolKind" : "method",

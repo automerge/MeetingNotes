@@ -104,6 +104,10 @@
         "name" : "MeetingNotes"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "SyncConnection.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/PeerNetworking\/SyncConnection.swift#L80"
+    },
     "role" : "symbol",
     "roleHeading" : "Initializer",
     "symbolKind" : "init",

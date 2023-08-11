@@ -42,6 +42,10 @@
         "name" : "MeetingNotes"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "MeetingNotesDocumentView.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/MeetingNotesDocumentView.swift#L6"
+    },
     "role" : "symbol",
     "roleHeading" : "Instance Property",
     "symbolKind" : "property",

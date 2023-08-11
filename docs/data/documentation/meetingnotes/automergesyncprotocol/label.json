@@ -64,6 +64,10 @@
         "name" : "MeetingNotes"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "AutomergeSyncProtocol.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/PeerNetworking\/AutomergeSyncProtocol.swift#L37"
+    },
     "role" : "symbol",
     "roleHeading" : "Type Property",
     "symbolKind" : "property",

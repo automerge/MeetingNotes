@@ -59,6 +59,10 @@
         ]
       }
     ],
+    "remoteSource" : {
+      "fileName" : "OSLog+extensions.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/OSLog+extensions.swift#L11"
+    },
     "role" : "symbol",
     "roleHeading" : "Type Property",
     "symbolKind" : "property",

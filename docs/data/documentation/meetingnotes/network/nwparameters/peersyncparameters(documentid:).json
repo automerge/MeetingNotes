@@ -76,6 +76,10 @@
         ]
       }
     ],
+    "remoteSource" : {
+      "fileName" : "NWParameters+peerSyncParameters.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/PeerNetworking\/NWParameters+peerSyncParameters.swift#L21"
+    },
     "role" : "symbol",
     "roleHeading" : "Type Method",
     "symbolKind" : "method",

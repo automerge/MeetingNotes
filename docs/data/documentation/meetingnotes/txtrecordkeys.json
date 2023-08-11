@@ -44,6 +44,10 @@
         "text" : "TXTRecordKeys"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "DocumentSyncCoordinator.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/PeerNetworking\/DocumentSyncCoordinator.swift#L11"
+    },
     "role" : "symbol",
     "roleHeading" : "Enumeration",
     "symbolKind" : "enum",

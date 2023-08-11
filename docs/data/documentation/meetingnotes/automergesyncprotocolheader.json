@@ -44,6 +44,10 @@
         "text" : "AutomergeSyncProtocolHeader"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "AutomergeSyncProtocol.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/PeerNetworking\/AutomergeSyncProtocol.swift#L136"
+    },
     "role" : "symbol",
     "roleHeading" : "Structure",
     "symbolKind" : "struct",

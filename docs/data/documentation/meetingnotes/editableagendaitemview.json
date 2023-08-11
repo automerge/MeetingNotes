@@ -44,6 +44,10 @@
         "text" : "EditableAgendaItemView"
       }
     ],
+    "remoteSource" : {
+      "fileName" : "EditableAgendaItemView.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/EditableAgendaItemView.swift#L6"
+    },
     "role" : "symbol",
     "roleHeading" : "Structure",
     "symbolKind" : "struct",
