@@ -485,14 +485,14 @@
 "doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AppWalkthrough": {
   "abstract" : [
     {
-      "text" : "A guided tour of MeetingNotes, a sample iOS and macOS SwiftUI app that uses Automerge for syncing and collaboration.",
+      "text" : "A guided tour of MeetingNotes, a sample iOS and macOS SwiftUI app that uses Automerge for data storage and collaboration.",
       "type" : "text"
     }
   ],
   "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppWalkthrough",
   "kind" : "article",
   "role" : "article",
-  "title" : "Meeting Notes, a Document-based SwiftUI app using Automerge.",
+  "title" : "Meeting Notes, a Document-based SwiftUI app using Automerge",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/appwalkthrough"
 },
