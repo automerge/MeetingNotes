@@ -1,20 +1,19 @@
-# Meeting Notes, a Document-based SwiftUI app using Automerge.
+# Meeting Notes, a Document-based SwiftUI app using Automerge
 
-A guided tour of MeetingNotes, a sample iOS and macOS SwiftUI app that uses Automerge for syncing and collaboration.
+A guided tour of MeetingNotes, a sample iOS and macOS SwiftUI app that uses Automerge for data storage and collaboration.
 
 ## Overview
 
 The source for the MeetingNotes app is [available on Github](https://github.com/automerge/MeetingNotes).
-The Document-based SwiftUI app illustrates storing and loading a `Codable` model and integrating Automerge backed models with the SwiftUI controls.
-The app includes file merging capabilities and interactive peer-to-peer syncing of updates in near real time. 
+The Document-based SwiftUI app illustrates storing and loading a `Codable` model and integrating that Automerge-backed model with SwiftUI controls.
+The example supports merging files with offline updates and interactive peer-to-peer syncing in near real time.
 
 ### Using Automerge in a Document-based app
 
-[MeetingNotesDocument.swift](https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/MeetingNotesDocument.swift) contains most of the swift code related to being a Document-based SwiftUI app.
-
 MeetingNotes is a document-based SwiftUI app, meaning that it defines a file type, reads and edits files stored on device, focusing on a document to store relevant information.
-The file type that the MeetingNotes defines is defined in the projects Info.plist and in code as a Universal Type Identifier.
-The identifier the app defines is `com.github.automerge.meetingnotes`.
+ [MeetingNotesDocument.swift](https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/MeetingNotesDocument.swift) contains the core code to support a Document-based SwiftUI app.
+
+The file type that the MeetingNotes defines in the `Info.plist` file is matched in code as an extension on Universal Type Identifier, `com.github.automerge.meetingnotes`:
 
 ```swift
 extension UTType {
@@ -26,14 +25,18 @@ extension UTType {
 }
 ```
 
-In the project `Info.plist` file, the app exports the type using the file extension `.meetingnotes` and conforms to the more general Uniform Type Identifiers of [`public.content`](https://developer.apple.com/documentation/uniformtypeidentifiers/uttype/3551481-content) and [`public.data`](https://developer.apple.com/documentation/uniformtypeidentifiers/uttype/3551482-data).
+The `Info.plist` file defines the type that the app exports with a file extension `.meetingnotes`.
+The app's type conforms to the more general Uniform Type Identifiers of [`public.content`](https://developer.apple.com/documentation/uniformtypeidentifiers/uttype/3551481-content) and [`public.data`](https://developer.apple.com/documentation/uniformtypeidentifiers/uttype/3551482-data).
 
-MeetingNotes does not use the raw bytes that an Automerge document provides. 
-Instead it wraps those bytes in order to track a unique document identifier that is created with any new document.
-This provides MeetingNotes with a convenient way to determine if two documents represent are intended to represent copies of the same document, or if they were generated independently.
-While Automerge supports merging any two document structures, the seamless updates of changes between copies relies on the documents having a shared based history.
-MeetingNotes uses the document identifier to constrain what Automerge documents it will merge or synchronize.
-MeetingNotes uses the Codable struct `WrappedAutomergeDocument` attach the document identifier, and encodes the result using [CBOR encoding](https://cbor.io).
+MeetingNotes doesn't use the raw bytes that an Automerge document provides for the file format. 
+Instead it wraps those bytes to track a unique document identifier created with any new document.
+Tracking a unique document identifier provides MeetingNotes with a convenient way to determine if two documents are copies of the same document, or if they were generated independently.
+While Automerge supports consistently merging any two document structures, the seamless updates of changes between copies relies on the documents having a shared based history.
+Merging two documents that don't share a common history can result in unexpected, although consistent, merge results.
+
+MeetingNotes uses the document identifier to constrain the documents it merges or synchronizes with.
+MeetingNotes uses the Codable struct `WrappedAutomergeDocument` to attach the document identifier and encodes it with [CBOR encoding](https://cbor.io).
+The CBOR encoding and decoding is provided by the dependency [PotentCodables](https://swiftpackageindex.com/outfoxx/PotentCodables).
 
 ```swift
 struct WrappedAutomergeDocument: Codable {
@@ -43,13 +46,11 @@ struct WrappedAutomergeDocument: Codable {
     static let fileDecoder = CBORDecoder()
 }
 ```
+Document-based SwiftUI apps expect you to use either a subclass of  [FileDocument](https://developer.apple.com/documentation/swiftui/filedocument) or [ReferenceFileDocument](https://developer.apple.com/documentation/swiftui/referencefiledocument).
+MeetingNotes defines `MeetingNotesDocument`, a subclass of `ReferenceFileDocument`.
 
-The CBOR encoding and decoding is provided by the dependency [PotentCodables](https://swiftpackageindex.com/outfoxx/PotentCodables).
-
-To integrate with the SwiftUI document-based app structure, MeetingNotes defines `MeetingNotesDocument`, a subclass of [ReferenceFileDocument](https://developer.apple.com/documentation/swiftui/referencefiledocument).
-
-In the create-a-new-document initializer, MeetingNotes creates a new Automerge document along with a new document identifier to go along with this document.
-The initializer goes on to create a new, empty model instance and seeds the schema of the model into Automerge using ``AutomergeEncoder``.
+In the create-a-new-document initializer (`init()`), MeetingNotes creates a new Automerge document along with a new document identifier.
+The initializer continues and creates a new, empty model instance and seeds the schema of the model into the Automerge document using `AutomergeEncoder`.
 
 ```swift
 init() {
@@ -70,8 +71,8 @@ init() {
 }
 ```
 
-In the read-a-document-from-data initializer (`init(configuration: ReadConfiguration)`), MeetingNotes attempts to decode the wrapper from the bytes provided by the system, followed by initializing an Automerge document using the bytes embedded within the wrapped document.
-If this process succeeds, the initializer uses ``AutomergeDecoder`` to decode an instance of the model from the Automerge document. 
+In the read-a-document-from-data initializer (`init(configuration: ReadConfiguration)`), MeetingNotes attempts to decode the wrapper from the bytes provided by the system, followed by initializing an Automerge document with the bytes embedded within the wrapped document.
+If this process succeeds, the initializer uses `AutomergeDecoder` to decode an instance of the model from the Automerge document. 
 
 ```swift
 required init(configuration: ReadConfiguration) throws {
@@ -110,9 +111,9 @@ required init(configuration: ReadConfiguration) throws {
 ```
 
 The required save-the-document method (`snapshot(contentType _: UTType)`) encodes any updates from the model back into the Automerge document.
-The SwiftUI system calls this method at different times, depending on the app platform.
-On macOS, it is invoked when the person using MeetingNotes invokes a "save" through the menu or keyboard shortcut.
-However, on iOS, the method is invoked more automatically, frequently driven by updating the UndoManager to let the system know the Document is dirty and an update can be saved.
+SwiftUI calls this method at different times, depending on the app platform.
+On macOS, it is invoked when the person using MeetingNotes uses "save" through the menu or keyboard shortcut.
+However, on iOS, the method is invoked automatically, driven by notifying the UndoManager to let the system know the Document is dirty and an update can be saved.
 
 ```swift
 func snapshot(contentType _: UTType) throws -> Document {
@@ -121,7 +122,7 @@ func snapshot(contentType _: UTType) throws -> Document {
 }
 ```
 
-That, in turn, is used by `fileWrapper(snapshot: Document, configuration _: WriteConfiguration)` to new wrapped document with the updated bytes, and serializes that to provide the final bytes to store on device.
+The snapshot, in turn, is used by `fileWrapper(snapshot: Document, configuration _: WriteConfiguration)` to create a new wrapped document with the updated bytes, and serializes the wrapped document to provide the final bytes to store on device.
 
 ```swift
 func fileWrapper(
@@ -143,7 +144,7 @@ func fileWrapper(
 }
 ```
 
-The Document subclass defines two additional helper methods: `storeModelUpdates()` and `getModelUpdates` to provide a convenient interface point for later updates from synchornization, merging files, or updates to from SwiftUI views.
+The Document subclass defines two additional helper methods: `storeModelUpdates()` and `getModelUpdates()` to provide a convenient interface point for changes to the Automerge document from synchronization, merging files, or updates to from SwiftUI views.
 
 ```swift
 /// Updates the Automerge document with the current value from the model.
@@ -164,19 +165,20 @@ For more information on building document-based app with SwiftUI, see [Building 
 
 ### Encoding and Decoding the model
 
-The model for the app is defined in [MeetingNotesModel.swift](https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/MeetingNotesModel.swift), with the top level of the model exposing a `Codable` struct that includes `title` and a list of `AgendaItem`.
-`AgendaItem` is another `Codable` struct that includes it's own `title` and an instance of ``AutomergeText``.
+The model used in the app is defined in [MeetingNotesModel.swift](https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/MeetingNotesModel.swift).
+The top level of the model exposes a `Codable` struct that includes `title` and a list of `AgendaItem`.
+`AgendaItem` is another `Codable` struct that includes a `title` and an instance of `AutomergeText`.
 
-This model illustrates the Codable encoding of both structs and arrays, as well as the special Automerge type `AutomergeText`, which dynamically reads and updates values from ``ObjType/Text`` objects within an Automerge document.
-For any updates to the model _other_ than the text updates, the app needs to call `storeModelUpdates()` on the instance of `ModelNotesDocument` to use an AutomergeEncoder to write the updates back into the Automerge ``Document`` instance.    
+This model illustrates the Codable encoding of both structs and arrays, as well as the special Automerge type `AutomergeText`, which dynamically reads and updates values from text objects within an Automerge document.
+For any updates to the model _other_ than the text updates, the app calls `storeModelUpdates()` on the instance of `ModelNotesDocument` to use an `AutomergeEncoder` to write the updates back into the Automerge `Document` instance.    
 
 ### Integrating with SwiftUI Controls and Views
 
 The primary content view for the app is provided by [MeetingNotesDocumentView](https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/Views/MeetingNotesDocumentView.swift).
 This view defines a two-column (list and detail) split view using [NavigationSplitView](https://developer.apple.com/documentation/swiftui/navigationsplitview).
 
-The view contains a reference to the `MeetingNotesDocument` as the property `document`. 
-`document` is used in the view to display the overall document title as an editable field: 
+The view contains a property `document`, that references the `MeetingNotesDocument`.
+The `document` property is used in the view to display the overall document title as an editable field: 
 
 ```swift
 TextField("Meeting Title", text: $document.model.title)
@@ -186,17 +188,20 @@ TextField("Meeting Title", text: $document.model.title)
     }
 ```
 
-On any updates to that field, the view calls `storeModelUpdates()` on the document and notifies the Undo manager that a change has happened.
-The Undo manager isn't used to build up a queue of changes that could be reversed, instead being the means to notify the SwiftUI document-based app framework that a change _has_ occured, so that it can mark the document as dirty.
-In the macOS app, this provides a visual affordance to let the person using the app know that the document has been updated and can be saved. In the iOS app, this automatically saves the document.
+On any updates to that field, the view notifies the Undo manager that a change has happened and calls `storeModelUpdates()` on the document.
+The Undo manager isn't used to build up a queue of changes to be reversed. 
+Instead it is a means to notify the document-based app framework that a change occurred, so that it can mark the document as dirty.
+In the macOS app, this provides a visual affordance to let the person using the app know that the document has been updated and can be saved. 
+In the iOS app, the framework automatically saves the document.
 
-This main document view also provides a list of each of the `AgendaItem` instances from our model, includes a button to add new, emtpy item, and a contextual menu option to delete an item.
+This main document view also provides a list of the `AgendaItem` instances, includes a button to add new one, and each has a contextual menu option to delete it.
 
 The detail view is provided by [EditableAgendaItemView](https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/Views/EditableAgendaItemView.swift).
-Like the main document view, it maintains a reference to `MeetingNotesDocument` as the property `document` to write changes back into the Automerge document, and maintains its own `@State` value for the agenda item's title.
-The view is also passed a unique, stable identifier for each agenda item, which is used to handle selection from the list view, using `id()` to identify the detail view with it's ID. 
+Like the main document view, it maintains a reference to `MeetingNotesDocument` as the property `document.
+The view maintains its own `@State` value for an agenda item's title.
+The view is passed a unique, stable identifier for each agenda item, which it uses to handle selection from the list view, using `id()` to identify the detail view to make sure it updates when a selection changes. 
 
-The state of the view is set up using `.onAppear()` and is refreshed when the view sees an update to the Document's objectWillChange publisher.
+The view sets its state using `.onAppear()`, and is refreshed when the view sees an update to the Document's `objectWillChange` publisher.
 
 ```swift
 .onAppear(perform: {
@@ -249,14 +254,14 @@ private func updateAgendaItemTitle() {
 }
 ```
 
-The discussion property of the agenda item is linked to a binding provided by ``AutomergeText/textBinding()``, the reference to the text instance looked up from the model using the agenda item's identifier.
+The `discussion` property of an agenda item is linked to a binding provided by `AutomergeText.textBinding()`, the reference to the text instance looked up from the model using the agenda item's identifier.
 
 ```swift
 TextEditor(text: bindingForAgendaItem())
 ```
 
 Each keystroke that updates the discussion is immediately written back to the Automerge document.
-By using the `Binding<String>` vended from `AutomergeText` the app directly reads and updates the view from changes to the Automerge document without having to necessarily rebuild the entire view.
+By using the `Binding<String>` vended from `AutomergeText`, the app directly reads and updates the view from changes to the Automerge document without having to rebuild the entire view.
 
 ```swift
 func bindingForAgendaItem() -> Binding<String> {
@@ -283,7 +288,7 @@ On a broad scale, this may be inconvenient or untenable for app performance.
 
 The second pattern leverages `Codable`, but does so with a special reference type that provides a reference that directly reads from and writes to the Automerge document.
 By using a `Codable` reference type, the app can leverage the capability of `AutomergeEncoder` to establish the needed objects within a new Automerge document, effecting "seeding the schema".
-Beyond that, it is the reposibility of the ``AutomergeText`` object to notify of changes to ensure SwiftUI views are refreshed as appropriate.
+Beyond that, it is the reposibility of the `AutomergeText` object to notify of changes to ensure SwiftUI views are refreshed as appropriate.
 
 The `AutomergeText` source provides an example of how you can structure your own reference types to achieve this sort of performance, if that need is critical to you.
 In practice, doing this extra work correlates well to wanting to expose live-collaboration capabilities, where one or more people are doing frequent updates and the documents are likewise frequently synchronizing.
@@ -295,7 +300,7 @@ The main app view includes a toolbar button displaying [MergeView.swift](https:/
 `MergeView` provides a button that uses [`fileImporter`](https://developer.apple.com/documentation/swiftui/view/fileimporter(ispresented:allowedcontenttypes:allowsmultipleselection:oncompletion:)) to attempt to load another instance of the MeetingNotes document type from device storage.
 This button illustrates how to seamlessly merge in updates from a copy made of the original document.
 
-Upon loading the document, it calls the helper method `mergeDocument` on `MeetingNotesDocument` to decode the document identifier, and if identical to the current document, merges any updates using ``Document/merge(other:)``.
+Upon loading the document, it calls the helper method `mergeDocument` on `MeetingNotesDocument` to decode the document identifier, and if identical to the current document, merges any updates using `Document.merge(other:)`.
 
 ```swift
 func mergeFile(_ fileURL: URL) -> Result<Bool, Error> {
@@ -320,15 +325,15 @@ func mergeFile(_ fileURL: URL) -> Result<Bool, Error> {
 
 ### Syncing Documents
 
-With a document-based SwiftUI app, the SwiftUI app framework owns the lifetime of a ReferenceFileDocument subclass.
-If the file saved from the Document based app is stored in iCloud, the operating system may destroy an existing instance and re-create it from the contents on device - most notably after having replicated the file with iCloud.
-There may be other instances of where the document can be rebuilt, but the important aspect is that SwiftUI is in control of that instance's lifecycle.
+With a document-based SwiftUI app, the SwiftUI app framework owns the lifetime of a `ReferenceFileDocument` subclass.
+If the file saved from the document-based app is stored in iCloud, the operating system may destroy an existing instance and re-create it from the contents on device - most notably after having replicated the file with iCloud.
+There may be other instances of where the document can be rebuilt, but the important aspect to note is that SwiftUI is in control of that instance's lifecycle.
 
-To provide peer to peer syncing, MeetingNotes handles that detail by enabling an app-level sync coordinator: [DocumentSyncCoordinator.swift](https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/PeerNetworking/DocumentSyncCoordinator.swift)
-This coordinator has properties for tracking Documents open by the app, as well as identifiers that represent those documents and identifiers that represent the various peers it syncs with.
-The sync coordinator presents itself as an Observable object to enable use within SwiftUI views, providing information about peers, connections, and the capability for establishing a new connection.
+To provide peer to peer syncing, MeetingNotes handles the document being ephemeral by enabling an app-level sync coordinator: [DocumentSyncCoordinator.swift](https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/PeerNetworking/DocumentSyncCoordinator.swift)
+This coordinator has properties for tracking Documents using identifiers that represent those documents and identifiers to represent the peers it syncs with.
+The sync coordinator presents itself as an `Observable` object for more convenient use within SwiftUI views, to provide information about peers, connections, and exposing a control to establish a new connection.
 
-When MeetingNotes enables sync, it registers a document with the SyncCoordinator, which builds up a [NWTextRecord](https://developer.apple.com/documentation/network/nwtxtrecord) instance to use in advertising that the document is available for sync.
+When MeetingNotes enables sync for a document, it registers a document with the SyncCoordinator, which builds a [NWTextRecord](https://developer.apple.com/documentation/network/nwtxtrecord) instance to use in advertising that the document.
 
 ```swift
 func registerDocument(_ document: MeetingNotesDocument) {
@@ -343,17 +348,17 @@ func registerDocument(_ document: MeetingNotesDocument) {
 ```
 
 On activating sync, the coordinator activates both an [NWBrowser](https://developer.apple.com/documentation/network/nwbrowser) and [NWListener](https://developer.apple.com/documentation/network/nwlistener) instance.
-In addition to activating the network services, the coordinator starts a timer that is used to drive checks for documents to determine if they should send a network sync message as a publisher.
-When established, connections subscribe to the timer to drive checks of the referenced Automerge document to synchronize it.
+In addition to activating the network services, the coordinator starts a timer to drive checks for document updates to determine if they should send a network sync message.
+When a connection is established, it subscribes to the timer to drive checks to sync the Automerge document.
 
 #### Network Browser
 
-The browser looks for nearby peers that the app can sync documents with, while the listener provides the means to accept network connections from a peer.
+The browser looks for nearby peers that the app can sync with, while the listener provides the means to accept network connections.
 The actual sync connection can be initiated by either peer, and only one needs to be initiated to support sync.
 
 The browser filters results by the type of network protocol it is initialized with: [AutomergeSyncProtocol](https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/PeerNetworking/AutomergeSyncProtocol.swift).
-The handler provide to the browser additionally filters the results to only forward the results from other peers on the network.
-The `NWBrowser` instance sees all available, local listeners including itself when the listener is active.
+The `NWBrowser` instance sees all available listeners, including itself, when the listener is active.
+The handler that processes browser updates filters the results to only show other peers on the network.
 
 ```swift
 // Only show broadcasting peers that doesn't have the name 
@@ -371,14 +376,15 @@ let filtered = results.filter { result in
 })
 ```
 
-MeetingNotes includes both a heuristic for automatically connecting when running on iOS and integration with a [NWBrowser.Result](https://developer.apple.com/documentation/network/nwbrowser/result), through a SwiftUI control, to establish a new connection.
-The heuristic for an auto-connect waits for a random period of time before establishing an automatic connection.
+MeetingNotes automatically connects to a new peer listed within [NWBrowser.Result](https://developer.apple.com/documentation/network/nwbrowser/result) when running on iOS.
+The view that shows these results also provides a button to establish a connection manually.
+The auto-connect waits for a short, random period of time before establishing an automatic connection.
 
 #### Network Listener
 
-To accept a connection the coordinator activates a bonjour listener for the document being shared.
-Within MeetingNotes, the listener is configured with the sync network, the `NWTxtRecord` that describes the document to another browser, and network parameters to configure TCP and TLS.
-MeetingNotes uses the document identifier as a pre-shared TLS secret, which both enables encryption and constraints sync connections to other instances that are also using this same convention.
+To accept a connection, the coordinator activates a bonjour listener for the document being shared.
+Within MeetingNotes, the listener is configured with the sync protocol, a `NWTxtRecord` that describes the document, and network parameters to configure TCP and TLS.
+MeetingNotes uses the document identifier as a pre-shared TLS secret, which both enables encryption and constraints sync connections to other instances that use this same convention.
 
 > Warning: Using a pre-shared secret is _not_ a recommended security practice, and this example makes no attestations of being a secure means of encrypting the communications.
 
@@ -391,10 +397,12 @@ Once MeetingNotes accepts a connection, it creates an instance of [SyncConnectio
 
 #### Syncing over a connection
 
-`SyncConnection` is initialized with an [NWConnection](https://developer.apple.com/documentation/network/nwconnection), the identifier for a document, and maintains its own identifier for convenience.
-It also establishes an instance of ``SyncState``, which tracks the state of the peer on the other side of the connection.
+`SyncConnection` tracks the state of a connection as well as the sync state with a peer.
+It is initialized with a [NWConnection](https://developer.apple.com/documentation/network/nwconnection), the identifier for the document.
+It maintains it's own identifier and establishes an instance of `SyncState` to track the state of the peer on the other side of the connection.
 
-Upon initialization, the connection wrapper subscribes to the sync coordinators timer and uses that timer signal to drive a check to determine if a sync message should be sent.
+Upon initialization, the connection wrapper subscribes to the timer provided by the sync coordinator.
+The `SyncConnection` uses the timer signal to drive a check to determine if a sync message should be sent.
 
 ```swift
 syncTriggerCancellable = trigger.sink(receiveValue: { _ in
@@ -413,9 +421,9 @@ syncTriggerCancellable = trigger.sink(receiveValue: { _ in
 })
 ```
 
-The underlying network protocol only sends an event if the call to ``Document/generateSyncMessage(state:)`` returns non-nil data.
-The heart of the synchronization happens when connection receives a network protocol sync message.
-This message is structured wrapper around the sync bytes from another Automerge document along with a minimal type-of-message identifier, taking advantage of the [Network framework](https://developer.apple.com/documentation/network) to frame and establish the messages being transfered.
+The underlying network protocol only sends an event if the call to `generateSyncMessage(state:)` returns non-nil data.
+The heart of the synchronization happens when the connection receives a network protocol sync message.
+This message is structured wrapper around the sync bytes from another Automerge document, along with a minimal type-of-message identifier, taking advantage of the [Network framework](https://developer.apple.com/documentation/network) to frame and establish the messages being transferred.
 Once received, the connection uses [NWProtocolFramer](https://developer.apple.com/documentation/network/nwprotocolframer) to retrieve the message from the bytes sent over the network, and delegates receiving the message to be processed if complete, before waiting for the next message on the network.
 
 ```swift
@@ -458,12 +466,12 @@ private func receiveNextMessage() {
 }
 ```
 
-The connection processes the received protocol message with the `receivedMessage` function, which uses the identifier of the associated of document stored with the connection to retrieve a reference to the instance of the Automerge document.
-Neither the connection, nor the sync coordinator object, can maintain a stable reference to the Automerge document instance because SwiftUI owns the life-cycle of the app's ReferenceFileDocument subclass.
-To work around SwiftUI replacing this class, the coordinator maintains and updates references as Document subclasses register themselves, in order to provide a quick lookup by the document's identifier.
+The connection processes the received sync protocol message with the `receivedMessage` function, using the identifier of the document stored with the connection to retrieve a reference to the document instance.
+Neither the connection, nor the sync coordinator object, can maintain a stable reference to the Automerge document instance because SwiftUI owns the life-cycle of the app's `ReferenceFileDocument` subclass.
+To work around SwiftUI replacing this class, the coordinator maintains and updates references as `Document` subclasses register themselves, in order to provide a quick lookup by the document's identifier.
 
-With a reference the relevant document, the method invokes ``Document/receiveSyncMessageWithPatches(state:message:)`` to receive any provided changes, and uses the returns array of ``Patch`` only to log how many patches were returned.
-Immediately after receiving an update, the function calls ``Document/generateSyncMessage(state:)`` to determine if the additional sync messages are needed, and sends a return sync message if the function returns any data.
+With a reference to the document, the method invokes `receiveSyncMessageWithPatches(state:message:)` to receive any provided changes, and uses the returns array of `Patch` to log how many patches were returned.
+Immediately after receiving an update, the function calls `generateSyncMessage(state:)` to determine if the additional sync messages are needed, and sends a return sync message if the function returns any data.
 
 ```swift
 func receivedMessage(
@@ -521,13 +529,13 @@ func receivedMessage(
 }
 ```
 
-With this established on both sides of a Bonjour connection, once a sync process is initiated, the functions send messages back and forth until a sync is complete.
-The timer, provided from the sync coordinator, is only needed to drive sync messages when changes have occurred locally.
+With this pattern established on both sides of a Bonjour connection, once a sync process is initiated, the functions send messages back and forth until a sync is complete.
+The timer, provided from the sync coordinator, is only needed to start to drive sync messages when changes have occurred locally.
 
 > Note: The messages that contain changes to sync generated by Automerge are _not_ guaranteed to have all the updates needed within a single round trip.
 The underlying mechanism optimizes for sharing the state of heads initially, resulting in a small initial message, followed by sets of changes from either side.
 The full sync process is iterative, which allows for efficient sync even when the two peers may be concurrently syncing with other, unseen or unknown, peers.
 
-The timer frequency in MeetingNotes is set intentionally low to drive sync updates frequently enough to appear to "sync with each keystoke" for the purpose of showing interactively visible collaboration possibilities.
+The timer frequency in MeetingNotes is intentionally set to a short value to drive sync updates frequently enough to appear to "sync with each keystroke" to show off interactively collaboration.
 Your own app may not need, or want, to drive a network sync this frequently.
 
