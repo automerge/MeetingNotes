@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>MeetingNotes uses the local network to enable peer to peer synchronisation of notes.</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -48,6 +46,25 @@
 					<string>meetingnotes</string>
 				</array>
 			</dict>
+		</dict>
+	</array>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Automerge document</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>com.github.automerge</string>
+			<key>UTTypeReferenceURL</key>
+			<string>https://automerge.org/</string>
+			<key>UTTypeTagSpecification</key>
+			<dict/>
 		</dict>
 	</array>
 </dict>
