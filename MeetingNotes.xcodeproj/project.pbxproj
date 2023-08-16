@@ -532,7 +532,7 @@
 				INFOPLIST_FILE = MeetingNotes/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MeetingNotes;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "to allow peer to peer syncing of Meeting Notes";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "MeetingNotes uses the local network to enable peer to peer synchronisation of notes.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -579,7 +579,7 @@
 				INFOPLIST_FILE = MeetingNotes/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MeetingNotes;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "to allow peer to peer syncing of Meeting Notes";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "MeetingNotes uses the local network to enable peer to peer synchronisation of notes.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
