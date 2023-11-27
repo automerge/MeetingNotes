@@ -1,62 +1,6 @@
 import Base58Swift
-import Foundation
+import MeetingNotes
 import XCTest
-
-extension Data {
-    struct HexEncodingOptions: OptionSet {
-        let rawValue: Int
-        static let upperCase = HexEncodingOptions(rawValue: 1 << 0)
-    }
-        
-    func hexEncodedString(uppercase: Bool = false) -> String {
-        let format = uppercase ? "%02hhX" : "%02hhx"
-        return map { String(format: format, $0) }.joined()
-    }
-}
-
-extension UUID {
-    var uintArray: [UInt8] {
-        var byteblob = [UInt8](repeating: 0, count: 16)
-        byteblob[0] = self.uuid.0
-        byteblob[1] = self.uuid.1
-        byteblob[2] = self.uuid.2
-        byteblob[3] = self.uuid.3
-        byteblob[4] = self.uuid.4
-        byteblob[5] = self.uuid.5
-        byteblob[6] = self.uuid.6
-        byteblob[7] = self.uuid.7
-        byteblob[8] = self.uuid.8
-        byteblob[9] = self.uuid.9
-        byteblob[10] = self.uuid.10
-        byteblob[11] = self.uuid.11
-        byteblob[12] = self.uuid.12
-        byteblob[13] = self.uuid.13
-        byteblob[14] = self.uuid.14
-        byteblob[15] = self.uuid.15
-        return byteblob
-    }
-    
-    var data: Data {
-        var byteblob = Data(count: 16)
-        byteblob[0] = self.uuid.0
-        byteblob[1] = self.uuid.1
-        byteblob[2] = self.uuid.2
-        byteblob[3] = self.uuid.3
-        byteblob[4] = self.uuid.4
-        byteblob[5] = self.uuid.5
-        byteblob[6] = self.uuid.6
-        byteblob[7] = self.uuid.7
-        byteblob[8] = self.uuid.8
-        byteblob[9] = self.uuid.9
-        byteblob[10] = self.uuid.10
-        byteblob[11] = self.uuid.11
-        byteblob[12] = self.uuid.12
-        byteblob[13] = self.uuid.13
-        byteblob[14] = self.uuid.14
-        byteblob[15] = self.uuid.15
-        return byteblob
-    }
-}
 
 final class MeetingNotesTests: XCTestCase {
     override func setUpWithError() throws {
@@ -77,7 +21,7 @@ final class MeetingNotesTests: XCTestCase {
             XCTAssertEqual(bytes.count, Data(decodedBytes).count)
         }
     }
-    
+
     func testDisplayingUUIDWithBase58() throws {
         let exampleUUID = try XCTUnwrap(UUID(uuidString: "1654A0B5-43B9-48FF-B7FB-83F58F4D1D75"))
         // print("hexencoded: \(exampleUUID.data.hexEncodedString())")
@@ -85,6 +29,7 @@ final class MeetingNotesTests: XCTestCase {
         let bs58Converted = Base58.base58CheckEncode(exampleUUID.uintArray)
         // print("Converted: \(bs58Converted)")
         XCTAssertEqual("K3YptshN5CcFZNpnnXcStizSNPU", bs58Converted)
+        XCTAssertEqual(exampleUUID.bs58String, bs58Converted)
     }
 
     func testDataInAndOutWithBase58() throws {
@@ -96,7 +41,7 @@ final class MeetingNotesTests: XCTestCase {
             XCTAssertEqual(16, Data(decodedBytes).count)
             XCTAssertEqual("7bf18580944c450ea740c1f23be047ca", Data(decodedBytes).hexEncodedString())
             // print(Data(decodedBytes).hexEncodedString())
-            
+
             let reversed = Base58.base58CheckEncode(decodedBytes)
             XCTAssertEqual(reversed, partial)
         }

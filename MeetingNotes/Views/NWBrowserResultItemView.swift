@@ -3,7 +3,7 @@ import SwiftUI
 
 /// A view that shows nearby peers available for sync.
 struct NWBrowserResultItemView: View {
-    var documentId: UUID
+    var documentId: String
     @ObservedObject var syncController: DocumentSyncCoordinator
     var result: NWBrowser.Result
 

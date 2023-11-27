@@ -26,15 +26,15 @@ enum MeetingNotesDefaultKeys {
 /// A application-shared sync controller that supports coordinates documents and network connections with peers.
 final class DocumentSyncCoordinator: ObservableObject {
     // support multiple documents
-    var documents: [UUID: MeetingNotesDocument] = [:]
-    var txtRecords: [UUID: NWTXTRecord] = [:]
-    var listeners: [UUID: NWListener] = [:]
-    @Published var listenerState: [UUID: NWListener.State] = [:]
+    var documents: [String: MeetingNotesDocument] = [:]
+    var txtRecords: [String: NWTXTRecord] = [:]
+    var listeners: [String: NWListener] = [:]
+    @Published var listenerState: [String: NWListener.State] = [:]
 
     /// Looks up and returns a reference for a document for an initiated Peer Connection
     ///
     /// Primarily in order to attempt to send and receive sync updates.
-    func automergeDocument(for docId: UUID) -> Document? {
+    func automergeDocument(for docId: String) -> Document? {
         documents[docId]?.doc
     }
 
@@ -44,7 +44,7 @@ final class DocumentSyncCoordinator: ObservableObject {
         var txtRecord = NWTXTRecord()
         txtRecord[TXTRecordKeys.name] = name
         txtRecord[TXTRecordKeys.peer_id] = peerId.uuidString
-        txtRecord[TXTRecordKeys.doc_id] = document.id.uuidString
+        txtRecord[TXTRecordKeys.doc_id] = document.id
         txtRecords[document.id] = txtRecord
     }
 
@@ -120,7 +120,7 @@ final class DocumentSyncCoordinator: ObservableObject {
 
     // MARK: NWBrowser
 
-    func attemptToConnectToPeer(_ endpoint: NWEndpoint, forPeer peerId: String, withDoc documentId: UUID) {
+    func attemptToConnectToPeer(_ endpoint: NWEndpoint, forPeer peerId: String, withDoc documentId: String) {
         Logger.syncController
             .debug(
                 "Attempting to establish connection to \(peerId, privacy: .public) through \(endpoint.debugDescription, privacy: .public) "
@@ -142,7 +142,7 @@ final class DocumentSyncCoordinator: ObservableObject {
         }
     }
 
-    func delayAndAttemptToConnect(_ endpoint: NWEndpoint, forPeer peerId: String, withDoc documentId: UUID) {
+    func delayAndAttemptToConnect(_ endpoint: NWEndpoint, forPeer peerId: String, withDoc documentId: String) {
         Task {
             let delay = Int.random(in: 250 ... 1000)
             Logger.syncController
@@ -223,8 +223,7 @@ final class DocumentSyncCoordinator: ObservableObject {
                     if case let .bonjour(txtrecord) = potentialPeer.metadata {
                         if let remotePeerIdString = txtrecord[TXTRecordKeys.peer_id],
                            remotePeerIdString != self.peerId.uuidString,
-                           let documentIdString = txtrecord[TXTRecordKeys.doc_id],
-                           let peerDocumentId = UUID(uuidString: documentIdString)
+                           let peerDocumentId = txtrecord[TXTRecordKeys.doc_id]
                         {
                             if documents[peerDocumentId] != nil {
                                 self.delayAndAttemptToConnect(
@@ -261,17 +260,17 @@ final class DocumentSyncCoordinator: ObservableObject {
     // MARK: NWListener handlers
 
     // Start listening and advertising.
-    fileprivate func setupBonjourListener(for documentId: UUID) {
+    fileprivate func setupBonjourListener(for documentId: String) {
         guard let txtRecordForDoc = txtRecords[documentId] else {
             Logger.syncController
                 .warning(
-                    "Attempting to establish listener for unregistered document: \(documentId.uuidString, privacy: .public)"
+                    "Attempting to establish listener for unregistered document: \(documentId, privacy: .public)"
                 )
             return
         }
         do {
             // Create the listener object.
-            let listener = try NWListener(using: NWParameters.peerSyncParameters(documentId: documentId.uuidString))
+            let listener = try NWListener(using: NWParameters.peerSyncParameters(documentId: documentId))
             // Set the service to advertise.
             listener.service = NWListener.Service(
                 type: AutomergeSyncProtocol.bonjourType,
@@ -348,13 +347,13 @@ final class DocumentSyncCoordinator: ObservableObject {
             listeners[documentId] = listener
             Logger.syncController
                 .debug(
-                    "Starting bonjour network listener for document id \(documentId.uuidString, privacy: .public)"
+                    "Starting bonjour network listener for document id \(documentId, privacy: .public)"
                 )
 
         } catch {
             Logger.syncController
                 .critical(
-                    "Failed to create bonjour listener for document id \(documentId.uuidString, privacy: .public): \(error, privacy: .public)"
+                    "Failed to create bonjour listener for document id \(documentId, privacy: .public): \(error, privacy: .public)"
                 )
             listenerSetupError = error
         }
@@ -363,7 +362,7 @@ final class DocumentSyncCoordinator: ObservableObject {
     // Stop all listeners.
     fileprivate func stopListening() {
         for (documentId, listener) in listeners {
-            Logger.syncController.debug("Terminating NWListener for \(documentId.uuidString, privacy: .public)")
+            Logger.syncController.debug("Terminating NWListener for \(documentId, privacy: .public)")
             listener.cancel()
             listeners.removeValue(forKey: documentId)
         }
@@ -384,12 +383,12 @@ final class DocumentSyncCoordinator: ObservableObject {
                 )
                 Logger.syncController
                     .debug(
-                        "Updated bonjour network listener to name \(name, privacy: .public) for document id \(documentId.uuidString, privacy: .public)"
+                        "Updated bonjour network listener to name \(name, privacy: .public) for document id \(documentId, privacy: .public)"
                     )
             } else {
                 Logger.syncController
                     .error(
-                        "Unable to find TXTRecord for the registered Document: \(documentId.uuidString, privacy: .public)"
+                        "Unable to find TXTRecord for the registered Document: \(documentId, privacy: .public)"
                     )
             }
         }
