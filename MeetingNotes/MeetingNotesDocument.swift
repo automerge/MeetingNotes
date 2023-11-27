@@ -16,7 +16,7 @@ extension UTType {
 /// The `id` is a unique identifier that provides a "new document" identifier for the purpose of comparing two documents
 /// to determine if they were branched from the same root document.
 struct WrappedAutomergeDocument: Codable {
-    let id: UUID
+    let id: String
     let data: Data
     static let fileEncoder = CBOREncoder()
     static let fileDecoder = CBORDecoder()
@@ -56,7 +56,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     let fileDecoder = CBORDecoder()
     let modelEncoder: AutomergeEncoder
     let modelDecoder: AutomergeDecoder
-    let id: UUID
+    let id: String
     var doc: Document
 
     @Published
@@ -66,7 +66,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
 
     init() {
         Logger.document.debug("INITIALIZING NEW DOCUMENT")
-        id = UUID()
+        id = UUID().bs58String
         doc = Document()
         let newModel = MeetingNotesModel(title: "Untitled")
         model = newModel
@@ -103,7 +103,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         doc = try Document(wrappedDocument.data)
         Logger.document
             .debug(
-                "Created Automerge doc of ID \(self.id.uuidString, privacy: .public) from CBOR encoded data of \(wrappedDocument.data.count, privacy: .public) bytes"
+                "Created Automerge doc of ID \(self.id, privacy: .public) from CBOR encoded data of \(wrappedDocument.data.count, privacy: .public) bytes"
             )
         modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
         modelDecoder = AutomergeDecoder(doc: doc)
@@ -137,7 +137,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     }
 
     deinit {
-        Logger.document.debug("DEINIT of MeetingNotesDocument, documentId: \(self.id.uuidString, privacy: .public)")
+        Logger.document.debug("DEINIT of MeetingNotesDocument, documentId: \(self.id, privacy: .public)")
     }
 
     func snapshot(contentType _: UTType) throws -> Document {

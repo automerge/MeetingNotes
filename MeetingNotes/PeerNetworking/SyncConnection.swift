@@ -28,7 +28,7 @@ final class SyncConnection: ObservableObject {
     }
 
     /// The document to which this connection is linked
-    var documentId: UUID
+    var documentId: String
 
     var connection: NWConnection?
     /// A Boolean value that indicates this app initiated this connection.
@@ -54,13 +54,13 @@ final class SyncConnection: ObservableObject {
         endpoint: NWEndpoint,
         peerId: String,
         trigger: AnyPublisher<Void, Never>,
-        documentId: UUID
+        documentId: String
     ) {
         self.documentId = documentId
         syncState = SyncState()
         let connection = NWConnection(
             to: endpoint,
-            using: NWParameters.peerSyncParameters(documentId: documentId.uuidString)
+            using: NWParameters.peerSyncParameters(documentId: documentId)
         )
         self.connection = connection
         self.endpoint = endpoint
@@ -77,7 +77,7 @@ final class SyncConnection: ObservableObject {
     /// - Parameters:
     ///   - connection: The connection provided by a listener to accept.
     ///   - delegate: A delegate that can process Automerge sync protocol messages.
-    init(connection: NWConnection, trigger: AnyPublisher<Void, Never>, documentId: UUID) {
+    init(connection: NWConnection, trigger: AnyPublisher<Void, Never>, documentId: String) {
         self.documentId = documentId
         self.connection = connection
         self.endpoint = connection.endpoint
@@ -303,7 +303,7 @@ final class SyncConnection: ObservableObject {
         guard let document = sharedSyncCoordinator.documents[self.documentId] else {
             Logger.syncConnection
                 .warning(
-                    "\(self.shortId, privacy: .public): received msg for unregistered document \(self.documentId.uuidString, privacy: .public) from \(endpoint.debugDescription, privacy: .public)"
+                    "\(self.shortId, privacy: .public): received msg for unregistered document \(self.documentId, privacy: .public) from \(endpoint.debugDescription, privacy: .public)"
                 )
 
             return
@@ -353,7 +353,7 @@ final class SyncConnection: ObservableObject {
             }
         case .id:
             Logger.syncConnection.info("\(self.shortId, privacy: .public): received request for document ID")
-            sendDocumentId(document.id.uuidString)
+            sendDocumentId(document.id)
         }
     }
 }
