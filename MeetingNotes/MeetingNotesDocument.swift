@@ -16,7 +16,7 @@ extension UTType {
 /// The `id` is a unique identifier that provides a "new document" identifier for the purpose of comparing two documents
 /// to determine if they were branched from the same root document.
 struct WrappedAutomergeDocument: Codable {
-    let id: String
+    let id: DocumentId
     let data: Data
     static let fileEncoder = CBOREncoder()
     static let fileDecoder = CBORDecoder()
@@ -56,7 +56,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     let fileDecoder = CBORDecoder()
     let modelEncoder: AutomergeEncoder
     let modelDecoder: AutomergeDecoder
-    let id: String
+    let id: DocumentId
     var doc: Document
 
     @Published
@@ -66,7 +66,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
 
     init() {
         Logger.document.debug("INITIALIZING NEW DOCUMENT")
-        id = UUID().bs58String
+        id = DocumentId()
         doc = Document()
         let newModel = MeetingNotesModel(title: "Untitled")
         model = newModel

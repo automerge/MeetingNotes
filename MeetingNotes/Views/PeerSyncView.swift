@@ -3,7 +3,7 @@ import SwiftUI
 
 /// A view that shows the status of peers and network syncing.
 struct PeerSyncView: View {
-    var documentId: String
+    var documentId: DocumentId
     @ObservedObject var syncController: DocumentSyncCoordinator
 
     @State var browserActive: Bool = false
