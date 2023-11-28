@@ -26,15 +26,15 @@ enum MeetingNotesDefaultKeys {
 /// A application-shared sync controller that supports coordinates documents and network connections with peers.
 final class DocumentSyncCoordinator: ObservableObject {
     // support multiple documents
-    var documents: [String: MeetingNotesDocument] = [:]
-    var txtRecords: [String: NWTXTRecord] = [:]
-    var listeners: [String: NWListener] = [:]
-    @Published var listenerState: [String: NWListener.State] = [:]
+    var documents: [DocumentId: MeetingNotesDocument] = [:]
+    var txtRecords: [DocumentId: NWTXTRecord] = [:]
+    var listeners: [DocumentId: NWListener] = [:]
+    @Published var listenerState: [DocumentId: NWListener.State] = [:]
 
     /// Looks up and returns a reference for a document for an initiated Peer Connection
     ///
     /// Primarily in order to attempt to send and receive sync updates.
-    func automergeDocument(for docId: String) -> Document? {
+    func automergeDocument(for docId: DocumentId) -> Document? {
         documents[docId]?.doc
     }
 
@@ -44,7 +44,7 @@ final class DocumentSyncCoordinator: ObservableObject {
         var txtRecord = NWTXTRecord()
         txtRecord[TXTRecordKeys.name] = name
         txtRecord[TXTRecordKeys.peer_id] = peerId.uuidString
-        txtRecord[TXTRecordKeys.doc_id] = document.id
+        txtRecord[TXTRecordKeys.doc_id] = document.id.description
         txtRecords[document.id] = txtRecord
     }
 
@@ -120,7 +120,7 @@ final class DocumentSyncCoordinator: ObservableObject {
 
     // MARK: NWBrowser
 
-    func attemptToConnectToPeer(_ endpoint: NWEndpoint, forPeer peerId: String, withDoc documentId: String) {
+    func attemptToConnectToPeer(_ endpoint: NWEndpoint, forPeer peerId: String, withDoc documentId: DocumentId) {
         Logger.syncController
             .debug(
                 "Attempting to establish connection to \(peerId, privacy: .public) through \(endpoint.debugDescription, privacy: .public) "
@@ -142,7 +142,7 @@ final class DocumentSyncCoordinator: ObservableObject {
         }
     }
 
-    func delayAndAttemptToConnect(_ endpoint: NWEndpoint, forPeer peerId: String, withDoc documentId: String) {
+    func delayAndAttemptToConnect(_ endpoint: NWEndpoint, forPeer peerId: String, withDoc documentId: DocumentId) {
         Task {
             let delay = Int.random(in: 250 ... 1000)
             Logger.syncController
@@ -223,7 +223,7 @@ final class DocumentSyncCoordinator: ObservableObject {
                     if case let .bonjour(txtrecord) = potentialPeer.metadata {
                         if let remotePeerIdString = txtrecord[TXTRecordKeys.peer_id],
                            remotePeerIdString != self.peerId.uuidString,
-                           let peerDocumentId = txtrecord[TXTRecordKeys.doc_id]
+                           let peerDocumentId = DocumentId(txtrecord[TXTRecordKeys.doc_id])
                         {
                             if documents[peerDocumentId] != nil {
                                 self.delayAndAttemptToConnect(
@@ -260,7 +260,7 @@ final class DocumentSyncCoordinator: ObservableObject {
     // MARK: NWListener handlers
 
     // Start listening and advertising.
-    fileprivate func setupBonjourListener(for documentId: String) {
+    fileprivate func setupBonjourListener(for documentId: DocumentId) {
         guard let txtRecordForDoc = txtRecords[documentId] else {
             Logger.syncController
                 .warning(

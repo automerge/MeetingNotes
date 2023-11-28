@@ -28,7 +28,7 @@ final class SyncConnection: ObservableObject {
     }
 
     /// The document to which this connection is linked
-    var documentId: String
+    var documentId: DocumentId
 
     var connection: NWConnection?
     /// A Boolean value that indicates this app initiated this connection.
@@ -54,7 +54,7 @@ final class SyncConnection: ObservableObject {
         endpoint: NWEndpoint,
         peerId: String,
         trigger: AnyPublisher<Void, Never>,
-        documentId: String
+        documentId: DocumentId
     ) {
         self.documentId = documentId
         syncState = SyncState()
@@ -77,7 +77,7 @@ final class SyncConnection: ObservableObject {
     /// - Parameters:
     ///   - connection: The connection provided by a listener to accept.
     ///   - delegate: A delegate that can process Automerge sync protocol messages.
-    init(connection: NWConnection, trigger: AnyPublisher<Void, Never>, documentId: String) {
+    init(connection: NWConnection, trigger: AnyPublisher<Void, Never>, documentId: DocumentId) {
         self.documentId = documentId
         self.connection = connection
         self.endpoint = connection.endpoint
@@ -252,7 +252,7 @@ final class SyncConnection: ObservableObject {
 
     /// Sends an Automerge document Id.
     /// - Parameter documentId: The document Id to send.
-    func sendDocumentId(_ documentId: String) {
+    func sendDocumentId(_ documentId: DocumentId) {
         // corresponds to SyncMessageType.id
         guard let connection = connection else {
             return
@@ -267,7 +267,7 @@ final class SyncConnection: ObservableObject {
 
         // Send the app content along with the message.
         connection.send(
-            content: documentId.data(using: .utf8),
+            content: documentId.description.data(using: .utf8),
             contentContext: context,
             isComplete: true,
             completion: .idempotent
