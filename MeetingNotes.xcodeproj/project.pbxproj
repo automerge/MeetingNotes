@@ -157,6 +157,7 @@
 				1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */,
 				1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */,
 				1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */,
+				1A2521432B1567F20096951D /* DocumentId.swift */,
 				1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */,
 				1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */,
 				1A0916FF2A4A171C00D80BF7 /* Documentation.docc */,
@@ -222,7 +223,6 @@
 				1AD7A8E82A476801003B6A1E /* AutomergeSyncProtocol.swift */,
 				1AD7A8EA2A476801003B6A1E /* SyncConnection.swift */,
 				1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */,
-				1A2521432B1567F20096951D /* DocumentId.swift */,
 			);
 			path = PeerNetworking;
 			sourceTree = "<group>";
