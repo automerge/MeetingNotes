@@ -28,6 +28,10 @@
 		1A7700C52A67343800869A4D /* PeerSyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C42A67343800869A4D /* PeerSyncView.swift */; };
 		1A7700C72A67479F00869A4D /* NWBrowserResultItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C62A67479F00869A4D /* NWBrowserResultItemView.swift */; };
 		1A8217AD2A6877730071DD38 /* DocumentSyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */; };
+		1AADE1F42B586801000205BB /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1AADE1F32B586801000205BB /* PotentCodables */; };
+		1AADE1F52B586875000205BB /* Data+hexEncodedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */; };
+		1AADE1F62B586878000205BB /* UUID+bs58String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */; };
+		1AADE1F72B58687E000205BB /* DocumentId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2521432B1567F20096951D /* DocumentId.swift */; };
 		1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD5DA322A464FBD0085DF79 /* Automerge */; };
 		1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */; };
 		1AD71E8E2A57622B00B965BF /* MeetingNotesDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */; };
@@ -109,6 +113,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AADE1F42B586801000205BB /* PotentCodables in Frameworks */,
 				1A66478A2AF987A60041C134 /* Automerge in Frameworks */,
 				1A6647882AF987A00041C134 /* Base58Swift in Frameworks */,
 			);
@@ -270,6 +275,7 @@
 			packageProductDependencies = (
 				1A6647872AF987A00041C134 /* Base58Swift */,
 				1A6647892AF987A60041C134 /* Automerge */,
+				1AADE1F32B586801000205BB /* PotentCodables */,
 			);
 			productName = MeetingNotesTests;
 			productReference = 1A0DDC452A464DEB001ECADD /* MeetingNotesTests.xctest */;
@@ -401,6 +407,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A0DDC4A2A464DEB001ECADD /* MeetingNotesTests.swift in Sources */,
+				1AADE1F52B586875000205BB /* Data+hexEncodedString.swift in Sources */,
+				1AADE1F62B586878000205BB /* UUID+bs58String.swift in Sources */,
+				1AADE1F72B58687E000205BB /* DocumentId.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,6 +843,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */;
 			productName = Automerge;
+		};
+		1AADE1F32B586801000205BB /* PotentCodables */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1AD7A8E32A4767A1003B6A1E /* XCRemoteSwiftPackageReference "PotentCodables" */;
+			productName = PotentCodables;
 		};
 		1AD5DA322A464FBD0085DF79 /* Automerge */ = {
 			isa = XCSwiftPackageProductDependency;
