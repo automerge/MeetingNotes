@@ -12,3 +12,6 @@ DerivedData/
 .DS_Store
 
 *.xcodeproj/xcshareddata/
+
+# interop server for dev/testing
+automerge-repo-sync-server
