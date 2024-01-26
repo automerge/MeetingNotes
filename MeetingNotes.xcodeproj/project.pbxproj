@@ -26,6 +26,7 @@
 		1A6647852AF986990041C134 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647842AF986990041C134 /* Base58Swift */; };
 		1A6647882AF987A00041C134 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647872AF987A00041C134 /* Base58Swift */; };
 		1A66478A2AF987A60041C134 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647892AF987A60041C134 /* Automerge */; };
+		1A6FF21D2B64710700C99F81 /* WebSocketStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FF21C2B64710700C99F81 /* WebSocketStatusView.swift */; };
 		1A7700C52A67343800869A4D /* PeerSyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C42A67343800869A4D /* PeerSyncView.swift */; };
 		1A7700C72A67479F00869A4D /* NWBrowserResultItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C62A67479F00869A4D /* NWBrowserResultItemView.swift */; };
 		1A8217AD2A6877730071DD38 /* DocumentSyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */; };
@@ -39,7 +40,7 @@
 		1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */; };
 		1AD71E8E2A57622B00B965BF /* MeetingNotesDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */; };
 		1AD71E912A57630B00B965BF /* MergeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E902A57630B00B965BF /* MergeView.swift */; };
-		1AD71E932A5765A800B965BF /* SyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E922A5765A800B965BF /* SyncView.swift */; };
+		1AD71E932A5765A800B965BF /* SyncStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E922A5765A800B965BF /* SyncStatusView.swift */; };
 		1AD7A8E52A4767A1003B6A1E /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD7A8E42A4767A1003B6A1E /* PotentCodables */; };
 		1AD7A8EB2A476801003B6A1E /* NWParameters+peerSyncParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E62A476801003B6A1E /* NWParameters+peerSyncParameters.swift */; };
 		1AD7A8ED2A476801003B6A1E /* AutomergeSyncProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E82A476801003B6A1E /* AutomergeSyncProtocol.swift */; };
@@ -86,6 +87,7 @@
 		1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+hexEncodedString.swift"; sourceTree = "<group>"; };
 		1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UUID+bs58String.swift"; sourceTree = "<group>"; };
 		1A4A610B2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+milliseconds.swift"; sourceTree = "<group>"; };
+		1A6FF21C2B64710700C99F81 /* WebSocketStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketStatusView.swift; sourceTree = "<group>"; };
 		1A7700C42A67343800869A4D /* PeerSyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerSyncView.swift; sourceTree = "<group>"; };
 		1A7700C62A67479F00869A4D /* NWBrowserResultItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NWBrowserResultItemView.swift; sourceTree = "<group>"; };
 		1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSyncCoordinator.swift; sourceTree = "<group>"; };
@@ -94,7 +96,7 @@
 		1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingNotesModel.swift; sourceTree = "<group>"; };
 		1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesDocumentView.swift; sourceTree = "<group>"; };
 		1AD71E902A57630B00B965BF /* MergeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MergeView.swift; sourceTree = "<group>"; };
-		1AD71E922A5765A800B965BF /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
+		1AD71E922A5765A800B965BF /* SyncStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStatusView.swift; sourceTree = "<group>"; };
 		1AD7A8E62A476801003B6A1E /* NWParameters+peerSyncParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NWParameters+peerSyncParameters.swift"; sourceTree = "<group>"; };
 		1AD7A8E82A476801003B6A1E /* AutomergeSyncProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutomergeSyncProtocol.swift; sourceTree = "<group>"; };
 		1AD7A8EA2A476801003B6A1E /* SyncConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncConnection.swift; sourceTree = "<group>"; };
@@ -226,13 +228,14 @@
 		1AB369012A50D82C00F855F8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1A2A02A42A50E74A0044064B /* EditableAgendaItemView.swift */,
 				1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */,
+				1A2A02A42A50E74A0044064B /* EditableAgendaItemView.swift */,
 				1A7700C42A67343800869A4D /* PeerSyncView.swift */,
 				1A7700C62A67479F00869A4D /* NWBrowserResultItemView.swift */,
 				1A2AD0302A7437E200EF0C5F /* SyncConnectionView.swift */,
 				1AD71E902A57630B00B965BF /* MergeView.swift */,
-				1AD71E922A5765A800B965BF /* SyncView.swift */,
+				1AD71E922A5765A800B965BF /* SyncStatusView.swift */,
+				1A6FF21C2B64710700C99F81 /* WebSocketStatusView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -408,12 +411,13 @@
 				1A30C4DD2B155F07007CE4F0 /* UUID+bs58String.swift in Sources */,
 				1A30C4DB2B155ECF007CE4F0 /* Data+hexEncodedString.swift in Sources */,
 				1AD71E912A57630B00B965BF /* MergeView.swift in Sources */,
+				1A6FF21D2B64710700C99F81 /* WebSocketStatusView.swift in Sources */,
 				1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */,
 				1AD71E8E2A57622B00B965BF /* MeetingNotesDocumentView.swift in Sources */,
 				1A8217AD2A6877730071DD38 /* DocumentSyncCoordinator.swift in Sources */,
 				1A9272E32B61A529000CB9E5 /* WebSocket.swift in Sources */,
 				1A7700C72A67479F00869A4D /* NWBrowserResultItemView.swift in Sources */,
-				1AD71E932A5765A800B965BF /* SyncView.swift in Sources */,
+				1AD71E932A5765A800B965BF /* SyncStatusView.swift in Sources */,
 				1AD7A8EF2A476801003B6A1E /* SyncConnection.swift in Sources */,
 				1A7700C52A67343800869A4D /* PeerSyncView.swift in Sources */,
 				1AD7A8EB2A476801003B6A1E /* NWParameters+peerSyncParameters.swift in Sources */,

@@ -11,6 +11,7 @@ if [ ! -d automerge-repo-sync-server ]; then
 fi
 
 cd automerge-repo-sync-server
-git pull
+git fetch --all --prune
+git reset --hard origin/main
 npm i
 npm start

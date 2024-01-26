@@ -1,23 +1,21 @@
 import SwiftUI
 
 /// A toolbar button for activating sync for a document.
-struct SyncView: View {
-    @ObservedObject var document: MeetingNotesDocument
-
+struct WebSocketStatusView: View {
     @State private var syncEnabledIndicator: Bool = false
     var body: some View {
         Button {
             syncEnabledIndicator.toggle()
             if syncEnabledIndicator {
-                // only enable listening if an identity has been chosen
-                sharedSyncCoordinator.activate()
+                sharedWebSocket.connect()
+                sharedWebSocket.join(senderId: sharedSyncCoordinator.peerId.uuidString)
             } else {
-                sharedSyncCoordinator.deactivate()
+                // sharedWebSocket.disconnect
             }
         } label: {
             Image(
-                systemName: syncEnabledIndicator ? "antenna.radiowaves.left.and.right.slash" :
-                    "antenna.radiowaves.left.and.right"
+                systemName: syncEnabledIndicator ? "wifi.slash" :
+                    "wifi"
             )
             .font(.title2)
         }
@@ -28,8 +26,8 @@ struct SyncView: View {
 }
 
 /// Preview of the sync toolbar button.
-struct SyncView_Previews: PreviewProvider {
+struct WebSocketView_Previews: PreviewProvider {
     static var previews: some View {
-        SyncView(document: MeetingNotesDocument.sample())
+        WebSocketStatusView()
     }
 }

@@ -54,8 +54,12 @@ struct MeetingNotesDocumentView: View {
                         .help("Merge a document into this one")
                 }
                 ToolbarItem(id: "sync", placement: .status) {
-                    SyncView(document: document)
+                    SyncStatusView()
                         .help("Enable peer to peer syncing")
+                }
+                ToolbarItem(id: "websocket", placement: .status) {
+                    WebSocketStatusView()
+                        .help("Enable websocket syncing")
                 }
             }
         } detail: {
