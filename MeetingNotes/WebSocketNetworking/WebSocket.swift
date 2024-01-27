@@ -23,9 +23,17 @@ final class Websocket: ObservableObject {
 
     init() {}
 
+    // server failure to be running error
+    //RCVD: .failure(Could not connect to the server.
+    //Task <053206D0-E01E-4116-A2EB-C3EB0CCA8CF0>.<1> finished with error [-1004] Error Domain=NSURLErrorDomain Code=-1004 "Could not connect to the server." UserInfo={NSErrorFailingURLStringKey=ws://localhost:3030/, NSErrorFailingURLKey=ws://localhost:3030/, _NSURLErrorRelatedURLSessionTaskErrorKey=(
+    //    "LocalWebSocketTask <053206D0-E01E-4116-A2EB-C3EB0CCA8CF0>.<1>"
+    //), _NSURLErrorFailingURLSessionTaskErrorKey=LocalWebSocketTask <053206D0-E01E-4116-A2EB-C3EB0CCA8CF0>.<1>, NSLocalizedDescription=Could not connect to the server.}
+    
     // call first - then call join()
     public func connect() {
-        guard let url = URL(string: "ws://localhost:3030/") else {
+        let urlString = "wss://sync.automerge.org/"
+//        let urlString = "ws://localhost:3030/"
+        guard let url = URL(string: urlString) else {
             Logger.webSocket.error("Unable to establish initial URL")
             return
         }
@@ -76,14 +84,23 @@ final class Websocket: ObservableObject {
                     //  78 24                             # text(36)
                     //     41374535464645392D383333452D343430432D383739302D463046453432363131444532 #
                     //     "A7E5FFE9-833E-440C-8790-F0FE42611DE2"
-
+                    
                     // which maps to:
-
-                // 57343([57344, ["type", "senderId", "selectedProtocolVersion", "targetId"], "peer",
-                // "storage-server-Sparrow", "1", "A7E5FFE9-833E-440C-8790-F0FE42611DE2"])
-                // dump(data)
+                    
+                    // 57343([57344, ["type", "senderId", "selectedProtocolVersion", "targetId"], "peer",
+                    // "storage-server-Sparrow", "1", "A7E5FFE9-833E-440C-8790-F0FE42611DE2"])
+                    // dump(data)
+                    
+                    // with sync.automerge.org:
+                    
+                    // {
+                    //   "type": "peer",
+                    //   "senderId": "storage-server-sync-automerge-org",
+                    //   "peerMetadata": {"storageId": "3760df37-a4c6-4f66-9ecd-732039a9385d", "isEphemeral": false},
+                    //   "selectedProtocolVersion": "1",
+                    //   "targetId": "FA38A1B2-1433-49E7-8C3C-5F63C117DF09"
+                    // }
                 @unknown default:
-//                    Logger.webSocket.error("Unknown case result: \(result)")
                     break
                 }
             }
