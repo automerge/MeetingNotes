@@ -46,6 +46,7 @@
 		1AD7A8ED2A476801003B6A1E /* AutomergeSyncProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E82A476801003B6A1E /* AutomergeSyncProtocol.swift */; };
 		1AD7A8EF2A476801003B6A1E /* SyncConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8EA2A476801003B6A1E /* SyncConnection.swift */; };
 		1AE3D77B2A68646A00CEA52E /* OSLog+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */; };
+		1AF9017F2B66E47A0077567D /* CBORExperiments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF9017E2B66E47A0077567D /* CBORExperiments.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +104,7 @@
 		1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OSLog+extensions.swift"; sourceTree = "<group>"; };
 		1AF5DB3A2A4A0C38008DAC6F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1AF5DB3B2A4A0C5E008DAC6F /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
+		1AF9017E2B66E47A0077567D /* CBORExperiments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBORExperiments.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,6 +198,7 @@
 			isa = PBXGroup;
 			children = (
 				1A0DDC492A464DEB001ECADD /* MeetingNotesTests.swift */,
+				1AF9017E2B66E47A0077567D /* CBORExperiments.swift */,
 			);
 			path = MeetingNotesTests;
 			sourceTree = "<group>";
@@ -434,6 +437,7 @@
 				1AADE1F52B586875000205BB /* Data+hexEncodedString.swift in Sources */,
 				1AADE1F62B586878000205BB /* UUID+bs58String.swift in Sources */,
 				1AADE1F72B58687E000205BB /* DocumentId.swift in Sources */,
+				1AF9017F2B66E47A0077567D /* CBORExperiments.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

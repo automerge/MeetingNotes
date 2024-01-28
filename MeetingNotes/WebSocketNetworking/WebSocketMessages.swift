@@ -49,15 +49,24 @@ struct JoinMsg: Codable {
 //    targetId: peer_id,
 // }
 
+// {
+//   "type": "peer",
+//   "senderId": "storage-server-sync-automerge-org",
+//   "peerMetadata": {"storageId": "3760df37-a4c6-4f66-9ecd-732039a9385d", "isEphemeral": false},
+//   "selectedProtocolVersion": "1",
+//   "targetId": "FA38A1B2-1433-49E7-8C3C-5F63C117DF09"
+// }
+
 struct PeerMsg: Codable {
     var type: String = "peer"
     let senderId: String
     let targetId: String
-    var supportedProtocolVersion: String = "1"
+    var selectedProtocolVersion: String
 
     init(senderId: String, targetId: String) {
         self.senderId = senderId
         self.targetId = targetId
+        self.selectedProtocolVersion = "1"
     }
 }
 
