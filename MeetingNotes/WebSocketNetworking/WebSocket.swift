@@ -34,8 +34,8 @@ final class Websocket: ObservableObject {
 
     // call first - then call join()
     public func connect() {
-        let urlString = "wss://sync.automerge.org/"
-//        let urlString = "ws://localhost:3030/"
+//        let urlString = "wss://sync.automerge.org/"
+        let urlString = "ws://localhost:3030/"
         guard let url = URL(string: urlString) else {
             Logger.webSocket.error("Unable to establish initial URL")
             return
