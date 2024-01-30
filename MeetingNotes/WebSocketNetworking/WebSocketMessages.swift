@@ -22,6 +22,12 @@ import Foundation
 // sync_message = bstr
 // ; The base58check encoded bytes of a document ID
 // document_id = str
+
+typealias PEER_ID = String
+typealias STORAGE_ID = String
+typealias DOCUMENT_ID = String
+typealias SYNC_MESSAGE = Data
+
 // ; Metadata sent in either the join or peer message types
 // peer_metadata = {
 //    ; The storage ID of this peer
@@ -29,7 +35,17 @@ import Foundation
 //    ; Whether the sender expects to connect again with this storage ID
 //    isEphemeral: bool
 // }
-//
+
+struct PeerMetadata: Codable {
+    var storageId: STORAGE_ID?
+    var isEphemeral: Bool
+
+    init(storageId: STORAGE_ID? = nil, isEphemeral: Bool) {
+        self.storageId = storageId
+        self.isEphemeral = isEphemeral
+    }
+}
+
 // - join -
 // {
 //    type: "join",
@@ -38,13 +54,15 @@ import Foundation
 //    ? metadata: peer_metadata,
 // }
 
+// MARK: Join/Peer
+
 struct JoinMsg: Codable {
     var type: String = "join"
-    let senderId: String
+    let senderId: PEER_ID
     var supportedProtocolVersions: String = "1"
     var peerMetadata: PeerMetadata?
 
-    init(senderId: String, metadata: PeerMetadata? = nil) {
+    init(senderId: PEER_ID, metadata: PeerMetadata? = nil) {
         self.senderId = senderId
         if let metadata {
             self.peerMetadata = metadata
@@ -70,19 +88,14 @@ struct JoinMsg: Codable {
 //   "targetId": "FA38A1B2-1433-49E7-8C3C-5F63C117DF09"
 // }
 
-struct PeerMetadata: Codable {
-    var storageId: String?
-    var isEphemeral: Bool
-}
-
 struct PeerMsg: Codable {
     var type: String = "peer"
-    let senderId: String
-    let targetId: String
+    let senderId: PEER_ID
+    let targetId: PEER_ID
     var peerMetadata: PeerMetadata?
     var selectedProtocolVersion: String
 
-    init(senderId: String, targetId: String, storageId: String?, ephemeral: Bool = true) {
+    init(senderId: PEER_ID, targetId: PEER_ID, storageId: String?, ephemeral: Bool = true) {
         self.senderId = senderId
         self.targetId = targetId
         self.selectedProtocolVersion = "1"
@@ -105,6 +118,8 @@ struct ErrorMsg: Codable {
     }
 }
 
+// MARK: Sync
+
 // - request -
 // {
 //    type: "request",
@@ -118,12 +133,12 @@ struct ErrorMsg: Codable {
 
 struct RequestMsg: Codable {
     var type: String = "error"
-    let documentId: String
-    let senderId: String // The peer requesting to begin sync
-    let targetId: String
+    let documentId: DOCUMENT_ID
+    let senderId: PEER_ID // The peer requesting to begin sync
+    let targetId: PEER_ID
     let sync_message: Data // The initial automerge sync message from the sender
 
-    init(documentId: String, senderId: String, targetId: String, sync_message: Data) {
+    init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, sync_message: Data) {
         self.documentId = documentId
         self.senderId = senderId
         self.targetId = targetId
@@ -144,12 +159,12 @@ struct RequestMsg: Codable {
 
 struct SyncMsg: Codable {
     var type = "sync"
-    let documentId: String
-    let senderId: String // The peer requesting to begin sync
-    let targetId: String
+    let documentId: DOCUMENT_ID
+    let senderId: PEER_ID // The peer requesting to begin sync
+    let targetId: PEER_ID
     let data: Data // The initial automerge sync message from the sender
 
-    init(documentId: String, senderId: String, targetId: String, data: Data) {
+    init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, data: Data) {
         self.documentId = documentId
         self.senderId = senderId
         self.targetId = targetId
@@ -167,16 +182,18 @@ struct SyncMsg: Codable {
 
 struct UnavailableMsg: Codable {
     var type = "doc-unavailable"
-    let documentId: String
-    let senderId: String
-    let targetId: String
+    let documentId: DOCUMENT_ID
+    let senderId: PEER_ID
+    let targetId: PEER_ID
 
-    init(documentId: String, senderId: String, targetId: String) {
+    init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID) {
         self.documentId = documentId
         self.senderId = senderId
         self.targetId = targetId
     }
 }
+
+// MARK: Ephemeral
 
 // - ephemeral -
 // {
@@ -197,14 +214,14 @@ struct UnavailableMsg: Codable {
 
 struct EphemeralMsg: Codable {
     var type = "ephemeral"
-    let senderId: String
-    let targetId: String
+    let senderId: PEER_ID
+    let targetId: PEER_ID
     let count: UInt
     let sessionId: String
-    let documentId: String
+    let documentId: DOCUMENT_ID
     let data: Data
 
-    init(senderId: String, targetId: String, count: UInt, sessionId: String, documentId: String, data: Data) {
+    init(senderId: PEER_ID, targetId: PEER_ID, count: UInt, sessionId: String, documentId: DOCUMENT_ID, data: Data) {
         self.senderId = senderId
         self.targetId = targetId
         self.count = count
@@ -213,6 +230,8 @@ struct EphemeralMsg: Codable {
         self.data = data
     }
 }
+
+// MARK: Head's Gossiping
 
 // - remote subscription changed -
 // {
@@ -226,6 +245,21 @@ struct EphemeralMsg: Codable {
 //  ; The storage IDs to remove from the subscription
 //  remove: [* storage_id]
 // }
+
+struct RemoteSubscriptionChangedMsg {
+    var type = "remote-subscription-change"
+    let senderId: PEER_ID
+    let targetId: PEER_ID
+    var add: [STORAGE_ID]?
+    var remove: [STORAGE_ID]
+
+    init(senderId: PEER_ID, targetId: PEER_ID, add: [STORAGE_ID]? = nil, remove: [STORAGE_ID]) {
+        self.senderId = senderId
+        self.targetId = targetId
+        self.add = add
+        self.remove = remove
+    }
+}
 
 // - remote heads changed
 // {
@@ -248,3 +282,39 @@ struct EphemeralMsg: Codable {
 //    }
 //  }
 // }
+
+struct RemoteHeadsChangedMsg {
+    struct HeadsAtTime {
+        var heads: [String]
+        let timestamp: uint
+
+        init(heads: [String], timestamp: uint) {
+            self.heads = heads
+            self.timestamp = timestamp
+        }
+    }
+
+    var type = "remote-heads-changed"
+    let senderId: PEER_ID
+    let targetId: PEER_ID
+    let documentId: DOCUMENT_ID
+    var newHeads: [STORAGE_ID: HeadsAtTime]
+    var add: [STORAGE_ID]
+    var remove: [STORAGE_ID]
+
+    init(
+        senderId: PEER_ID,
+        targetId: PEER_ID,
+        documentId: DOCUMENT_ID,
+        newHeads: [STORAGE_ID: HeadsAtTime],
+        add: [STORAGE_ID],
+        remove: [STORAGE_ID]
+    ) {
+        self.senderId = senderId
+        self.targetId = targetId
+        self.documentId = documentId
+        self.newHeads = newHeads
+        self.add = add
+        self.remove = remove
+    }
+}
