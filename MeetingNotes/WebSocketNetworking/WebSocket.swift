@@ -4,24 +4,32 @@ import OSLog
 import PotentCBOR
 
 // base WebSocket usage example from https://medium.com/@ios_guru/swiftui-and-websocket-connectivity-478aa5fddfc7
-// Automerge Repo WebSocket sync details:
-// https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo-network-websocket/README.md
-// explicitly using a protocol version '1' here - make sure to specify that
-// Send 'join', expect 'peer' in response - anything else, error
-// 'request' or 'sync' to begin a sync
-// receive 'unavailable' - nothing to sync/not found (aka 404)
-// 'error' indicates an error
-// 'ephemeral' for ? not obvious what its used for from the page
-//
 
-final class Websocket: ObservableObject {
+public final class WebsocketSyncConnection: ObservableObject {
+    /// The state of the WebSocket sync connection.
+    public enum SyncProtocolState {
+        /// A sync connection hasn't yet been requested
+        case newConnection
+        /// The state is initiating and waiting to successfully peer with the recipient.
+        case initiating
+        /// The connection has successfully peered.
+        ///
+        /// While `peered`, the connection can send and receive sync, ephemeral, and gossip messages about remote peers.
+        case peered
+        /// The connection has terminated.
+        case closed
+    }
+
     @Published var messages = [String]()
     static let fileEncoder = CBOREncoder()
     static let fileDecoder = CBORDecoder()
 
     private var webSocketTask: URLSessionWebSocketTask?
+    @Published public var syncState: SyncProtocolState
 
-    init() {}
+    init() {
+        syncState = .newConnection
+    }
 
     // server failure to be running error
     // RCVD: .failure(Could not connect to the server.
@@ -33,7 +41,10 @@ final class Websocket: ObservableObject {
     // NSLocalizedDescription=Could not connect to the server.}
 
     // call first - then call join()
+
+    /// Initiates a WebSocket connection to a remote peer.
     public func connect() {
+        assert(syncState == .newConnection || syncState == .closed)
 //        let urlString = "wss://sync.automerge.org/"
         let urlString = "ws://localhost:3030/"
         guard let url = URL(string: urlString) else {
@@ -46,24 +57,6 @@ final class Websocket: ObservableObject {
         Logger.webSocket.trace("Activating websocket to \(url, privacy: .public)")
         webSocketTask?.resume()
         receiveMessage()
-    }
-
-    private func attemptDecodePeer(data: Data) -> PeerMsg? {
-        do {
-            return try Websocket.fileDecoder.decode(PeerMsg.self, from: data)
-        } catch {
-            Logger.webSocket.warning("Failed to decode data as PeerMsg")
-        }
-        return nil
-    }
-
-    private func attemptDecodeError(data: Data) -> ErrorMsg? {
-        do {
-            return try Websocket.fileDecoder.decode(ErrorMsg.self, from: data)
-        } catch {
-            Logger.webSocket.warning("Failed to decode data as ErrorMsg")
-        }
-        return nil
     }
 
     private func receiveMessage() {
@@ -137,6 +130,24 @@ final class Websocket: ObservableObject {
         }
     }
 
+    private func attemptDecodePeer(data: Data) -> PeerMsg? {
+        do {
+            return try Self.fileDecoder.decode(PeerMsg.self, from: data)
+        } catch {
+            Logger.webSocket.warning("Failed to decode data as PeerMsg")
+        }
+        return nil
+    }
+
+    private func attemptDecodeError(data: Data) -> ErrorMsg? {
+        do {
+            return try Self.fileDecoder.decode(ErrorMsg.self, from: data)
+        } catch {
+            Logger.webSocket.warning("Failed to decode data as ErrorMsg")
+        }
+        return nil
+    }
+
 //    func sendMessage(_ message: String) {
 //        // guard let data = message.data(using: .utf8) else { return }
 //        webSocketTask?.send(.string(message)) { error in
@@ -157,12 +168,17 @@ final class Websocket: ObservableObject {
         let joinMessage = JoinMsg(senderId: senderId)
         do {
             let data = try Self.fileEncoder.encode(joinMessage)
-            webSocketTask.send(.data(data)) { error in
+            webSocketTask.send(.data(data)) { [weak self] error in
                 if let error = error {
                     print(error.localizedDescription)
+                    // kill the websocket and disconnect
+                    // syncState = .failed?
+                    self?.syncState = .closed
                 }
             }
+            syncState = .initiating
         } catch {
+            syncState = .closed
             fatalError()
         }
     }

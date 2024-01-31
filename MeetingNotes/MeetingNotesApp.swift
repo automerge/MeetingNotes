@@ -2,7 +2,7 @@ import SwiftUI
 
 /// A shared instance of a document sync coordinator.
 let sharedSyncCoordinator = DocumentSyncCoordinator()
-let sharedWebSocket = Websocket()
+let sharedWebSocket = WebsocketSyncConnection()
 
 /// The document-based Meeting Notes application.
 @main

@@ -25,7 +25,6 @@ enum SyncMessageType: UInt32 {
     case invalid = 0 // msg isn't a recognized type
     case sync = 1 // msg is generated sync data to merge into an Automerge document
     case id = 2 // msg is a unique for the source/master of a document to know if they've been cloned
-    // case document = 3 // msg is the entirety of the document as a byte stream
 }
 
 /// The definition of the Automerge network sync protocol.
@@ -114,7 +113,7 @@ class AutomergeSyncProtocol: NWProtocolFramerImplementation {
 // Extend framer messages to handle storing your command types in the message metadata.
 extension NWProtocolFramer.Message {
     /// Create a new protocol-framed message for the Automerge network sync protocol.
-    /// - Parameter syncMessageType: <#syncMessageType description#>
+    /// - Parameter syncMessageType: The type of sync message for this Automerge peer to peer sync protocol
     convenience init(syncMessageType: SyncMessageType) {
         self.init(definition: AutomergeSyncProtocol.definition)
         self["SyncMessageType"] = syncMessageType
@@ -132,7 +131,7 @@ extension NWProtocolFramer.Message {
 
 // Define a protocol header structure to help encode and decode bytes.
 
-/// The Automerge network sync protcol header structure.
+/// The Automerge network sync protocol header structure.
 struct AutomergeSyncProtocolHeader: Codable {
     let type: UInt32
     let length: UInt32

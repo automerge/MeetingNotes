@@ -7,6 +7,10 @@
 
 import Foundation
 
+// Automerge Repo WebSocket sync details:
+// https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo-network-websocket/README.md
+// explicitly using a protocol version "1" here - make sure to specify (and verify?) that
+
 // related source for the automerge-repo sync code:
 // https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo-network-websocket/src/BrowserWebSocketClientAdapter.ts
 // All the websocket messages are CBOR encoded and sent as data streams
@@ -23,9 +27,22 @@ import Foundation
 // ; The base58check encoded bytes of a document ID
 // document_id = str
 
+/// A type that represents a peer
+///
+/// Typically a UUID4 in string form.
 typealias PEER_ID = String
+
+/// A type that represents an identity for the storage of a peer.
+///
+/// Typically a UUID4 in string form. Receiving peers may tie cached sync state for documents to this identifier.
 typealias STORAGE_ID = String
+
+/// A type that represents a document Id.
+///
+/// Typically 16 bytes encoded in bs58 format.
 typealias DOCUMENT_ID = String
+
+/// A type that represents the raw bytes of an Automerge sync message.
 typealias SYNC_MESSAGE = Data
 
 // ; Metadata sent in either the join or peer message types
@@ -56,6 +73,13 @@ struct PeerMetadata: Codable {
 
 // MARK: Join/Peer
 
+/// A message that indicates a desire to peer and sync documents.
+///
+/// Sent by the initiating peer (represented by `senderId`) to initiate a connection to manage documents between peers.
+/// The next response is expected to be a ``PeerMsg``. If any other message is received after sending `JoinMsg`, the
+/// initiating client should disconnect.
+/// If the receiving peer receives any message other than a `JoinMsg` from the initiating peer, it is expected to
+/// terminate the connection.
 struct JoinMsg: Codable {
     var type: String = "join"
     let senderId: PEER_ID
@@ -88,6 +112,10 @@ struct JoinMsg: Codable {
 //   "targetId": "FA38A1B2-1433-49E7-8C3C-5F63C117DF09"
 // }
 
+/// A message that acknowledges a join request.
+///
+/// A response sent by a receiving peer (represented by `targetId`) after receiving a ``JoinMsg`` that indicates sync,
+/// gossiping, and ephemeral messages may now be initiated.
 struct PeerMsg: Codable {
     var type: String = "peer"
     let senderId: PEER_ID
@@ -109,6 +137,7 @@ struct PeerMsg: Codable {
 //    message: str,
 // }
 
+/// A sync error message
 struct ErrorMsg: Codable {
     var type: String = "error"
     let message: String
@@ -131,8 +160,13 @@ struct ErrorMsg: Codable {
 //    data: sync_message
 // }
 
+/// A request to synchronize an Automerge document.
+///
+/// Sent when the initiating peer (represented by `senderId`) is asking to begin sync for the given document ID.
+/// Identical to ``SyncMsg`` but indicates to the receiving peer that the sender would like an ``UnavailableMsg``
+/// message if the receiving peer (represented by `targetId` does not have the document (identified by `documentId`).
 struct RequestMsg: Codable {
-    var type: String = "error"
+    var type: String = "request"
     let documentId: DOCUMENT_ID
     let senderId: PEER_ID // The peer requesting to begin sync
     let targetId: PEER_ID
@@ -157,6 +191,13 @@ struct RequestMsg: Codable {
 //    data: sync_message
 // }
 
+/// A request to synchronize an Automerge document.
+///
+/// Sent when the initiating peer (represented by `senderId`) is asking to begin sync for the given document ID.
+/// Use `SyncMsg` instead of `RequestMsg` when you are creating a new Automerge document that you want to share.
+///
+/// If the receiving peer doesn't have an Automerge document represented by `documentId` and can't or won't store the
+/// document.
 struct SyncMsg: Codable {
     var type = "sync"
     let documentId: DOCUMENT_ID
@@ -180,6 +221,10 @@ struct SyncMsg: Codable {
 //  documentId: document_id,
 // }
 
+/// A message that indicates a document is unavailable.
+///
+/// Generally a response for a ``RequestMsg`` from an initiating peer (represented by `senderId`) that the receiving
+/// peer (represented by `targetId`) doesn't have a copy of the requested Document, or is unable to share it.
 struct UnavailableMsg: Codable {
     var type = "doc-unavailable"
     let documentId: DOCUMENT_ID
