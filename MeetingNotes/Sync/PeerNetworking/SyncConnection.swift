@@ -122,7 +122,7 @@ final class SyncConnection: ObservableObject {
         }
 
         syncTriggerCancellable = trigger.sink(receiveValue: { _ in
-            if let automergeDoc = sharedSyncCoordinator.documents[self.documentId]?.doc,
+            if let automergeDoc = sharedSyncCoordinator.documents[self.documentId]?.value?.doc,
                let syncData = automergeDoc.generateSyncMessage(state: self.syncState),
                self.connectionState == .ready
             {
@@ -237,7 +237,7 @@ final class SyncConnection: ObservableObject {
             }
             // Extract your message type from the received context.
             if let syncMessage = context?
-                .protocolMetadata(definition: AutomergeSyncProtocol.definition) as? NWProtocolFramer.Message,
+                .protocolMetadata(definition: P2PAutomergeSyncProtocol.definition) as? NWProtocolFramer.Message,
                 let endpoint = self.connection?.endpoint
             {
                 self.receivedMessage(content: content, message: syncMessage, from: endpoint)
@@ -304,7 +304,7 @@ final class SyncConnection: ObservableObject {
     }
 
     func receivedMessage(content data: Data?, message: NWProtocolFramer.Message, from endpoint: NWEndpoint) {
-        guard let document = sharedSyncCoordinator.documents[self.documentId] else {
+        guard let document = sharedSyncCoordinator.documents[self.documentId]?.value else {
             Logger.syncConnection
                 .warning(
                     "\(self.shortId, privacy: .public): received msg for unregistered document \(self.documentId, privacy: .public) from \(endpoint.debugDescription, privacy: .public)"

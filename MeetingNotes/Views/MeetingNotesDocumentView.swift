@@ -58,7 +58,7 @@ struct MeetingNotesDocumentView: View {
                         .help("Enable peer to peer syncing")
                 }
                 ToolbarItem(id: "websocket", placement: .status) {
-                    WebSocketStatusView()
+                    WebSocketStatusView(document: document)
                         .help("Enable websocket syncing")
                 }
             }

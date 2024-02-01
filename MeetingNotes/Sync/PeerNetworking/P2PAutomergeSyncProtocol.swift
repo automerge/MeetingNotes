@@ -28,9 +28,9 @@ enum SyncMessageType: UInt32 {
 }
 
 /// The definition of the Automerge network sync protocol.
-class AutomergeSyncProtocol: NWProtocolFramerImplementation {
+class P2PAutomergeSyncProtocol: NWProtocolFramerImplementation {
     // Create a global definition of your game protocol to add to connections.
-    static let definition = NWProtocolFramer.Definition(implementation: AutomergeSyncProtocol.self)
+    static let definition = NWProtocolFramer.Definition(implementation: P2PAutomergeSyncProtocol.self)
 
     // Set a name for your protocol for use in debugging.
     static var label: String { "AutomergeSync" }
@@ -115,7 +115,7 @@ extension NWProtocolFramer.Message {
     /// Create a new protocol-framed message for the Automerge network sync protocol.
     /// - Parameter syncMessageType: The type of sync message for this Automerge peer to peer sync protocol
     convenience init(syncMessageType: SyncMessageType) {
-        self.init(definition: AutomergeSyncProtocol.definition)
+        self.init(definition: P2PAutomergeSyncProtocol.definition)
         self["SyncMessageType"] = syncMessageType
     }
 

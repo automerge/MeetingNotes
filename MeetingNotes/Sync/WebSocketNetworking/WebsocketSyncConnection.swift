@@ -1,10 +1,10 @@
+import Automerge
 import Combine
 import Foundation
 import OSLog
 import PotentCBOR
 
-// base WebSocket usage example from https://medium.com/@ios_guru/swiftui-and-websocket-connectivity-478aa5fddfc7
-
+/// A class that provides a WebSocket connection to sync an Automerge document.
 public final class WebsocketSyncConnection: ObservableObject {
     /// The state of the WebSocket sync connection.
     public enum SyncProtocolState {
@@ -20,46 +20,76 @@ public final class WebsocketSyncConnection: ObservableObject {
         case closed
     }
 
-    @Published var messages = [String]()
     static let fileEncoder = CBOREncoder()
     static let fileDecoder = CBORDecoder()
-
     private var webSocketTask: URLSessionWebSocketTask?
+    private let senderId: String
+    private let targetId: String? = nil
+    private weak var document: Automerge.Document?
+
     @Published public var syncState: SyncProtocolState
 
-    init() {
+    init(_ document: Automerge.Document? = nil) {
         syncState = .newConnection
+        senderId = UUID().uuidString
+        self.document = document
     }
 
-    // server failure to be running error
-    // RCVD: .failure(Could not connect to the server.
-    // Task <053206D0-E01E-4116-A2EB-C3EB0CCA8CF0>.<1> finished with error [-1004] Error Domain=NSURLErrorDomain
-    // Code=-1004 "Could not connect to the server." UserInfo={NSErrorFailingURLStringKey=ws://localhost:3030/,
-    // NSErrorFailingURLKey=ws://localhost:3030/, _NSURLErrorRelatedURLSessionTaskErrorKey=(
-    //    "LocalWebSocketTask <053206D0-E01E-4116-A2EB-C3EB0CCA8CF0>.<1>"
-    // ), _NSURLErrorFailingURLSessionTaskErrorKey=LocalWebSocketTask <053206D0-E01E-4116-A2EB-C3EB0CCA8CF0>.<1>,
-    // NSLocalizedDescription=Could not connect to the server.}
-
-    // call first - then call join()
+    public func registerDocument(_ document: Automerge.Document) {
+        self.document = document
+    }
 
     /// Initiates a WebSocket connection to a remote peer.
-    public func connect() {
+    public func connect(_ destination: String) {
         assert(syncState == .newConnection || syncState == .closed)
-//        let urlString = "wss://sync.automerge.org/"
-        let urlString = "ws://localhost:3030/"
-        guard let url = URL(string: urlString) else {
-            Logger.webSocket.error("Unable to establish initial URL")
+        if self.document == nil {
+            Logger.webSocket.error("Attempting to join a connection without a document registered")
+            return
+        }
+        guard let url = URL(string: destination) else {
+            Logger.webSocket.error("Destination provided is not a valid URL")
             return
         }
         let request = URLRequest(url: url)
         webSocketTask = URLSession.shared.webSocketTask(with: request)
         // establishes the websocket
         Logger.webSocket.trace("Activating websocket to \(url, privacy: .public)")
-        webSocketTask?.resume()
-        receiveMessage()
+        configureWebsocketReceiveHandler()
+        guard let webSocketTask = webSocketTask else {
+            #if DEBUG
+            fatalError("Attempting to configure and join a nil webSocketTask")
+            #else
+            return
+            #endif
+        }
+        webSocketTask.resume()
+        let joinMessage = JoinMsg(senderId: senderId)
+        do {
+            let data = try Self.fileEncoder.encode(joinMessage)
+            webSocketTask.send(.data(data)) { [weak self] error in
+                if let error = error {
+                    Logger.webSocket.warning("\(error.localizedDescription, privacy: .public)")
+                    // kill the websocket and disconnect
+                    self?.webSocketTask = nil
+                    self?.syncState = .closed
+                    // should we have a syncState = .failed?
+                }
+            }
+            syncState = .initiating
+        } catch {
+            Logger.webSocket.error("\(error.localizedDescription, privacy: .public)")
+            syncState = .closed
+            self.webSocketTask = nil
+        }
     }
 
-    private func receiveMessage() {
+    public func disconnect() {
+        self.webSocketTask?.cancel(with: .normalClosure, reason: nil)
+        syncState = .closed
+        self.webSocketTask = nil
+    }
+
+    private func configureWebsocketReceiveHandler() {
         webSocketTask?.receive { result in
             Logger.webSocket.trace("Received websocket message")
             switch result {
@@ -70,7 +100,8 @@ public final class WebsocketSyncConnection: ObservableObject {
                 switch message {
                 case let .string(text):
                     Logger.webSocket.warning("RCVD: .string(\(text)")
-                    self.messages.append(text)
+                //
+                // self.messages.append(text)
                 case let .data(data):
                     // Handle binary data
                     Logger.webSocket.warning("RCVD: .data(\(data.hexEncodedString(uppercase: false)))")
@@ -156,30 +187,4 @@ public final class WebsocketSyncConnection: ObservableObject {
 //            }
 //        }
 //    }
-
-    func join(senderId: String) {
-        guard let webSocketTask = webSocketTask else {
-            #if DEBUG
-            fatalError("Attempting to join on an nil webSocketTask")
-            #else
-            return
-            #endif
-        }
-        let joinMessage = JoinMsg(senderId: senderId)
-        do {
-            let data = try Self.fileEncoder.encode(joinMessage)
-            webSocketTask.send(.data(data)) { [weak self] error in
-                if let error = error {
-                    print(error.localizedDescription)
-                    // kill the websocket and disconnect
-                    // syncState = .failed?
-                    self?.syncState = .closed
-                }
-            }
-            syncState = .initiating
-        } catch {
-            syncState = .closed
-            fatalError()
-        }
-    }
 }

@@ -23,10 +23,21 @@ enum MeetingNotesDefaultKeys {
     static let sharingIdentity = "sharingIdentity"
 }
 
+/// A weak reference to a MeetingNotes document
+///
+/// Allow a global singleton keep references to documents without incurring memory leaks as Documents are opened and
+/// closed.
+final class WeakMeetingNotesDocumentRef {
+    weak var value: MeetingNotesDocument?
+
+    init(_ value: MeetingNotesDocument? = nil) {
+        self.value = value
+    }
+}
+
 /// A application-shared sync controller that supports coordinates documents and network connections with peers.
 final class DocumentSyncCoordinator: ObservableObject {
-    // support multiple documents
-    var documents: [DocumentId: MeetingNotesDocument] = [:]
+    var documents: [DocumentId: WeakMeetingNotesDocumentRef] = [:]
     var txtRecords: [DocumentId: NWTXTRecord] = [:]
     var listeners: [DocumentId: NWListener] = [:]
     @Published var listenerState: [DocumentId: NWListener.State] = [:]
@@ -35,11 +46,11 @@ final class DocumentSyncCoordinator: ObservableObject {
     ///
     /// Primarily in order to attempt to send and receive sync updates.
     func automergeDocument(for docId: DocumentId) -> Document? {
-        documents[docId]?.doc
+        documents[docId]?.value?.doc
     }
 
     func registerDocument(_ document: MeetingNotesDocument) {
-        documents[document.id] = document
+        documents[document.id] = WeakMeetingNotesDocumentRef(document)
 
         var txtRecord = NWTXTRecord()
         txtRecord[TXTRecordKeys.name] = name
@@ -162,7 +173,7 @@ final class DocumentSyncCoordinator: ObservableObject {
 
         // Browse for the Automerge sync bonjour service type.
         let newNetworkBrowser = NWBrowser(
-            for: .bonjourWithTXTRecord(type: AutomergeSyncProtocol.bonjourType, domain: nil),
+            for: .bonjourWithTXTRecord(type: P2PAutomergeSyncProtocol.bonjourType, domain: nil),
             using: browserNetworkParameters
         )
 
@@ -273,7 +284,7 @@ final class DocumentSyncCoordinator: ObservableObject {
             let listener = try NWListener(using: NWParameters.peerSyncParameters(documentId: documentId))
             // Set the service to advertise.
             listener.service = NWListener.Service(
-                type: AutomergeSyncProtocol.bonjourType,
+                type: P2PAutomergeSyncProtocol.bonjourType,
                 txtRecord: txtRecordForDoc
             )
             listener.stateUpdateHandler = { [weak self] newState in
@@ -378,7 +389,7 @@ final class DocumentSyncCoordinator: ObservableObject {
 
                 // Reset the service to advertise.
                 listeners[documentId]?.service = NWListener.Service(
-                    type: AutomergeSyncProtocol.bonjourType,
+                    type: P2PAutomergeSyncProtocol.bonjourType,
                     txtRecord: txtRecord
                 )
                 Logger.syncController

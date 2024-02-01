@@ -24,7 +24,7 @@ extension NWParameters {
         tcpOptions.keepaliveIdle = 2
 
         let params = NWParameters(tls: tlsOptions(passcode: documentId.description), tcp: tcpOptions)
-        let syncOptions = NWProtocolFramer.Options(definition: AutomergeSyncProtocol.definition)
+        let syncOptions = NWProtocolFramer.Options(definition: P2PAutomergeSyncProtocol.definition)
         params.defaultProtocolStack.applicationProtocols.insert(syncOptions, at: 0)
 
         params.includePeerToPeer = true

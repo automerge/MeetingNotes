@@ -15,12 +15,17 @@ final class MeetingNotesUITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
+    @available(macOS 14.0, *)
+    func testAutomatedAccessibility() {
+        // https://holyswift.app/xcode-15-new-feature-streamlined-accessibility-audits/
+        let myApp = XCUIApplication()
+        myApp.launch()
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        do {
+            try myApp.performAccessibilityAudit()
+        } catch {
+            XCTFail("The automated accessibility audit fail because [\(error.localizedDescription)]")
+        }
     }
 
     func testLaunchPerformance() throws {

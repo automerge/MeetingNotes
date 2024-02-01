@@ -30,7 +30,7 @@
 		1A7700C52A67343800869A4D /* PeerSyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C42A67343800869A4D /* PeerSyncView.swift */; };
 		1A7700C72A67479F00869A4D /* NWBrowserResultItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C62A67479F00869A4D /* NWBrowserResultItemView.swift */; };
 		1A8217AD2A6877730071DD38 /* DocumentSyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */; };
-		1A9272E32B61A529000CB9E5 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9272E22B61A529000CB9E5 /* WebSocket.swift */; };
+		1A9272E32B61A529000CB9E5 /* WebsocketSyncConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9272E22B61A529000CB9E5 /* WebsocketSyncConnection.swift */; };
 		1A9272E62B61AC2C000CB9E5 /* WebSocketMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9272E52B61AC2C000CB9E5 /* WebSocketMessages.swift */; };
 		1AADE1F42B586801000205BB /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1AADE1F32B586801000205BB /* PotentCodables */; };
 		1AADE1F52B586875000205BB /* Data+hexEncodedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */; };
@@ -43,7 +43,7 @@
 		1AD71E932A5765A800B965BF /* SyncStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E922A5765A800B965BF /* SyncStatusView.swift */; };
 		1AD7A8E52A4767A1003B6A1E /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD7A8E42A4767A1003B6A1E /* PotentCodables */; };
 		1AD7A8EB2A476801003B6A1E /* NWParameters+peerSyncParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E62A476801003B6A1E /* NWParameters+peerSyncParameters.swift */; };
-		1AD7A8ED2A476801003B6A1E /* AutomergeSyncProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E82A476801003B6A1E /* AutomergeSyncProtocol.swift */; };
+		1AD7A8ED2A476801003B6A1E /* P2PAutomergeSyncProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E82A476801003B6A1E /* P2PAutomergeSyncProtocol.swift */; };
 		1AD7A8EF2A476801003B6A1E /* SyncConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8EA2A476801003B6A1E /* SyncConnection.swift */; };
 		1AE3D77B2A68646A00CEA52E /* OSLog+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */; };
 		1AF9017F2B66E47A0077567D /* CBORExperiments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF9017E2B66E47A0077567D /* CBORExperiments.swift */; };
@@ -92,14 +92,14 @@
 		1A7700C42A67343800869A4D /* PeerSyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerSyncView.swift; sourceTree = "<group>"; };
 		1A7700C62A67479F00869A4D /* NWBrowserResultItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NWBrowserResultItemView.swift; sourceTree = "<group>"; };
 		1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSyncCoordinator.swift; sourceTree = "<group>"; };
-		1A9272E22B61A529000CB9E5 /* WebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
+		1A9272E22B61A529000CB9E5 /* WebsocketSyncConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketSyncConnection.swift; sourceTree = "<group>"; };
 		1A9272E52B61AC2C000CB9E5 /* WebSocketMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketMessages.swift; sourceTree = "<group>"; };
 		1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingNotesModel.swift; sourceTree = "<group>"; };
 		1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesDocumentView.swift; sourceTree = "<group>"; };
 		1AD71E902A57630B00B965BF /* MergeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MergeView.swift; sourceTree = "<group>"; };
 		1AD71E922A5765A800B965BF /* SyncStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStatusView.swift; sourceTree = "<group>"; };
 		1AD7A8E62A476801003B6A1E /* NWParameters+peerSyncParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NWParameters+peerSyncParameters.swift"; sourceTree = "<group>"; };
-		1AD7A8E82A476801003B6A1E /* AutomergeSyncProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutomergeSyncProtocol.swift; sourceTree = "<group>"; };
+		1AD7A8E82A476801003B6A1E /* P2PAutomergeSyncProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = P2PAutomergeSyncProtocol.swift; sourceTree = "<group>"; };
 		1AD7A8EA2A476801003B6A1E /* SyncConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncConnection.swift; sourceTree = "<group>"; };
 		1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OSLog+extensions.swift"; sourceTree = "<group>"; };
 		1AF5DB3A2A4A0C38008DAC6F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -166,10 +166,9 @@
 		1A0DDC332A464DEA001ECADD /* MeetingNotes */ = {
 			isa = PBXGroup;
 			children = (
-				1AB369012A50D82C00F855F8 /* Views */,
-				1AD7A8F02A476807003B6A1E /* PeerNetworking */,
-				1A9272E42B61A800000CB9E5 /* WebSocketNetworking */,
 				1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */,
+				1AB369012A50D82C00F855F8 /* Views */,
+				1A74051D2B6C3BE100E88B18 /* Sync */,
 				1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */,
 				1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */,
 				1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */,
@@ -219,10 +218,20 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		1A74051D2B6C3BE100E88B18 /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */,
+				1AD7A8F02A476807003B6A1E /* PeerNetworking */,
+				1A9272E42B61A800000CB9E5 /* WebSocketNetworking */,
+			);
+			path = Sync;
+			sourceTree = "<group>";
+		};
 		1A9272E42B61A800000CB9E5 /* WebSocketNetworking */ = {
 			isa = PBXGroup;
 			children = (
-				1A9272E22B61A529000CB9E5 /* WebSocket.swift */,
+				1A9272E22B61A529000CB9E5 /* WebsocketSyncConnection.swift */,
 				1A9272E52B61AC2C000CB9E5 /* WebSocketMessages.swift */,
 			);
 			path = WebSocketNetworking;
@@ -248,9 +257,8 @@
 			children = (
 				1AD7A8E62A476801003B6A1E /* NWParameters+peerSyncParameters.swift */,
 				1A4A610B2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift */,
-				1AD7A8E82A476801003B6A1E /* AutomergeSyncProtocol.swift */,
+				1AD7A8E82A476801003B6A1E /* P2PAutomergeSyncProtocol.swift */,
 				1AD7A8EA2A476801003B6A1E /* SyncConnection.swift */,
-				1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */,
 			);
 			path = PeerNetworking;
 			sourceTree = "<group>";
@@ -409,7 +417,7 @@
 				1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */,
 				1A2AD0312A7437E200EF0C5F /* SyncConnectionView.swift in Sources */,
 				1A2A02A52A50E74B0044064B /* EditableAgendaItemView.swift in Sources */,
-				1AD7A8ED2A476801003B6A1E /* AutomergeSyncProtocol.swift in Sources */,
+				1AD7A8ED2A476801003B6A1E /* P2PAutomergeSyncProtocol.swift in Sources */,
 				1A0917002A4A171C00D80BF7 /* Documentation.docc in Sources */,
 				1A30C4DD2B155F07007CE4F0 /* UUID+bs58String.swift in Sources */,
 				1A30C4DB2B155ECF007CE4F0 /* Data+hexEncodedString.swift in Sources */,
@@ -418,7 +426,7 @@
 				1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */,
 				1AD71E8E2A57622B00B965BF /* MeetingNotesDocumentView.swift in Sources */,
 				1A8217AD2A6877730071DD38 /* DocumentSyncCoordinator.swift in Sources */,
-				1A9272E32B61A529000CB9E5 /* WebSocket.swift in Sources */,
+				1A9272E32B61A529000CB9E5 /* WebsocketSyncConnection.swift in Sources */,
 				1A7700C72A67479F00869A4D /* NWBrowserResultItemView.swift in Sources */,
 				1AD71E932A5765A800B965BF /* SyncStatusView.swift in Sources */,
 				1AD7A8EF2A476801003B6A1E /* SyncConnection.swift in Sources */,
