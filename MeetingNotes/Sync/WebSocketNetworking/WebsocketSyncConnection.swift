@@ -10,18 +10,19 @@ public final class WebsocketSyncConnection: ObservableObject {
     public enum SyncProtocolState {
         /// A sync connection hasn't yet been requested
         case newConnection
+
         /// The state is initiating and waiting to successfully peer with the recipient.
         case handshake
+
         /// The connection has successfully peered.
         ///
         /// While `peered`, the connection can send and receive sync, ephemeral, and gossip messages about remote peers.
         case peered
+
         /// The connection has terminated.
         case closed
     }
 
-    static let fileEncoder = CBOREncoder()
-    static let fileDecoder = CBORDecoder()
     private var webSocketTask: URLSessionWebSocketTask?
     private let senderId: String
     private let targetId: String? = nil
@@ -65,7 +66,7 @@ public final class WebsocketSyncConnection: ObservableObject {
         webSocketTask.resume()
         let joinMessage = JoinMsg(senderId: senderId)
         do {
-            let data = try Self.fileEncoder.encode(joinMessage)
+            let data = try V1Msg.encode(joinMessage)
             webSocketTask.send(.data(data)) { [weak self] error in
                 if let error = error {
                     Logger.webSocket.warning("\(error.localizedDescription, privacy: .public)")
@@ -98,23 +99,23 @@ public final class WebsocketSyncConnection: ObservableObject {
             case let .failure(error):
                 Logger.webSocket.warning("RCVD: .failure(\(error.localizedDescription)")
                 print(error.localizedDescription)
+                // failure from the websocket
+                self.webSocketTask?.cancel()
+                self.webSocketTask = nil
+                self.syncState = .closed
+
             case let .success(message):
                 switch message {
                 case let .string(text):
                     Logger.webSocket.warning("RCVD: .string(\(text)")
-                //
-                // self.messages.append(text)
                 case let .data(data):
                     // Handle binary data
                     Logger.webSocket.warning("RCVD: .data(\(data.hexEncodedString(uppercase: false)))")
-                    if let peerMsg = self.attemptDecodePeer(data: data) {
-                        Logger.webSocket.info("DECODED PEER MSG")
-                        dump(peerMsg)
-                    } else if let errorMsg = self.attemptDecodeError(data: data) {
-                        Logger.webSocket.info("DECODED ERROR MSG")
-                        dump(errorMsg)
+                    let decoded = V1Msg.decodePeer(data)
+                    if case let .unknown(data) = decoded {
+                        Logger.webSocket.warning("FAILED TO DECODE MSG: \(data.hexEncodedString(uppercase: false))")
                     } else {
-                        Logger.webSocket.warning("FAILED TO DECODE MSG")
+                        dump(decoded)
                     }
                     // dumping data to logger in a format to fill in the right side of the utility
                     // https://cbor.me
@@ -161,24 +162,6 @@ public final class WebsocketSyncConnection: ObservableObject {
                 }
             }
         }
-    }
-
-    private func attemptDecodePeer(data: Data) -> PeerMsg? {
-        do {
-            return try Self.fileDecoder.decode(PeerMsg.self, from: data)
-        } catch {
-            Logger.webSocket.warning("Failed to decode data as PeerMsg")
-        }
-        return nil
-    }
-
-    private func attemptDecodeError(data: Data) -> ErrorMsg? {
-        do {
-            return try Self.fileDecoder.decode(ErrorMsg.self, from: data)
-        } catch {
-            Logger.webSocket.warning("Failed to decode data as ErrorMsg")
-        }
-        return nil
     }
 
 //    func sendMessage(_ message: String) {
