@@ -11,7 +11,7 @@ public final class WebsocketSyncConnection: ObservableObject {
         /// A sync connection hasn't yet been requested
         case newConnection
         /// The state is initiating and waiting to successfully peer with the recipient.
-        case initiating
+        case handshake
         /// The connection has successfully peered.
         ///
         /// While `peered`, the connection can send and receive sync, ephemeral, and gossip messages about remote peers.
@@ -70,12 +70,14 @@ public final class WebsocketSyncConnection: ObservableObject {
                 if let error = error {
                     Logger.webSocket.warning("\(error.localizedDescription, privacy: .public)")
                     // kill the websocket and disconnect
-                    self?.webSocketTask = nil
-                    self?.syncState = .closed
-                    // should we have a syncState = .failed?
+                    DispatchQueue.main.async {
+                        self?.webSocketTask = nil
+                        self?.syncState = .closed
+                        // should we have a syncState = .failed?
+                    }
                 }
             }
-            syncState = .initiating
+            syncState = .handshake
         } catch {
             Logger.webSocket.error("\(error.localizedDescription, privacy: .public)")
             syncState = .closed
