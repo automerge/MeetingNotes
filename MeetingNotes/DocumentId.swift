@@ -1,39 +1,53 @@
+import Base58Swift
 import Foundation
 
-struct DocumentId: Hashable, Comparable, Identifiable {
-    let id: String
+/// A type that represents an Automerge-repo compatible document identifier
+public struct DocumentId: Hashable, Comparable, Identifiable {
+    /// A bs58 encoded string that represents the identifier
+    public let id: String
+    // Data?
+    // [UInt8]
 
-    /// Creates a new, random document Id.
-    init() {
+    /// Creates a new, random document identifier.
+    public init() {
         id = UUID().bs58String
     }
 
-    /// Creates a document Id from a UUID v4
-    /// - Parameter id: the v4 UUID to use as a document id.
-    init(_ id: UUID) {
+    /// Creates a document identifier from a UUID v4
+    /// - Parameter id: the v4 UUID to use as a document identifier.
+    public init(_ id: UUID) {
         self.id = id.bs58String
     }
 
-    /// Creates a document Id from an optional string if the optional string is not null.
-    /// - Parameter id: The string to use as a document id.
-    init?(_ id: String?) {
-        if let id {
-            self.id = id
-        } else {
+    /// Creates a document identifier from an optional string.
+    /// - Parameter id: The string to use as a document identifier.
+    public init?(_ id: String?) {
+        guard let id else {
             return nil
         }
+        guard let uint_array = Base58.base58CheckDecode(id) else {
+            return nil
+        }
+        if uint_array.count != 16 {
+            return nil
+        }
+        self.id = id
     }
 
-    /// Creates a document Id from a string.
-    /// - Parameter id: The string to use as a document id.
-    init(_ id: String) {
+    /// Creates a document identifier from a string.
+    /// - Parameter id: The string to use as a document identifier.
+    public init?(_ id: String) {
+        guard let uint_array = Base58.base58CheckDecode(id) else {
+            return nil
+        }
+        if uint_array.count != 16 {
+            return nil
+        }
         self.id = id
-        // Open Question(heckj): Should this be a throwable or fail-able initializer that verifies
-        // the string represents exactly 16 bytes, in bs58 encoding?
     }
 
     // Comparable conformance
-    static func < (lhs: DocumentId, rhs: DocumentId) -> Bool {
+    public static func < (lhs: DocumentId, rhs: DocumentId) -> Bool {
         lhs.id < rhs.id
     }
 }
@@ -41,8 +55,8 @@ struct DocumentId: Hashable, Comparable, Identifiable {
 extension DocumentId: Codable {}
 
 extension DocumentId: CustomStringConvertible {
-    /// The string representation of the Document Id
-    var description: String {
+    /// The string representation of the Document identifier
+    public var description: String {
         id
     }
 }

@@ -36,9 +36,13 @@ struct WebSocketStatusView: View {
             Button {
                 syncEnabledIndicator.toggle()
                 if syncEnabledIndicator {
-                    websocket.connect(syncDestination.urlString)
+                    Task {
+                        await websocket.connect(syncDestination.urlString)
+                    }
                 } else {
-                    websocket.disconnect()
+                    Task {
+                        await websocket.disconnect()
+                    }
                 }
             } label: {
                 Image(
@@ -52,7 +56,7 @@ struct WebSocketStatusView: View {
             #endif
         }
         .onAppear {
-            websocket.registerDocument(document.doc)
+            websocket.registerDocument(document.doc, id: document.id)
         }
     }
 }

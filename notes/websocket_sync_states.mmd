@@ -1,0 +1,14 @@
+---
+title: WebSocket Sync Protocol
+---
+
+stateDiagram-v2
+    [*] --> new : WebsocketSyncConnection.init()
+    new --> handshake : registerDocument()\nawait connect()
+    handshake --> closed : connect timeout expired\nconnection failed
+    handshake --> peered_waiting : websocket peer response
+    peered_waiting --> closed : await disconnect()\nwebsocket error
+    peered_waiting --> peered_syncing : websocket sync request\ndocument updated\n`await sync()`
+    peered_syncing --> closed : await disconnect()\nwebsocket error
+    peered_syncing --> peered_waiting : sync complete
+    closed --> handshake : await connect()

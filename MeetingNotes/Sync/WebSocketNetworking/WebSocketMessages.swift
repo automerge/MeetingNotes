@@ -304,13 +304,44 @@ indirect enum V1Msg {
     }
 }
 
-struct PeerMetadata: Codable {
+extension V1Msg: CustomDebugStringConvertible {
+    var debugDescription: String {
+        switch self {
+        case let .peer(interior_msg):
+            return interior_msg.debugDescription
+        case let .join(interior_msg):
+            return interior_msg.debugDescription
+        case let .error(interior_msg):
+            return interior_msg.debugDescription
+        case let .request(interior_msg):
+            return interior_msg.debugDescription
+        case let .sync(interior_msg):
+            return interior_msg.debugDescription
+        case let .unavailable(interior_msg):
+            return interior_msg.debugDescription
+        case let .ephemeral(interior_msg):
+            return interior_msg.debugDescription
+        case let .remoteSubscriptionChange(interior_msg):
+            return interior_msg.debugDescription
+        case let .remoteheadschanged(interior_msg):
+            return interior_msg.debugDescription
+        case let .unknown(data):
+            return "UNKNOWN[data: \(data.hexEncodedString(uppercase: false))]"
+        }
+    }
+}
+
+struct PeerMetadata: Codable, CustomDebugStringConvertible {
     var storageId: STORAGE_ID?
     var isEphemeral: Bool
 
     init(storageId: STORAGE_ID? = nil, isEphemeral: Bool) {
         self.storageId = storageId
         self.isEphemeral = isEphemeral
+    }
+
+    var debugDescription: String {
+        "[storageId: \(storageId ?? "nil"), ephemeral: \(isEphemeral)]"
     }
 }
 
@@ -331,7 +362,7 @@ struct PeerMetadata: Codable {
 /// initiating client should disconnect.
 /// If the receiving peer receives any message other than a `JoinMsg` from the initiating peer, it is expected to
 /// terminate the connection.
-struct JoinMsg: Codable {
+struct JoinMsg: Codable, CustomDebugStringConvertible {
     var type: String = "join"
     let senderId: PEER_ID
     var supportedProtocolVersions: String = "1"
@@ -342,6 +373,10 @@ struct JoinMsg: Codable {
         if let metadata {
             self.peerMetadata = metadata
         }
+    }
+
+    var debugDescription: String {
+        "JOIN[version: \(supportedProtocolVersions), sender: \(senderId), metadata: \(peerMetadata?.debugDescription ?? "nil")]"
     }
 }
 
@@ -367,7 +402,7 @@ struct JoinMsg: Codable {
 ///
 /// A response sent by a receiving peer (represented by `targetId`) after receiving a ``JoinMsg`` that indicates sync,
 /// gossiping, and ephemeral messages may now be initiated.
-struct PeerMsg: Codable {
+struct PeerMsg: Codable, CustomDebugStringConvertible {
     var type: String = "peer"
     let senderId: PEER_ID
     let targetId: PEER_ID
@@ -380,6 +415,10 @@ struct PeerMsg: Codable {
         self.selectedProtocolVersion = "1"
         self.peerMetadata = PeerMetadata(storageId: storageId, isEphemeral: ephemeral)
     }
+
+    var debugDescription: String {
+        "PEER[version: \(selectedProtocolVersion), sender: \(senderId), target: \(targetId), metadata: \(peerMetadata?.debugDescription ?? "nil")]"
+    }
 }
 
 // - error -
@@ -389,12 +428,16 @@ struct PeerMsg: Codable {
 // }
 
 /// A sync error message
-struct ErrorMsg: Codable {
+struct ErrorMsg: Codable, CustomDebugStringConvertible {
     var type: String = "error"
     let message: String
 
     init(message: String) {
         self.message = message
+    }
+
+    var debugDescription: String {
+        "ERROR[msg: \(message)"
     }
 }
 
@@ -416,7 +459,7 @@ struct ErrorMsg: Codable {
 /// Sent when the initiating peer (represented by `senderId`) is asking to begin sync for the given document ID.
 /// Identical to ``SyncMsg`` but indicates to the receiving peer that the sender would like an ``UnavailableMsg``
 /// message if the receiving peer (represented by `targetId` does not have the document (identified by `documentId`).
-struct RequestMsg: Codable {
+struct RequestMsg: Codable, CustomDebugStringConvertible {
     var type: String = "request"
     let documentId: DOCUMENT_ID
     let senderId: PEER_ID // The peer requesting to begin sync
@@ -428,6 +471,10 @@ struct RequestMsg: Codable {
         self.senderId = senderId
         self.targetId = targetId
         self.sync_message = sync_message
+    }
+
+    var debugDescription: String {
+        "REQUEST[documentId: \(documentId), sender: \(senderId), target: \(targetId), data: \(sync_message.count) bytes]"
     }
 }
 
@@ -449,18 +496,22 @@ struct RequestMsg: Codable {
 ///
 /// If the receiving peer doesn't have an Automerge document represented by `documentId` and can't or won't store the
 /// document.
-struct SyncMsg: Codable {
+struct SyncMsg: Codable, CustomDebugStringConvertible {
     var type = "sync"
     let documentId: DOCUMENT_ID
     let senderId: PEER_ID // The peer requesting to begin sync
     let targetId: PEER_ID
-    let data: Data // The initial automerge sync message from the sender
+    let sync_message: Data // The initial automerge sync message from the sender
 
-    init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, data: Data) {
+    init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, sync_message: Data) {
         self.documentId = documentId
         self.senderId = senderId
         self.targetId = targetId
-        self.data = data
+        self.sync_message = sync_message
+    }
+
+    var debugDescription: String {
+        "SYNC[documentId: \(documentId), sender: \(senderId), target: \(targetId), data: \(sync_message.count) bytes]"
     }
 }
 
@@ -476,7 +527,7 @@ struct SyncMsg: Codable {
 ///
 /// Generally a response for a ``RequestMsg`` from an initiating peer (represented by `senderId`) that the receiving
 /// peer (represented by `targetId`) doesn't have a copy of the requested Document, or is unable to share it.
-struct UnavailableMsg: Codable {
+struct UnavailableMsg: Codable, CustomDebugStringConvertible {
     var type = "doc-unavailable"
     let documentId: DOCUMENT_ID
     let senderId: PEER_ID
@@ -486,6 +537,10 @@ struct UnavailableMsg: Codable {
         self.documentId = documentId
         self.senderId = senderId
         self.targetId = targetId
+    }
+
+    var debugDescription: String {
+        "UNAVAILABLE[documentId: \(documentId), sender: \(senderId), target: \(targetId)]"
     }
 }
 
@@ -508,7 +563,7 @@ struct UnavailableMsg: Codable {
 //  data: bstr
 // }
 
-struct EphemeralMsg: Codable {
+struct EphemeralMsg: Codable, CustomDebugStringConvertible {
     var type = "ephemeral"
     let senderId: PEER_ID
     let targetId: PEER_ID
@@ -524,6 +579,10 @@ struct EphemeralMsg: Codable {
         self.sessionId = sessionId
         self.documentId = documentId
         self.data = data
+    }
+
+    var debugDescription: String {
+        "EPHEMERAL[documentId: \(documentId), sender: \(senderId), target: \(targetId), count: \(count), sessionId: \(sessionId), data: \(data.count) bytes]"
     }
 }
 
@@ -542,7 +601,7 @@ struct EphemeralMsg: Codable {
 //  remove: [* storage_id]
 // }
 
-struct RemoteSubscriptionChangeMsg: Codable {
+struct RemoteSubscriptionChangeMsg: Codable, CustomDebugStringConvertible {
     var type = "remote-subscription-change"
     let senderId: PEER_ID
     let targetId: PEER_ID
@@ -554,6 +613,19 @@ struct RemoteSubscriptionChangeMsg: Codable {
         self.targetId = targetId
         self.add = add
         self.remove = remove
+    }
+
+    var debugDescription: String {
+        var returnString = "REMOTE_SUBSCRIPTION_CHANGE[sender: \(senderId), target: \(targetId)]"
+        if let add {
+            returnString.append("\n  add: [")
+            returnString.append(add.joined(separator: ","))
+            returnString.append("]")
+        }
+        returnString.append("\n  remove: [")
+        returnString.append(remove.joined(separator: ","))
+        returnString.append("]")
+        return returnString
     }
 }
 
@@ -579,14 +651,18 @@ struct RemoteSubscriptionChangeMsg: Codable {
 //  }
 // }
 
-struct RemoteHeadsChangedMsg: Codable {
-    struct HeadsAtTime: Codable {
+struct RemoteHeadsChangedMsg: Codable, CustomDebugStringConvertible {
+    struct HeadsAtTime: Codable, CustomDebugStringConvertible {
         var heads: [String]
         let timestamp: uint
 
         init(heads: [String], timestamp: uint) {
             self.heads = heads
             self.timestamp = timestamp
+        }
+
+        var debugDescription: String {
+            "\(timestamp):[\(heads.joined(separator: ","))]"
         }
     }
 
@@ -612,5 +688,21 @@ struct RemoteHeadsChangedMsg: Codable {
         self.newHeads = newHeads
         self.add = add
         self.remove = remove
+    }
+
+    var debugDescription: String {
+        var returnString = "REMOTE_HEADS_CHANGED[documentId: \(documentId), sender: \(senderId), target: \(targetId)]"
+        returnString.append("\n  heads:")
+        for (storage_id, headsAtTime) in newHeads {
+            returnString.append("\n    \(storage_id) : \(headsAtTime.debugDescription)")
+        }
+        returnString.append("\n  add: [")
+        returnString.append(add.joined(separator: ", "))
+        returnString.append("]")
+
+        returnString.append("\n  remove: [")
+        returnString.append(remove.joined(separator: ", "))
+        returnString.append("]")
+        return returnString
     }
 }

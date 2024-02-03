@@ -94,6 +94,7 @@
 		1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSyncCoordinator.swift; sourceTree = "<group>"; };
 		1A9272E22B61A529000CB9E5 /* WebsocketSyncConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketSyncConnection.swift; sourceTree = "<group>"; };
 		1A9272E52B61AC2C000CB9E5 /* WebSocketMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketMessages.swift; sourceTree = "<group>"; };
+		1AA529342B6D973C0084F855 /* notes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = notes; sourceTree = "<group>"; };
 		1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingNotesModel.swift; sourceTree = "<group>"; };
 		1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesDocumentView.swift; sourceTree = "<group>"; };
 		1AD71E902A57630B00B965BF /* MergeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MergeView.swift; sourceTree = "<group>"; };
@@ -144,6 +145,7 @@
 			children = (
 				1AF5DB3A2A4A0C38008DAC6F /* README.md */,
 				1AF5DB3B2A4A0C5E008DAC6F /* CONTRIBUTING.md */,
+				1AA529342B6D973C0084F855 /* notes */,
 				1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */,
 				1A0DDC332A464DEA001ECADD /* MeetingNotes */,
 				1A0DDC482A464DEB001ECADD /* MeetingNotesTests */,
