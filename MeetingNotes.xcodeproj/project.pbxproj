@@ -36,6 +36,7 @@
 		1AADE1F52B586875000205BB /* Data+hexEncodedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */; };
 		1AADE1F62B586878000205BB /* UUID+bs58String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */; };
 		1AADE1F72B58687E000205BB /* DocumentId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2521432B1567F20096951D /* DocumentId.swift */; };
+		1ACF1CE12B6DCAFC00DC5198 /* Task+timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF1CE02B6DCAFC00DC5198 /* Task+timeout.swift */; };
 		1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD5DA322A464FBD0085DF79 /* Automerge */; };
 		1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */; };
 		1AD71E8E2A57622B00B965BF /* MeetingNotesDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */; };
@@ -95,6 +96,7 @@
 		1A9272E22B61A529000CB9E5 /* WebsocketSyncConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketSyncConnection.swift; sourceTree = "<group>"; };
 		1A9272E52B61AC2C000CB9E5 /* WebSocketMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketMessages.swift; sourceTree = "<group>"; };
 		1AA529342B6D973C0084F855 /* notes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = notes; sourceTree = "<group>"; };
+		1ACF1CE02B6DCAFC00DC5198 /* Task+timeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+timeout.swift"; sourceTree = "<group>"; };
 		1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingNotesModel.swift; sourceTree = "<group>"; };
 		1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesDocumentView.swift; sourceTree = "<group>"; };
 		1AD71E902A57630B00B965BF /* MergeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MergeView.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 			children = (
 				1A9272E22B61A529000CB9E5 /* WebsocketSyncConnection.swift */,
 				1A9272E52B61AC2C000CB9E5 /* WebSocketMessages.swift */,
+				1ACF1CE02B6DCAFC00DC5198 /* Task+timeout.swift */,
 			);
 			path = WebSocketNetworking;
 			sourceTree = "<group>";
@@ -431,6 +434,7 @@
 				1A9272E32B61A529000CB9E5 /* WebsocketSyncConnection.swift in Sources */,
 				1A7700C72A67479F00869A4D /* NWBrowserResultItemView.swift in Sources */,
 				1AD71E932A5765A800B965BF /* SyncStatusView.swift in Sources */,
+				1ACF1CE12B6DCAFC00DC5198 /* Task+timeout.swift in Sources */,
 				1AD7A8EF2A476801003B6A1E /* SyncConnection.swift in Sources */,
 				1A7700C52A67343800869A4D /* PeerSyncView.swift in Sources */,
 				1AD7A8EB2A476801003B6A1E /* NWParameters+peerSyncParameters.swift in Sources */,

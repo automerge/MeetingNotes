@@ -32,20 +32,20 @@ import PotentCBOR
 /// A type that represents a peer
 ///
 /// Typically a UUID4 in string form.
-typealias PEER_ID = String
+public typealias PEER_ID = String
 
 /// A type that represents an identity for the storage of a peer.
 ///
 /// Typically a UUID4 in string form. Receiving peers may tie cached sync state for documents to this identifier.
-typealias STORAGE_ID = String
+public typealias STORAGE_ID = String
 
 /// A type that represents a document Id.
 ///
 /// Typically 16 bytes encoded in bs58 format.
-typealias DOCUMENT_ID = String
+public typealias DOCUMENT_ID = String
 
 /// A type that represents the raw bytes of an Automerge sync message.
-typealias SYNC_MESSAGE = Data
+public typealias SYNC_MESSAGE = Data
 
 // ; Metadata sent in either the join or peer message types
 // peer_metadata = {
@@ -56,7 +56,7 @@ typealias SYNC_MESSAGE = Data
 // }
 
 /// A type that encapsulates valid V1 protocol messages for the Automerge-repo sync protocol.
-indirect enum V1Msg {
+public indirect enum V1Msg {
     static let encoder = CBOREncoder()
     static let decoder = CBORDecoder()
 
@@ -78,7 +78,7 @@ indirect enum V1Msg {
     ///
     /// - Parameter data: The data to decode
     /// - Returns: The decoded message, or ``V1Msg/unknown(_:)`` if the decoding attempt failed.
-    static func decodePeer(_ data: Data) -> V1Msg {
+    public static func decodePeer(_ data: Data) -> V1Msg {
         if let peerMsg = attemptPeer(data) {
             return .peer(peerMsg)
         } else {
@@ -98,7 +98,7 @@ indirect enum V1Msg {
     /// Enable `withGossip` to attempt to decode head gossip messages, and `withHandshake` to include handshake phase
     /// messages.
     /// With both `withGossip` and `withHandshake` set to `true`, the decoding is exhaustive over all V1 messages.
-    static func decode(_ data: Data, withGossip: Bool = false, withHandshake: Bool = false) -> V1Msg {
+    public static func decode(_ data: Data, withGossip: Bool = false, withHandshake: Bool = false) -> V1Msg {
         if withHandshake {
             if let peerMsg = attemptPeer(data) {
                 return .peer(peerMsg)
@@ -241,43 +241,43 @@ indirect enum V1Msg {
 
     // encode messages
 
-    static func encode(_ msg: JoinMsg) throws -> Data {
+    public static func encode(_ msg: JoinMsg) throws -> Data {
         try encoder.encode(msg)
     }
 
-    static func encode(_ msg: RequestMsg) throws -> Data {
+    public static func encode(_ msg: RequestMsg) throws -> Data {
         try encoder.encode(msg)
     }
 
-    static func encode(_ msg: SyncMsg) throws -> Data {
+    public static func encode(_ msg: SyncMsg) throws -> Data {
         try encoder.encode(msg)
     }
 
-    static func encode(_ msg: PeerMsg) throws -> Data {
+    public static func encode(_ msg: PeerMsg) throws -> Data {
         try encoder.encode(msg)
     }
 
-    static func encode(_ msg: UnavailableMsg) throws -> Data {
+    public static func encode(_ msg: UnavailableMsg) throws -> Data {
         try encoder.encode(msg)
     }
 
-    static func encode(_ msg: EphemeralMsg) throws -> Data {
+    public static func encode(_ msg: EphemeralMsg) throws -> Data {
         try encoder.encode(msg)
     }
 
-    static func encode(_ msg: RemoteSubscriptionChangeMsg) throws -> Data {
+    public static func encode(_ msg: RemoteSubscriptionChangeMsg) throws -> Data {
         try encoder.encode(msg)
     }
 
-    static func encode(_ msg: RemoteHeadsChangedMsg) throws -> Data {
+    public static func encode(_ msg: RemoteHeadsChangedMsg) throws -> Data {
         try encoder.encode(msg)
     }
 
-    static func encode(_ msg: ErrorMsg) throws -> Data {
+    public static func encode(_ msg: ErrorMsg) throws -> Data {
         try encoder.encode(msg)
     }
 
-    static func encode(_ msg: V1Msg) throws -> Data {
+    public static func encode(_ msg: V1Msg) throws -> Data {
         // not sure this is useful, but might as well finish out the set...
         switch msg {
         case let .peer(peerMsg):
@@ -305,7 +305,7 @@ indirect enum V1Msg {
 }
 
 extension V1Msg: CustomDebugStringConvertible {
-    var debugDescription: String {
+    public var debugDescription: String {
         switch self {
         case let .peer(interior_msg):
             return interior_msg.debugDescription
@@ -331,16 +331,16 @@ extension V1Msg: CustomDebugStringConvertible {
     }
 }
 
-struct PeerMetadata: Codable, CustomDebugStringConvertible {
-    var storageId: STORAGE_ID?
-    var isEphemeral: Bool
+public struct PeerMetadata: Codable, CustomDebugStringConvertible {
+    public var storageId: STORAGE_ID?
+    public var isEphemeral: Bool
 
-    init(storageId: STORAGE_ID? = nil, isEphemeral: Bool) {
+    public init(storageId: STORAGE_ID? = nil, isEphemeral: Bool) {
         self.storageId = storageId
         self.isEphemeral = isEphemeral
     }
 
-    var debugDescription: String {
+    public var debugDescription: String {
         "[storageId: \(storageId ?? "nil"), ephemeral: \(isEphemeral)]"
     }
 }
@@ -362,20 +362,20 @@ struct PeerMetadata: Codable, CustomDebugStringConvertible {
 /// initiating client should disconnect.
 /// If the receiving peer receives any message other than a `JoinMsg` from the initiating peer, it is expected to
 /// terminate the connection.
-struct JoinMsg: Codable, CustomDebugStringConvertible {
-    var type: String = "join"
-    let senderId: PEER_ID
-    var supportedProtocolVersions: String = "1"
-    var peerMetadata: PeerMetadata?
+public struct JoinMsg: Codable, CustomDebugStringConvertible {
+    public var type: String = "join"
+    public let senderId: PEER_ID
+    public var supportedProtocolVersions: String = "1"
+    public var peerMetadata: PeerMetadata?
 
-    init(senderId: PEER_ID, metadata: PeerMetadata? = nil) {
+    public init(senderId: PEER_ID, metadata: PeerMetadata? = nil) {
         self.senderId = senderId
         if let metadata {
             self.peerMetadata = metadata
         }
     }
 
-    var debugDescription: String {
+    public var debugDescription: String {
         "JOIN[version: \(supportedProtocolVersions), sender: \(senderId), metadata: \(peerMetadata?.debugDescription ?? "nil")]"
     }
 }
@@ -402,21 +402,21 @@ struct JoinMsg: Codable, CustomDebugStringConvertible {
 ///
 /// A response sent by a receiving peer (represented by `targetId`) after receiving a ``JoinMsg`` that indicates sync,
 /// gossiping, and ephemeral messages may now be initiated.
-struct PeerMsg: Codable, CustomDebugStringConvertible {
-    var type: String = "peer"
-    let senderId: PEER_ID
-    let targetId: PEER_ID
-    var peerMetadata: PeerMetadata?
-    var selectedProtocolVersion: String
+public struct PeerMsg: Codable, CustomDebugStringConvertible {
+    public var type: String = "peer"
+    public let senderId: PEER_ID
+    public let targetId: PEER_ID
+    public var peerMetadata: PeerMetadata?
+    public var selectedProtocolVersion: String
 
-    init(senderId: PEER_ID, targetId: PEER_ID, storageId: String?, ephemeral: Bool = true) {
+    public init(senderId: PEER_ID, targetId: PEER_ID, storageId: String?, ephemeral: Bool = true) {
         self.senderId = senderId
         self.targetId = targetId
         self.selectedProtocolVersion = "1"
         self.peerMetadata = PeerMetadata(storageId: storageId, isEphemeral: ephemeral)
     }
 
-    var debugDescription: String {
+    public var debugDescription: String {
         "PEER[version: \(selectedProtocolVersion), sender: \(senderId), target: \(targetId), metadata: \(peerMetadata?.debugDescription ?? "nil")]"
     }
 }
@@ -428,15 +428,15 @@ struct PeerMsg: Codable, CustomDebugStringConvertible {
 // }
 
 /// A sync error message
-struct ErrorMsg: Codable, CustomDebugStringConvertible {
-    var type: String = "error"
-    let message: String
+public struct ErrorMsg: Codable, CustomDebugStringConvertible {
+    public var type: String = "error"
+    public let message: String
 
-    init(message: String) {
+    public init(message: String) {
         self.message = message
     }
 
-    var debugDescription: String {
+    public var debugDescription: String {
         "ERROR[msg: \(message)"
     }
 }
@@ -459,21 +459,21 @@ struct ErrorMsg: Codable, CustomDebugStringConvertible {
 /// Sent when the initiating peer (represented by `senderId`) is asking to begin sync for the given document ID.
 /// Identical to ``SyncMsg`` but indicates to the receiving peer that the sender would like an ``UnavailableMsg``
 /// message if the receiving peer (represented by `targetId` does not have the document (identified by `documentId`).
-struct RequestMsg: Codable, CustomDebugStringConvertible {
-    var type: String = "request"
-    let documentId: DOCUMENT_ID
-    let senderId: PEER_ID // The peer requesting to begin sync
-    let targetId: PEER_ID
-    let sync_message: Data // The initial automerge sync message from the sender
+public struct RequestMsg: Codable, CustomDebugStringConvertible {
+    public var type: String = "request"
+    public let documentId: DOCUMENT_ID
+    public let senderId: PEER_ID // The peer requesting to begin sync
+    public let targetId: PEER_ID
+    public let sync_message: Data // The initial automerge sync message from the sender
 
-    init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, sync_message: Data) {
+    public init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, sync_message: Data) {
         self.documentId = documentId
         self.senderId = senderId
         self.targetId = targetId
         self.sync_message = sync_message
     }
 
-    var debugDescription: String {
+    public var debugDescription: String {
         "REQUEST[documentId: \(documentId), sender: \(senderId), target: \(targetId), data: \(sync_message.count) bytes]"
     }
 }
@@ -496,21 +496,21 @@ struct RequestMsg: Codable, CustomDebugStringConvertible {
 ///
 /// If the receiving peer doesn't have an Automerge document represented by `documentId` and can't or won't store the
 /// document.
-struct SyncMsg: Codable, CustomDebugStringConvertible {
-    var type = "sync"
-    let documentId: DOCUMENT_ID
-    let senderId: PEER_ID // The peer requesting to begin sync
-    let targetId: PEER_ID
-    let sync_message: Data // The initial automerge sync message from the sender
+public struct SyncMsg: Codable, CustomDebugStringConvertible {
+    public var type = "sync"
+    public let documentId: DOCUMENT_ID
+    public let senderId: PEER_ID // The peer requesting to begin sync
+    public let targetId: PEER_ID
+    public let sync_message: Data // The initial automerge sync message from the sender
 
-    init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, sync_message: Data) {
+    public init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, sync_message: Data) {
         self.documentId = documentId
         self.senderId = senderId
         self.targetId = targetId
         self.sync_message = sync_message
     }
 
-    var debugDescription: String {
+    public var debugDescription: String {
         "SYNC[documentId: \(documentId), sender: \(senderId), target: \(targetId), data: \(sync_message.count) bytes]"
     }
 }
@@ -527,19 +527,19 @@ struct SyncMsg: Codable, CustomDebugStringConvertible {
 ///
 /// Generally a response for a ``RequestMsg`` from an initiating peer (represented by `senderId`) that the receiving
 /// peer (represented by `targetId`) doesn't have a copy of the requested Document, or is unable to share it.
-struct UnavailableMsg: Codable, CustomDebugStringConvertible {
-    var type = "doc-unavailable"
-    let documentId: DOCUMENT_ID
-    let senderId: PEER_ID
-    let targetId: PEER_ID
+public struct UnavailableMsg: Codable, CustomDebugStringConvertible {
+    public var type = "doc-unavailable"
+    public let documentId: DOCUMENT_ID
+    public let senderId: PEER_ID
+    public let targetId: PEER_ID
 
-    init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID) {
+    public init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID) {
         self.documentId = documentId
         self.senderId = senderId
         self.targetId = targetId
     }
 
-    var debugDescription: String {
+    public var debugDescription: String {
         "UNAVAILABLE[documentId: \(documentId), sender: \(senderId), target: \(targetId)]"
     }
 }
@@ -563,16 +563,23 @@ struct UnavailableMsg: Codable, CustomDebugStringConvertible {
 //  data: bstr
 // }
 
-struct EphemeralMsg: Codable, CustomDebugStringConvertible {
-    var type = "ephemeral"
-    let senderId: PEER_ID
-    let targetId: PEER_ID
-    let count: UInt
-    let sessionId: String
-    let documentId: DOCUMENT_ID
-    let data: Data
+public struct EphemeralMsg: Codable, CustomDebugStringConvertible {
+    public var type = "ephemeral"
+    public let senderId: PEER_ID
+    public let targetId: PEER_ID
+    public let count: UInt
+    public let sessionId: String
+    public let documentId: DOCUMENT_ID
+    public let data: Data
 
-    init(senderId: PEER_ID, targetId: PEER_ID, count: UInt, sessionId: String, documentId: DOCUMENT_ID, data: Data) {
+    public init(
+        senderId: PEER_ID,
+        targetId: PEER_ID,
+        count: UInt,
+        sessionId: String,
+        documentId: DOCUMENT_ID,
+        data: Data
+    ) {
         self.senderId = senderId
         self.targetId = targetId
         self.count = count
@@ -581,7 +588,7 @@ struct EphemeralMsg: Codable, CustomDebugStringConvertible {
         self.data = data
     }
 
-    var debugDescription: String {
+    public var debugDescription: String {
         "EPHEMERAL[documentId: \(documentId), sender: \(senderId), target: \(targetId), count: \(count), sessionId: \(sessionId), data: \(data.count) bytes]"
     }
 }
@@ -601,21 +608,21 @@ struct EphemeralMsg: Codable, CustomDebugStringConvertible {
 //  remove: [* storage_id]
 // }
 
-struct RemoteSubscriptionChangeMsg: Codable, CustomDebugStringConvertible {
-    var type = "remote-subscription-change"
-    let senderId: PEER_ID
-    let targetId: PEER_ID
-    var add: [STORAGE_ID]?
-    var remove: [STORAGE_ID]
+public struct RemoteSubscriptionChangeMsg: Codable, CustomDebugStringConvertible {
+    public var type = "remote-subscription-change"
+    public let senderId: PEER_ID
+    public let targetId: PEER_ID
+    public var add: [STORAGE_ID]?
+    public var remove: [STORAGE_ID]
 
-    init(senderId: PEER_ID, targetId: PEER_ID, add: [STORAGE_ID]? = nil, remove: [STORAGE_ID]) {
+    public init(senderId: PEER_ID, targetId: PEER_ID, add: [STORAGE_ID]? = nil, remove: [STORAGE_ID]) {
         self.senderId = senderId
         self.targetId = targetId
         self.add = add
         self.remove = remove
     }
 
-    var debugDescription: String {
+    public var debugDescription: String {
         var returnString = "REMOTE_SUBSCRIPTION_CHANGE[sender: \(senderId), target: \(targetId)]"
         if let add {
             returnString.append("\n  add: [")
@@ -651,30 +658,30 @@ struct RemoteSubscriptionChangeMsg: Codable, CustomDebugStringConvertible {
 //  }
 // }
 
-struct RemoteHeadsChangedMsg: Codable, CustomDebugStringConvertible {
-    struct HeadsAtTime: Codable, CustomDebugStringConvertible {
-        var heads: [String]
-        let timestamp: uint
+public struct RemoteHeadsChangedMsg: Codable, CustomDebugStringConvertible {
+    public struct HeadsAtTime: Codable, CustomDebugStringConvertible {
+        public var heads: [String]
+        public let timestamp: uint
 
-        init(heads: [String], timestamp: uint) {
+        public init(heads: [String], timestamp: uint) {
             self.heads = heads
             self.timestamp = timestamp
         }
 
-        var debugDescription: String {
+        public var debugDescription: String {
             "\(timestamp):[\(heads.joined(separator: ","))]"
         }
     }
 
-    var type = "remote-heads-changed"
-    let senderId: PEER_ID
-    let targetId: PEER_ID
-    let documentId: DOCUMENT_ID
-    var newHeads: [STORAGE_ID: HeadsAtTime]
-    var add: [STORAGE_ID]
-    var remove: [STORAGE_ID]
+    public var type = "remote-heads-changed"
+    public let senderId: PEER_ID
+    public let targetId: PEER_ID
+    public let documentId: DOCUMENT_ID
+    public var newHeads: [STORAGE_ID: HeadsAtTime]
+    public var add: [STORAGE_ID]
+    public var remove: [STORAGE_ID]
 
-    init(
+    public init(
         senderId: PEER_ID,
         targetId: PEER_ID,
         documentId: DOCUMENT_ID,
@@ -690,7 +697,7 @@ struct RemoteHeadsChangedMsg: Codable, CustomDebugStringConvertible {
         self.remove = remove
     }
 
-    var debugDescription: String {
+    public var debugDescription: String {
         var returnString = "REMOTE_HEADS_CHANGED[documentId: \(documentId), sender: \(senderId), target: \(targetId)]"
         returnString.append("\n  heads:")
         for (storage_id, headsAtTime) in newHeads {
