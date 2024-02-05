@@ -35,6 +35,8 @@ public final class WebsocketSyncConnection: ObservableObject {
     private weak var document: Automerge.Document?
     private var documentId: DocumentId?
 
+    private var receiveHandler: Task<Void, any Error>?
+
     // TODO: Add a delegate link of some form for a 'ephemeral' msg data handler
     // TODO: Add an indicator of if we should involve ourselves in "gossip" about updates
     // TODO: Add something that watches Documents for updates to invoke either gossip or sync depending
@@ -107,7 +109,7 @@ public final class WebsocketSyncConnection: ObservableObject {
         webSocketTask = URLSession.shared.webSocketTask(with: request)
         // establishes the websocket
         Logger.webSocket.trace("Activating websocket to \(url, privacy: .public)")
-        configureWebsocketReceiveHandler()
+//        configureWebsocketReceiveHandler()
         // TO-DO _ replace with async handler to receive messages....
         guard let webSocketTask = webSocketTask else {
             #if DEBUG
@@ -132,57 +134,75 @@ public final class WebsocketSyncConnection: ObservableObject {
 //            self.webSocketTask = nil
 //        }
 
-//        // add in calling receive to expect a peer message with a timeout... and use the async handler
-//        // for further messages.
-//        try await withThrowingTaskGroup(of: Void.self) { group in
-//            group.addTask {
-//                // retrieve the next websocket message
-//                let websocketMsg = try await webSocketTask.receive()
-//                switch websocketMsg {
-//                case .data(let raw_data):
-//                    let msg = V1Msg.decodePeer(raw_data)
-//                    if case let .peer(peerMsg) = msg {
-//                        self.targetId = peerMsg.targetId
-//                        self.connectionState = .peered_waiting
-//                        // TODO: handle the gossip setup - read and process the peer metadata
-//                    } else {
-//                        // In the handshake phase and received anything other than a valid peer message
-//                        let decodeAttempted = V1Msg.decode(raw_data, withGossip: true, withHandshake: true)
-//                        Logger.webSocket
-//                            .warning("FAILED TO PEER - RECEIVED MSG: \(decodeAttempted.debugDescription)")
-//                        await self.disconnect()
-//                    }
-//
-//                case .string(let string):
-//                    // In the handshake phase and received anything other than a valid peer message
-//                    Logger.webSocket
-//                        .warning("FAILED TO PEER - RECEIVED MSG: \(string)")
-//                    await self.disconnect()
-//                @unknown default:
-//                    // In the handshake phase and received anything other than a valid peer message
-//                    Logger.webSocket
-//                        .error("Unknown websocket message received: \(String(describing: websocketMsg))")
-//                    await self.disconnect()
-//                }
-//            }
-//
-//            group.addTask {
-//                // allow for 3.5 second timeout to get the next message from the server
-//                // and process it into relevant local state on this final class.
-//                try await Task.sleep(for: .seconds(3.5))
-//                throw TimeoutError()
-//            }
-//
-//            try await group.next()
-//            // cancel all ongoing tasks (the websocket receive request, in this case)
-//            group.cancelAll()
-//        }
+        // add in calling receive to expect a peer message with a timeout... and use the async handler
+        // for further messages.
+        let websocketMsg = try await withThrowingTaskGroup(of: URLSessionWebSocketTask.Message.self) { group in
+            group.addTask {
+                // retrieve the next websocket message
+                try await webSocketTask.receive()
+            }
+
+            group.addTask {
+                // allow for 3.5 second timeout to get the next message from the server
+                // and process it into relevant local state on this final class.
+                try await Task.sleep(for: .seconds(3.5))
+                throw TimeoutError()
+            }
+
+            guard let msg = try await group.next() else {
+                throw CancellationError()
+            }
+            // cancel all ongoing tasks (the websocket receive request, in this case)
+            group.cancelAll()
+            return msg
+        }
+
+        // essentially "Peer or die"
+        switch websocketMsg {
+        case let .data(raw_data):
+            let msg = V1Msg.decodePeer(raw_data)
+            if case let .peer(peerMsg) = msg {
+                Logger.webSocket.trace("Peered to targetId: \(peerMsg.targetId) \(peerMsg.debugDescription)")
+                await MainActor.run {
+                    self.targetId = peerMsg.targetId
+                    self.connectionState = .peered_waiting
+                }
+                // TODO: handle the gossip setup - read and process the peer metadata
+            } else {
+                // In the handshake phase and received anything other than a valid peer message
+                let decodeAttempted = V1Msg.decode(raw_data, withGossip: true, withHandshake: true)
+                Logger.webSocket
+                    .warning("FAILED TO PEER - RECEIVED MSG: \(decodeAttempted.debugDescription)")
+                await self.disconnect()
+            }
+
+        case let .string(string):
+            // In the handshake phase and received anything other than a valid peer message
+            Logger.webSocket
+                .warning("FAILED TO PEER - RECEIVED MSG: \(string)")
+            await self.disconnect()
+        @unknown default:
+            // In the handshake phase and received anything other than a valid peer message
+            Logger.webSocket
+                .error("Unknown websocket message received: \(String(describing: websocketMsg))")
+            await self.disconnect()
+        }
+
+        // verify we're in the right state before invoking the recursive (async) handler setup
+        guard self.connectionState == .peered_syncing || self.connectionState == .peered_waiting else { return }
+        self.receiveHandler = Task {
+            try await receiveAndHandleWebsocketMessages()
+        }
+
+        // then kick off an initial sync
+        await syncDocument()
     }
 
     /// Asynchronously disconnect the WebSocket and shut down active sessions.
     public func disconnect() async {
         DispatchQueue.main.async {
             self.webSocketTask?.cancel(with: .normalClosure, reason: nil)
+            self.receiveHandler?.cancel()
             self.connectionState = .closed
             self.webSocketTask = nil
         }
@@ -197,7 +217,7 @@ public final class WebsocketSyncConnection: ObservableObject {
         }
     }
 
-    /// <#Description#>
+    /// Synchronize the Automerge document
     public func syncDocument() async {
         guard connectionState == .peered_waiting else {
             return
@@ -225,11 +245,24 @@ public final class WebsocketSyncConnection: ObservableObject {
                 targetId: targetId,
                 sync_message: syncData
             )
+            var data: Data? = nil
             do {
-                let data = try V1Msg.encode(syncMsg)
+                data = try V1Msg.encode(syncMsg)
+            } catch {
+                Logger.webSocket.warning("Error encoding data: \(error.localizedDescription, privacy: .public)")
+            }
+
+            do {
+                guard let data = data else {
+                    return
+                }
+                Logger.webSocket.trace("SEND: \(syncMsg.debugDescription)")
+                Logger.webSocket.trace("RAW WEBSOCKET BYTES: \(data.hexEncodedString())")
+                Logger.webSocket.trace("SYNC MESSAGE BYTES: \(syncMsg.sync_message.hexEncodedString())")
                 try await webSocketTask.send(.data(data))
             } catch {
-                Logger.webSocket.warning("\(error.localizedDescription, privacy: .public)")
+                Logger.webSocket
+                    .warning("Error in sending websocket data: \(error.localizedDescription, privacy: .public)")
                 await self.disconnect()
             }
         }
@@ -417,52 +450,51 @@ public final class WebsocketSyncConnection: ObservableObject {
 
     // async handler
     // EXPERIMENT - NOT WIRED IN
-    private func receiveAndHandleWebsocketMessages() async {
-        do {
-            if let webSocketMessage = try await webSocketTask?.receive() {
-                switch webSocketMessage {
-                case let .data(data):
-                    self.handleReceivedMessage(data)
-                case let .string(string):
-                    Logger.webSocket.warning("RCVD: .string(\(string)")
-                @unknown default:
-                    Logger.webSocket.error("Unknown websocket message type: \(String(describing: webSocketMessage))")
-                    await self.disconnect()
-                }
-            }
-            await receiveAndHandleWebsocketMessages()
-        } catch {
-            Logger.webSocket.warning("Error while receiving messages: \(error.localizedDescription)")
+    private func receiveAndHandleWebsocketMessages() async throws {
+        guard let webSocketTask = self.webSocketTask else {
+            return
+        }
+        try Task.checkCancellation()
+        let webSocketMessage = try await webSocketTask.receive()
+        switch webSocketMessage {
+        case let .data(data):
+            self.handleReceivedMessage(data)
+        case let .string(string):
+            Logger.webSocket.warning("RCVD: .string(\(string)")
+        @unknown default:
+            Logger.webSocket.error("Unknown websocket message type: \(String(describing: webSocketMessage))")
             await self.disconnect()
         }
+
+        try await receiveAndHandleWebsocketMessages()
     }
 
     // sync handler
-    private func configureWebsocketReceiveHandler() {
-        webSocketTask?.receive { result in
-            switch result {
-            case let .failure(error):
-                Logger.webSocket.warning("RCVD: .failure(\(error.localizedDescription)")
-                print(error.localizedDescription)
-                // failure from the websocket
-                self.webSocketTask?.cancel()
-                self.webSocketTask = nil
-                self.connectionState = .closed
-
-            case let .success(message):
-                switch message {
-                case let .string(text):
-                    Logger.webSocket.warning("RCVD: .string(\(text)")
-                case let .data(data):
-                    // extra decode here just to watch what's happening
-                    let decoded = V1Msg.decode(data, withGossip: true, withHandshake: true)
-                    Logger.webSocket.trace("RCVD: \(decoded.debugDescription)")
-                    // Handle binary data
-                    self.handleReceivedMessage(data)
-                @unknown default:
-                    break
-                }
-            }
-        }
-    }
+//    private func configureWebsocketReceiveHandler() {
+//        webSocketTask?.receive { result in
+//            switch result {
+//            case let .failure(error):
+//                Logger.webSocket.warning("RCVD: .failure(\(error.localizedDescription)")
+//                print(error.localizedDescription)
+//                // failure from the websocket
+//                self.webSocketTask?.cancel()
+//                self.webSocketTask = nil
+//                self.connectionState = .closed
+//
+//            case let .success(message):
+//                switch message {
+//                case let .string(text):
+//                    Logger.webSocket.warning("RCVD: .string(\(text)")
+//                case let .data(data):
+//                    // extra decode here just to watch what's happening
+//                    let decoded = V1Msg.decode(data, withGossip: true, withHandshake: true)
+//                    Logger.webSocket.trace("RCVD: \(decoded.debugDescription)")
+//                    // Handle binary data
+//                    self.handleReceivedMessage(data)
+//                @unknown default:
+//                    break
+//                }
+//            }
+//        }
+//    }
 }
