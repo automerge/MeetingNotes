@@ -85,6 +85,7 @@ public final class WebsocketSyncConnection: ObservableObject {
 //    }
 
     /// Initiates a WebSocket connection to a remote peer.
+    @MainActor
     public func connect(_ destination: String) async throws {
         guard connectionState == .new || connectionState == .closed else {
             return
@@ -180,16 +181,20 @@ public final class WebsocketSyncConnection: ObservableObject {
 
     /// Asynchronously disconnect the WebSocket and shut down active sessions.
     public func disconnect() async {
-        self.webSocketTask?.cancel(with: .normalClosure, reason: nil)
-        connectionState = .closed
-        self.webSocketTask = nil
+        DispatchQueue.main.async {
+            self.webSocketTask?.cancel(with: .normalClosure, reason: nil)
+            self.connectionState = .closed
+            self.webSocketTask = nil
+        }
     }
 
     /// Synchronously  disconnect the WebSocket and shut down active sessions.
     private func disconnect() {
-        self.webSocketTask?.cancel(with: .normalClosure, reason: nil)
-        connectionState = .closed
-        self.webSocketTask = nil
+        DispatchQueue.main.async {
+            self.webSocketTask?.cancel(with: .normalClosure, reason: nil)
+            self.connectionState = .closed
+            self.webSocketTask = nil
+        }
     }
 
     /// <#Description#>
@@ -211,7 +216,9 @@ public final class WebsocketSyncConnection: ObservableObject {
         ) // should be assured by the state diagram, but just in case.
 
         if let syncData = document.generateSyncMessage(state: self.syncState) {
-            connectionState = .peered_syncing
+            await MainActor.run {
+                self.connectionState = .peered_syncing
+            }
             let syncMsg = SyncMsg(
                 documentId: documentId.description,
                 senderId: self.senderId,
@@ -228,7 +235,7 @@ public final class WebsocketSyncConnection: ObservableObject {
         }
     }
 
-    // ideas for additiona async API for this?
+    // ideas for additional async API for this?
 //    public func gossip() async {
 //
 //    }
@@ -245,8 +252,10 @@ public final class WebsocketSyncConnection: ObservableObject {
         case .handshake:
             let msg = V1Msg.decodePeer(raw_data)
             if case let .peer(peerMsg) = msg {
-                self.targetId = peerMsg.targetId
-                self.connectionState = .peered_waiting
+                DispatchQueue.main.async {
+                    self.targetId = peerMsg.targetId
+                    self.connectionState = .peered_waiting
+                }
                 // TODO: handle the gossip setup - read and process the peer metadata
             } else {
                 // In the handshake phase and received anything other than a valid peer message
@@ -283,7 +292,9 @@ public final class WebsocketSyncConnection: ObservableObject {
                     try document.applyEncodedChanges(encoded: syncMsg.sync_message)
                     // TODO: enable gossip of sending changed heads (if in gossip mode)
                     if let syncData = document.generateSyncMessage(state: self.syncState) {
-                        connectionState = .peered_syncing
+                        DispatchQueue.main.async {
+                            self.connectionState = .peered_syncing
+                        }
                         let syncMsg = SyncMsg(
                             documentId: documentId.description,
                             senderId: self.senderId,
@@ -295,7 +306,9 @@ public final class WebsocketSyncConnection: ObservableObject {
                             try await webSocketTask?.send(.data(data))
                         }
                     } else {
-                        connectionState = .peered_waiting
+                        DispatchQueue.main.async {
+                            self.connectionState = .peered_waiting
+                        }
                     }
                 } catch {
                     Logger.webSocket.warning("\(error.localizedDescription, privacy: .public)")
@@ -350,7 +363,9 @@ public final class WebsocketSyncConnection: ObservableObject {
                     try document.applyEncodedChanges(encoded: syncMsg.sync_message)
                     // TODO: enable gossip of sending changed heads (if in gossip mode)
                     if let syncData = document.generateSyncMessage(state: self.syncState) {
-                        connectionState = .peered_syncing
+                        DispatchQueue.main.async {
+                            self.connectionState = .peered_syncing
+                        }
                         let syncMsg = SyncMsg(
                             documentId: documentId.description,
                             senderId: self.senderId,
@@ -362,7 +377,9 @@ public final class WebsocketSyncConnection: ObservableObject {
                             try await webSocketTask?.send(.data(data))
                         }
                     } else {
-                        connectionState = .peered_waiting
+                        DispatchQueue.main.async {
+                            self.connectionState = .peered_waiting
+                        }
                     }
                 } catch {
                     Logger.webSocket.warning("\(error.localizedDescription, privacy: .public)")
@@ -423,7 +440,6 @@ public final class WebsocketSyncConnection: ObservableObject {
     // sync handler
     private func configureWebsocketReceiveHandler() {
         webSocketTask?.receive { result in
-            Logger.webSocket.trace("Received websocket message")
             switch result {
             case let .failure(error):
                 Logger.webSocket.warning("RCVD: .failure(\(error.localizedDescription)")
@@ -438,6 +454,9 @@ public final class WebsocketSyncConnection: ObservableObject {
                 case let .string(text):
                     Logger.webSocket.warning("RCVD: .string(\(text)")
                 case let .data(data):
+                    // extra decode here just to watch what's happening
+                    let decoded = V1Msg.decode(data, withGossip: true, withHandshake: true)
+                    Logger.webSocket.trace("RCVD: \(decoded.debugDescription)")
                     // Handle binary data
                     self.handleReceivedMessage(data)
                 @unknown default:
