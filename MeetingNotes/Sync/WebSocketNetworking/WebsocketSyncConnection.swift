@@ -33,7 +33,7 @@ public final class WebsocketSyncConnection: ObservableObject {
     private let senderId: String
     /// The peer identifier for the receiving end of the websocket.
     private var targetId: String? = nil
-    
+
     private var syncState: Automerge.SyncState
     /// The Automerge document that this connection interacts with
     private weak var document: Automerge.Document?
@@ -47,14 +47,6 @@ public final class WebsocketSyncConnection: ObservableObject {
     // TODO: Add an indicator of if we should involve ourselves in "gossip" about updates
     // TODO: Add something that watches Documents for updates to invoke either gossip or sync depending
     // ^^ perhaps should be done outside of WebsocketSyncConnection, an over-layer that manages a strategy
-
-    // Strategy ideas that use the lower level protocol:
-    // 1 - request a document do an initial sync if available, and then be done.
-    // 2 - sync once and done - sync on command only
-    // 3 - sync once on command, and gossip about heads changed (i.e. let the remote side determine if they want to sync
-    // or not)
-    // 4 - sync once on command, and thereafter as changes come in to document - either from websocket or app updates to
-    // the Document
 
     @Published public var connectionState: SyncProtocolState
 
@@ -110,13 +102,11 @@ public final class WebsocketSyncConnection: ObservableObject {
         // reset the document's synchronization state maintained by the connection
         syncState = SyncState()
 
-        // configure and start the websocket
+        // establishes the websocket
         let request = URLRequest(url: url)
         webSocketTask = URLSession.shared.webSocketTask(with: request)
-        // establishes the websocket
+
         Logger.webSocket.trace("Activating websocket to \(url, privacy: .public)")
-//        configureWebsocketReceiveHandler()
-        // TO-DO _ replace with async handler to receive messages....
         guard let webSocketTask = webSocketTask else {
             #if DEBUG
             fatalError("Attempting to configure and join a nil webSocketTask")
@@ -124,6 +114,7 @@ public final class WebsocketSyncConnection: ObservableObject {
             return
             #endif
         }
+        // start the websocket processing things
         webSocketTask.resume()
 
         // since we initiated the WebSocket, it's on us to send an initial 'join'
@@ -204,7 +195,32 @@ public final class WebsocketSyncConnection: ObservableObject {
                 try await receiveAndHandleWebsocketMessages()
             }
 
-            // then kick off an initial sync
+            // NOTE(heckj): This causes `await connect()` to jump from having
+            // peered pretty directly into an intial document sync. I'm not 100% convinced
+            // that's the right way to go, and that maybe there should be a layer over the
+            // async methods here that "watch" the sync state and drive the choices and messages
+            // and behaviors based on a 'strategy'.
+            //
+            // The two obvious strategies (barring enabling the 'gossip' mechanisms in the protocol)
+            // each with two variants - 'one-and-done' and 'ongoing-sync'. The strategies so far:
+            //
+            //  1. I have a document, here, sync it and be done (a one-off sort of thing)
+            //  2. I have a document, sync it and keep it up to date
+            //     (ongoing sync while the websocket is connected, and possibly handling
+            //      some "attempt to reconnect" and continue bits)
+            //  3. I want a document, request one - and if it's available be done (another one-off)
+            //  4. I want a document, request one, and there-after keep it synced as you or I make
+            //     updates (again - with possible reconnect and continue if the websocket fails
+
+            // I haven't quite sorted how gossip is used in the protocol, but additional variations
+            // on strategies might include:
+            //
+            // A) sync once on command, and gossip about heads changed. Implying that the remote
+            //    side determine if they want to sync or not, and send a sync command if so.
+            // B) primarily gossip if the connection is constrained (low data?), syncing only
+            //    periodically.
+
+            // kick off an initial sync
             await syncDocument()
         }
     }
