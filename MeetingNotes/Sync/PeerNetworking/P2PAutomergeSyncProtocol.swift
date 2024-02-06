@@ -18,7 +18,7 @@ import Network
 import OSLog
 
 /// The type of sync message for the Automerge network sync protocol.
-enum SyncMessageType: UInt32 {
+enum P2PSyncMessageType: UInt32 {
     // TODO(heckj): is there benefit to dropping this down to a UInt8? Or does 4 bytes
     // fit some other optimization that's not as obvious?
 
@@ -56,7 +56,7 @@ class P2PAutomergeSyncProtocol: NWProtocolFramerImplementation {
         let type = message.syncMessageType
 
         // Create a header using the type and length.
-        let header = AutomergeSyncProtocolHeader(type: type.rawValue, length: UInt32(messageLength))
+        let header = P2PAutomergeSyncProtocolHeader(type: type.rawValue, length: UInt32(messageLength))
 
         // Write the header.
         framer.writeOutput(data: header.encodedData)
@@ -73,8 +73,8 @@ class P2PAutomergeSyncProtocol: NWProtocolFramerImplementation {
     func handleInput(framer: NWProtocolFramer.Instance) -> Int {
         while true {
             // Try to read out a single header.
-            var tempHeader: AutomergeSyncProtocolHeader? = nil
-            let headerSize = AutomergeSyncProtocolHeader.encodedSize
+            var tempHeader: P2PAutomergeSyncProtocolHeader? = nil
+            let headerSize = P2PAutomergeSyncProtocolHeader.encodedSize
             let parsed = framer.parseInput(
                 minimumIncompleteLength: headerSize,
                 maximumLength: headerSize
@@ -85,7 +85,7 @@ class P2PAutomergeSyncProtocol: NWProtocolFramerImplementation {
                 if buffer.count < headerSize {
                     return 0
                 }
-                tempHeader = AutomergeSyncProtocolHeader(buffer)
+                tempHeader = P2PAutomergeSyncProtocolHeader(buffer)
                 return headerSize
             }
 
@@ -96,8 +96,8 @@ class P2PAutomergeSyncProtocol: NWProtocolFramerImplementation {
             }
 
             // Create an object to deliver the message.
-            var messageType = SyncMessageType.invalid
-            if let parsedMessageType = SyncMessageType(rawValue: header.type) {
+            var messageType = P2PSyncMessageType.invalid
+            if let parsedMessageType = P2PSyncMessageType(rawValue: header.type) {
                 messageType = parsedMessageType
             }
             let message = NWProtocolFramer.Message(syncMessageType: messageType)
@@ -114,14 +114,14 @@ class P2PAutomergeSyncProtocol: NWProtocolFramerImplementation {
 extension NWProtocolFramer.Message {
     /// Create a new protocol-framed message for the Automerge network sync protocol.
     /// - Parameter syncMessageType: The type of sync message for this Automerge peer to peer sync protocol
-    convenience init(syncMessageType: SyncMessageType) {
+    convenience init(syncMessageType: P2PSyncMessageType) {
         self.init(definition: P2PAutomergeSyncProtocol.definition)
         self["SyncMessageType"] = syncMessageType
     }
 
     /// The type of sync message.
-    var syncMessageType: SyncMessageType {
-        if let type = self["SyncMessageType"] as? SyncMessageType {
+    var syncMessageType: P2PSyncMessageType {
+        if let type = self["SyncMessageType"] as? P2PSyncMessageType {
             return type
         } else {
             return .invalid
@@ -132,7 +132,7 @@ extension NWProtocolFramer.Message {
 // Define a protocol header structure to help encode and decode bytes.
 
 /// The Automerge network sync protocol header structure.
-struct AutomergeSyncProtocolHeader: Codable {
+struct P2PAutomergeSyncProtocolHeader: Codable {
     let type: UInt32
     let length: UInt32
 
