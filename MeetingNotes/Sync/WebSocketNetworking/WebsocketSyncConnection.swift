@@ -192,7 +192,7 @@ public final class WebsocketSyncConnection: ObservableObject {
             // against Automerge-repo code, it doesn't proactively ask us to do anything, playing
             // a more reactive role, but it's worth being away its a possibility.
             self.receiveHandler = Task {
-                try await receiveAndHandleWebsocketMessages()
+                try await receiveAndHandleWebSocketMessages()
             }
 
             // NOTE(heckj): This causes `await connect()` to jump from having
@@ -296,12 +296,14 @@ public final class WebsocketSyncConnection: ObservableObject {
 //    }
 
     // async websocket message receive and process
-    private func receiveAndHandleWebsocketMessages() async throws {
+    private func receiveAndHandleWebSocketMessages() async throws {
         while true {
             guard let webSocketTask = self.webSocketTask else {
+                Logger.webSocket.warning("Receive Handler: webSocketTask is nil, terminating handler loop")
                 break
             }
             try Task.checkCancellation()
+            Logger.webSocket.trace("Receive Handler: Task not cancelled, awaiting next message:")
             let webSocketMessage = try await webSocketTask.receive()
             switch webSocketMessage {
             case let .data(data):
@@ -361,6 +363,7 @@ public final class WebsocketSyncConnection: ObservableObject {
                 }
 
                 do {
+                    Logger.webSocket.trace("RCVD: Applying sync message: \(syncMsg.debugDescription)")
                     try document.applyEncodedChanges(encoded: syncMsg.data)
                     // TODO: enable gossip of sending changed heads (if in gossip mode)
                     if let syncData = document.generateSyncMessage(state: self.syncState) {
@@ -373,11 +376,17 @@ public final class WebsocketSyncConnection: ObservableObject {
                             targetId: targetId,
                             sync_message: syncData
                         )
+                        Logger.webSocket
+                            .trace(
+                                " - SYNC: Sending another sync msg after applying updates: \(syncMsg.debugDescription)"
+                            )
                         let data = try V1Msg.encode(syncMsg)
                         Task {
+                            assert(webSocketTask != nil)
                             try await webSocketTask?.send(.data(data))
                         }
                     } else {
+                        Logger.webSocket.trace(" - SYNC: No further sync msgs needed - sync complete.")
                         await MainActor.run {
                             self.connectionState = .peered_waiting
                         }
@@ -386,12 +395,12 @@ public final class WebsocketSyncConnection: ObservableObject {
                     Logger.webSocket.warning("\(error.localizedDescription, privacy: .public)")
                     await self.disconnect()
                 }
-            case .ephemeral:
-                // TODO: enable a callback or something to allow someone external to handle the ephemeral messages
-                break
-            case .remoteheadschanged:
+            case let .ephemeral(msg):
+                Logger.webSocket.trace("RCVD: Ephemeral message: \(msg.debugDescription).")
+            // TODO: enable a callback or something to allow someone external to handle the ephemeral messages
+            case let .remoteheadschanged(msg):
+                Logger.webSocket.trace("RCVD: remote head's changed message: \(msg.debugDescription).")
                 // TODO: enable gossiping responses
-                break
 
             // Unexpected messages in the "peered but waiting" state
 
@@ -432,6 +441,7 @@ public final class WebsocketSyncConnection: ObservableObject {
                     return
                 }
                 do {
+                    Logger.webSocket.trace("RCVD: Applying sync message: \(syncMsg.debugDescription)")
                     try document.applyEncodedChanges(encoded: syncMsg.data)
                     // TODO: enable gossip of sending changed heads (if in gossip mode)
                     if let syncData = document.generateSyncMessage(state: self.syncState) {
@@ -444,12 +454,18 @@ public final class WebsocketSyncConnection: ObservableObject {
                             targetId: targetId,
                             sync_message: syncData
                         )
+                        Logger.webSocket
+                            .trace(
+                                " - SYNC: Sending another sync msg after applying updates: \(syncMsg.debugDescription)"
+                            )
                         let data = try V1Msg.encode(syncMsg)
                         Task {
+                            assert(webSocketTask != nil)
                             try await webSocketTask?.send(.data(data))
                         }
                     } else {
                         await MainActor.run {
+                            Logger.webSocket.trace(" - SYNC: No further sync msgs needed - sync complete.")
                             self.connectionState = .peered_waiting
                         }
                     }
@@ -457,12 +473,14 @@ public final class WebsocketSyncConnection: ObservableObject {
                     Logger.webSocket.warning("\(error.localizedDescription, privacy: .public)")
                     await self.disconnect()
                 }
-            case .ephemeral:
-                // TODO: enable a callback or something to allow someone external to handle the ephemeral messages
-                break
-            case .remoteheadschanged:
+            case let .ephemeral(msg):
+                Logger.webSocket.trace("RCVD: Ephemeral message: \(msg.debugDescription).")
+
+            // TODO: enable a callback or something to allow someone external to handle the ephemeral messages
+            case let .remoteheadschanged(msg):
+                Logger.webSocket.trace("RCVD: remote head's changed message: \(msg.debugDescription).")
+
                 // TODO: enable gossiping responses
-                break
 
             // Unexpected messages in the "peered but waiting" state
 
