@@ -1,4 +1,5 @@
 import XCTest
+import Foundation
 
 final class MeetingNotesUITests: XCTestCase {
     override func setUpWithError() throws {
@@ -22,6 +23,7 @@ final class MeetingNotesUITests: XCTestCase {
         myApp.launch()
 
         do {
+            // requires Xcode 15
             try myApp.performAccessibilityAudit()
         } catch {
             XCTFail("The automated accessibility audit fail because [\(error.localizedDescription)]")
