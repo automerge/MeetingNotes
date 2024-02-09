@@ -7,11 +7,11 @@ REPO_DIR=$THIS_SCRIPT_DIR/../
 
 cd ${REPO_DIR}
 if [ ! -d automerge-repo-sync-server ]; then
-    git clone https://github.com/automerge/automerge-repo-sync-server.git
+    git clone https://github.com/heckj/automerge-repo-sync-server.git
 fi
 
 cd automerge-repo-sync-server
 git fetch --all --prune
-git reset --hard origin/main
-npm i
-npm start
+git reset --hard origin/sync_debug
+yarn install
+yarn start

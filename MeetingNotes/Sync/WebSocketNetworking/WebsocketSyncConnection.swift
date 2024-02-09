@@ -155,9 +155,9 @@ public final class WebsocketSyncConnection: ObservableObject {
         case let .data(raw_data):
             let msg = V1Msg.decodePeer(raw_data)
             if case let .peer(peerMsg) = msg {
-                Logger.webSocket.trace("Peered to targetId: \(peerMsg.targetId) \(peerMsg.debugDescription)")
+                Logger.webSocket.trace("Peered to targetId: \(peerMsg.senderId) \(peerMsg.debugDescription)")
                 await MainActor.run {
-                    self.targetId = peerMsg.targetId
+                    self.targetId = peerMsg.senderId
                     self.connectionState = .peered_waiting
                 }
                 // TODO: handle the gossip setup - read and process the peer metadata
@@ -274,9 +274,9 @@ public final class WebsocketSyncConnection: ObservableObject {
                 guard let data = data else {
                     return
                 }
-                Logger.webSocket.trace("SEND: \(syncMsg.debugDescription)")
-                Logger.webSocket.trace("RAW WEBSOCKET BYTES: \(data.hexEncodedString())")
-                Logger.webSocket.trace("SYNC MESSAGE BYTES: \(syncMsg.sync_message.hexEncodedString())")
+                // Logger.webSocket.trace("SEND: \(syncMsg.debugDescription)")
+                // Logger.webSocket.trace("RAW WEBSOCKET BYTES: \(data.hexEncodedString())")
+                // Logger.webSocket.trace("SYNC MESSAGE BYTES: \(syncMsg.data.hexEncodedString())")
                 try await webSocketTask.send(.data(data))
             } catch {
                 Logger.webSocket
@@ -349,18 +349,19 @@ public final class WebsocketSyncConnection: ObservableObject {
                 else {
                     return
                 }
-                guard targetId == syncMsg.targetId,
+
+                guard self.senderId == syncMsg.targetId,
                       documentId.description == syncMsg.documentId
                 else {
                     Logger.webSocket
                         .warning(
-                            "Sync message target and document Id don't match expected values. Received: \(syncMsg.debugDescription), targetId expected: \(targetId), documentId expected: \(documentId.description)"
+                            "Sync message target and document Id don't match expected values. Received: \(syncMsg.debugDescription), targetId expected: \(self.senderId), documentId expected: \(documentId.description)"
                         )
                     return
                 }
 
                 do {
-                    try document.applyEncodedChanges(encoded: syncMsg.sync_message)
+                    try document.applyEncodedChanges(encoded: syncMsg.data)
                     // TODO: enable gossip of sending changed heads (if in gossip mode)
                     if let syncData = document.generateSyncMessage(state: self.syncState) {
                         await MainActor.run {
@@ -421,7 +422,7 @@ public final class WebsocketSyncConnection: ObservableObject {
                 else {
                     return
                 }
-                guard targetId == syncMsg.targetId,
+                guard senderId == syncMsg.targetId,
                       documentId.description == syncMsg.documentId
                 else {
                     Logger.webSocket
@@ -431,7 +432,7 @@ public final class WebsocketSyncConnection: ObservableObject {
                     return
                 }
                 do {
-                    try document.applyEncodedChanges(encoded: syncMsg.sync_message)
+                    try document.applyEncodedChanges(encoded: syncMsg.data)
                     // TODO: enable gossip of sending changed heads (if in gossip mode)
                     if let syncData = document.generateSyncMessage(state: self.syncState) {
                         await MainActor.run {

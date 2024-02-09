@@ -464,17 +464,17 @@ public struct RequestMsg: Codable, CustomDebugStringConvertible {
     public let documentId: DOCUMENT_ID
     public let senderId: PEER_ID // The peer requesting to begin sync
     public let targetId: PEER_ID
-    public let sync_message: Data // The initial automerge sync message from the sender
+    public let data: Data // The initial automerge sync message from the sender
 
     public init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, sync_message: Data) {
         self.documentId = documentId
         self.senderId = senderId
         self.targetId = targetId
-        self.sync_message = sync_message
+        self.data = sync_message
     }
 
     public var debugDescription: String {
-        "REQUEST[documentId: \(documentId), sender: \(senderId), target: \(targetId), data: \(sync_message.count) bytes]"
+        "REQUEST[documentId: \(documentId), sender: \(senderId), target: \(targetId), data: \(data.count) bytes]"
     }
 }
 
@@ -501,17 +501,17 @@ public struct SyncMsg: Codable, CustomDebugStringConvertible {
     public let documentId: DOCUMENT_ID
     public let senderId: PEER_ID // The peer requesting to begin sync
     public let targetId: PEER_ID
-    public let sync_message: Data // The initial automerge sync message from the sender
+    public let data: Data // The initial automerge sync message from the sender
 
     public init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, sync_message: Data) {
         self.documentId = documentId
         self.senderId = senderId
         self.targetId = targetId
-        self.sync_message = sync_message
+        self.data = sync_message
     }
 
     public var debugDescription: String {
-        "SYNC[documentId: \(documentId), sender: \(senderId), target: \(targetId), data: \(sync_message.count) bytes]"
+        "SYNC[documentId: \(documentId), sender: \(senderId), target: \(targetId), data: \(data.count) bytes]"
     }
 }
 
