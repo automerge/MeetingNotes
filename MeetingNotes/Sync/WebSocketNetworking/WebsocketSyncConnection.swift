@@ -19,10 +19,7 @@ public final class WebsocketSyncConnection: ObservableObject {
         case handshake
 
         /// The connection has successfully peered.
-        case peered_waiting
-
-        /// The connection is actively engaged in syncing.
-        case peered_syncing
+        case peered
 
         /// The connection has terminated.
         case closed
@@ -158,7 +155,7 @@ public final class WebsocketSyncConnection: ObservableObject {
                 Logger.webSocket.trace("Peered to targetId: \(peerMsg.senderId) \(peerMsg.debugDescription)")
                 await MainActor.run {
                     self.targetId = peerMsg.senderId
-                    self.connectionState = .peered_waiting
+                    self.connectionState = .peered
                 }
                 // TODO: handle the gossip setup - read and process the peer metadata
             } else {
@@ -186,7 +183,7 @@ public final class WebsocketSyncConnection: ObservableObject {
         try Task.checkCancellation()
         // verify we're in the right state before invoking the recursive (async) handler setup
         // and start the process of synchronizing the document.
-        if self.connectionState == .peered_syncing || self.connectionState == .peered_waiting {
+        if self.connectionState == .peered {
             // NOTE: this is technically a race between do we accept a message and do something
             // with it (possibly changing state), or do we initiate a sync ourselves. In practice
             // against Automerge-repo code, it doesn't proactively ask us to do anything, playing
@@ -196,7 +193,7 @@ public final class WebsocketSyncConnection: ObservableObject {
             }
 
             // NOTE(heckj): This causes `await connect()` to jump from having
-            // peered pretty directly into an intial document sync. I'm not 100% convinced
+            // peered pretty directly into an initial document sync. I'm not 100% convinced
             // that's the right way to go, and that maybe there should be a layer over the
             // async methods here that "watch" the sync state and drive the choices and messages
             // and behaviors based on a 'strategy'.
@@ -237,7 +234,7 @@ public final class WebsocketSyncConnection: ObservableObject {
 
     /// Start a synchronization process for the Automerge document
     public func syncDocument() async {
-        guard connectionState == .peered_waiting else {
+        guard connectionState == .peered else {
             return
         }
         guard let document = self.document,
@@ -255,7 +252,7 @@ public final class WebsocketSyncConnection: ObservableObject {
 
         if let syncData = document.generateSyncMessage(state: self.syncState) {
             await MainActor.run {
-                self.connectionState = .peered_syncing
+                self.connectionState = .peered
             }
             let syncMsg = SyncMsg(
                 documentId: documentId.description,
@@ -327,7 +324,7 @@ public final class WebsocketSyncConnection: ObservableObject {
             if case let .peer(peerMsg) = msg {
                 await MainActor.run {
                     self.targetId = peerMsg.targetId
-                    self.connectionState = .peered_waiting
+                    self.connectionState = .peered
                 }
                 // TODO: handle the gossip setup - read and process the peer metadata
             } else {
@@ -336,7 +333,7 @@ public final class WebsocketSyncConnection: ObservableObject {
                     .warning("FAILED TO PEER - RECEIVED MSG: \(raw_data.hexEncodedString(uppercase: false))")
                 await self.disconnect()
             }
-        case .peered_waiting:
+        case .peered:
             let msg = V1Msg.decode(raw_data, withGossip: true, withHandshake: false)
             switch msg {
             case let .error(errorMsg):
@@ -367,9 +364,6 @@ public final class WebsocketSyncConnection: ObservableObject {
                     try document.applyEncodedChanges(encoded: syncMsg.data)
                     // TODO: enable gossip of sending changed heads (if in gossip mode)
                     if let syncData = document.generateSyncMessage(state: self.syncState) {
-                        await MainActor.run {
-                            self.connectionState = .peered_syncing
-                        }
                         let syncMsg = SyncMsg(
                             documentId: documentId.description,
                             senderId: self.senderId,
@@ -387,9 +381,6 @@ public final class WebsocketSyncConnection: ObservableObject {
                         }
                     } else {
                         Logger.webSocket.trace(" - SYNC: No further sync msgs needed - sync complete.")
-                        await MainActor.run {
-                            self.connectionState = .peered_waiting
-                        }
                     }
                 } catch {
                     Logger.webSocket.warning("\(error.localizedDescription, privacy: .public)")
@@ -400,86 +391,6 @@ public final class WebsocketSyncConnection: ObservableObject {
             // TODO: enable a callback or something to allow someone external to handle the ephemeral messages
             case let .remoteheadschanged(msg):
                 Logger.webSocket.trace("RCVD: remote head's changed message: \(msg.debugDescription).")
-                // TODO: enable gossiping responses
-
-            // Unexpected messages in the "peered but waiting" state
-
-            case let .peer(inside_msg):
-                Logger.webSocket.warning("RCVD unexpected msg: \(inside_msg.debugDescription, privacy: .public)")
-            case let .join(inside_msg):
-                Logger.webSocket.warning("RCVD unexpected msg: \(inside_msg.debugDescription, privacy: .public)")
-            case let .request(inside_msg):
-                Logger.webSocket.warning("RCVD unexpected msg: \(inside_msg.debugDescription, privacy: .public)")
-            case let .remoteSubscriptionChange(inside_msg):
-                Logger.webSocket.warning("RCVD unexpected msg: \(inside_msg.debugDescription, privacy: .public)")
-            case let .unavailable(inside_msg):
-                Logger.webSocket.warning("RCVD unexpected msg: \(inside_msg.debugDescription, privacy: .public)")
-            case let .unknown(inside_msg):
-                Logger.webSocket.warning("RCVD unexpected msg: \(inside_msg.debugDescription, privacy: .public)")
-            }
-        case .peered_syncing:
-            let msg = V1Msg.decode(raw_data, withGossip: true, withHandshake: false)
-            switch msg {
-            case let .error(errorMsg):
-                Logger.webSocket.warning("RCVD ERROR: \(errorMsg.debugDescription)")
-                await self.disconnect()
-
-            case let .sync(syncMsg):
-                guard let document = self.document,
-                      let documentId = self.documentId,
-                      let targetId = self.targetId
-                else {
-                    return
-                }
-                guard senderId == syncMsg.targetId,
-                      documentId.description == syncMsg.documentId
-                else {
-                    Logger.webSocket
-                        .warning(
-                            "Sync message target and document Id don't match expected values. Received: \(syncMsg.debugDescription), targetId expected: \(targetId), documentId expected: \(documentId.description)"
-                        )
-                    return
-                }
-                do {
-                    Logger.webSocket.trace("RCVD: Applying sync message: \(syncMsg.debugDescription)")
-                    try document.applyEncodedChanges(encoded: syncMsg.data)
-                    // TODO: enable gossip of sending changed heads (if in gossip mode)
-                    if let syncData = document.generateSyncMessage(state: self.syncState) {
-                        await MainActor.run {
-                            self.connectionState = .peered_syncing
-                        }
-                        let syncMsg = SyncMsg(
-                            documentId: documentId.description,
-                            senderId: self.senderId,
-                            targetId: targetId,
-                            sync_message: syncData
-                        )
-                        Logger.webSocket
-                            .trace(
-                                " - SYNC: Sending another sync msg after applying updates: \(syncMsg.debugDescription)"
-                            )
-                        let data = try V1Msg.encode(syncMsg)
-                        Task {
-                            assert(webSocketTask != nil)
-                            try await webSocketTask?.send(.data(data))
-                        }
-                    } else {
-                        await MainActor.run {
-                            Logger.webSocket.trace(" - SYNC: No further sync msgs needed - sync complete.")
-                            self.connectionState = .peered_waiting
-                        }
-                    }
-                } catch {
-                    Logger.webSocket.warning("\(error.localizedDescription, privacy: .public)")
-                    await self.disconnect()
-                }
-            case let .ephemeral(msg):
-                Logger.webSocket.trace("RCVD: Ephemeral message: \(msg.debugDescription).")
-
-            // TODO: enable a callback or something to allow someone external to handle the ephemeral messages
-            case let .remoteheadschanged(msg):
-                Logger.webSocket.trace("RCVD: remote head's changed message: \(msg.debugDescription).")
-
                 // TODO: enable gossiping responses
 
             // Unexpected messages in the "peered but waiting" state

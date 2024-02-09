@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant local
+    participant remote
+
+    critical handshaking phase
+    Note over local,remote: state = "new" or "closed"
+    local->>remote: join
+    Note over local,remote: state = "handshake"
+    remote->>local: peer
+    end
+
+    Note over local,remote: state = "peered"
+    local->>remote: request
+    alt: if unavailable
+    remote->>local: unavailable
+    else
+    remote-->>local: sync (if needed)
+    end
