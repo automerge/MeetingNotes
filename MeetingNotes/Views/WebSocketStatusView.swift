@@ -19,7 +19,7 @@ struct WebSocketStatusView: View {
     }
 
     @ObservedObject var document: MeetingNotesDocument
-    @StateObject private var websocket = WebsocketSyncConnection()
+    @StateObject private var websocket = WebsocketSyncConnection(nil, id: nil)
     @State private var syncEnabledIndicator: Bool = false
     @State private var syncDestination: SyncTargets = .local
 

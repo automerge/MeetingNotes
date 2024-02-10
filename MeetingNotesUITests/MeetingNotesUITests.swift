@@ -1,5 +1,5 @@
-import XCTest
 import Foundation
+import XCTest
 
 final class MeetingNotesUITests: XCTestCase {
     override func setUpWithError() throws {
