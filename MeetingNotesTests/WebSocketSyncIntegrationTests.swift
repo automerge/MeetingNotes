@@ -95,6 +95,8 @@ final class WebSocketSyncIntegrationTests: XCTestCase {
             from: "ws://localhost:3030/"
         ) {
             let decoder = AutomergeDecoder(doc: copyOfDocument)
+            XCTAssertFalse(try copyOfDocument.isEmpty())
+            // print(try copyOfDocument.schema().description)
             let modelReplica = try decoder.decode(ExampleStruct.self)
             XCTAssertEqual(modelReplica, model)
         } else {
