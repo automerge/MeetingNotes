@@ -57,16 +57,12 @@ public final class WebsocketSyncConnection: ObservableObject {
 
     // having register after initialization lets us add within a SwiftUI view, and then
     // configure and activate things onAppear within the view...
-    public init(_ document: Automerge.Document?, id _: DocumentId?) {
+    public init(_ document: Automerge.Document?, id documentId: DocumentId?) {
         connectionState = .new
         syncState = SyncState()
         senderId = UUID().uuidString
         self.document = document
-        if let documentId {
-            self.documentId = documentId
-        } else {
-            self.documentId = DocumentId()
-        }
+        self.documentId = documentId
     }
 
     // having register after initialization lets us add within a SwiftUI view, and then
@@ -93,8 +89,12 @@ public final class WebsocketSyncConnection: ObservableObject {
         ongoing: Bool = false
     ) async throws -> (Automerge.Document, WebsocketSyncConnection)? {
         let tempDocument = Document()
-        let websocketconnection = WebsocketSyncConnection(tempDocument, id: id)
 
+        let websocketconnection = WebsocketSyncConnection(tempDocument, id: id)
+//        let websocketconnection = WebsocketSyncConnection(nil, id: nil)
+//        websocketconnection.registerDocument(tempDocument, id: id)
+
+        assert(id == websocketconnection.documentId!)
         try await websocketconnection.connect(destination)
 
         try Task.checkCancellation()

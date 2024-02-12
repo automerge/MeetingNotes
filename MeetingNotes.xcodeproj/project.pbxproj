@@ -47,6 +47,12 @@
 		1AD7A8EB2A476801003B6A1E /* NWParameters+peerSyncParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E62A476801003B6A1E /* NWParameters+peerSyncParameters.swift */; };
 		1AD7A8ED2A476801003B6A1E /* P2PAutomergeSyncProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E82A476801003B6A1E /* P2PAutomergeSyncProtocol.swift */; };
 		1AD7A8EF2A476801003B6A1E /* SyncConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8EA2A476801003B6A1E /* SyncConnection.swift */; };
+		1ADE51672B7A90AA00EA44F0 /* WebSocketSyncIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADE51662B7A90AA00EA44F0 /* WebSocketSyncIntegrationTests.swift */; };
+		1ADE51682B7A94B100EA44F0 /* String+hexEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6CB2642B71CABF00CA23E9 /* String+hexEncoding.swift */; };
+		1ADE51692B7A94BC00EA44F0 /* Task+timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF1CE02B6DCAFC00DC5198 /* Task+timeout.swift */; };
+		1ADE516A2B7A94BC00EA44F0 /* WebSocketMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9272E52B61AC2C000CB9E5 /* WebSocketMessages.swift */; };
+		1ADE516B2B7A94BC00EA44F0 /* WebsocketSyncConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9272E22B61A529000CB9E5 /* WebsocketSyncConnection.swift */; };
+		1ADE516C2B7A953500EA44F0 /* OSLog+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */; };
 		1AE3D77B2A68646A00CEA52E /* OSLog+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */; };
 		1AF9017F2B66E47A0077567D /* CBORExperiments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF9017E2B66E47A0077567D /* CBORExperiments.swift */; };
 /* End PBXBuildFile section */
@@ -106,6 +112,7 @@
 		1AD7A8E62A476801003B6A1E /* NWParameters+peerSyncParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NWParameters+peerSyncParameters.swift"; sourceTree = "<group>"; };
 		1AD7A8E82A476801003B6A1E /* P2PAutomergeSyncProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = P2PAutomergeSyncProtocol.swift; sourceTree = "<group>"; };
 		1AD7A8EA2A476801003B6A1E /* SyncConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncConnection.swift; sourceTree = "<group>"; };
+		1ADE51662B7A90AA00EA44F0 /* WebSocketSyncIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketSyncIntegrationTests.swift; sourceTree = "<group>"; };
 		1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OSLog+extensions.swift"; sourceTree = "<group>"; };
 		1AF5DB3A2A4A0C38008DAC6F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1AF5DB3B2A4A0C5E008DAC6F /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
@@ -205,6 +212,7 @@
 			children = (
 				1A0DDC492A464DEB001ECADD /* MeetingNotesTests.swift */,
 				1AF9017E2B66E47A0077567D /* CBORExperiments.swift */,
+				1ADE51662B7A90AA00EA44F0 /* WebSocketSyncIntegrationTests.swift */,
 			);
 			path = MeetingNotesTests;
 			sourceTree = "<group>";
@@ -452,10 +460,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A0DDC4A2A464DEB001ECADD /* MeetingNotesTests.swift in Sources */,
+				1ADE51672B7A90AA00EA44F0 /* WebSocketSyncIntegrationTests.swift in Sources */,
+				1ADE516C2B7A953500EA44F0 /* OSLog+extensions.swift in Sources */,
 				1AADE1F52B586875000205BB /* Data+hexEncodedString.swift in Sources */,
 				1AADE1F62B586878000205BB /* UUID+bs58String.swift in Sources */,
 				1AADE1F72B58687E000205BB /* DocumentId.swift in Sources */,
 				1AF9017F2B66E47A0077567D /* CBORExperiments.swift in Sources */,
+				1ADE51682B7A94B100EA44F0 /* String+hexEncoding.swift in Sources */,
+				1ADE51692B7A94BC00EA44F0 /* Task+timeout.swift in Sources */,
+				1ADE516A2B7A94BC00EA44F0 /* WebSocketMessages.swift in Sources */,
+				1ADE516B2B7A94BC00EA44F0 /* WebsocketSyncConnection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
