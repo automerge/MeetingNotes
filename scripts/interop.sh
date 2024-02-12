@@ -14,4 +14,5 @@ cd automerge-repo-sync-server
 git fetch --all --prune
 git reset --hard origin/sync_debug
 yarn install
-yarn start
+NODE_ENV=dev DEBUG=* node ./src/index.js
+

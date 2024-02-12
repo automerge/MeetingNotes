@@ -38,6 +38,7 @@ struct WebSocketStatusView: View {
                 if syncEnabledIndicator {
                     Task {
                         try await websocket.connect(syncDestination.urlString)
+                        try await websocket.runOngoingSync()
                     }
                 } else {
                     Task {
