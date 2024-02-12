@@ -6,16 +6,41 @@
 //
 
 import Automerge
+import OSLog
 import XCTest
 
 final class WebSocketSyncIntegrationTests: XCTestCase {
+    private static let subsystem = Bundle.main.bundleIdentifier!
+
+    static let test = Logger(subsystem: subsystem, category: "WebSocketSyncIntegrationTests")
+    let syncDestination = "ws://localhost:3030/"
+
     override func setUp() async throws {
-        // setup
-        // TODO: spin up and/or verify server to sync with is operational
+        let isWebSocketConnectable = await webSocketAvailable(destination: syncDestination)
+        try XCTSkipUnless(isWebSocketConnectable, "websocket unavailable for integration test")
     }
 
     override func tearDown() async throws {
         // teardown
+    }
+
+    func webSocketAvailable(destination: String) async -> Bool {
+        guard let url = URL(string: destination) else {
+            // ws://localhost:3030/
+            return false
+        }
+        // establishes the websocket
+        let request = URLRequest(url: url)
+        let ws: URLSessionWebSocketTask = URLSession.shared.webSocketTask(with: request)
+        ws.resume()
+        do {
+            try await ws.sendPing()
+            ws.cancel(with: .normalClosure, reason: nil)
+            return true
+        } catch {
+            ws.cancel(with: .abnormalClosure, reason: nil)
+            return false
+        }
     }
 
     func testSync() async throws {
@@ -43,7 +68,6 @@ final class WebSocketSyncIntegrationTests: XCTestCase {
         // SwiftUI does it in a two-step: define and then add data through onAppear:
         let websocket = WebsocketSyncConnection(nil, id: nil)
         websocket.registerDocument(document, id: documentId)
-        let syncDestination = "ws://localhost:3030/"
         print("SYNCING DOCUMENT: \(documentId.description)")
 
         try await websocket.connect(syncDestination)
@@ -65,8 +89,7 @@ final class WebSocketSyncIntegrationTests: XCTestCase {
             documentId,
             from: "ws://localhost:3030/"
         ) {
-            let newAutomergeDoc = Document()
-            let decoder = AutomergeDecoder(doc: newAutomergeDoc)
+            let decoder = AutomergeDecoder(doc: copyOfDocument)
             let modelReplica = try decoder.decode(ExampleStruct.self)
             XCTAssertEqual(modelReplica, model)
         } else {

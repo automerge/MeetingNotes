@@ -15,6 +15,7 @@
 		1A0DDC4A2A464DEB001ECADD /* MeetingNotesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC492A464DEB001ECADD /* MeetingNotesTests.swift */; };
 		1A0DDC542A464DEB001ECADD /* MeetingNotesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC532A464DEB001ECADD /* MeetingNotesUITests.swift */; };
 		1A0DDC562A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */; };
+		1A11B8922B7AC37100CB4CA9 /* URLSessionWebSocketTask+sendPing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A11B8912B7AC37100CB4CA9 /* URLSessionWebSocketTask+sendPing.swift */; };
 		1A2521442B1567F20096951D /* DocumentId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2521432B1567F20096951D /* DocumentId.swift */; };
 		1A27AB432B768C0300A29BC3 /* Automerge-swift-privacy-manifest.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1A27AB422B768C0300A29BC3 /* Automerge-swift-privacy-manifest.bundle */; };
 		1A2A02A52A50E74B0044064B /* EditableAgendaItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2A02A42A50E74A0044064B /* EditableAgendaItemView.swift */; };
@@ -89,6 +90,7 @@
 		1A0DDC532A464DEB001ECADD /* MeetingNotesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesUITests.swift; sourceTree = "<group>"; };
 		1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeetingNotes.xctestplan; sourceTree = "<group>"; };
+		1A11B8912B7AC37100CB4CA9 /* URLSessionWebSocketTask+sendPing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionWebSocketTask+sendPing.swift"; sourceTree = "<group>"; };
 		1A2521432B1567F20096951D /* DocumentId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentId.swift; sourceTree = "<group>"; };
 		1A27AB422B768C0300A29BC3 /* Automerge-swift-privacy-manifest.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = "Automerge-swift-privacy-manifest.bundle"; sourceTree = "<group>"; };
 		1A2A02A42A50E74A0044064B /* EditableAgendaItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableAgendaItemView.swift; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				1A0DDC492A464DEB001ECADD /* MeetingNotesTests.swift */,
 				1AF9017E2B66E47A0077567D /* CBORExperiments.swift */,
 				1ADE51662B7A90AA00EA44F0 /* WebSocketSyncIntegrationTests.swift */,
+				1A11B8912B7AC37100CB4CA9 /* URLSessionWebSocketTask+sendPing.swift */,
 			);
 			path = MeetingNotesTests;
 			sourceTree = "<group>";
@@ -466,6 +469,7 @@
 				1AADE1F62B586878000205BB /* UUID+bs58String.swift in Sources */,
 				1AADE1F72B58687E000205BB /* DocumentId.swift in Sources */,
 				1AF9017F2B66E47A0077567D /* CBORExperiments.swift in Sources */,
+				1A11B8922B7AC37100CB4CA9 /* URLSessionWebSocketTask+sendPing.swift in Sources */,
 				1ADE51682B7A94B100EA44F0 /* String+hexEncoding.swift in Sources */,
 				1ADE51692B7A94BC00EA44F0 /* Task+timeout.swift in Sources */,
 				1ADE516A2B7A94BC00EA44F0 /* WebSocketMessages.swift in Sources */,
