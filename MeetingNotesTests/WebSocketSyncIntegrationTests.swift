@@ -18,7 +18,8 @@ final class WebSocketSyncIntegrationTests: XCTestCase {
     private static let subsystem = Bundle.main.bundleIdentifier!
 
     static let test = Logger(subsystem: subsystem, category: "WebSocketSyncIntegrationTests")
-    let syncDestination = "ws://localhost:3030/"
+//    let syncDestination = "ws://localhost:3030/"
+    let syncDestination = "wss://sync.automerge.org/"
 
     override func setUp() async throws {
         let isWebSocketConnectable = await webSocketAvailable(destination: syncDestination)
@@ -31,18 +32,21 @@ final class WebSocketSyncIntegrationTests: XCTestCase {
 
     func webSocketAvailable(destination: String) async -> Bool {
         guard let url = URL(string: destination) else {
-            // ws://localhost:3030/
+            Self.test.error("invalid URL: \(destination, privacy: .public) - endpoint unavailable")
             return false
         }
         // establishes the websocket
         let request = URLRequest(url: url)
         let ws: URLSessionWebSocketTask = URLSession.shared.webSocketTask(with: request)
         ws.resume()
+        Self.test.info("websocket to \(destination, privacy: .public) prepped, sending ping")
         do {
             try await ws.sendPing()
+            Self.test.info("PING OK - returning true")
             ws.cancel(with: .normalClosure, reason: nil)
             return true
         } catch {
+            Self.test.error("PING FAILED: \(error.localizedDescription, privacy: .public) - returning false")
             ws.cancel(with: .abnormalClosure, reason: nil)
             return false
         }
@@ -92,7 +96,7 @@ final class WebSocketSyncIntegrationTests: XCTestCase {
         print("REQUESTING DOCUMENT: \(documentId.description)")
         if let (copyOfDocument, _) = try await WebsocketSyncConnection.requestDocument(
             documentId,
-            from: "ws://localhost:3030/"
+            from: self.syncDestination
         ) {
             let decoder = AutomergeDecoder(doc: copyOfDocument)
             XCTAssertFalse(try copyOfDocument.isEmpty())
