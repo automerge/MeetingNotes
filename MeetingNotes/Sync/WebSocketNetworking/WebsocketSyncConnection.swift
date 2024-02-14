@@ -288,6 +288,7 @@ public final class WebsocketSyncConnection: ObservableObject {
         let joinMessage = JoinMsg(senderId: senderId)
         let data = try V1Msg.encode(joinMessage)
         try await webSocketTask.send(.data(data))
+        Logger.webSocket.trace("SEND: \(joinMessage.debugDescription)")
         await MainActor.run {
             self.connectionState = .handshake
         }
@@ -404,6 +405,7 @@ public final class WebsocketSyncConnection: ObservableObject {
         )
         let data = try V1Msg.encode(requestMsg)
         try await webSocketTask.send(.data(data))
+        Logger.webSocket.trace("SEND: \(requestMsg.debugDescription)")
     }
 
     /// Start a synchronization process for the Automerge document
@@ -447,10 +449,8 @@ public final class WebsocketSyncConnection: ObservableObject {
                 guard let data = data else {
                     return
                 }
-                // Logger.webSocket.trace("SEND: \(syncMsg.debugDescription)")
-                // Logger.webSocket.trace("RAW WEBSOCKET BYTES: \(data.hexEncodedString())")
-                // Logger.webSocket.trace("SYNC MESSAGE BYTES: \(syncMsg.data.hexEncodedString())")
                 try await webSocketTask.send(.data(data))
+                Logger.webSocket.trace("SEND: \(syncMsg.debugDescription)")
             } catch {
                 Logger.webSocket
                     .warning("Error in sending websocket data: \(error.localizedDescription, privacy: .public)")
@@ -547,7 +547,7 @@ public final class WebsocketSyncConnection: ObservableObject {
 
                 do {
                     Logger.webSocket.trace("RCVD: Applying sync message: \(syncMsg.debugDescription)")
-                    try document.applyEncodedChanges(encoded: syncMsg.data)
+                    try document.receiveSyncMessage(state: self.syncState, message: syncMsg.data)
                     // TODO: enable gossip of sending changed heads (if in gossip mode)
                     if let syncData = document.generateSyncMessage(state: self.syncState) {
                         // if we have a sync message, then sync isn't complete...
@@ -564,11 +564,10 @@ public final class WebsocketSyncConnection: ObservableObject {
                             sync_message: syncData
                         )
                         Logger.webSocket
-                            .trace(
-                                " - SYNC: Sending another sync msg after applying updates: \(syncMsg.debugDescription, privacy: .public)"
-                            )
+                            .trace(" - SYNC: Sending another sync msg after applying updates")
                         let replyData = try V1Msg.encode(replyingSyncMsg)
                         try await webSocketTask.send(.data(replyData))
+                        Logger.webSocket.trace("SEND: \(replyingSyncMsg.debugDescription)")
                     } else {
                         await MainActor.run {
                             self.syncInProgress = false

@@ -18,8 +18,8 @@ final class WebSocketSyncIntegrationTests: XCTestCase {
     private static let subsystem = Bundle.main.bundleIdentifier!
 
     static let test = Logger(subsystem: subsystem, category: "WebSocketSyncIntegrationTests")
-//    let syncDestination = "ws://localhost:3030/"
-    let syncDestination = "wss://sync.automerge.org/"
+    let syncDestination = "ws://localhost:3030/"
+//    let syncDestination = "wss://sync.automerge.org/"
 
     override func setUp() async throws {
         let isWebSocketConnectable = await webSocketAvailable(destination: syncDestination)
