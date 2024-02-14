@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A0001C32B7C4115000EC1BF /* Automerge+LocalizedInternalErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0001C22B7C4115000EC1BF /* Automerge+LocalizedInternalErrors.swift */; };
 		1A0917002A4A171C00D80BF7 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 1A0916FF2A4A171C00D80BF7 /* Documentation.docc */; };
 		1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */; };
 		1A0DDC372A464DEA001ECADD /* MeetingNotesDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */; };
@@ -78,6 +79,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A0001C22B7C4115000EC1BF /* Automerge+LocalizedInternalErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Automerge+LocalizedInternalErrors.swift"; sourceTree = "<group>"; };
 		1A0916FF2A4A171C00D80BF7 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		1A0DDC312A464DEA001ECADD /* MeetingNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeetingNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesApp.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 				1AB369012A50D82C00F855F8 /* Views */,
 				1A74051D2B6C3BE100E88B18 /* Sync */,
 				1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */,
+				1A0001C22B7C4115000EC1BF /* Automerge+LocalizedInternalErrors.swift */,
 				1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */,
 				1A6CB2642B71CABF00CA23E9 /* String+hexEncoding.swift */,
 				1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */,
@@ -437,6 +440,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AE3D77B2A68646A00CEA52E /* OSLog+extensions.swift in Sources */,
+				1A0001C32B7C4115000EC1BF /* Automerge+LocalizedInternalErrors.swift in Sources */,
 				1A9272E62B61AC2C000CB9E5 /* WebSocketMessages.swift in Sources */,
 				1A0DDC372A464DEA001ECADD /* MeetingNotesDocument.swift in Sources */,
 				1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */,

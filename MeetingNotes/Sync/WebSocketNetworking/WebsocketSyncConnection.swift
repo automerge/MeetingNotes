@@ -557,7 +557,7 @@ public final class WebsocketSyncConnection: ObservableObject {
                                 self.syncInProgress = true
                             }
                         }
-                        let syncMsg = SyncMsg(
+                        let replyingSyncMsg = SyncMsg(
                             documentId: documentId.description,
                             senderId: self.senderId,
                             targetId: targetId,
@@ -567,8 +567,8 @@ public final class WebsocketSyncConnection: ObservableObject {
                             .trace(
                                 " - SYNC: Sending another sync msg after applying updates: \(syncMsg.debugDescription, privacy: .public)"
                             )
-                        let data = try V1Msg.encode(syncMsg)
-                        try await webSocketTask.send(.data(data))
+                        let replyData = try V1Msg.encode(replyingSyncMsg)
+                        try await webSocketTask.send(.data(replyData))
                     } else {
                         await MainActor.run {
                             self.syncInProgress = false
@@ -576,10 +576,55 @@ public final class WebsocketSyncConnection: ObservableObject {
                         Logger.webSocket.trace(" - SYNC: No further sync msgs needed - sync complete.")
                     }
                 } catch {
+                    // message    String    "Internal error: unable to parse chunk: failed to parse header: Invalid
+                    // magic bytes"
+
+                    // raw data: 430000010000010e856f4a83b81a9544000400000000020102
+//
+                    // echo "430000010000010e856f4a83b81a9544000400000000020102" | python3 -c "import sys, binascii;
+                    // sys.stdout.buffer.write(binascii.unhexlify(input().strip()))" > syncmsg_from_server
+//
+                    // ~/src/automerge/rust/target/debug/automerge examine-sync ./syncmsg_from_server
+//
+                    // {
+                    //  "changes": [
+//    [
+//      133,
+//      111,
+//      74,
+//      131,
+//      184,
+//      26,
+//      149,
+//      68,
+//      0,
+//      4,
+//      0,
+//      0,
+//      0,
+//      0
+//    ]
+                    //  ],
+                    //  "have": [
+//    {
+//      "bloom": {
+//        "bits": [],
+//        "num_bits_per_entry": 10,
+//        "num_entries": 0,
+//        "num_probes": 7
+//      },
+//      "last_sync": []
+//    }
+                    //  ],
+                    //  "heads": [],
+                    //  "need": []
+                    // }
+
                     Logger.webSocket
                         .error(
                             "Error while applying sync message \(error.localizedDescription, privacy: .public), DISCONNECTING!"
                         )
+                    Logger.webSocket.error("sync data raw bytes: \(syncMsg.data.hexEncodedString(), privacy: .public)")
                     await self.disconnect()
                 }
             case let .ephemeral(msg):
