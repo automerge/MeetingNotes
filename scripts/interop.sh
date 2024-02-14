@@ -7,7 +7,7 @@ REPO_DIR=$THIS_SCRIPT_DIR/../
 
 cd ${REPO_DIR}
 if [ ! -d automerge-repo-sync-server ]; then
-    git clone https://github.com/heckj/automerge-repo-sync-server.git
+    gh repo clone heckj/automerge-repo-sync-server
 fi
 
 cd automerge-repo-sync-server

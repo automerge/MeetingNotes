@@ -58,6 +58,7 @@
 		1ADE516B2B7A94BC00EA44F0 /* WebsocketSyncConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9272E22B61A529000CB9E5 /* WebsocketSyncConnection.swift */; };
 		1ADE516C2B7A953500EA44F0 /* OSLog+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */; };
 		1AE3D77B2A68646A00CEA52E /* OSLog+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */; };
+		1AF4DDDA2B7C57E800B23BF8 /* ExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF4DDD92B7C57E800B23BF8 /* ExportView.swift */; };
 		1AF9017F2B66E47A0077567D /* CBORExperiments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF9017E2B66E47A0077567D /* CBORExperiments.swift */; };
 /* End PBXBuildFile section */
 
@@ -122,6 +123,7 @@
 		1ADB17B02B7AD9DF00F41B15 /* Document+isEmpty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Document+isEmpty.swift"; sourceTree = "<group>"; };
 		1ADE51662B7A90AA00EA44F0 /* WebSocketSyncIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketSyncIntegrationTests.swift; sourceTree = "<group>"; };
 		1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OSLog+extensions.swift"; sourceTree = "<group>"; };
+		1AF4DDD92B7C57E800B23BF8 /* ExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportView.swift; sourceTree = "<group>"; };
 		1AF5DB3A2A4A0C38008DAC6F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1AF5DB3B2A4A0C5E008DAC6F /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		1AF9017E2B66E47A0077567D /* CBORExperiments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBORExperiments.swift; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 				1A7700C62A67479F00869A4D /* NWBrowserResultItemView.swift */,
 				1A2AD0302A7437E200EF0C5F /* SyncConnectionView.swift */,
 				1AD71E902A57630B00B965BF /* MergeView.swift */,
+				1AF4DDD92B7C57E800B23BF8 /* ExportView.swift */,
 				1AD71E922A5765A800B965BF /* SyncStatusView.swift */,
 				1A6FF21C2B64710700C99F81 /* WebSocketStatusView.swift */,
 			);
@@ -462,6 +465,7 @@
 				1ACF1CE12B6DCAFC00DC5198 /* Task+timeout.swift in Sources */,
 				1AD7A8EF2A476801003B6A1E /* SyncConnection.swift in Sources */,
 				1A7700C52A67343800869A4D /* PeerSyncView.swift in Sources */,
+				1AF4DDDA2B7C57E800B23BF8 /* ExportView.swift in Sources */,
 				1AD7A8EB2A476801003B6A1E /* NWParameters+peerSyncParameters.swift in Sources */,
 				1A4A610C2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift in Sources */,
 				1A2521442B1567F20096951D /* DocumentId.swift in Sources */,

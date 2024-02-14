@@ -45,7 +45,14 @@ struct MeetingNotesDocumentView: View {
                             }
                         }
                 }
-                PeerSyncView(documentId: document.id, syncController: sharedSyncCoordinator)
+                HStack(alignment: .firstTextBaseline) {
+                    if #available(macOS 14.0, iOS 17.0, *) {
+                        ExportView(document: document)
+                            .help("Exports the underlying Automerge document")
+                            .padding(.leading)
+                    }
+                    PeerSyncView(documentId: document.id, syncController: sharedSyncCoordinator)
+                }
             }
             .navigationSplitViewColumnWidth(min: 250, ideal: 250)
             .toolbar {
@@ -106,7 +113,9 @@ struct MeetingNotesDocumentView_Previews: PreviewProvider {
             MeetingNotesDocumentView(document: MeetingNotesDocument.sample())
         }
         #else
-        MeetingNotesDocumentView(document: MeetingNotesDocument.sample())
+        if #available(macOS 14.0, iOS 17.0, *) {
+            MeetingNotesDocumentView(document: MeetingNotesDocument.sample())
+        } else {}
         #endif
     }
 }
