@@ -17,12 +17,12 @@
 		1A0DDC562A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */; };
 		1A11B8922B7AC37100CB4CA9 /* URLSessionWebSocketTask+sendPing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A11B8912B7AC37100CB4CA9 /* URLSessionWebSocketTask+sendPing.swift */; };
 		1A2521442B1567F20096951D /* DocumentId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2521432B1567F20096951D /* DocumentId.swift */; };
-		1A27AB432B768C0300A29BC3 /* Automerge-swift-privacy-manifest.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1A27AB422B768C0300A29BC3 /* Automerge-swift-privacy-manifest.bundle */; };
 		1A2A02A52A50E74B0044064B /* EditableAgendaItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2A02A42A50E74A0044064B /* EditableAgendaItemView.swift */; };
 		1A2AD0312A7437E200EF0C5F /* SyncConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2AD0302A7437E200EF0C5F /* SyncConnectionView.swift */; };
 		1A30C4DB2B155ECF007CE4F0 /* Data+hexEncodedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */; };
 		1A30C4DD2B155F07007CE4F0 /* UUID+bs58String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */; };
 		1A4A610C2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A610B2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift */; };
+		1A54BC802B7EC11A00A423DE /* Automerge Privacy Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1A54BC7F2B7EC11A00A423DE /* Automerge Privacy Bundle.bundle */; };
 		1A54E5E62A698EA100CE1BEF /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 1A54E5E52A698EA100CE1BEF /* CustomDump */; };
 		1A6647852AF986990041C134 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647842AF986990041C134 /* Base58Swift */; };
 		1A6647882AF987A00041C134 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647872AF987A00041C134 /* Base58Swift */; };
@@ -39,7 +39,6 @@
 		1AADE1F62B586878000205BB /* UUID+bs58String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */; };
 		1AADE1F72B58687E000205BB /* DocumentId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2521432B1567F20096951D /* DocumentId.swift */; };
 		1AC103972B7EB0EF0099296C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1AC103962B7EB0EF0099296C /* PrivacyInfo.xcprivacy */; };
-		1AC103992B7EB4B20099296C /* automerge-swift-privacy.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1AC103982B7EB4B20099296C /* automerge-swift-privacy.bundle */; };
 		1ACF1CE12B6DCAFC00DC5198 /* Task+timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF1CE02B6DCAFC00DC5198 /* Task+timeout.swift */; };
 		1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD5DA322A464FBD0085DF79 /* Automerge */; };
 		1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */; };
@@ -101,6 +100,7 @@
 		1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+hexEncodedString.swift"; sourceTree = "<group>"; };
 		1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UUID+bs58String.swift"; sourceTree = "<group>"; };
 		1A4A610B2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+milliseconds.swift"; sourceTree = "<group>"; };
+		1A54BC7F2B7EC11A00A423DE /* Automerge Privacy Bundle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = "Automerge Privacy Bundle.bundle"; sourceTree = "<group>"; };
 		1A6CB2642B71CABF00CA23E9 /* String+hexEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+hexEncoding.swift"; sourceTree = "<group>"; };
 		1A6FF21C2B64710700C99F81 /* WebSocketStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketStatusView.swift; sourceTree = "<group>"; };
 		1A7700C42A67343800869A4D /* PeerSyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerSyncView.swift; sourceTree = "<group>"; };
@@ -110,7 +110,6 @@
 		1A9272E52B61AC2C000CB9E5 /* WebSocketMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketMessages.swift; sourceTree = "<group>"; };
 		1AA529342B6D973C0084F855 /* notes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = notes; sourceTree = "<group>"; };
 		1AC103962B7EB0EF0099296C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		1AC103982B7EB4B20099296C /* automerge-swift-privacy.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = "automerge-swift-privacy.bundle"; path = "../../Desktop/automerge-swift-privacy.bundle"; sourceTree = "<group>"; };
 		1ACF1CE02B6DCAFC00DC5198 /* Task+timeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+timeout.swift"; sourceTree = "<group>"; };
 		1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingNotesModel.swift; sourceTree = "<group>"; };
 		1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesDocumentView.swift; sourceTree = "<group>"; };
@@ -167,7 +166,7 @@
 				1AF5DB3B2A4A0C5E008DAC6F /* CONTRIBUTING.md */,
 				1AA529342B6D973C0084F855 /* notes */,
 				1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */,
-				1AC103982B7EB4B20099296C /* automerge-swift-privacy.bundle */,
+				1A54BC7F2B7EC11A00A423DE /* Automerge Privacy Bundle.bundle */,
 				1A0DDC332A464DEA001ECADD /* MeetingNotes */,
 				1A0DDC482A464DEB001ECADD /* MeetingNotesTests */,
 				1A0DDC522A464DEB001ECADD /* MeetingNotesUITests */,
@@ -412,11 +411,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AC103992B7EB4B20099296C /* automerge-swift-privacy.bundle in Resources */,
+				1A54BC802B7EC11A00A423DE /* Automerge Privacy Bundle.bundle in Resources */,
 				1A0DDC402A464DEB001ECADD /* Preview Assets.xcassets in Resources */,
 				1A0DDC3B2A464DEB001ECADD /* Assets.xcassets in Resources */,
 				1AC103972B7EB0EF0099296C /* PrivacyInfo.xcprivacy in Resources */,
-				1A27AB432B768C0300A29BC3 /* Automerge-swift-privacy-manifest.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
