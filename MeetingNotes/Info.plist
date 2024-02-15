@@ -21,6 +21,8 @@
 			<string>com.github.automerge.meetingnotes</string>
 		</dict>
 	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_automergesync._tcp</string>
