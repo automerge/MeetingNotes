@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A0001C32B7C4115000EC1BF /* Automerge+LocalizedInternalErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0001C22B7C4115000EC1BF /* Automerge+LocalizedInternalErrors.swift */; };
 		1A0917002A4A171C00D80BF7 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 1A0916FF2A4A171C00D80BF7 /* Documentation.docc */; };
 		1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */; };
 		1A0DDC372A464DEA001ECADD /* MeetingNotesDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */; };
@@ -49,8 +48,6 @@
 		1AD7A8EB2A476801003B6A1E /* NWParameters+peerSyncParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E62A476801003B6A1E /* NWParameters+peerSyncParameters.swift */; };
 		1AD7A8ED2A476801003B6A1E /* P2PAutomergeSyncProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E82A476801003B6A1E /* P2PAutomergeSyncProtocol.swift */; };
 		1AD7A8EF2A476801003B6A1E /* SyncConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8EA2A476801003B6A1E /* SyncConnection.swift */; };
-		1ADB17B12B7AD9DF00F41B15 /* Document+schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADB17AF2B7AD9DE00F41B15 /* Document+schema.swift */; };
-		1ADB17B22B7AD9DF00F41B15 /* Document+isEmpty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADB17B02B7AD9DF00F41B15 /* Document+isEmpty.swift */; };
 		1ADE51672B7A90AA00EA44F0 /* WebSocketSyncIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADE51662B7A90AA00EA44F0 /* WebSocketSyncIntegrationTests.swift */; };
 		1ADE51682B7A94B100EA44F0 /* String+hexEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6CB2642B71CABF00CA23E9 /* String+hexEncoding.swift */; };
 		1ADE51692B7A94BC00EA44F0 /* Task+timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF1CE02B6DCAFC00DC5198 /* Task+timeout.swift */; };
@@ -80,7 +77,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1A0001C22B7C4115000EC1BF /* Automerge+LocalizedInternalErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Automerge+LocalizedInternalErrors.swift"; sourceTree = "<group>"; };
 		1A0916FF2A4A171C00D80BF7 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
 		1A0DDC312A464DEA001ECADD /* MeetingNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeetingNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesApp.swift; sourceTree = "<group>"; };
@@ -119,8 +115,6 @@
 		1AD7A8E62A476801003B6A1E /* NWParameters+peerSyncParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NWParameters+peerSyncParameters.swift"; sourceTree = "<group>"; };
 		1AD7A8E82A476801003B6A1E /* P2PAutomergeSyncProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = P2PAutomergeSyncProtocol.swift; sourceTree = "<group>"; };
 		1AD7A8EA2A476801003B6A1E /* SyncConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncConnection.swift; sourceTree = "<group>"; };
-		1ADB17AF2B7AD9DE00F41B15 /* Document+schema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Document+schema.swift"; sourceTree = "<group>"; };
-		1ADB17B02B7AD9DF00F41B15 /* Document+isEmpty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Document+isEmpty.swift"; sourceTree = "<group>"; };
 		1ADE51662B7A90AA00EA44F0 /* WebSocketSyncIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketSyncIntegrationTests.swift; sourceTree = "<group>"; };
 		1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OSLog+extensions.swift"; sourceTree = "<group>"; };
 		1AF4DDD92B7C57E800B23BF8 /* ExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportView.swift; sourceTree = "<group>"; };
@@ -193,7 +187,6 @@
 				1AB369012A50D82C00F855F8 /* Views */,
 				1A74051D2B6C3BE100E88B18 /* Sync */,
 				1AE3D77A2A68646A00CEA52E /* OSLog+extensions.swift */,
-				1A0001C22B7C4115000EC1BF /* Automerge+LocalizedInternalErrors.swift */,
 				1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */,
 				1A6CB2642B71CABF00CA23E9 /* String+hexEncoding.swift */,
 				1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */,
@@ -221,8 +214,6 @@
 		1A0DDC482A464DEB001ECADD /* MeetingNotesTests */ = {
 			isa = PBXGroup;
 			children = (
-				1ADB17B02B7AD9DF00F41B15 /* Document+isEmpty.swift */,
-				1ADB17AF2B7AD9DE00F41B15 /* Document+schema.swift */,
 				1A0DDC492A464DEB001ECADD /* MeetingNotesTests.swift */,
 				1AF9017E2B66E47A0077567D /* CBORExperiments.swift */,
 				1ADE51662B7A90AA00EA44F0 /* WebSocketSyncIntegrationTests.swift */,
@@ -443,7 +434,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AE3D77B2A68646A00CEA52E /* OSLog+extensions.swift in Sources */,
-				1A0001C32B7C4115000EC1BF /* Automerge+LocalizedInternalErrors.swift in Sources */,
 				1A9272E62B61AC2C000CB9E5 /* WebSocketMessages.swift in Sources */,
 				1A0DDC372A464DEA001ECADD /* MeetingNotesDocument.swift in Sources */,
 				1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */,
@@ -477,12 +467,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A0DDC4A2A464DEB001ECADD /* MeetingNotesTests.swift in Sources */,
-				1ADB17B12B7AD9DF00F41B15 /* Document+schema.swift in Sources */,
 				1ADE51672B7A90AA00EA44F0 /* WebSocketSyncIntegrationTests.swift in Sources */,
 				1ADE516C2B7A953500EA44F0 /* OSLog+extensions.swift in Sources */,
 				1AADE1F52B586875000205BB /* Data+hexEncodedString.swift in Sources */,
 				1AADE1F62B586878000205BB /* UUID+bs58String.swift in Sources */,
-				1ADB17B22B7AD9DF00F41B15 /* Document+isEmpty.swift in Sources */,
 				1AADE1F72B58687E000205BB /* DocumentId.swift in Sources */,
 				1AF9017F2B66E47A0077567D /* CBORExperiments.swift in Sources */,
 				1A11B8922B7AC37100CB4CA9 /* URLSessionWebSocketTask+sendPing.swift in Sources */,
@@ -891,8 +879,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/automerge/automerge-swift/";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.2;
+				branch = main;
+				kind = branch;
 			};
 		};
 		1AD7A8E32A4767A1003B6A1E /* XCRemoteSwiftPackageReference "PotentCodables" */ = {

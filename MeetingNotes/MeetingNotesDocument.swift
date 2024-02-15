@@ -1,4 +1,5 @@
 import Automerge
+import Combine
 import OSLog
 import PotentCBOR
 import SwiftUI
@@ -62,6 +63,8 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     @Published
     var model: MeetingNotesModel
 
+    var syncedDocumentTrigger: Cancellable?
+
     static var readableContentTypes: [UTType] { [.meetingnote] }
 
     init() {
@@ -78,6 +81,10 @@ final class MeetingNotesDocument: ReferenceFileDocument {
             try modelEncoder.encode(newModel)
         } catch {
             fatalError(error.localizedDescription)
+        }
+
+        syncedDocumentTrigger = doc.objectWillChange.sink {
+            self.objectWillChange.send()
         }
     }
 
@@ -134,10 +141,15 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         }
         Logger.document
             .debug("finished loading from \(String(describing: configuration.file.filename), privacy: .public)")
+        syncedDocumentTrigger = doc.objectWillChange.receive(on: RunLoop.main).sink {
+            self.objectWillChange.send()
+        }
     }
 
     deinit {
         Logger.document.debug("DEINIT of MeetingNotesDocument, documentId: \(self.id, privacy: .public)")
+        syncedDocumentTrigger?.cancel()
+        syncedDocumentTrigger = nil
     }
 
     func snapshot(contentType _: UTType) throws -> Document {

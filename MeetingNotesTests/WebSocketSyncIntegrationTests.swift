@@ -6,6 +6,7 @@
 //
 
 import Automerge
+import AutomergeUtilities
 import OSLog
 import XCTest
 

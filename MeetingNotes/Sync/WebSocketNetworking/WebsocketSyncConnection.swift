@@ -66,6 +66,10 @@ public final class WebsocketSyncConnection: ObservableObject {
     /// A handle on an unstructured task that accepts and processes WebSocket messages
     private var receiveHandler: Task<Void, any Error>?
 
+    /// A handle to a cancellable Combine pipeline that watches a document for updates and attempts to start a sync when
+    /// it changes.
+    private var syncTrigger: Cancellable?
+
     // TODO: Add a delegate link of some form for a 'ephemeral' msg data handler
     // TODO: Add an indicator of if we should involve ourselves in "gossip" about updates
     // TODO: Add something that watches Documents for updates to invoke either gossip or sync depending
@@ -322,9 +326,11 @@ public final class WebsocketSyncConnection: ObservableObject {
 
     /// Asynchronously disconnect the WebSocket and shut down active sessions.
     public func disconnect() async {
+        self.syncTrigger?.cancel()
+        self.webSocketTask?.cancel(with: .normalClosure, reason: nil)
+        self.receiveHandler?.cancel()
         await MainActor.run {
-            self.webSocketTask?.cancel(with: .normalClosure, reason: nil)
-            self.receiveHandler?.cancel()
+            self.syncTrigger = nil
             self.connectionState = .closed
             self.webSocketTask = nil
             self.syncInProgress = false
@@ -347,33 +353,18 @@ public final class WebsocketSyncConnection: ObservableObject {
                 try await ongoingHandleWebSocketMessage()
             }
 
-            // NOTE(heckj): This causes `await connect()` to jump from having
-            // peered pretty directly into an initial document sync. I'm not 100% convinced
-            // that's the right way to go, and that maybe there should be a layer over the
-            // async methods here that "watch" the sync state and drive the choices and messages
-            // and behaviors based on a 'strategy'.
-            //
-            // The two obvious strategies (barring enabling the 'gossip' mechanisms in the protocol)
-            // each with two variants - 'one-and-done' and 'ongoing-sync'. The strategies so far:
-            //
-            //  1. I have a document, here, sync it and be done (a one-off sort of thing)
-            //  2. I have a document, sync it and keep it up to date
-            //     (ongoing sync while the websocket is connected, and possibly handling
-            //      some "attempt to reconnect" and continue bits)
-            //  3. I want a document, request one - and if it's available be done (another one-off)
-            //  4. I want a document, request one, and there-after keep it synced as you or I make
-            //     updates (again - with possible reconnect and continue if the websocket fails
-
-            // I haven't quite sorted how gossip is used in the protocol, but additional variations
-            // on strategies might include:
-            //
-            // A) sync once on command, and gossip about heads changed. Implying that the remote
-            //    side determine if they want to sync or not, and send a sync command if so.
-            // B) primarily gossip if the connection is constrained (low data?), syncing only
-            //    periodically.
-
             // kick off an initial sync
             await initiateSync()
+
+            // Watch the Automerge document for update messages, triggering a sync
+            // if one isn't already in flight.
+            self.syncTrigger = self.document?.objectWillChange.sink {
+                if !self.syncInProgress {
+                    Task { [weak self] in
+                        await self?.initiateSync()
+                    }
+                }
+            }
         }
     }
 
@@ -410,7 +401,9 @@ public final class WebsocketSyncConnection: ObservableObject {
 
     /// Start a synchronization process for the Automerge document
     private func initiateSync() async {
-        guard connectionState == .peered else {
+        guard connectionState == .peered,
+              syncInProgress == false
+        else {
             return
         }
         guard let document = self.document,
