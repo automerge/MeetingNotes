@@ -22,7 +22,6 @@
 		1A30C4DB2B155ECF007CE4F0 /* Data+hexEncodedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */; };
 		1A30C4DD2B155F07007CE4F0 /* UUID+bs58String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */; };
 		1A4A610C2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A610B2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift */; };
-		1A54E5E62A698EA100CE1BEF /* CustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 1A54E5E52A698EA100CE1BEF /* CustomDump */; };
 		1A6647852AF986990041C134 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647842AF986990041C134 /* Base58Swift */; };
 		1A6647882AF987A00041C134 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647872AF987A00041C134 /* Base58Swift */; };
 		1A66478A2AF987A60041C134 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647892AF987A60041C134 /* Automerge */; };
@@ -33,7 +32,6 @@
 		1A8217AD2A6877730071DD38 /* DocumentSyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */; };
 		1A9272E32B61A529000CB9E5 /* WebsocketSyncConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9272E22B61A529000CB9E5 /* WebsocketSyncConnection.swift */; };
 		1A9272E62B61AC2C000CB9E5 /* WebSocketMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9272E52B61AC2C000CB9E5 /* WebSocketMessages.swift */; };
-		1A9D76732B7EC3F100048EC0 /* Automerge Privacy Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1A9D76722B7EC3F100048EC0 /* Automerge Privacy Bundle.bundle */; };
 		1AADE1F42B586801000205BB /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1AADE1F32B586801000205BB /* PotentCodables */; };
 		1AADE1F52B586875000205BB /* Data+hexEncodedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */; };
 		1AADE1F62B586878000205BB /* UUID+bs58String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */; };
@@ -107,7 +105,6 @@
 		1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSyncCoordinator.swift; sourceTree = "<group>"; };
 		1A9272E22B61A529000CB9E5 /* WebsocketSyncConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsocketSyncConnection.swift; sourceTree = "<group>"; };
 		1A9272E52B61AC2C000CB9E5 /* WebSocketMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketMessages.swift; sourceTree = "<group>"; };
-		1A9D76722B7EC3F100048EC0 /* Automerge Privacy Bundle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = "Automerge Privacy Bundle.bundle"; sourceTree = "<group>"; };
 		1AA529342B6D973C0084F855 /* notes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = notes; sourceTree = "<group>"; };
 		1AC103962B7EB0EF0099296C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		1ACF1CE02B6DCAFC00DC5198 /* Task+timeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+timeout.swift"; sourceTree = "<group>"; };
@@ -133,7 +130,6 @@
 			files = (
 				1A6647852AF986990041C134 /* Base58Swift in Frameworks */,
 				1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */,
-				1A54E5E62A698EA100CE1BEF /* CustomDump in Frameworks */,
 				1AD7A8E52A4767A1003B6A1E /* PotentCodables in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -166,7 +162,6 @@
 				1AF5DB3B2A4A0C5E008DAC6F /* CONTRIBUTING.md */,
 				1AA529342B6D973C0084F855 /* notes */,
 				1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */,
-				1A9D76722B7EC3F100048EC0 /* Automerge Privacy Bundle.bundle */,
 				1A0DDC332A464DEA001ECADD /* MeetingNotes */,
 				1A0DDC482A464DEB001ECADD /* MeetingNotesTests */,
 				1A0DDC522A464DEB001ECADD /* MeetingNotesUITests */,
@@ -309,7 +304,6 @@
 			packageProductDependencies = (
 				1AD5DA322A464FBD0085DF79 /* Automerge */,
 				1AD7A8E42A4767A1003B6A1E /* PotentCodables */,
-				1A54E5E52A698EA100CE1BEF /* CustomDump */,
 				1A6647842AF986990041C134 /* Base58Swift */,
 			);
 			productName = MeetingNotes;
@@ -392,7 +386,6 @@
 			packageReferences = (
 				1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */,
 				1AD7A8E32A4767A1003B6A1E /* XCRemoteSwiftPackageReference "PotentCodables" */,
-				1A54E5E42A698EA100CE1BEF /* XCRemoteSwiftPackageReference "swift-custom-dump" */,
 				1A6647832AF986990041C134 /* XCRemoteSwiftPackageReference "Base58Swift" */,
 			);
 			productRefGroup = 1A0DDC322A464DEA001ECADD /* Products */;
@@ -411,7 +404,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A9D76732B7EC3F100048EC0 /* Automerge Privacy Bundle.bundle in Resources */,
 				1A0DDC402A464DEB001ECADD /* Preview Assets.xcassets in Resources */,
 				1A0DDC3B2A464DEB001ECADD /* Assets.xcassets in Resources */,
 				1AC103972B7EB0EF0099296C /* PrivacyInfo.xcprivacy in Resources */,
@@ -637,9 +629,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MeetingNotes/MeetingNotes.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"MeetingNotes/Preview Content\"";
 				DEVELOPMENT_TEAM = BDV4VC27D3;
@@ -685,9 +677,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MeetingNotes/MeetingNotes.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"MeetingNotes/Preview Content\"";
 				DEVELOPMENT_TEAM = BDV4VC27D3;
@@ -867,14 +859,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		1A54E5E42A698EA100CE1BEF /* XCRemoteSwiftPackageReference "swift-custom-dump" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-custom-dump";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
-			};
-		};
 		1A6647832AF986990041C134 /* XCRemoteSwiftPackageReference "Base58Swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/keefertaylor/Base58Swift";
@@ -887,7 +871,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/automerge/automerge-swift/";
 			requirement = {
-				branch = main;
+				branch = privacy_inc;
 				kind = branch;
 			};
 		};
@@ -902,11 +886,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		1A54E5E52A698EA100CE1BEF /* CustomDump */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1A54E5E42A698EA100CE1BEF /* XCRemoteSwiftPackageReference "swift-custom-dump" */;
-			productName = CustomDump;
-		};
 		1A6647842AF986990041C134 /* Base58Swift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1A6647832AF986990041C134 /* XCRemoteSwiftPackageReference "Base58Swift" */;
