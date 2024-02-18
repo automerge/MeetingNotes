@@ -141,7 +141,18 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         }
         Logger.document
             .debug("finished loading from \(String(describing: configuration.file.filename), privacy: .public)")
-        syncedDocumentTrigger = doc.objectWillChange.receive(on: RunLoop.main).sink {
+        syncedDocumentTrigger = doc.objectWillChange
+            // slow down the rate at which updates can appear so that the whole SwiftUI view
+            // structure won't be reset too frequently, but IS updated when changes come in from
+            // a syncing mechanism.
+            .throttle(for: 1.0, scheduler: DispatchQueue.main, latest: true)
+            .receive(on: RunLoop.main)
+            .sink {
+            do {
+                try self.getModelUpdates()
+            } catch {
+                fatalError("Error occurred while updating the model from the Automerge document: \(error)")
+            }
             self.objectWillChange.send()
         }
     }
