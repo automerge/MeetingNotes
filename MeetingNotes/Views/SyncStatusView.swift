@@ -14,8 +14,8 @@ struct SyncStatusView: View {
             }
         } label: {
             Image(
-                systemName: syncEnabledIndicator ? "antenna.radiowaves.left.and.right.slash" :
-                    "antenna.radiowaves.left.and.right"
+                systemName: syncEnabledIndicator ? "antenna.radiowaves.left.and.right" :
+                    "antenna.radiowaves.left.and.right.slash"
             )
             .font(.title2)
         }

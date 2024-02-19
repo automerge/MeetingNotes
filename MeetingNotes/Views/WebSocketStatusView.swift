@@ -21,17 +21,17 @@ struct WebSocketStatusView: View {
     @ObservedObject var document: MeetingNotesDocument
     @StateObject private var websocket = WebsocketSyncConnection(nil, id: nil)
     @State private var syncEnabledIndicator: Bool = false
-    @State private var syncDestination: SyncTargets = .local
+    @State private var syncDestination: SyncTargets = .automerge
 
     var body: some View {
         HStack {
-            Picker("Destination", selection: $syncDestination) {
-                ForEach(SyncTargets.allCases) { dest in
-                    Text(dest.rawValue.capitalized)
-                }
-            }
-            .pickerStyle(.segmented)
-            .disabled(syncEnabledIndicator)
+//            Picker("Destination", selection: $syncDestination) {
+//                ForEach(SyncTargets.allCases) { dest in
+//                    Text(dest.rawValue.capitalized)
+//                }
+//            }
+//            .pickerStyle(.segmented)
+//            .disabled(syncEnabledIndicator)
 
             Button {
                 syncEnabledIndicator.toggle()
@@ -47,8 +47,8 @@ struct WebSocketStatusView: View {
                 }
             } label: {
                 Image(
-                    systemName: syncEnabledIndicator ? "wifi.slash" :
-                        "wifi"
+                    systemName: syncEnabledIndicator ? "wifi" :
+                        "wifi.slash"
                 )
                 .font(.title2)
             }
