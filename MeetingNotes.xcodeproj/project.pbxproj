@@ -631,7 +631,7 @@
 				CODE_SIGN_ENTITLEMENTS = MeetingNotes/MeetingNotes.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"MeetingNotes/Preview Content\"";
 				DEVELOPMENT_TEAM = BDV4VC27D3;
@@ -679,7 +679,7 @@
 				CODE_SIGN_ENTITLEMENTS = MeetingNotes/MeetingNotes.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"MeetingNotes/Preview Content\"";
 				DEVELOPMENT_TEAM = BDV4VC27D3;
