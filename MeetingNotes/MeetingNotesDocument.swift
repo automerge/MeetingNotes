@@ -148,13 +148,13 @@ final class MeetingNotesDocument: ReferenceFileDocument {
             .throttle(for: 1.0, scheduler: DispatchQueue.main, latest: true)
             .receive(on: RunLoop.main)
             .sink {
-            do {
-                try self.getModelUpdates()
-            } catch {
-                fatalError("Error occurred while updating the model from the Automerge document: \(error)")
+                do {
+                    try self.getModelUpdates()
+                } catch {
+                    fatalError("Error occurred while updating the model from the Automerge document: \(error)")
+                }
+                self.objectWillChange.send()
             }
-            self.objectWillChange.send()
-        }
     }
 
     deinit {

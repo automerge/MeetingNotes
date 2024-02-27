@@ -22,6 +22,7 @@
 		1A30C4DB2B155ECF007CE4F0 /* Data+hexEncodedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */; };
 		1A30C4DD2B155F07007CE4F0 /* UUID+bs58String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */; };
 		1A4A610C2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A610B2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift */; };
+		1A5F2D3B2B8E70F300C9417D /* CBORDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5F2D3A2B8E70F300C9417D /* CBORDecodingTests.swift */; };
 		1A6647852AF986990041C134 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647842AF986990041C134 /* Base58Swift */; };
 		1A6647882AF987A00041C134 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647872AF987A00041C134 /* Base58Swift */; };
 		1A66478A2AF987A60041C134 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647892AF987A60041C134 /* Automerge */; };
@@ -98,6 +99,7 @@
 		1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+hexEncodedString.swift"; sourceTree = "<group>"; };
 		1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UUID+bs58String.swift"; sourceTree = "<group>"; };
 		1A4A610B2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+milliseconds.swift"; sourceTree = "<group>"; };
+		1A5F2D3A2B8E70F300C9417D /* CBORDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBORDecodingTests.swift; sourceTree = "<group>"; };
 		1A6CB2642B71CABF00CA23E9 /* String+hexEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+hexEncoding.swift"; sourceTree = "<group>"; };
 		1A6FF21C2B64710700C99F81 /* WebSocketStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketStatusView.swift; sourceTree = "<group>"; };
 		1A7700C42A67343800869A4D /* PeerSyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerSyncView.swift; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 			children = (
 				1A0DDC492A464DEB001ECADD /* MeetingNotesTests.swift */,
 				1AF9017E2B66E47A0077567D /* CBORExperiments.swift */,
+				1A5F2D3A2B8E70F300C9417D /* CBORDecodingTests.swift */,
 				1ADE51662B7A90AA00EA44F0 /* WebSocketSyncIntegrationTests.swift */,
 				1A11B8912B7AC37100CB4CA9 /* URLSessionWebSocketTask+sendPing.swift */,
 			);
@@ -473,6 +476,7 @@
 				1AF9017F2B66E47A0077567D /* CBORExperiments.swift in Sources */,
 				1A11B8922B7AC37100CB4CA9 /* URLSessionWebSocketTask+sendPing.swift in Sources */,
 				1ADE51682B7A94B100EA44F0 /* String+hexEncoding.swift in Sources */,
+				1A5F2D3B2B8E70F300C9417D /* CBORDecodingTests.swift in Sources */,
 				1ADE51692B7A94BC00EA44F0 /* Task+timeout.swift in Sources */,
 				1ADE516A2B7A94BC00EA44F0 /* WebSocketMessages.swift in Sources */,
 				1ADE516B2B7A94BC00EA44F0 /* WebsocketSyncConnection.swift in Sources */,

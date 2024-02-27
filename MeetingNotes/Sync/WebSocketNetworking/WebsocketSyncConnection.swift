@@ -72,8 +72,6 @@ public final class WebsocketSyncConnection: ObservableObject {
 
     // TODO: Add a delegate link of some form for a 'ephemeral' msg data handler
     // TODO: Add an indicator of if we should involve ourselves in "gossip" about updates
-    // TODO: Add something that watches Documents for updates to invoke either gossip or sync depending
-    // ^^ perhaps should be done outside of WebsocketSyncConnection, an over-layer that manages a strategy
 
     @Published public var connectionState: SyncProtocolState
     @Published public var syncInProgress: Bool
@@ -100,7 +98,6 @@ public final class WebsocketSyncConnection: ObservableObject {
 
     // MARK: static initializers
 
-    // WHATS THE INTENTION HERE?
     public static func syncDocument(
         _ document: Automerge.Document,
         id: DocumentId,
@@ -109,7 +106,7 @@ public final class WebsocketSyncConnection: ObservableObject {
         let websocketconnection = WebsocketSyncConnection(document, id: id)
 
         try await websocketconnection.connect(destination)
-        // need to invoke an initial sync at least
+        try await websocketconnection.runOngoingSync()
         return websocketconnection
     }
 
@@ -218,7 +215,7 @@ public final class WebsocketSyncConnection: ObservableObject {
                     return msg
                 } else {
                     // In the handshake phase and received anything other than a valid peer message
-                    let decodeAttempted = V1Msg.decode(raw_data, withGossip: true, withHandshake: true)
+                    let decodeAttempted = V1Msg.decode(raw_data)
                     Logger.webSocket
                         .warning(
                             "Decoding websocket message, expecting peer only - and it wasn't a peer message. RECEIVED MSG: \(decodeAttempted.debugDescription)"
@@ -226,7 +223,7 @@ public final class WebsocketSyncConnection: ObservableObject {
                     throw UnexpectedWebSocketMsg(msg: decodeAttempted)
                 }
             } else {
-                let decodedMsg = V1Msg.decode(raw_data, withGossip: true, withHandshake: true)
+                let decodedMsg = V1Msg.decode(raw_data)
                 if case .unknown = decodedMsg {
                     throw UnexpectedWebSocketMsg(msg: decodedMsg)
                 }
@@ -568,50 +565,6 @@ public final class WebsocketSyncConnection: ObservableObject {
                         Logger.webSocket.trace(" - SYNC: No further sync msgs needed - sync complete.")
                     }
                 } catch {
-                    // message    String    "Internal error: unable to parse chunk: failed to parse header: Invalid
-                    // magic bytes"
-
-                    // raw data: 430000010000010e856f4a83b81a9544000400000000020102
-//
-                    // echo "430000010000010e856f4a83b81a9544000400000000020102" | python3 -c "import sys, binascii;
-                    // sys.stdout.buffer.write(binascii.unhexlify(input().strip()))" > syncmsg_from_server
-//
-                    // ~/src/automerge/rust/target/debug/automerge examine-sync ./syncmsg_from_server
-//
-                    // {
-                    //  "changes": [
-//    [
-//      133,
-//      111,
-//      74,
-//      131,
-//      184,
-//      26,
-//      149,
-//      68,
-//      0,
-//      4,
-//      0,
-//      0,
-//      0,
-//      0
-//    ]
-                    //  ],
-                    //  "have": [
-//    {
-//      "bloom": {
-//        "bits": [],
-//        "num_bits_per_entry": 10,
-//        "num_entries": 0,
-//        "num_probes": 7
-//      },
-//      "last_sync": []
-//    }
-                    //  ],
-                    //  "heads": [],
-                    //  "need": []
-                    // }
-
                     Logger.webSocket
                         .error(
                             "Error while applying sync message \(error.localizedDescription, privacy: .public), DISCONNECTING!"
@@ -622,7 +575,7 @@ public final class WebsocketSyncConnection: ObservableObject {
             case let .ephemeral(msg):
                 Logger.webSocket.trace("RCVD: Ephemeral message: \(msg.debugDescription, privacy: .public).")
             // TODO: enable a callback or something to allow someone external to handle the ephemeral messages
-            case let .remoteheadschanged(msg):
+            case let .remoteHeadsChanged(msg):
                 Logger.webSocket
                     .trace("RCVD: remote head's changed message: \(msg.debugDescription, privacy: .public).")
                 // TODO: enable gossiping responses

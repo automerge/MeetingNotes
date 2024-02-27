@@ -15,7 +15,7 @@ import PotentCBOR
 
 // related source for the automerge-repo sync code:
 // https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo-network-websocket/src/BrowserWebSocketClientAdapter.ts
-// All the websocket messages are CBOR encoded and sent as data streams
+// All the WebSocket messages are CBOR encoded and sent as data streams
 
 // CDDL pre-amble
 // ; The base64 encoded bytes of a Peer ID
@@ -60,6 +60,19 @@ public indirect enum V1Msg {
     static let encoder = CBOREncoder()
     static let decoder = CBORDecoder()
 
+    /// The collection of value "type" strings for the V1 automerge-repo protocol.
+    enum MTypes: String {
+        case peer
+        case sync
+        case ephemeral
+        case error
+        case unavailable = "doc-unavailable"
+        case join
+        case remoteHeadsChanged = "remote-heads-changed"
+        case request
+        case remoteSubscriptionChange = "remote-subscription-change"
+    }
+
     case peer(PeerMsg)
     case join(JoinMsg)
     case error(ErrorMsg)
@@ -70,7 +83,7 @@ public indirect enum V1Msg {
     case ephemeral(EphemeralMsg)
     // gossip additions
     case remoteSubscriptionChange(RemoteSubscriptionChangeMsg)
-    case remoteheadschanged(RemoteHeadsChangedMsg)
+    case remoteHeadsChanged(RemoteHeadsChangedMsg)
     // fall-through scenario - unknown message
     case unknown(Data)
 
@@ -98,53 +111,62 @@ public indirect enum V1Msg {
     /// Enable `withGossip` to attempt to decode head gossip messages, and `withHandshake` to include handshake phase
     /// messages.
     /// With both `withGossip` and `withHandshake` set to `true`, the decoding is exhaustive over all V1 messages.
-    public static func decode(_ data: Data, withGossip: Bool = false, withHandshake: Bool = false) -> V1Msg {
-        if withHandshake {
+    public static func decode(_ data: Data) -> V1Msg {
+        var cborMsg: CBOR? = nil
+
+        // attempt to deserialize CBOR message (in order to read the type from it)
+        do {
+            cborMsg = try CBORSerialization.cbor(from: data)
+        } catch {
+            Logger.webSocket.warning("Unable to CBOR decode incoming data: \(data)")
+            return .unknown(data)
+        }
+        // read the "type" of the message in order to choose the appropriate decoding path
+        guard let msgType = cborMsg?.mapValue?["type"]?.utf8StringValue else {
+            return .unknown(data)
+        }
+
+        switch msgType {
+        case MTypes.peer.rawValue:
             if let peerMsg = attemptPeer(data) {
                 return .peer(peerMsg)
             }
-        }
-
-        if withGossip {
-            if let remoteHeadsChanged = attemptRemoteHeadsChanged(data) {
-                return .remoteheadschanged(remoteHeadsChanged)
+        case MTypes.sync.rawValue:
+            if let syncMsg = attemptSync(data) {
+                return .sync(syncMsg)
             }
-        }
-
-        if let syncMsg = attemptSync(data) {
-            return .sync(syncMsg)
-        }
-
-        if let ephemeralMsg = attemptEphemeral(data) {
-            return .ephemeral(ephemeralMsg)
-        }
-
-        if let errorMsg = attemptError(data) {
-            return .error(errorMsg)
-        }
-
-        if let unavailableMsg = attemptUnavailable(data) {
-            return .unavailable(unavailableMsg)
-        }
-
-        // exhaustive - probably unexpected messages from an initiating client
-
-        if withHandshake {
+        case MTypes.ephemeral.rawValue:
+            if let ephemeralMsg = attemptEphemeral(data) {
+                return .ephemeral(ephemeralMsg)
+            }
+        case MTypes.error.rawValue:
+            if let errorMsg = attemptError(data) {
+                return .error(errorMsg)
+            }
+        case MTypes.unavailable.rawValue:
+            if let unavailableMsg = attemptUnavailable(data) {
+                return .unavailable(unavailableMsg)
+            }
+        case MTypes.join.rawValue:
             if let joinMsg = attemptJoin(data) {
                 return .join(joinMsg)
             }
-        }
-
-        if withGossip {
+        case MTypes.remoteHeadsChanged.rawValue:
+            if let remoteHeadsChanged = attemptRemoteHeadsChanged(data) {
+                return .remoteHeadsChanged(remoteHeadsChanged)
+            }
+        case MTypes.request.rawValue:
+            if let requestMsg = attemptRequest(data) {
+                return .request(requestMsg)
+            }
+        case MTypes.remoteSubscriptionChange.rawValue:
             if let remoteSubChangeMsg = attemptRemoteSubscriptionChange(data) {
                 return .remoteSubscriptionChange(remoteSubChangeMsg)
             }
-        }
 
-        if let requestMsg = attemptRequest(data) {
-            return .request(requestMsg)
+        default:
+            return .unknown(data)
         }
-
         return .unknown(data)
     }
 
@@ -296,7 +318,7 @@ public indirect enum V1Msg {
             return try encode(ephemeralMsg)
         case let .remoteSubscriptionChange(remoteSubscriptionChangeMsg):
             return try encode(remoteSubscriptionChangeMsg)
-        case let .remoteheadschanged(remoteHeadsChangedMsg):
+        case let .remoteHeadsChanged(remoteHeadsChangedMsg):
             return try encode(remoteHeadsChangedMsg)
         case let .unknown(data):
             return data
@@ -323,7 +345,7 @@ extension V1Msg: CustomDebugStringConvertible {
             return interior_msg.debugDescription
         case let .remoteSubscriptionChange(interior_msg):
             return interior_msg.debugDescription
-        case let .remoteheadschanged(interior_msg):
+        case let .remoteHeadsChanged(interior_msg):
             return interior_msg.debugDescription
         case let .unknown(data):
             return "UNKNOWN[data: \(data.hexEncodedString(uppercase: false))]"
@@ -363,7 +385,7 @@ public struct PeerMetadata: Codable, CustomDebugStringConvertible {
 /// If the receiving peer receives any message other than a `JoinMsg` from the initiating peer, it is expected to
 /// terminate the connection.
 public struct JoinMsg: Codable, CustomDebugStringConvertible {
-    public var type: String = "join"
+    public var type: String = V1Msg.MTypes.join.rawValue
     public let senderId: PEER_ID
     public var supportedProtocolVersions: String = "1"
     public var peerMetadata: PeerMetadata?
@@ -403,7 +425,7 @@ public struct JoinMsg: Codable, CustomDebugStringConvertible {
 /// A response sent by a receiving peer (represented by `targetId`) after receiving a ``JoinMsg`` that indicates sync,
 /// gossiping, and ephemeral messages may now be initiated.
 public struct PeerMsg: Codable, CustomDebugStringConvertible {
-    public var type: String = "peer"
+    public var type: String = V1Msg.MTypes.peer.rawValue
     public let senderId: PEER_ID
     public let targetId: PEER_ID
     public var peerMetadata: PeerMetadata?
@@ -429,7 +451,7 @@ public struct PeerMsg: Codable, CustomDebugStringConvertible {
 
 /// A sync error message
 public struct ErrorMsg: Codable, CustomDebugStringConvertible {
-    public var type: String = "error"
+    public var type: String = V1Msg.MTypes.error.rawValue
     public let message: String
 
     public init(message: String) {
@@ -460,7 +482,7 @@ public struct ErrorMsg: Codable, CustomDebugStringConvertible {
 /// Identical to ``SyncMsg`` but indicates to the receiving peer that the sender would like an ``UnavailableMsg``
 /// message if the receiving peer (represented by `targetId` does not have the document (identified by `documentId`).
 public struct RequestMsg: Codable, CustomDebugStringConvertible {
-    public var type: String = "request"
+    public var type: String = V1Msg.MTypes.request.rawValue
     public let documentId: DOCUMENT_ID
     public let senderId: PEER_ID // The peer requesting to begin sync
     public let targetId: PEER_ID
@@ -497,7 +519,7 @@ public struct RequestMsg: Codable, CustomDebugStringConvertible {
 /// If the receiving peer doesn't have an Automerge document represented by `documentId` and can't or won't store the
 /// document.
 public struct SyncMsg: Codable, CustomDebugStringConvertible {
-    public var type = "sync"
+    public var type = V1Msg.MTypes.sync.rawValue
     public let documentId: DOCUMENT_ID
     public let senderId: PEER_ID // The peer requesting to begin sync
     public let targetId: PEER_ID
@@ -528,7 +550,7 @@ public struct SyncMsg: Codable, CustomDebugStringConvertible {
 /// Generally a response for a ``RequestMsg`` from an initiating peer (represented by `senderId`) that the receiving
 /// peer (represented by `targetId`) doesn't have a copy of the requested Document, or is unable to share it.
 public struct UnavailableMsg: Codable, CustomDebugStringConvertible {
-    public var type = "doc-unavailable"
+    public var type = V1Msg.MTypes.unavailable.rawValue
     public let documentId: DOCUMENT_ID
     public let senderId: PEER_ID
     public let targetId: PEER_ID
@@ -564,7 +586,7 @@ public struct UnavailableMsg: Codable, CustomDebugStringConvertible {
 // }
 
 public struct EphemeralMsg: Codable, CustomDebugStringConvertible {
-    public var type = "ephemeral"
+    public var type = V1Msg.MTypes.ephemeral.rawValue
     public let senderId: PEER_ID
     public let targetId: PEER_ID
     public let count: UInt
@@ -609,7 +631,7 @@ public struct EphemeralMsg: Codable, CustomDebugStringConvertible {
 // }
 
 public struct RemoteSubscriptionChangeMsg: Codable, CustomDebugStringConvertible {
-    public var type = "remote-subscription-change"
+    public var type = V1Msg.MTypes.remoteSubscriptionChange.rawValue
     public let senderId: PEER_ID
     public let targetId: PEER_ID
     public var add: [STORAGE_ID]?
@@ -673,7 +695,7 @@ public struct RemoteHeadsChangedMsg: Codable, CustomDebugStringConvertible {
         }
     }
 
-    public var type = "remote-heads-changed"
+    public var type = V1Msg.MTypes.remoteHeadsChanged.rawValue
     public let senderId: PEER_ID
     public let targetId: PEER_ID
     public let documentId: DOCUMENT_ID
