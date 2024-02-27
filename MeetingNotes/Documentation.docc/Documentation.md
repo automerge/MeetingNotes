@@ -43,7 +43,7 @@ The source for the MeetingNotes app is [available on Github](https://github.com/
 - ``PeerSyncView``
 - ``SyncConnectionView``
 - ``MergeView``
-- ``SyncView``
+
 
 ### Previews
 
@@ -61,9 +61,9 @@ The source for the MeetingNotes app is [available on Github](https://github.com/
 
 ### Peer to Peer Syncing Protocol
 
-- ``AutomergeSyncProtocol``
-- ``SyncMessageType`` 
-- ``AutomergeSyncProtocolHeader``
+- ``P2PAutomergeSyncProtocol``
+- ``P2PSyncMessageType`` 
+- ``P2PAutomergeSyncProtocolHeader``
 - ``MeetingNotes/Network/NWParameters/peerSyncParameters(documentId:)``
 
 ### Application Resources
