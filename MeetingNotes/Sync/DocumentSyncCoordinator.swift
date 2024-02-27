@@ -36,7 +36,7 @@ final class WeakMeetingNotesDocumentRef {
 }
 
 /// A application-shared sync controller that supports coordinates documents and network connections with peers.
-final class DocumentSyncCoordinator: ObservableObject {
+public final class DocumentSyncCoordinator: ObservableObject {
     var documents: [DocumentId: WeakMeetingNotesDocumentRef] = [:]
     var txtRecords: [DocumentId: NWTXTRecord] = [:]
     var listeners: [DocumentId: NWListener] = [:]
@@ -93,7 +93,7 @@ final class DocumentSyncCoordinator: ObservableObject {
         #endif
     }
 
-    init() {
+    public init() {
         self.name = UserDefaults.standard
             .string(forKey: MeetingNotesDefaultKeys.sharingIdentity) ?? DocumentSyncCoordinator.defaultSharingIdentity()
         Logger.syncController.debug("SYNC CONTROLLER INIT, peer \(self.peerId.uuidString, privacy: .public)")
@@ -104,7 +104,7 @@ final class DocumentSyncCoordinator: ObservableObject {
         #endif
     }
 
-    func activate() {
+    public func activate() {
         Logger.syncController.debug("SYNC PEER  \(self.peerId.uuidString, privacy: .public): ACTIVATE")
         browserState = .setup
         startBrowsing()
@@ -120,7 +120,7 @@ final class DocumentSyncCoordinator: ObservableObject {
             })
     }
 
-    func deactivate() {
+    public func deactivate() {
         Logger.syncController.debug("SYNC PEER  \(self.peerId.uuidString, privacy: .public): CANCEL")
         timerCancellable?.cancel()
         stopBrowsing()

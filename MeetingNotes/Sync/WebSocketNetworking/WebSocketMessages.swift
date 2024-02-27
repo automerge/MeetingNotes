@@ -346,7 +346,6 @@ extension V1: CustomDebugStringConvertible {
 }
 
 public extension V1 {
-    
     // ; Metadata sent in either the join or peer message types
     // peer_metadata = {
     //    ; The storage ID of this peer
