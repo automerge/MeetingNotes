@@ -1,4 +1,5 @@
 import Automerge
+import Combine
 import OSLog
 import PotentCBOR
 import SwiftUI
@@ -62,6 +63,8 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     @Published
     var model: MeetingNotesModel
 
+    var syncedDocumentTrigger: Cancellable?
+
     static var readableContentTypes: [UTType] { [.meetingnote] }
 
     init() {
@@ -78,6 +81,10 @@ final class MeetingNotesDocument: ReferenceFileDocument {
             try modelEncoder.encode(newModel)
         } catch {
             fatalError(error.localizedDescription)
+        }
+
+        syncedDocumentTrigger = doc.objectWillChange.sink {
+            self.objectWillChange.send()
         }
     }
 
@@ -134,10 +141,26 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         }
         Logger.document
             .debug("finished loading from \(String(describing: configuration.file.filename), privacy: .public)")
+        syncedDocumentTrigger = doc.objectWillChange
+            // slow down the rate at which updates can appear so that the whole SwiftUI view
+            // structure won't be reset too frequently, but IS updated when changes come in from
+            // a syncing mechanism.
+            .throttle(for: 1.0, scheduler: DispatchQueue.main, latest: true)
+            .receive(on: RunLoop.main)
+            .sink {
+                do {
+                    try self.getModelUpdates()
+                } catch {
+                    fatalError("Error occurred while updating the model from the Automerge document: \(error)")
+                }
+                self.objectWillChange.send()
+            }
     }
 
     deinit {
         Logger.document.debug("DEINIT of MeetingNotesDocument, documentId: \(self.id, privacy: .public)")
+        syncedDocumentTrigger?.cancel()
+        syncedDocumentTrigger = nil
     }
 
     func snapshot(contentType _: UTType) throws -> Document {

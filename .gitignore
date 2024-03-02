@@ -11,4 +11,7 @@ DerivedData/
 # Finder giblets
 .DS_Store
 
-*.xcodeproj/xcshareddata/
+*.xcodeproj/xcuserdata
+
+# interop server for dev/testing
+automerge-repo-sync-server

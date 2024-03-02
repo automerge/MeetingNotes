@@ -1,0 +1,11 @@
+stateDiagram-v2
+    direction LR
+    
+    classDef currentState fill:#0CC,font-weight:bold,strike-width:2px
+
+    [*] --> new:::currentState
+    new --> handshake
+    handshake --> closed
+    handshake --> peered
+    peered --> closed
+    closed --> handshake

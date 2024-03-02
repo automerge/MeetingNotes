@@ -13,6 +13,6 @@ extension Logger {
     /// Logs updates and interaction related to the process of synchronization over the network.
     static let syncConnection = Logger(subsystem: subsystem, category: "SyncConnection")
 
-    /// All logs related to tracking and analytics.
-//    static let statistics = Logger(subsystem: subsystem, category: "statistics")
+    /// Logs updates and interaction related to the process of synchronization over the network.
+    static let webSocket = Logger(subsystem: subsystem, category: "WebSocket")
 }
