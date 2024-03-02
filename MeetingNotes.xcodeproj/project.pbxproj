@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,15 +17,20 @@
 		1A0DDC562A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */; };
 		1A11B8922B7AC37100CB4CA9 /* URLSessionWebSocketTask+sendPing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A11B8912B7AC37100CB4CA9 /* URLSessionWebSocketTask+sendPing.swift */; };
 		1A2521442B1567F20096951D /* DocumentId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2521432B1567F20096951D /* DocumentId.swift */; };
+		1A273DC32B93EC8D00B321C5 /* AutomergeRepo in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DC22B93EC8D00B321C5 /* AutomergeRepo */; };
+		1A273DC62B93ECF400B321C5 /* AutomergeRepo in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DC52B93ECF400B321C5 /* AutomergeRepo */; };
+		1A273DC92B93EE9300B321C5 /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DC82B93EE9300B321C5 /* PotentCodables */; };
+		1A273DCC2B93EEA600B321C5 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DCB2B93EEA600B321C5 /* Base58Swift */; };
+		1A273DCF2B93EEBB00B321C5 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DCE2B93EEBB00B321C5 /* Automerge */; };
+		1A273DD12B93EEE200B321C5 /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DD02B93EEE200B321C5 /* PotentCodables */; };
+		1A273DD32B93EEEC00B321C5 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DD22B93EEEC00B321C5 /* Base58Swift */; };
+		1A273DD52B93EEF700B321C5 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DD42B93EEF700B321C5 /* Automerge */; };
 		1A2A02A52A50E74B0044064B /* EditableAgendaItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2A02A42A50E74A0044064B /* EditableAgendaItemView.swift */; };
 		1A2AD0312A7437E200EF0C5F /* SyncConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2AD0302A7437E200EF0C5F /* SyncConnectionView.swift */; };
 		1A30C4DB2B155ECF007CE4F0 /* Data+hexEncodedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */; };
 		1A30C4DD2B155F07007CE4F0 /* UUID+bs58String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */; };
 		1A4A610C2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4A610B2A6F05BE00E097F1 /* TimeInterval+milliseconds.swift */; };
 		1A5F2D3B2B8E70F300C9417D /* CBORDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5F2D3A2B8E70F300C9417D /* CBORDecodingTests.swift */; };
-		1A6647852AF986990041C134 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647842AF986990041C134 /* Base58Swift */; };
-		1A6647882AF987A00041C134 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647872AF987A00041C134 /* Base58Swift */; };
-		1A66478A2AF987A60041C134 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1A6647892AF987A60041C134 /* Automerge */; };
 		1A6CB2652B71CABF00CA23E9 /* String+hexEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6CB2642B71CABF00CA23E9 /* String+hexEncoding.swift */; };
 		1A6FF21D2B64710700C99F81 /* WebSocketStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FF21C2B64710700C99F81 /* WebSocketStatusView.swift */; };
 		1A7700C52A67343800869A4D /* PeerSyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C42A67343800869A4D /* PeerSyncView.swift */; };
@@ -33,18 +38,15 @@
 		1A8217AD2A6877730071DD38 /* DocumentSyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8217AC2A6877730071DD38 /* DocumentSyncCoordinator.swift */; };
 		1A9272E32B61A529000CB9E5 /* WebsocketSyncConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9272E22B61A529000CB9E5 /* WebsocketSyncConnection.swift */; };
 		1A9272E62B61AC2C000CB9E5 /* WebSocketMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9272E52B61AC2C000CB9E5 /* WebSocketMessages.swift */; };
-		1AADE1F42B586801000205BB /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1AADE1F32B586801000205BB /* PotentCodables */; };
 		1AADE1F52B586875000205BB /* Data+hexEncodedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DA2B155ECF007CE4F0 /* Data+hexEncodedString.swift */; };
 		1AADE1F62B586878000205BB /* UUID+bs58String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A30C4DC2B155F07007CE4F0 /* UUID+bs58String.swift */; };
 		1AADE1F72B58687E000205BB /* DocumentId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2521432B1567F20096951D /* DocumentId.swift */; };
 		1AC103972B7EB0EF0099296C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1AC103962B7EB0EF0099296C /* PrivacyInfo.xcprivacy */; };
 		1ACF1CE12B6DCAFC00DC5198 /* Task+timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF1CE02B6DCAFC00DC5198 /* Task+timeout.swift */; };
-		1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD5DA322A464FBD0085DF79 /* Automerge */; };
 		1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */; };
 		1AD71E8E2A57622B00B965BF /* MeetingNotesDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */; };
 		1AD71E912A57630B00B965BF /* MergeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E902A57630B00B965BF /* MergeView.swift */; };
 		1AD71E932A5765A800B965BF /* SyncStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E922A5765A800B965BF /* SyncStatusView.swift */; };
-		1AD7A8E52A4767A1003B6A1E /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1AD7A8E42A4767A1003B6A1E /* PotentCodables */; };
 		1AD7A8EB2A476801003B6A1E /* NWParameters+peerSyncParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E62A476801003B6A1E /* NWParameters+peerSyncParameters.swift */; };
 		1AD7A8ED2A476801003B6A1E /* P2PAutomergeSyncProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8E82A476801003B6A1E /* P2PAutomergeSyncProtocol.swift */; };
 		1AD7A8EF2A476801003B6A1E /* SyncConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD7A8EA2A476801003B6A1E /* SyncConnection.swift */; };
@@ -93,6 +95,7 @@
 		1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeetingNotes.xctestplan; sourceTree = "<group>"; };
 		1A11B8912B7AC37100CB4CA9 /* URLSessionWebSocketTask+sendPing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionWebSocketTask+sendPing.swift"; sourceTree = "<group>"; };
 		1A2521432B1567F20096951D /* DocumentId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentId.swift; sourceTree = "<group>"; };
+		1A273DC02B93EBD000B321C5 /* Packages */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Packages; sourceTree = "<group>"; };
 		1A27AB422B768C0300A29BC3 /* Automerge-swift-privacy-manifest.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = "Automerge-swift-privacy-manifest.bundle"; sourceTree = "<group>"; };
 		1A2A02A42A50E74A0044064B /* EditableAgendaItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableAgendaItemView.swift; sourceTree = "<group>"; };
 		1A2AD0302A7437E200EF0C5F /* SyncConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncConnectionView.swift; sourceTree = "<group>"; };
@@ -130,9 +133,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A6647852AF986990041C134 /* Base58Swift in Frameworks */,
-				1AD5DA332A464FBD0085DF79 /* Automerge in Frameworks */,
-				1AD7A8E52A4767A1003B6A1E /* PotentCodables in Frameworks */,
+				1A273DCC2B93EEA600B321C5 /* Base58Swift in Frameworks */,
+				1A273DCF2B93EEBB00B321C5 /* Automerge in Frameworks */,
+				1A273DC92B93EE9300B321C5 /* PotentCodables in Frameworks */,
+				1A273DC32B93EC8D00B321C5 /* AutomergeRepo in Frameworks */,
+				1A273DC62B93ECF400B321C5 /* AutomergeRepo in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,9 +145,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AADE1F42B586801000205BB /* PotentCodables in Frameworks */,
-				1A66478A2AF987A60041C134 /* Automerge in Frameworks */,
-				1A6647882AF987A00041C134 /* Base58Swift in Frameworks */,
+				1A273DD32B93EEEC00B321C5 /* Base58Swift in Frameworks */,
+				1A273DD12B93EEE200B321C5 /* PotentCodables in Frameworks */,
+				1A273DD52B93EEF700B321C5 /* Automerge in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,6 +169,7 @@
 				1AF5DB3B2A4A0C5E008DAC6F /* CONTRIBUTING.md */,
 				1AA529342B6D973C0084F855 /* notes */,
 				1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */,
+				1A273DC02B93EBD000B321C5 /* Packages */,
 				1A0DDC332A464DEA001ECADD /* MeetingNotes */,
 				1A0DDC482A464DEB001ECADD /* MeetingNotesTests */,
 				1A0DDC522A464DEB001ECADD /* MeetingNotesUITests */,
@@ -305,9 +311,11 @@
 			);
 			name = MeetingNotes;
 			packageProductDependencies = (
-				1AD5DA322A464FBD0085DF79 /* Automerge */,
-				1AD7A8E42A4767A1003B6A1E /* PotentCodables */,
-				1A6647842AF986990041C134 /* Base58Swift */,
+				1A273DC22B93EC8D00B321C5 /* AutomergeRepo */,
+				1A273DC52B93ECF400B321C5 /* AutomergeRepo */,
+				1A273DC82B93EE9300B321C5 /* PotentCodables */,
+				1A273DCB2B93EEA600B321C5 /* Base58Swift */,
+				1A273DCE2B93EEBB00B321C5 /* Automerge */,
 			);
 			productName = MeetingNotes;
 			productReference = 1A0DDC312A464DEA001ECADD /* MeetingNotes.app */;
@@ -328,9 +336,9 @@
 			);
 			name = MeetingNotesTests;
 			packageProductDependencies = (
-				1A6647872AF987A00041C134 /* Base58Swift */,
-				1A6647892AF987A60041C134 /* Automerge */,
-				1AADE1F32B586801000205BB /* PotentCodables */,
+				1A273DD02B93EEE200B321C5 /* PotentCodables */,
+				1A273DD22B93EEEC00B321C5 /* Base58Swift */,
+				1A273DD42B93EEF700B321C5 /* Automerge */,
 			);
 			productName = MeetingNotesTests;
 			productReference = 1A0DDC452A464DEB001ECADD /* MeetingNotesTests.xctest */;
@@ -387,9 +395,10 @@
 			);
 			mainGroup = 1A0DDC282A464DEA001ECADD;
 			packageReferences = (
-				1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */,
-				1AD7A8E32A4767A1003B6A1E /* XCRemoteSwiftPackageReference "PotentCodables" */,
-				1A6647832AF986990041C134 /* XCRemoteSwiftPackageReference "Base58Swift" */,
+				1A273DC42B93ECF400B321C5 /* XCLocalSwiftPackageReference "Packages/automerge-repo" */,
+				1A273DC72B93EE9300B321C5 /* XCRemoteSwiftPackageReference "PotentCodables" */,
+				1A273DCA2B93EEA600B321C5 /* XCRemoteSwiftPackageReference "Base58Swift" */,
+				1A273DCD2B93EEBA00B321C5 /* XCRemoteSwiftPackageReference "automerge-swift" */,
 			);
 			productRefGroup = 1A0DDC322A464DEA001ECADD /* Products */;
 			projectDirPath = "";
@@ -862,8 +871,23 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		1A273DC42B93ECF400B321C5 /* XCLocalSwiftPackageReference "Packages/automerge-repo" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "Packages/automerge-repo";
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
-		1A6647832AF986990041C134 /* XCRemoteSwiftPackageReference "Base58Swift" */ = {
+		1A273DC72B93EE9300B321C5 /* XCRemoteSwiftPackageReference "PotentCodables" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/outfoxx/PotentCodables";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.2.0;
+			};
+		};
+		1A273DCA2B93EEA600B321C5 /* XCRemoteSwiftPackageReference "Base58Swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/keefertaylor/Base58Swift";
 			requirement = {
@@ -871,54 +895,54 @@
 				minimumVersion = 2.1.14;
 			};
 		};
-		1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */ = {
+		1A273DCD2B93EEBA00B321C5 /* XCRemoteSwiftPackageReference "automerge-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/automerge/automerge-swift/";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.0;
-			};
-		};
-		1AD7A8E32A4767A1003B6A1E /* XCRemoteSwiftPackageReference "PotentCodables" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/outfoxx/PotentCodables";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.1.0;
+				minimumVersion = 0.5.8;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		1A6647842AF986990041C134 /* Base58Swift */ = {
+		1A273DC22B93EC8D00B321C5 /* AutomergeRepo */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1A6647832AF986990041C134 /* XCRemoteSwiftPackageReference "Base58Swift" */;
-			productName = Base58Swift;
+			productName = AutomergeRepo;
 		};
-		1A6647872AF987A00041C134 /* Base58Swift */ = {
+		1A273DC52B93ECF400B321C5 /* AutomergeRepo */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1A6647832AF986990041C134 /* XCRemoteSwiftPackageReference "Base58Swift" */;
-			productName = Base58Swift;
+			productName = AutomergeRepo;
 		};
-		1A6647892AF987A60041C134 /* Automerge */ = {
+		1A273DC82B93EE9300B321C5 /* PotentCodables */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */;
-			productName = Automerge;
-		};
-		1AADE1F32B586801000205BB /* PotentCodables */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1AD7A8E32A4767A1003B6A1E /* XCRemoteSwiftPackageReference "PotentCodables" */;
+			package = 1A273DC72B93EE9300B321C5 /* XCRemoteSwiftPackageReference "PotentCodables" */;
 			productName = PotentCodables;
 		};
-		1AD5DA322A464FBD0085DF79 /* Automerge */ = {
+		1A273DCB2B93EEA600B321C5 /* Base58Swift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1AD5DA312A464FBD0085DF79 /* XCRemoteSwiftPackageReference "automerge-swift" */;
+			package = 1A273DCA2B93EEA600B321C5 /* XCRemoteSwiftPackageReference "Base58Swift" */;
+			productName = Base58Swift;
+		};
+		1A273DCE2B93EEBB00B321C5 /* Automerge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1A273DCD2B93EEBA00B321C5 /* XCRemoteSwiftPackageReference "automerge-swift" */;
 			productName = Automerge;
 		};
-		1AD7A8E42A4767A1003B6A1E /* PotentCodables */ = {
+		1A273DD02B93EEE200B321C5 /* PotentCodables */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1AD7A8E32A4767A1003B6A1E /* XCRemoteSwiftPackageReference "PotentCodables" */;
+			package = 1A273DC72B93EE9300B321C5 /* XCRemoteSwiftPackageReference "PotentCodables" */;
 			productName = PotentCodables;
+		};
+		1A273DD22B93EEEC00B321C5 /* Base58Swift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1A273DCA2B93EEA600B321C5 /* XCRemoteSwiftPackageReference "Base58Swift" */;
+			productName = Base58Swift;
+		};
+		1A273DD42B93EEF700B321C5 /* Automerge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1A273DCD2B93EEBA00B321C5 /* XCRemoteSwiftPackageReference "automerge-swift" */;
+			productName = Automerge;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

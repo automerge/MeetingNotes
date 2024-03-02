@@ -19,17 +19,14 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(
-            url: "https://github.com/automerge/automerge-swift",
-            .upToNextMajor(from: "0.5.7")
-        ),
+        .package(url: "https://github.com/automerge/automerge-swift", .upToNextMajor(from: "0.5.7")),
         .package(url: "https://github.com/outfoxx/PotentCodables", .upToNextMajor(from: "3.1.0")),
         .package(url: "https://github.com/keefertaylor/Base58Swift", .upToNextMajor(from: "2.1.14")),
     ],
     targets: [
         .target(
             name: "AutomergeRepo",
-            dependencies: ["automerge-swift"]
+            dependencies: [.product(name: "Automerge", package: "automerge-swift")]
         ),
         .testTarget(
             name: "AutomergeRepoTests",
