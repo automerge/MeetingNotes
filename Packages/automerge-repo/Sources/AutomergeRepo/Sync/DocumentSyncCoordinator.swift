@@ -8,58 +8,59 @@ import UIKit // for UIDevice.name access
 #endif
 
 /// A type that provides type-safe strings for TXTRecord publications with Bonjour
-enum TXTRecordKeys {
+public enum TXTRecordKeys {
     /// The document identifier.
-    static var doc_id = "doc_id"
+    public static var doc_id = "doc_id"
     /// The peer identifier.
-    static var peer_id = "peer_id"
+    public static var peer_id = "peer_id"
     /// The human-readable name for the peer.
-    static var name = "name"
+    public static var name = "name"
 }
 
 /// A collection of User Default keys for the app.
-enum MeetingNotesDefaultKeys {
-    /// The key to the string that the app broadcasts to represent you when sharing and syncing MeetingNotes.
-    static let sharingIdentity = "sharingIdentity"
+public enum SyncUserDefaultsKeys {
+    /// The key to the string that the app broadcasts to represent you when sharing and syncing Automerge Documents.
+    public static let sharingIdentity = "sharingIdentity"
 }
 
-/// A weak reference to a MeetingNotes document
+/// A weak reference to an Automerge document
 ///
 /// Allow a global singleton keep references to documents without incurring memory leaks as Documents are opened and
 /// closed.
-final class WeakMeetingNotesDocumentRef {
-    weak var value: MeetingNotesDocument?
+final class WeakDocumentRef {
+    weak var value: Automerge.Document?
 
-    init(_ value: MeetingNotesDocument? = nil) {
+    init(_ value: Automerge.Document? = nil) {
         self.value = value
     }
 }
 
 /// A application-shared sync controller that supports coordinates documents and network connections with peers.
 public final class DocumentSyncCoordinator: ObservableObject {
-    var documents: [DocumentId: WeakMeetingNotesDocumentRef] = [:]
+    var documents: [DocumentId: WeakDocumentRef] = [:]
     var txtRecords: [DocumentId: NWTXTRecord] = [:]
     var listeners: [DocumentId: NWListener] = [:]
-    @Published var listenerState: [DocumentId: NWListener.State] = [:]
+    
+    @Published public var listenerState: [DocumentId: NWListener.State] = [:]
 
     /// Looks up and returns a reference for a document for an initiated Peer Connection
     ///
     /// Primarily in order to attempt to send and receive sync updates.
-    func automergeDocument(for docId: DocumentId) -> Document? {
-        documents[docId]?.value?.doc
+    public func automergeDocument(for docId: DocumentId) -> Document? {
+        documents[docId]?.value
     }
 
-    func registerDocument(_ document: MeetingNotesDocument) {
-        documents[document.id] = WeakMeetingNotesDocumentRef(document)
-
+    public func registerDocument(document: Automerge.Document, id: DocumentId? = nil) {
+        let documentId: DocumentId = id ?? DocumentId()
+        documents[documentId] = WeakDocumentRef(document)
         var txtRecord = NWTXTRecord()
         txtRecord[TXTRecordKeys.name] = name
         txtRecord[TXTRecordKeys.peer_id] = peerId.uuidString
-        txtRecord[TXTRecordKeys.doc_id] = document.id.description
-        txtRecords[document.id] = txtRecord
+        txtRecord[TXTRecordKeys.doc_id] = documentId.description
+        txtRecords[documentId] = txtRecord
     }
 
-    @Published var name: String {
+    @Published public var name: String {
         didSet {
             // update a listener, if running, with the new name.
             resetName(name)
@@ -67,35 +68,35 @@ public final class DocumentSyncCoordinator: ObservableObject {
     }
 
     var browser: NWBrowser?
-    @Published var browserResults: [NWBrowser.Result] = []
-    @Published var browserState: NWBrowser.State = .setup
-    var autoconnect: Bool
+    @Published public var browserResults: [NWBrowser.Result] = []
+    @Published public var browserState: NWBrowser.State = .setup
+    public var autoconnect: Bool
 
-    @Published var connections: [SyncConnection] = []
+    @Published public var connections: [SyncConnection] = []
 
     func removeConnection(_ connectionId: UUID) {
         connections.removeAll { $0.connectionId == connectionId }
     }
 
-    @Published var listenerSetupError: Error? = nil
-    @Published var listenerStatusError: NWError? = nil
+    @Published public var listenerSetupError: Error? = nil
+    @Published public var listenerStatusError: NWError? = nil
 
     let peerId = UUID()
     let syncQueue = DispatchQueue(label: "PeerSyncQueue")
     var timerCancellable: Cancellable?
     var syncTrigger: PassthroughSubject<Void, Never> = PassthroughSubject()
 
-    static func defaultSharingIdentity() -> String {
+    public static func defaultSharingIdentity() -> String {
         #if os(iOS)
         UIDevice().name
         #elseif os(macOS)
-        Host.current().localizedName ?? "MeetingNotes User"
+        Host.current().localizedName ?? "Automerge User"
         #endif
     }
 
-    public init() {
+    internal init() {
         self.name = UserDefaults.standard
-            .string(forKey: MeetingNotesDefaultKeys.sharingIdentity) ?? DocumentSyncCoordinator.defaultSharingIdentity()
+            .string(forKey: SyncUserDefaultsKeys.sharingIdentity) ?? DocumentSyncCoordinator.defaultSharingIdentity()
         Logger.syncController.debug("SYNC CONTROLLER INIT, peer \(self.peerId.uuidString, privacy: .public)")
         #if os(iOS)
         autoconnect = true
@@ -131,7 +132,7 @@ public final class DocumentSyncCoordinator: ObservableObject {
 
     // MARK: NWBrowser
 
-    func attemptToConnectToPeer(_ endpoint: NWEndpoint, forPeer peerId: String, withDoc documentId: DocumentId) {
+    public func attemptToConnectToPeer(_ endpoint: NWEndpoint, forPeer peerId: String, withDoc documentId: DocumentId) {
         Logger.syncController
             .debug(
                 "Attempting to establish connection to \(peerId, privacy: .public) through \(endpoint.debugDescription, privacy: .public) "
@@ -404,4 +405,8 @@ public final class DocumentSyncCoordinator: ObservableObject {
             }
         }
     }
+}
+
+public extension DocumentSyncCoordinator {
+    static let shared = DocumentSyncCoordinator()
 }

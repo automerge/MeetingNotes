@@ -1,5 +1,5 @@
-import MeetingNotes
 import PotentCBOR
+import AutomergeRepo
 import XCTest
 
 final class CBORDecodingTests: XCTestCase {

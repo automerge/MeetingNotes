@@ -1,4 +1,5 @@
 import Network
+import AutomergeRepo
 import SwiftUI
 
 /// A view that shows the status of peers and network syncing.
@@ -10,9 +11,9 @@ struct PeerSyncView: View {
     @State var browserStyling: Color = .primary
 
     @State private var editNamePopoverShown: Bool = false
-    @AppStorage(MeetingNotesDefaultKeys.sharingIdentity) private var sharingIdentity: String = DocumentSyncCoordinator
+    @AppStorage(SyncUserDefaultsKeys.sharingIdentity) private var sharingIdentity: String = DocumentSyncCoordinator
         .defaultSharingIdentity()
-
+    
     var body: some View {
         VStack {
             HStack {

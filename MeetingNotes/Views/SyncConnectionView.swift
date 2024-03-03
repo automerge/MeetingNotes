@@ -1,5 +1,6 @@
 import Network
 import SwiftUI
+import AutomergeRepo
 
 /// A view that displays a sync connection and its state.
 struct SyncConnectionView: View {

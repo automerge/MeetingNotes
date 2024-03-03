@@ -53,8 +53,8 @@ public indirect enum V1 {
     static let decoder = CBORDecoder()
 
     /// The collection of value "type" strings for the V1 automerge-repo protocol.
-    enum MsgTypes {
-        static var peer = "peer"
+    public enum MsgTypes {
+        public static var peer = "peer"
         static var sync = "sync"
         static var ephemeral = "ephemeral"
         static var error = "error"
