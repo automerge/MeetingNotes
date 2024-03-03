@@ -23,10 +23,10 @@ import OSLog
 /// As soon as it is established, it attempts to commence a sync operation (send and expect to receive sync messages).
 /// In addition, it includes an optional `trigger` in its initializer that, when it receives any signal value, kicks off
 /// another attempt to sync the relevant Automerge document.
-final class SyncConnection: ObservableObject {
+public final class SyncConnection: ObservableObject {
     /// A unique identifier to track the connections for comparison against existing connections.
     var connectionId = UUID()
-    var shortId: String {
+    public var shortId: String {
         //  "41ee739d-c827-4be8-9a4f-c44a492e76cf"
         String(connectionId.uuidString.lowercased().suffix(8))
     }
@@ -37,12 +37,12 @@ final class SyncConnection: ObservableObject {
     var connection: NWConnection?
     /// A Boolean value that indicates this app initiated this connection.
 
-    @Published var connectionState: NWConnection.State = .setup
-    @Published var endpoint: NWEndpoint?
+    @Published public var connectionState: NWConnection.State = .setup
+    @Published public var endpoint: NWEndpoint?
     /// The peer Id for the connection endpoint, only set on outbound connections.
     var peerId: String?
 
-    /// The synchronisation state associated with this connection.
+    /// The synchronization state associated with this connection.
     var syncState: SyncState
 
     /// The cancellable subscription to the trigger mechanism that attempts sync updates.
@@ -95,7 +95,7 @@ final class SyncConnection: ObservableObject {
     }
 
     /// Cancels the current connection.
-    func cancel() {
+    public func cancel() {
         if let connection = connection {
             syncTriggerCancellable?.cancel()
             if let peerId {
@@ -122,7 +122,7 @@ final class SyncConnection: ObservableObject {
         }
 
         syncTriggerCancellable = trigger.sink(receiveValue: { _ in
-            if let automergeDoc = sharedSyncCoordinator.documents[self.documentId]?.value?.doc,
+            if let automergeDoc = DocumentSyncCoordinator.shared.documents[self.documentId]?.value,
                let syncData = automergeDoc.generateSyncMessage(state: self.syncState),
                self.connectionState == .ready
             {
@@ -160,7 +160,7 @@ final class SyncConnection: ObservableObject {
                 // Cancel the connection upon a failure.
                 connection.cancel()
                 self.syncTriggerCancellable?.cancel()
-                sharedSyncCoordinator.removeConnection(self.connectionId)
+                DocumentSyncCoordinator.shared.removeConnection(self.connectionId)
                 self.syncTriggerCancellable = nil
 
             case .cancelled:
@@ -169,7 +169,7 @@ final class SyncConnection: ObservableObject {
                         "\(self.shortId, privacy: .public): CANCEL \(endpoint.debugDescription, privacy: .public) connection."
                     )
                 self.syncTriggerCancellable?.cancel()
-                sharedSyncCoordinator.removeConnection(self.connectionId)
+                DocumentSyncCoordinator.shared.removeConnection(self.connectionId)
                 self.syncTriggerCancellable = nil
 
             case let .waiting(nWError):
@@ -304,7 +304,7 @@ final class SyncConnection: ObservableObject {
     }
 
     func receivedMessage(content data: Data?, message: NWProtocolFramer.Message, from endpoint: NWEndpoint) {
-        guard let document = sharedSyncCoordinator.documents[self.documentId]?.value else {
+        guard let document = DocumentSyncCoordinator.shared.documents[self.documentId]?.value else {
             Logger.syncConnection
                 .warning(
                     "\(self.shortId, privacy: .public): received msg for unregistered document \(self.documentId, privacy: .public) from \(endpoint.debugDescription, privacy: .public)"
@@ -329,7 +329,7 @@ final class SyncConnection: ObservableObject {
             do {
                 // When we receive a complete sync message from the underlying transport,
                 // update our automerge document, and the associated SyncState.
-                let patches = try document.doc.receiveSyncMessageWithPatches(
+                let patches = try document.receiveSyncMessageWithPatches(
                     state: syncState,
                     message: data
                 )
@@ -337,11 +337,10 @@ final class SyncConnection: ObservableObject {
                     .debug(
                         "\(self.shortId, privacy: .public): Received \(patches.count, privacy: .public) patches in \(data.count, privacy: .public) bytes"
                     )
-                try document.getModelUpdates()
 
                 // Once the Automerge doc is updated, check (using the SyncState) to see if
                 // we believe we need to send additional messages to the peer to keep it in sync.
-                if let response = document.doc.generateSyncMessage(state: syncState) {
+                if let response = document.generateSyncMessage(state: syncState) {
                     sendSyncMsg(response)
                 } else {
                     // When generateSyncMessage returns nil, the remote endpoint represented by
@@ -357,7 +356,7 @@ final class SyncConnection: ObservableObject {
             }
         case .id:
             Logger.syncConnection.info("\(self.shortId, privacy: .public): received request for document ID")
-            sendDocumentId(document.id)
+            sendDocumentId(self.documentId)
         }
     }
 }

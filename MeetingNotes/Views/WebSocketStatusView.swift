@@ -1,4 +1,5 @@
 import SwiftUI
+import AutomergeRepo
 
 /// A toolbar button for activating sync for a document.
 struct WebSocketStatusView: View {

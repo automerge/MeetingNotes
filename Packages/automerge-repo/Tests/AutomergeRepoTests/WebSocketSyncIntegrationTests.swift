@@ -7,6 +7,7 @@
 
 import Automerge
 import AutomergeUtilities
+import AutomergeRepo
 import OSLog
 import XCTest
 

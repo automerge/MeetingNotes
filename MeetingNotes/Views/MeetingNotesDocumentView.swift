@@ -80,7 +80,7 @@ struct MeetingNotesDocumentView: View {
             // including sometimes regenerating them when disk contents are updated
             // in the background, so register the current instance with the
             // sync coordinator as they become visible.
-            sharedSyncCoordinator.registerDocument(document)
+            sharedSyncCoordinator.registerDocument(document: document.doc, id: document.id)
         }
         .onReceive(document.objectWillChange, perform: { _ in
             if !document.model.agendas.contains(where: { agendaItem in
