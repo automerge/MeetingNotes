@@ -29,6 +29,7 @@
 		1A6FF21D2B64710700C99F81 /* WebSocketStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FF21C2B64710700C99F81 /* WebSocketStatusView.swift */; };
 		1A7700C52A67343800869A4D /* PeerSyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C42A67343800869A4D /* PeerSyncView.swift */; };
 		1A7700C72A67479F00869A4D /* NWBrowserResultItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C62A67479F00869A4D /* NWBrowserResultItemView.swift */; };
+		1A9D231A2B940D23007F3A16 /* AutomergeRepo in Frameworks */ = {isa = PBXBuildFile; productRef = 1A9D23192B940D23007F3A16 /* AutomergeRepo */; };
 		1AC103972B7EB0EF0099296C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1AC103962B7EB0EF0099296C /* PrivacyInfo.xcprivacy */; };
 		1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */; };
 		1AD71E8E2A57622B00B965BF /* MeetingNotesDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */; };
@@ -104,6 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A9D231A2B940D23007F3A16 /* AutomergeRepo in Frameworks */,
 				1A273DD32B93EEEC00B321C5 /* Base58Swift in Frameworks */,
 				1A273DD12B93EEE200B321C5 /* PotentCodables in Frameworks */,
 				1A273DD52B93EEF700B321C5 /* Automerge in Frameworks */,
@@ -257,6 +259,7 @@
 				1A273DD02B93EEE200B321C5 /* PotentCodables */,
 				1A273DD22B93EEEC00B321C5 /* Base58Swift */,
 				1A273DD42B93EEF700B321C5 /* Automerge */,
+				1A9D23192B940D23007F3A16 /* AutomergeRepo */,
 			);
 			productName = MeetingNotesTests;
 			productReference = 1A0DDC452A464DEB001ECADD /* MeetingNotesTests.xctest */;
@@ -837,6 +840,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1A273DCD2B93EEBA00B321C5 /* XCRemoteSwiftPackageReference "automerge-swift" */;
 			productName = Automerge;
+		};
+		1A9D23192B940D23007F3A16 /* AutomergeRepo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1A273DC42B93ECF400B321C5 /* XCLocalSwiftPackageReference "Packages/automerge-repo" */;
+			productName = AutomergeRepo;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
