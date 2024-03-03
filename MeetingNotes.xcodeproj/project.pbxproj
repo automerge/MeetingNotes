@@ -71,7 +71,6 @@
 		1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeetingNotes.xctestplan; sourceTree = "<group>"; };
 		1A273DC02B93EBD000B321C5 /* Packages */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Packages; sourceTree = "<group>"; };
 		1A273DD62B93F64500B321C5 /* Logger+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Logger+extensions.swift"; sourceTree = "<group>"; };
-		1A27AB422B768C0300A29BC3 /* Automerge-swift-privacy-manifest.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = "Automerge-swift-privacy-manifest.bundle"; sourceTree = "<group>"; };
 		1A2A02A42A50E74A0044064B /* EditableAgendaItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableAgendaItemView.swift; sourceTree = "<group>"; };
 		1A2AD0302A7437E200EF0C5F /* SyncConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncConnectionView.swift; sourceTree = "<group>"; };
 		1A6FF21C2B64710700C99F81 /* WebSocketStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketStatusView.swift; sourceTree = "<group>"; };
@@ -160,7 +159,6 @@
 				1A0DDC3E2A464DEB001ECADD /* Preview Content */,
 				1A0DDC3C2A464DEB001ECADD /* Info.plist */,
 				1A0DDC3D2A464DEB001ECADD /* MeetingNotes.entitlements */,
-				1A27AB422B768C0300A29BC3 /* Automerge-swift-privacy-manifest.bundle */,
 				1A273DD62B93F64500B321C5 /* Logger+extensions.swift */,
 			);
 			path = MeetingNotes;
