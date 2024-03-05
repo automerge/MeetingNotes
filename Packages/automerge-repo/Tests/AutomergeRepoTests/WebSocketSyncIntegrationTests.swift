@@ -6,8 +6,8 @@
 //
 
 import Automerge
-import AutomergeUtilities
 import AutomergeRepo
+import AutomergeUtilities
 import OSLog
 import XCTest
 

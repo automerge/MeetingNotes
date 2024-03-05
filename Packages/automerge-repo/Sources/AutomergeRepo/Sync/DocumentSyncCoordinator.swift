@@ -40,7 +40,7 @@ public final class DocumentSyncCoordinator: ObservableObject {
     var documents: [DocumentId: WeakDocumentRef] = [:]
     var txtRecords: [DocumentId: NWTXTRecord] = [:]
     var listeners: [DocumentId: NWListener] = [:]
-    
+
     @Published public var listenerState: [DocumentId: NWListener.State] = [:]
 
     /// Looks up and returns a reference for a document for an initiated Peer Connection
@@ -94,7 +94,7 @@ public final class DocumentSyncCoordinator: ObservableObject {
         #endif
     }
 
-    internal init() {
+    init() {
         self.name = UserDefaults.standard
             .string(forKey: SyncUserDefaultsKeys.sharingIdentity) ?? DocumentSyncCoordinator.defaultSharingIdentity()
         Logger.syncController.debug("SYNC CONTROLLER INIT, peer \(self.peerId.uuidString, privacy: .public)")

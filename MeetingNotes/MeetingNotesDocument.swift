@@ -1,10 +1,10 @@
 import Automerge
+import AutomergeRepo
 import Combine
 import OSLog
 import PotentCBOR
 import SwiftUI
 import UniformTypeIdentifiers
-import AutomergeRepo
 
 extension UTType {
     /// An Automerge document that is CBOR encoded with a document identifier.

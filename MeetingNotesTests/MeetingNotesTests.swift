@@ -26,7 +26,7 @@ final class MeetingNotesTests: XCTestCase {
         let exampleUUID = try XCTUnwrap(UUID(uuidString: "1654A0B5-43B9-48FF-B7FB-83F58F4D1D75"))
         // print("hexencoded: \(exampleUUID.data.hexEncodedString())")
         XCTAssertEqual("1654a0b543b948ffb7fb83f58f4d1d75", exampleUUID.data.hexEncodedString())
-        let bs58Converted = Base58.base58CheckEncode(exampleUUID.uintArray)
+        let bs58Converted = Base58.base58CheckEncode(exampleUUID.data.bytes)
         // print("Converted: \(bs58Converted)")
         XCTAssertEqual("K3YptshN5CcFZNpnnXcStizSNPU", bs58Converted)
         XCTAssertEqual(exampleUUID.bs58String, bs58Converted)

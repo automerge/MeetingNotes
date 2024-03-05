@@ -96,7 +96,7 @@ public final class SyncConnection: ObservableObject {
 
     /// Cancels the current connection.
     public func cancel() {
-        if let connection = connection {
+        if let connection {
             syncTriggerCancellable?.cancel()
             if let peerId {
                 Logger.syncConnection
@@ -117,7 +117,7 @@ public final class SyncConnection: ObservableObject {
 
     // Handle starting the peer-to-peer connection for both inbound and outbound connections.
     private func startConnection(_ trigger: AnyPublisher<Void, Never>) {
-        guard let connection = connection else {
+        guard let connection else {
             return
         }
 
@@ -221,7 +221,7 @@ public final class SyncConnection: ObservableObject {
     /// Receive a message from the sync protocol framing, deliver it to the delegate for processing, and continue
     /// receiving messages.
     private func receiveNextMessage() {
-        guard let connection = connection else {
+        guard let connection else {
             return
         }
 
@@ -258,7 +258,7 @@ public final class SyncConnection: ObservableObject {
     /// - Parameter documentId: The document Id to send.
     func sendDocumentId(_ documentId: DocumentId) {
         // corresponds to SyncMessageType.id
-        guard let connection = connection else {
+        guard let connection else {
             return
         }
 
@@ -281,7 +281,7 @@ public final class SyncConnection: ObservableObject {
     /// Sends an Automerge sync data packet.
     /// - Parameter syncMsg: The data to send.
     func sendSyncMsg(_ syncMsg: Data) {
-        guard let connection = connection else {
+        guard let connection else {
             Logger.syncConnection
                 .error("\(self.shortId, privacy: .public): PeerConnection doesn't have an active connection!")
             return
@@ -313,7 +313,7 @@ public final class SyncConnection: ObservableObject {
             return
         }
         switch message.syncMessageType {
-        case .invalid:
+        case .unknown:
             Logger.syncConnection
                 .error(
                     "\(self.shortId, privacy: .public): Invalid message received from \(endpoint.debugDescription, privacy: .public)"
@@ -357,6 +357,22 @@ public final class SyncConnection: ObservableObject {
         case .id:
             Logger.syncConnection.info("\(self.shortId, privacy: .public): received request for document ID")
             sendDocumentId(self.documentId)
+        case .peer:
+            break
+        case .join:
+            break
+        case .request:
+            break
+        case .unavailable:
+            break
+        case .ephemeral:
+            break
+        case .syncerror:
+            break
+        case .remoteHeadsChanged:
+            break
+        case .remoteSubscriptionChange:
+            break
         }
     }
 }

@@ -1,5 +1,5 @@
-import Network
 import AutomergeRepo
+import Network
 import SwiftUI
 
 /// A view that shows nearby peers available for sync.

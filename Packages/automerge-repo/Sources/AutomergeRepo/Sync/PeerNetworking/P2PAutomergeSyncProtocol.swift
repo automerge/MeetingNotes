@@ -19,12 +19,17 @@ import OSLog
 
 /// The type of sync message for the Automerge network sync protocol.
 enum P2PSyncMessageType: UInt32 {
-    // TODO(heckj): is there benefit to dropping this down to a UInt8? Or does 4 bytes
-    // fit some other optimization that's not as obvious?
-
-    case invalid = 0 // msg isn't a recognized type
+    case unknown = 0 // msg isn't a recognized type
     case sync = 1 // msg is generated sync data to merge into an Automerge document
     case id = 2 // msg is a unique for the source/master of a document to know if they've been cloned
+    case peer = 3
+    case join = 4
+    case request = 5
+    case unavailable = 6
+    case ephemeral = 7
+    case syncerror = 8
+    case remoteHeadsChanged = 9
+    case remoteSubscriptionChange = 10
 }
 
 /// The definition of the Automerge network sync protocol.
@@ -79,7 +84,7 @@ class P2PAutomergeSyncProtocol: NWProtocolFramerImplementation {
                 minimumIncompleteLength: headerSize,
                 maximumLength: headerSize
             ) { buffer, _ -> Int in
-                guard let buffer = buffer else {
+                guard let buffer else {
                     return 0
                 }
                 if buffer.count < headerSize {
@@ -96,7 +101,7 @@ class P2PAutomergeSyncProtocol: NWProtocolFramerImplementation {
             }
 
             // Create an object to deliver the message.
-            var messageType = P2PSyncMessageType.invalid
+            var messageType = P2PSyncMessageType.unknown
             if let parsedMessageType = P2PSyncMessageType(rawValue: header.type) {
                 messageType = parsedMessageType
             }
@@ -122,9 +127,9 @@ extension NWProtocolFramer.Message {
     /// The type of sync message.
     var syncMessageType: P2PSyncMessageType {
         if let type = self["SyncMessageType"] as? P2PSyncMessageType {
-            return type
+            type
         } else {
-            return .invalid
+            .unknown
         }
     }
 }

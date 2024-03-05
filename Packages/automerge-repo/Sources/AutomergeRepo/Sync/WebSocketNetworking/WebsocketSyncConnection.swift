@@ -272,7 +272,7 @@ public final class WebsocketSyncConnection: ObservableObject {
             syncState = SyncState()
             webSocketTask = URLSession.shared.webSocketTask(with: request)
         }
-        guard let webSocketTask = webSocketTask else {
+        guard let webSocketTask else {
             #if DEBUG
             fatalError("Attempting to configure and join a nil webSocketTask")
             #else
@@ -436,7 +436,7 @@ public final class WebsocketSyncConnection: ObservableObject {
             }
 
             do {
-                guard let data = data else {
+                guard let data else {
                     return
                 }
                 try await webSocketTask.send(.data(data))

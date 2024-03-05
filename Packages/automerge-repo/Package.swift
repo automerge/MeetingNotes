@@ -26,10 +26,11 @@ let package = Package(
     targets: [
         .target(
             name: "AutomergeRepo",
-            dependencies: [.product(name: "Automerge", package: "automerge-swift"),
-                           .product(name: "PotentCodables", package: "PotentCodables"),
-                           .product(name: "Base58Swift", package: "Base58Swift")
-                          ]
+            dependencies: [
+                .product(name: "Automerge", package: "automerge-swift"),
+                .product(name: "PotentCodables", package: "PotentCodables"),
+                .product(name: "Base58Swift", package: "Base58Swift"),
+            ]
         ),
         .testTarget(
             name: "AutomergeRepoTests",
