@@ -77,7 +77,6 @@
 		1A6FF21C2B64710700C99F81 /* WebSocketStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketStatusView.swift; sourceTree = "<group>"; };
 		1A7700C42A67343800869A4D /* PeerSyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerSyncView.swift; sourceTree = "<group>"; };
 		1A7700C62A67479F00869A4D /* NWBrowserResultItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NWBrowserResultItemView.swift; sourceTree = "<group>"; };
-		1AA529342B6D973C0084F855 /* notes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = notes; sourceTree = "<group>"; };
 		1AC103962B7EB0EF0099296C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingNotesModel.swift; sourceTree = "<group>"; };
 		1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesDocumentView.swift; sourceTree = "<group>"; };
@@ -128,7 +127,6 @@
 				1AC103962B7EB0EF0099296C /* PrivacyInfo.xcprivacy */,
 				1AF5DB3A2A4A0C38008DAC6F /* README.md */,
 				1AF5DB3B2A4A0C5E008DAC6F /* CONTRIBUTING.md */,
-				1AA529342B6D973C0084F855 /* notes */,
 				1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */,
 				1A273DC02B93EBD000B321C5 /* Packages */,
 				1A0DDC332A464DEA001ECADD /* MeetingNotes */,
