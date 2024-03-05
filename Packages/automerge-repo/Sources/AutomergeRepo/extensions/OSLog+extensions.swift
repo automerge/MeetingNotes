@@ -12,4 +12,7 @@ extension Logger {
 
     /// Logs updates and interaction related to the process of synchronization over the network.
     static let webSocket = Logger(subsystem: subsystem, category: "WebSocket")
+
+    /// Logs updates and interaction related to the process of synchronization over the network.
+    static let storage = Logger(subsystem: subsystem, category: "storageSubsystem")
 }
