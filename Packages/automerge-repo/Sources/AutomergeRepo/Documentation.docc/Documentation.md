@@ -16,7 +16,7 @@ introduction to automerge repo and what it provides, what problem it solves
 ### Network Adapters
 
 - ``AutomergeRepo/NetworkSyncProvider``
-- ``AutomergeRepo/SyncConnection``
+- ``AutomergeRepo/BonjourSyncConnection``
 - ``AutomergeRepo/WebsocketSyncConnection``
 - ``AutomergeRepo/PeerMetadata``
 

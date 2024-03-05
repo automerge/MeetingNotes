@@ -4,53 +4,8 @@ import Foundation
 import OSLog
 import PotentCBOR
 
-private struct TimeoutError: LocalizedError {
-    var errorDescription: String? = "Task timed out before completion"
-}
-
-private struct SyncComplete: LocalizedError {
-    var errorDescription: String? = "The synchronization process is complete"
-}
-
-private struct WebsocketClosed: LocalizedError {
-    var errorDescription: String? = "The websocket task was closed and/or nil"
-}
-
-private struct InvalidURL: LocalizedError {
-    let urlString: String
-    var errorDescription: String? {
-        "Invalid URL: \(urlString)"
-    }
-}
-
-private struct UnexpectedWebSocketMsg<MSG>: LocalizedError {
-    let msg: MSG
-    var errorDescription: String? {
-        "Received an unexpected websocket message: \(msg)"
-    }
-}
-
-private struct DocumentUnavailable: LocalizedError {
-    var errorDescription: String? = "The requested document isn't available"
-}
-
 /// A class that provides a WebSocket connection to sync an Automerge document.
 public final class WebsocketSyncConnection: ObservableObject {
-    /// The state of the WebSocket sync connection.
-    public enum SyncProtocolState: String {
-        /// A sync connection hasn't yet been requested
-        case new
-
-        /// The state is initiating and waiting to successfully peer with the recipient.
-        case handshake
-
-        /// The connection has successfully peered.
-        case peered
-
-        /// The connection has terminated.
-        case closed
-    }
-
     private var webSocketTask: URLSessionWebSocketTask?
     /// This connections "peer identifier"
     private let senderId: String
@@ -73,7 +28,7 @@ public final class WebsocketSyncConnection: ObservableObject {
     // TODO: Add a delegate link of some form for a 'ephemeral' msg data handler
     // TODO: Add an indicator of if we should involve ourselves in "gossip" about updates
 
-    @Published public var connectionState: SyncProtocolState
+    @Published public var protocolState: ProtocolState
     @Published public var syncInProgress: Bool
 
     // MARK: Initializers, registration/setup
@@ -81,7 +36,7 @@ public final class WebsocketSyncConnection: ObservableObject {
     // having register after initialization lets us add within a SwiftUI view, and then
     // configure and activate things onAppear within the view...
     public init(_ document: Automerge.Document?, id documentId: DocumentId?) {
-        connectionState = .new
+        protocolState = .setup
         syncState = SyncState()
         senderId = UUID().uuidString
         self.document = document
@@ -124,7 +79,7 @@ public final class WebsocketSyncConnection: ObservableObject {
 
         try Task.checkCancellation()
 
-        guard websocketconnection.connectionState == .peered else { return nil }
+        guard websocketconnection.protocolState == .ready else { return nil }
 
         // enable the request...
         websocketconnection.receiveHandler = nil
@@ -136,7 +91,7 @@ public final class WebsocketSyncConnection: ObservableObject {
             try Task.checkCancellation()
             Logger.webSocket
                 .trace(
-                    "sync in progress, !cancelled - state is: \(websocketconnection.connectionState.rawValue, privacy: .public)"
+                    "sync in progress, !cancelled - state is: \(websocketconnection.protocolState.rawValue, privacy: .public)"
                 )
             // Race a timeout against receiving a Peer message from the other side
             // of the WebSocket connection. If we fail that race, shut down the connection
@@ -175,7 +130,8 @@ public final class WebsocketSyncConnection: ObservableObject {
         // check the invariants
         guard let webSocketTask = self.webSocketTask
         else {
-            throw WebsocketClosed(errorDescription: "Attempting to wait for a websocket message when the task is nil")
+            throw SyncV1.Errors
+                .ConnectionClosed(errorDescription: "Attempting to wait for a websocket message when the task is nil")
         }
 
         // Race a timeout against receiving a Peer message from the other side
@@ -190,7 +146,7 @@ public final class WebsocketSyncConnection: ObservableObject {
             group.addTask {
                 // Race against the receive call with a continuous timer
                 try await Task.sleep(for: withTimeout)
-                throw TimeoutError()
+                throw SyncV1.Errors.Timeout()
             }
 
             guard let msg = try await group.next() else {
@@ -220,12 +176,12 @@ public final class WebsocketSyncConnection: ObservableObject {
                         .warning(
                             "Decoding websocket message, expecting peer only - and it wasn't a peer message. RECEIVED MSG: \(decodeAttempted.debugDescription)"
                         )
-                    throw UnexpectedWebSocketMsg(msg: decodeAttempted)
+                    throw SyncV1.Errors.UnexpectedMsg(msg: decodeAttempted)
                 }
             } else {
                 let decodedMsg = SyncV1.decode(raw_data)
                 if case .unknown = decodedMsg {
-                    throw UnexpectedWebSocketMsg(msg: decodedMsg)
+                    throw SyncV1.Errors.UnexpectedMsg(msg: decodedMsg)
                 }
                 return decodedMsg
             }
@@ -234,12 +190,12 @@ public final class WebsocketSyncConnection: ObservableObject {
             // In the handshake phase and received anything other than a valid peer message
             Logger.webSocket
                 .warning("Unknown websocket message received: .string(\(string))")
-            throw UnexpectedWebSocketMsg(msg: msg)
+            throw SyncV1.Errors.UnexpectedMsg(msg: msg)
         @unknown default:
             // In the handshake phase and received anything other than a valid peer message
             Logger.webSocket
                 .error("Unknown websocket message received: \(String(describing: msg))")
-            throw UnexpectedWebSocketMsg(msg: msg)
+            throw SyncV1.Errors.UnexpectedMsg(msg: msg)
         }
     }
 
@@ -249,7 +205,7 @@ public final class WebsocketSyncConnection: ObservableObject {
     ///
     /// throws an error if something is awry, otherwise returns Void, with the connection established
     public func connect(_ destination: String) async throws {
-        guard connectionState == .new || connectionState == .closed else {
+        guard protocolState == .setup || protocolState == .closed else {
             return
         }
         guard self.document != nil, self.documentId != nil else {
@@ -262,7 +218,7 @@ public final class WebsocketSyncConnection: ObservableObject {
         }
         guard let url = URL(string: destination) else {
             Logger.webSocket.error("Destination provided is not a valid URL")
-            throw InvalidURL(urlString: destination)
+            throw SyncV1.Errors.InvalidURL(urlString: destination)
         }
 
         // establishes the websocket
@@ -291,7 +247,7 @@ public final class WebsocketSyncConnection: ObservableObject {
         try await webSocketTask.send(.data(data))
         Logger.webSocket.trace("SEND: \(joinMessage.debugDescription)")
         await MainActor.run {
-            self.connectionState = .handshake
+            self.protocolState = .preparing
         }
 
         do {
@@ -304,21 +260,21 @@ public final class WebsocketSyncConnection: ObservableObject {
             // For the sync protocol handshake phase, it's essentially "peer or die" since
             // we were the initiating side of the connection.
             guard case let .peer(peerMsg) = try attemptToDecode(websocketMsg, peerOnly: true) else {
-                throw UnexpectedWebSocketMsg(msg: websocketMsg)
+                throw SyncV1.Errors.UnexpectedMsg(msg: websocketMsg)
             }
 
             Logger.webSocket.trace("Peered to targetId: \(peerMsg.senderId) \(peerMsg.debugDescription)")
             // TODO: handle the gossip setup - read and process the peer metadata
             await MainActor.run {
                 self.targetId = peerMsg.senderId
-                self.connectionState = .peered
+                self.protocolState = .ready
             }
         } catch {
             // if there's an error, disconnect anything that's lingering and cancel it down.
             await self.disconnect()
             throw error
         }
-        assert(self.connectionState == .peered)
+        assert(self.protocolState == .ready)
     }
 
     /// Asynchronously disconnect the WebSocket and shut down active sessions.
@@ -328,7 +284,7 @@ public final class WebsocketSyncConnection: ObservableObject {
         self.receiveHandler?.cancel()
         await MainActor.run {
             self.syncTrigger = nil
-            self.connectionState = .closed
+            self.protocolState = .closed
             self.webSocketTask = nil
             self.syncInProgress = false
         }
@@ -341,7 +297,7 @@ public final class WebsocketSyncConnection: ObservableObject {
 
         // verify we're in the right state before invoking the recursive (async) handler setup
         // and start the process of synchronizing the document.
-        if self.connectionState == .peered {
+        if self.protocolState == .ready {
             // NOTE: this is technically a race between do we accept a message and do something
             // with it (possibly changing state), or do we initiate a sync ourselves. In practice
             // against Automerge-repo code, it doesn't proactively ask us to do anything, playing
@@ -367,7 +323,7 @@ public final class WebsocketSyncConnection: ObservableObject {
 
     public func sendRequestForDocument() async throws {
         // verify we're already connected and peered
-        guard connectionState == .peered,
+        guard protocolState == .ready,
               let document = self.document,
               let documentId = self.documentId,
               let targetId = self.targetId,
@@ -398,7 +354,7 @@ public final class WebsocketSyncConnection: ObservableObject {
 
     /// Start a synchronization process for the Automerge document
     private func initiateSync() async {
-        guard connectionState == .peered,
+        guard protocolState == .ready,
               syncInProgress == false
         else {
             return
@@ -419,7 +375,7 @@ public final class WebsocketSyncConnection: ObservableObject {
 
         if let syncData = document.generateSyncMessage(state: self.syncState) {
             await MainActor.run {
-                self.connectionState = .peered
+                self.protocolState = .ready
                 self.syncInProgress = true
             }
             let syncMsg = SyncV1.SyncMsg(
@@ -473,7 +429,7 @@ public final class WebsocketSyncConnection: ObservableObject {
 
             Logger.webSocket
                 .trace(
-                    "Receive Handler: Task not cancelled, awaiting next message, state is \(self.connectionState.rawValue, privacy: .public)"
+                    "Receive Handler: Task not cancelled, awaiting next message, state is \(self.protocolState.rawValue, privacy: .public)"
                 )
 
             let webSocketMessage = try await webSocketTask.receive()
@@ -493,14 +449,14 @@ public final class WebsocketSyncConnection: ObservableObject {
     ///  - if it is invoked while `connectionState` is reporting a ``SyncProtocolState/closed`` state
     /// it disconnects and shuts down the web-socket.
     private func handleReceivedMessage(msg: SyncV1) async {
-        switch connectionState {
-        case .new:
+        switch protocolState {
+        case .setup:
             Logger.webSocket.warning("RCVD: \(msg.debugDescription, privacy: .public) while in NEW state")
-        case .handshake:
+        case .preparing:
             if case let .peer(peerMsg) = msg {
                 await MainActor.run {
                     self.targetId = peerMsg.targetId
-                    self.connectionState = .peered
+                    self.protocolState = .ready
                 }
                 // TODO: handle the gossip setup - read and process the peer metadata
             } else {
@@ -511,7 +467,7 @@ public final class WebsocketSyncConnection: ObservableObject {
                     )
                 await self.disconnect()
             }
-        case .peered:
+        case .ready:
             switch msg {
             case let .error(errorMsg):
                 Logger.webSocket.warning("RCVD ERROR: \(errorMsg.debugDescription)")
@@ -583,7 +539,7 @@ public final class WebsocketSyncConnection: ObservableObject {
             case let .unavailable(inside_msg):
                 Logger.webSocket.trace("RCVD unexpected msg: \(inside_msg.debugDescription, privacy: .public)")
 
-            // Messages that are technically allowed, but not common in the "peered" state unless
+            // Messages that are technically allowed, but not common in the "ready" state unless
             // you're "serving up multiple documents" (this implementation links to a single Automerge
             // document.
 
@@ -593,7 +549,7 @@ public final class WebsocketSyncConnection: ObservableObject {
             case let .remoteSubscriptionChange(inside_msg):
                 Logger.webSocket.warning("RCVD unusual msg: \(inside_msg.debugDescription, privacy: .public)")
 
-            // Messages that are always unexpected while in the "peered" state
+            // Messages that are always unexpected while in the "ready" state
 
             case let .peer(inside_msg):
                 Logger.webSocket.error("RCVD unexpected msg: \(inside_msg.debugDescription, privacy: .public)")
