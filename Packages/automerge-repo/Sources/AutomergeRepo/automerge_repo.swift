@@ -70,7 +70,7 @@ public protocol NetworkSyncProvider<T> {
     var connectedPeers: UUID { get }
     
     func connect(asPeer: UUID, metadata: PeerMetadata?) async // aka "activate"
-    func send(message: V1) async
+    func send(message: SyncV1) async
     func disconnect() async // aka "deactivate"
     
     func configure(_: T)
