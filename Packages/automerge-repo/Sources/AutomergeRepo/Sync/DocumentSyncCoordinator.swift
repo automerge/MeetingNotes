@@ -72,7 +72,7 @@ public final class DocumentSyncCoordinator: ObservableObject {
     @Published public var browserState: NWBrowser.State = .setup
     public var autoconnect: Bool
 
-    @Published public var connections: [SyncConnection] = []
+    @Published public var connections: [BonjourSyncConnection] = []
 
     func removeConnection(_ connectionId: UUID) {
         connections.removeAll { $0.connectionId == connectionId }
@@ -142,7 +142,7 @@ public final class DocumentSyncCoordinator: ObservableObject {
         }).isEmpty {
             Logger.syncController
                 .debug("No connection stored for \(peerId, privacy: .public)")
-            let newConnection = SyncConnection(
+            let newConnection = BonjourSyncConnection(
                 endpoint: endpoint,
                 peerId: peerId,
                 trigger: syncTrigger.eraseToAnyPublisher(),
@@ -338,7 +338,7 @@ public final class DocumentSyncCoordinator: ObservableObject {
                         .info(
                             "Endpoint not yet recorded, accepting connection from \(newConnection.endpoint.debugDescription, privacy: .public)"
                         )
-                    let peerConnection = SyncConnection(
+                    let peerConnection = BonjourSyncConnection(
                         connection: newConnection,
                         trigger: syncTrigger.eraseToAnyPublisher(),
                         documentId: documentId
