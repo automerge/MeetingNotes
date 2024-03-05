@@ -1,5 +1,6 @@
 import Base58Swift
-import Foundation
+import struct Foundation.Data
+import struct Foundation.UUID
 
 /// A type that represents an Automerge-repo compatible document identifier
 public struct DocumentId: Hashable, Comparable, Identifiable {

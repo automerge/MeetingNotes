@@ -18,9 +18,9 @@ public enum TXTRecordKeys {
 }
 
 /// A collection of User Default keys for the app.
-public enum SyncUserDefaultsKeys {
+public enum SynchronizerDefaultKeys {
     /// The key to the string that the app broadcasts to represent you when sharing and syncing Automerge Documents.
-    public static let sharingIdentity = "sharingIdentity"
+    public static let publicPeerName = "sharingIdentity"
 }
 
 /// A weak reference to an Automerge document
@@ -96,7 +96,7 @@ public final class DocumentSyncCoordinator: ObservableObject {
 
     init() {
         self.name = UserDefaults.standard
-            .string(forKey: SyncUserDefaultsKeys.sharingIdentity) ?? DocumentSyncCoordinator.defaultSharingIdentity()
+            .string(forKey: SynchronizerDefaultKeys.publicPeerName) ?? DocumentSyncCoordinator.defaultSharingIdentity()
         Logger.syncController.debug("SYNC CONTROLLER INIT, peer \(self.peerId.uuidString, privacy: .public)")
         #if os(iOS)
         autoconnect = true

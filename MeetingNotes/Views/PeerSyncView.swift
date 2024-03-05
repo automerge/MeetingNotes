@@ -11,7 +11,7 @@ struct PeerSyncView: View {
     @State var browserStyling: Color = .primary
 
     @State private var editNamePopoverShown: Bool = false
-    @AppStorage(SyncUserDefaultsKeys.sharingIdentity) private var sharingIdentity: String = DocumentSyncCoordinator
+    @AppStorage(SynchronizerDefaultKeys.publicPeerName) private var sharingIdentity: String = DocumentSyncCoordinator
         .defaultSharingIdentity()
 
     var body: some View {

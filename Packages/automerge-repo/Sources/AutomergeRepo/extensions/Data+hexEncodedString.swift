@@ -1,4 +1,4 @@
-import Foundation
+import struct Foundation.Data
 
 public extension Data {
     /// Returns the data as a hex-encoded string.

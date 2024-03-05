@@ -18,12 +18,11 @@ introduction to automerge repo and what it provides, what problem it solves
 - ``AutomergeRepo/NetworkSyncProvider``
 - ``AutomergeRepo/BonjourSyncConnection``
 - ``AutomergeRepo/WebsocketSyncConnection``
-- ``AutomergeRepo/PeerMetadata``
 
 - ``AutomergeRepo/NetworkSubsystem``
 - ``AutomergeRepo/NetworkAdapterEvents``
 - ``AutomergeRepo/SyncUserDefaultsKeys``
-- ``AutomergeRepo/TXTRecordKeys``
+- ``AutomergeRepo/SynchronizerDefaultKeys
 - ``AutomergeRepo/SyncV1``
 
 ### Storage Adapters

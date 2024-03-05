@@ -1,4 +1,4 @@
-import Foundation // Data
+import Foundation
 
 public extension SyncV1 {
     // ; Metadata sent in either the join or peer message types

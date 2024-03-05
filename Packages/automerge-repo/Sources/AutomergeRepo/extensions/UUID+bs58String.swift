@@ -1,5 +1,6 @@
 import Base58Swift
-import Foundation
+import struct Foundation.Data
+import struct Foundation.UUID
 
 public extension UUID {
     /// The contents of the UUID as data.

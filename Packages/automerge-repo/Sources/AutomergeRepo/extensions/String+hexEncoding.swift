@@ -1,4 +1,4 @@
-import Foundation
+import struct Foundation.Data
 
 // https://stackoverflow.com/a/56870030/19477
 // Licensed: CC BY-SA 4.0 for [itMaxence](https://stackoverflow.com/users/3328736/itmaxence)

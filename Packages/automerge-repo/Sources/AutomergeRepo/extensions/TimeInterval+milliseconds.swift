@@ -1,4 +1,4 @@
-import Foundation
+import struct Foundation.TimeInterval
 
 extension TimeInterval {
     /// Returns a time interval from the number of milliseconds you provide.
