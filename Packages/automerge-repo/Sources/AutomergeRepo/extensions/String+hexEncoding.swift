@@ -31,21 +31,16 @@ extension String {
 //   "5413".data(using: .hexadecimal)
 //   "0x1234FF".data(using: .hexadecimal)
 
-extension Data {
-    var bytes: [UInt8] { // fancy pretty call: myData.bytes -> [UInt8]
-        [UInt8](self)
-    }
-
-    // Could make a more optimized one~
-    func hexa(prefixed isPrefixed: Bool = true) -> String {
-        self.bytes.reduce(isPrefixed ? "0x" : "") { $0 + String(format: "%02X", $1) }
-    }
-}
-
+// extension Data {
+// Could make a more optimized one~
+//    func hexa(prefixed isPrefixed: Bool = true) -> String {
+//        self.bytes.reduce(isPrefixed ? "0x" : "") { $0 + String(format: "%02X", $1) }
+//    }
 // print("000204ff5400".data(using: .hexadecimal)?.hexa() ?? "failed") // OK
 // print("0x000204ff5400".data(using: .hexadecimal)?.hexa() ?? "failed") // OK
 // print("541".data(using: .hexadecimal)?.hexa() ?? "failed") // fails
 // print("5413".data(using: .hexadecimal)?.hexa() ?? "failed") // OK
+// }
 
 // https://stackoverflow.com/a/73731660/19477
 // Licensed: CC BY-SA 4.0 for [Nick](https://stackoverflow.com/users/392986/nick)

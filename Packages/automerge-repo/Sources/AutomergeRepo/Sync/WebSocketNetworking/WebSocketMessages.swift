@@ -79,16 +79,92 @@ public indirect enum SyncV1 {
     // fall-through scenario - unknown message
     case unknown(Data)
 
+    var peerMessageType: P2PSyncMessageType {
+        switch self {
+        case .peer:
+            P2PSyncMessageType.peer
+        case .join:
+            P2PSyncMessageType.join
+        case let .error(errorMsg):
+            P2PSyncMessageType.syncerror
+        case .request:
+            P2PSyncMessageType.request
+        case .sync:
+            P2PSyncMessageType.sync
+        case .unavailable:
+            P2PSyncMessageType.unavailable
+        case .ephemeral:
+            P2PSyncMessageType.ephemeral
+        case .remoteSubscriptionChange:
+            P2PSyncMessageType.remoteSubscriptionChange
+        case .remoteHeadsChanged:
+            P2PSyncMessageType.remoteHeadsChanged
+        case .unknown:
+            P2PSyncMessageType.unknown
+        }
+    }
+
     /// Attempts to decode the data you provide as a peer message.
     ///
     /// - Parameter data: The data to decode
     /// - Returns: The decoded message, or ``V1/unknown(_:)`` if the decoding attempt failed.
     public static func decodePeer(_ data: Data) -> SyncV1 {
         if let peerMsg = attemptPeer(data) {
-            return .peer(peerMsg)
+            .peer(peerMsg)
         } else {
-            return .unknown(data)
+            .unknown(data)
         }
+    }
+
+    /// Decodes a Peer2Peer message data block using the message type you provide
+    /// - Parameters:
+    ///   - data: The data to be decoded
+    ///   - msgType: The type of message to decode.
+    /// - Returns: The decoded message.
+    static func decode(_ data: Data, as msgType: P2PSyncMessageType) -> SyncV1 {
+        switch msgType {
+        case .unknown:
+            return .unknown(data)
+        case .sync:
+            if let msgData = attemptSync(data) {
+                return .sync(msgData)
+            }
+        case .id:
+            return .unknown(data)
+        case .peer:
+            if let msgData = attemptPeer(data) {
+                return .peer(msgData)
+            }
+        case .join:
+            if let msgData = attemptJoin(data) {
+                return .join(msgData)
+            }
+        case .request:
+            if let msgData = attemptRequest(data) {
+                return .request(msgData)
+            }
+        case .unavailable:
+            if let msgData = attemptUnavailable(data) {
+                return .unavailable(msgData)
+            }
+        case .ephemeral:
+            if let msgData = attemptEphemeral(data) {
+                return .ephemeral(msgData)
+            }
+        case .syncerror:
+            if let msgData = attemptError(data) {
+                return .error(msgData)
+            }
+        case .remoteHeadsChanged:
+            if let msgData = attemptRemoteHeadsChanged(data) {
+                return .remoteHeadsChanged(msgData)
+            }
+        case .remoteSubscriptionChange:
+            if let msgData = attemptRemoteSubscriptionChange(data) {
+                return .remoteSubscriptionChange(msgData)
+            }
+        }
+        return .unknown(data)
     }
 
     /// Exhaustively attempt to decode incoming data as V1 protocol messages.
@@ -295,25 +371,25 @@ public indirect enum SyncV1 {
         // not sure this is useful, but might as well finish out the set...
         switch msg {
         case let .peer(peerMsg):
-            return try encode(peerMsg)
+            try encode(peerMsg)
         case let .join(joinMsg):
-            return try encode(joinMsg)
+            try encode(joinMsg)
         case let .error(errorMsg):
-            return try encode(errorMsg)
+            try encode(errorMsg)
         case let .request(requestMsg):
-            return try encode(requestMsg)
+            try encode(requestMsg)
         case let .sync(syncMsg):
-            return try encode(syncMsg)
+            try encode(syncMsg)
         case let .unavailable(unavailableMsg):
-            return try encode(unavailableMsg)
+            try encode(unavailableMsg)
         case let .ephemeral(ephemeralMsg):
-            return try encode(ephemeralMsg)
+            try encode(ephemeralMsg)
         case let .remoteSubscriptionChange(remoteSubscriptionChangeMsg):
-            return try encode(remoteSubscriptionChangeMsg)
+            try encode(remoteSubscriptionChangeMsg)
         case let .remoteHeadsChanged(remoteHeadsChangedMsg):
-            return try encode(remoteHeadsChangedMsg)
+            try encode(remoteHeadsChangedMsg)
         case let .unknown(data):
-            return data
+            data
         }
     }
 }
@@ -322,25 +398,25 @@ extension SyncV1: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
         case let .peer(interior_msg):
-            return interior_msg.debugDescription
+            interior_msg.debugDescription
         case let .join(interior_msg):
-            return interior_msg.debugDescription
+            interior_msg.debugDescription
         case let .error(interior_msg):
-            return interior_msg.debugDescription
+            interior_msg.debugDescription
         case let .request(interior_msg):
-            return interior_msg.debugDescription
+            interior_msg.debugDescription
         case let .sync(interior_msg):
-            return interior_msg.debugDescription
+            interior_msg.debugDescription
         case let .unavailable(interior_msg):
-            return interior_msg.debugDescription
+            interior_msg.debugDescription
         case let .ephemeral(interior_msg):
-            return interior_msg.debugDescription
+            interior_msg.debugDescription
         case let .remoteSubscriptionChange(interior_msg):
-            return interior_msg.debugDescription
+            interior_msg.debugDescription
         case let .remoteHeadsChanged(interior_msg):
-            return interior_msg.debugDescription
+            interior_msg.debugDescription
         case let .unknown(data):
-            return "UNKNOWN[data: \(data.hexEncodedString(uppercase: false))]"
+            "UNKNOWN[data: \(data.hexEncodedString(uppercase: false))]"
         }
     }
 }

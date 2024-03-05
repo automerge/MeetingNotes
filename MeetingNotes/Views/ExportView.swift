@@ -1,7 +1,7 @@
+import AutomergeRepo
 import OSLog
 import SwiftUI
 import UniformTypeIdentifiers
-import AutomergeRepo
 
 /// A toolbar button to coordinate merging documents.
 @available(macOS 14.0, iOS 17.0, *)
