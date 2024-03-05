@@ -1,5 +1,3 @@
-import Network
-
 /// The state of a sync protocol connection.
 public enum ProtocolState: String {
     /// The connection that has been created but not yet connected
@@ -13,7 +11,12 @@ public enum ProtocolState: String {
 
     /// The connection is cancelled, failed, or terminated.
     case closed
+}
 
+#if canImport(Network)
+import class Network.NWConnection
+
+extension ProtocolState {
     /// Translates a Network connection state into a protocol state
     /// - Parameter connectState: The state of the network connection
     /// - Returns: The corresponding protocol state
@@ -36,3 +39,4 @@ public enum ProtocolState: String {
         }
     }
 }
+#endif

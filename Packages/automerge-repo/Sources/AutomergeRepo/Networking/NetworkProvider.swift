@@ -1,4 +1,3 @@
-import class Combine.PassthroughSubject
 import protocol Combine.Publisher
 import struct Foundation.Data
 import struct Foundation.UUID
@@ -39,23 +38,4 @@ public protocol NetworkSyncProvider<ProviderConfiguration> {
     func send(message: SyncV1) async
     associatedtype NetworkEvents: Publisher<NetworkAdapterEvents, Never>
     var eventPublisher: NetworkEvents { get }
-}
-
-// riff
-// https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo/src/network/NetworkSubsystem.ts
-public struct NetworkSubsystem {
-    var adapters: [any NetworkSyncProvider]
-
-    init(adapters: [any NetworkSyncProvider]) {
-        self.adapters = adapters
-    }
-
-    func send(message _: Data) {}
-    func isReady() async -> Bool {
-        false
-    }
-
-    func whenReady() async {}
-
-    let eventPublisher: PassthroughSubject<NetworkAdapterEvents, Never> = PassthroughSubject()
 }
