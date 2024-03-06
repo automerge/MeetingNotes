@@ -33,7 +33,13 @@ public actor InMemoryStorage: StorageProvider {
         _incrementalChunks[CombinedKey(id: key, prefix: prefix)] ?? []
     }
 
-    public func removeRange(key: DocumentId, prefix: String) async {
-        _incrementalChunks.removeValue(forKey: CombinedKey(id: key, prefix: prefix))
+    public func removeRange(key: DocumentId, prefix: String, data: [Data]) async {
+        var chunksForKey: [Data] = _incrementalChunks[CombinedKey(id: key, prefix: prefix)] ?? []
+        for d in data {
+            if let indexToRemove = chunksForKey.firstIndex(of: d) {
+                chunksForKey.remove(at: indexToRemove)
+            }
+        }
+        _incrementalChunks[CombinedKey(id: key, prefix: prefix)] = chunksForKey
     }
 }
