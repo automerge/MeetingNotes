@@ -11,5 +11,5 @@ public protocol StorageProvider {
 
     func addToRange(key: DocumentId, prefix: String, data: Data) async
     func loadRange(key: DocumentId, prefix: String) async -> [Data]
-    func removeRange(key: DocumentId, prefix: String) async
+    func removeRange(key: DocumentId, prefix: String, data: [Data]) async
 }
