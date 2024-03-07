@@ -101,6 +101,25 @@ public extension SyncV1 {
         }
     }
 
+    // - leave -
+    // {
+    //    type: "leave"
+    //    senderId: this.peerId
+    // }
+
+    struct LeaveMsg: Codable, CustomDebugStringConvertible {
+        public var type: String = SyncV1.MsgTypes.leave
+        public let senderId: PEER_ID
+
+        public init(senderId: PEER_ID) {
+            self.senderId = senderId
+        }
+
+        public var debugDescription: String {
+            "LEAVE[sender: \(senderId)"
+        }
+    }
+
     // - error -
     // {
     //    type: "error",

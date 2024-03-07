@@ -30,6 +30,11 @@ public extension SyncV1 {
             }
         case .id:
             return .unknown(data)
+
+        case .leave:
+            if let msgData = attemptLeave(data) {
+                return .leave(msgData)
+            }
         case .peer:
             if let msgData = attemptPeer(data) {
                 return .peer(msgData)
@@ -186,6 +191,15 @@ public extension SyncV1 {
         return nil
     }
 
+    internal static func attemptLeave(_ data: Data) -> LeaveMsg? {
+        do {
+            return try decoder.decode(LeaveMsg.self, from: data)
+        } catch {
+            Logger.webSocket.warning("Failed to decode data as LeaveMsg")
+        }
+        return nil
+    }
+
     // error
 
     internal static func attemptError(_ data: Data) -> ErrorMsg? {
@@ -238,6 +252,10 @@ public extension SyncV1 {
         try encoder.encode(msg)
     }
 
+    static func encode(_ msg: LeaveMsg) throws -> Data {
+        try encoder.encode(msg)
+    }
+
     static func encode(_ msg: SyncMsg) throws -> Data {
         try encoder.encode(msg)
     }
@@ -273,6 +291,8 @@ public extension SyncV1 {
             try encode(peerMsg)
         case let .join(joinMsg):
             try encode(joinMsg)
+        case let .leave(leaveMsg):
+            try encode(leaveMsg)
         case let .error(errorMsg):
             try encode(errorMsg)
         case let .request(requestMsg):

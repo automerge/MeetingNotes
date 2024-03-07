@@ -359,6 +359,8 @@ public final class BonjourSyncConnection: ObservableObject {
             sendDocumentId(self.documentId)
         case .peer:
             break
+        case .leave:
+            break
         case .join:
             break
         case .request:
