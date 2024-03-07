@@ -54,16 +54,16 @@ public indirect enum SyncV1 {
 
     /// The collection of value "type" strings for the V1 automerge-repo protocol.
     public enum MsgTypes {
-        static var peer = "peer"
-        static var join = "join"
-        static var leave = "leave"
-        static var request = "request"
-        static var sync = "sync"
-        static var ephemeral = "ephemeral"
-        static var error = "error"
-        static var unavailable = "doc-unavailable"
-        static var remoteHeadsChanged = "remote-heads-changed"
-        static var remoteSubscriptionChange = "remote-subscription-change"
+        public static var peer = "peer"
+        public static var join = "join"
+        public static var leave = "leave"
+        public static var request = "request"
+        public static var sync = "sync"
+        public static var ephemeral = "ephemeral"
+        public static var error = "error"
+        public static var unavailable = "doc-unavailable"
+        public static var remoteHeadsChanged = "remote-heads-changed"
+        public static var remoteSubscriptionChange = "remote-subscription-change"
     }
 
     case peer(PeerMsg)
