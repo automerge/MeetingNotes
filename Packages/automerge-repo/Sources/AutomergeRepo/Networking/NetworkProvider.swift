@@ -4,7 +4,7 @@ import struct Foundation.UUID
 
 public enum NetworkAdapterEvents {
     public struct OpenPayload {
-        let network: any NetworkSyncProvider
+        let network: any NetworkProvider
     }
 
     public struct PeerCandidatePayload {
@@ -24,43 +24,69 @@ public enum NetworkAdapterEvents {
 }
 
 // https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo/src/network/NetworkAdapterInterface.ts
-// - impl is responsible for the setup and peering part of the handshake/state diagram
-// beyond that, messages are passed up to the level above to deal with. In the Automerge-repo
-// that's achieved by event emitters (equiv to the publisher concept in iOS)
-//
-// On the "making a connection" side of things, the connection is established to any relevant
-// destinations, and a "ready" signal is sent out. After which, it sends a `join` message over the transport and await
-// for future messages.
-// When it receives a "peer" message, the `peerCandidate` is trigger up the event pipeline, otherwise the message itself
-// is sent upwards. (error messages are just logged it seems)
-// on a socket close, there's a `peerDisconnect` message propogated, and if a retry is set up, it'll retry to connect
-// and stay established.
-//
-// There's a sender "leave" message sent just before disconnect:
-// { type: "leave", senderId: this.peerId }
-//
-//
-// On the receiving side, when a connection is opened the `ready` signal is emitted.
-// When the receiver gets a 'join' message, it checks to see if it knows about the sender, and may send
-// a peer-disconnected message and close that other channel, but generally emits a new `peerCandidate`
-// message. It checks and if the protocol versions don't align, it'll send an error and close
-// the connection.
-// If it receives that "leave" message, it'll politely terminate the connection.
-// Otherwise it takes the message and emits it upward for someone else to deal with.
 
 /// A type that is responsible for establishing, and maintaining, a network connection for Automerge
-public protocol NetworkSyncProvider<ProviderConfiguration> {
+///
+/// Types conforming to this protocol are responsible for the setup and initial handshake with other
+/// peers, and flow through messages to component that owns the reference to the network adapter.
+/// A higher level object is responsible for responding to sync, gossip, and other messages appropriately.
+///
+/// A NetworkProvider instance can be either initiating or listening for - and responding to - a connection.
+///
+/// The expected behavior when a network provide initiates a connection:
+///
+/// - After the underlying transport connection is established due to a call to `connect`, the provider emits
+/// ``NetworkAdapterEvents/ready(payload:)``, which includes a payload that indicates a
+/// reference to the network provider (`any NetworkAdapter`).
+/// - After the connection is established, the adapter sends a ``SyncV1/join(_:)`` message to request peering.
+/// - When the NetworkAdapter receives a ``SyncV1/peer(_:)`` message, it emits
+/// ``NetworkAdapterEvents/peerCandidate(payload:)``.
+/// - If a message other than `peer` is received, the adapter should terminate the connection and emit
+/// ``NetworkAdapterEvents/close``.
+/// - All other messages are emitted as ``NetworkAdapterEvents/message(payload:)``.
+/// - When a transport connection is closed, the adapter should emit ``NetworkAdapterEvents/peerDisconnect(payload:)``.
+/// - When `disconnect` is invoked on a network provider, it should send a ``SyncV1/leave(_:)`` message, terminate the
+/// connection, and emit ``NetworkAdapterEvents/close``.
+///
+/// A connecting transport may optionally enable automatic reconnection on connection failure. Any configurable
+/// reconnection logic exists,
+/// it should be configured with a `configure` call with the relevant configuration type for the network provider.
+///
+/// The expected behavior when listening for, and responding to, an incoming connection:
+/// - When a connection is established, emit ``NetworkAdapterEvents/ready(payload:)``.
+/// - When the transport receives a `join` message, verify that the protocols being requested are compatible. If they
+/// are not,
+/// return an ``SyncV1/error(_:)`` message, close the connection, and emit ``NetworkAdapterEvents/close``.
+/// - When any other message is received, it is emitted with ``NetworkAdapterEvents/message(payload:)``.
+/// - When the transport receives a `leave` message, close the connection and emit ``NetworkAdapterEvents/close``.
+public protocol NetworkProvider<ProviderConfiguration>: Identifiable {
+    /// The peer Id of the local instance.
     var peerId: UUID { get }
-    var peerMetadata: SyncV1.PeerMetadata { get }
-    var connectedPeers: [UUID] { get }
+    /// The optional metadata associated with this peer's presentation.
+    var peerMetadata: SyncV1.PeerMetadata? { get }
+    /// The peer Id of the remote
+    var connectedPeer: UUID { get }
 
-    associatedtype ProviderConfiguration // network provider configuration
+    /// The type used to configure an instance of a Network Provider.
+    associatedtype ProviderConfiguration
+
+    /// Configure the network provider.
+    ///
+    /// For connecting providers, this may include enabling automatic reconnection, as well as relevant timeouts for
+    /// connections.
+    /// - Parameter _: the configuration for the network provider.
     func configure(_: ProviderConfiguration)
 
+    /// Initiate a connection.
     func connect(asPeer: UUID, metadata: SyncV1.PeerMetadata?) async // aka "activate"
+    /// Disconnect and terminate any existing connection.
     func disconnect() async // aka "deactivate"
 
+    /// Sends a message.
+    /// - Parameter message: The message to send.
     func send(message: SyncV1) async
     associatedtype NetworkEvents: Publisher<NetworkAdapterEvents, Never>
+
+    /// A publisher that provides events and messages from the network provider.
     var eventPublisher: NetworkEvents { get }
 }

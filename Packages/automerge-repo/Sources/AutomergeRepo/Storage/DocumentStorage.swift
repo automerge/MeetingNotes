@@ -2,10 +2,12 @@ import Automerge
 import Foundation
 import OSLog
 
-// replicating main structure from automerge-repo
+// inspired from automerge-repo:
 // https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo/src/storage/StorageSubsystem.ts
-public actor StorageSubsystem<S: StorageProvider> {
-    let chunkNamespace = "incChanges"
+
+/// A type that provides coordinated, concurrency safe access to persist Automerge documents.
+public actor DocumentStorage<S: StorageProvider> {
+    let chunkNamespace = "incrChanges"
     var compacting: Bool
     let _storage: StorageProvider
     var latestHeads: [DocumentId: Set<ChangeHash>]
@@ -16,27 +18,39 @@ public actor StorageSubsystem<S: StorageProvider> {
 
     var chunks: [DocumentId: [Data]]
 
+    /// Creates a new concurrency safe document storage instance to manage changes to Automerge documents.
+    /// - Parameter storage: The storage provider
     public init(_ storage: some StorageProvider) {
         compacting = false
         _storage = storage
         latestHeads = [:]
         chunks = [:]
 
-        // memo-ized sizes so that we don't have to potentially re-iterate through
-        // the storage provider (disk accesses, or even network accesses) to get a
-        // size determination to know if we should compact or not. (used in
-        // `shouldCompact(:DocumentId)`
+        // memo-ized sizes of documents and chunks so that we don't always have to
+        // iterate through the storage provider (disk accesses, or even network accesses)
+        // to get a size determination to know if we should compact or not.
+        // (used in function`shouldCompact(:DocumentId)`)
         storedChunkSize = [:]
         memoryChunkSize = [:]
         storedDocSize = [:]
     }
 
+    /// Returns an existing, or creates a new, document for the document Id you provide.
+    ///
+    /// The method throws errors from the underlying storage system or Document errors if the
+    /// loaded data was corrupt or incorrect.
+    ///
+    /// - Parameter id: The document Id
+    /// - Returns: An automerge document.
     public func loadDoc(id: DocumentId) async throws -> Document {
         var combined: Data
-        let storageChunks = await _storage.loadRange(key: id, prefix: chunkNamespace)
+        let storageChunks = try await _storage.loadRange(key: id, prefix: chunkNamespace)
+        if chunks[id] == nil {
+            chunks[id] = []
+        }
         let inMemChunks: [Data] = chunks[id] ?? []
 
-        if let baseData = await _storage.load(key: id) {
+        if let baseData = try await _storage.load(key: id) {
             // loading all the changes from the base document and any incremental saves available
             combined = baseData
             storedDocSize[id] = baseData.count
@@ -59,11 +73,16 @@ public actor StorageSubsystem<S: StorageProvider> {
             combined.append(chunk)
         }
         storedChunkSize[id] = storedChunks
+        let combinedDoc = try Document(combined)
+        latestHeads[id] = combinedDoc.heads()
 
-        return try Document(combined)
+        return combinedDoc
     }
 
-    private func shouldCompact(_ key: DocumentId) async -> Bool {
+    /// Determine if a documentId should be compacted.
+    /// - Parameter key: the document Id to analyze
+    /// - Returns: a Boolean value that indicates whether the document should be compacted.
+    private func shouldCompact(_ key: DocumentId) async throws -> Bool {
         if compacting {
             return false
         }
@@ -71,22 +90,27 @@ public actor StorageSubsystem<S: StorageProvider> {
             incrSize + data.count
         }
 
-        let baseSize: Int = if let i = storedDocSize[key] {
+        let baseSize = if let i = storedDocSize[key] {
             i
         } else {
-            await _storage.load(key: key)?.count ?? 0
+            try await _storage.load(key: key)?.count ?? 0
         }
 
-        let chunkSize: Int = if let j = storedChunkSize[key] {
+        let chunkSize = if let j = storedChunkSize[key] {
             j
         } else {
-            await _storage.loadRange(key: key, prefix: chunkNamespace).reduce(0) { incrSize, data in
+            try await _storage.loadRange(key: key, prefix: chunkNamespace).reduce(0) { incrSize, data in
                 incrSize + data.count
             }
         }
         return chunkSize > baseSize || inMemSize > baseSize
     }
 
+    /// Determine if the document provided has changes not represented by the underlying storage system
+    /// - Parameters:
+    ///   - key: The Id of the document
+    ///   - doc: The Automerge document
+    /// - Returns: A Boolean value that indicates the document has changes.
     private func shouldSave(for key: DocumentId, doc: Document) -> Bool {
         guard let storedHeads = self.latestHeads[key] else {
             return true
@@ -98,10 +122,14 @@ public actor StorageSubsystem<S: StorageProvider> {
         return true
     }
 
+    /// Saves a document to the storage backend, compacting it if needed.
+    /// - Parameters:
+    ///   - id: The Id of the document
+    ///   - doc: The automerge document
     public func saveDoc(id: DocumentId, doc: Document) async throws {
         if shouldSave(for: id, doc: doc) {
-            if await shouldCompact(id) {
-                try await compact(id: id, doc: doc, chunks: chunks[id] ?? [])
+            if try await shouldCompact(id) {
+                try await compact(id: id, doc: doc)
                 self.chunks[id] = []
             } else {
                 try await self.saveIncremental(id: id, doc: doc)
@@ -109,10 +137,14 @@ public actor StorageSubsystem<S: StorageProvider> {
         }
     }
 
-    // TODO: update data type from Data to Chunk when validating a byte array as a partial set of changes is available from Automerge cores
-    public func compact(id: DocumentId, doc _: Document, chunks _: [Data]) async throws {
+    /// A concurrency safe compaction routine to consolidate in-memory and stored incremental changes into a compacted
+    /// Automerge document.
+    /// - Parameters:
+    ///   - id: The document Id to compact
+    ///   - doc: The document to compact.
+    public func compact(id: DocumentId, doc _: Document) async throws {
         compacting = true
-        var combined: Data = if let baseData = await _storage.load(key: id) {
+        var combined: Data = if let baseData = try await _storage.load(key: id) {
             // loading all the changes from the base document and any incremental saves available
             baseData
         } else {
@@ -127,7 +159,7 @@ public actor StorageSubsystem<S: StorageProvider> {
             combined.append(chunk)
         }
 
-        let storageChunks = await _storage.loadRange(key: id, prefix: chunkNamespace)
+        let storageChunks = try await _storage.loadRange(key: id, prefix: chunkNamespace)
         for chunk in storageChunks {
             combined.append(chunk)
         }
@@ -136,7 +168,7 @@ public actor StorageSubsystem<S: StorageProvider> {
 
         let compactedData = compactedDoc.save()
         // only remove the chunks AFTER the save is complete
-        await _storage.save(key: id, data: compactedData)
+        try await _storage.save(key: id, data: compactedData)
         storedDocSize[id] = compactedData.count
         latestHeads[id] = compactedDoc.heads()
 
@@ -159,27 +191,32 @@ public actor StorageSubsystem<S: StorageProvider> {
         // reads the base document and appends the found changes in a load, they'll still
         // end up with the same document, so these can safely be removed _after_ the new
         // compacted document has been stored away by the underlying storage provider.
-        await _storage.removeRange(key: id, prefix: chunkNamespace, data: storageChunks)
-        storedChunkSize[id] = await _storage.loadRange(key: id, prefix: chunkNamespace).reduce(0) { incrSize, data in
-            incrSize + data.count
-        }
+        try await _storage.removeRange(key: id, prefix: chunkNamespace, data: storageChunks)
+        storedChunkSize[id] = try await _storage.loadRange(key: id, prefix: chunkNamespace)
+            .reduce(0) { incrSize, data in
+                incrSize + data.count
+            }
 
         compacting = false
     }
 
+    /// Save incremental changes of the existing Automerge document.
+    /// - Parameters:
+    ///   - id: The Id of the document
+    ///   - doc: The automerge document
     public func saveIncremental(id: DocumentId, doc: Document) async throws {
         var chunkCollection = chunks[id] ?? []
         let oldHeads = latestHeads[id] ?? Set<ChangeHash>()
-        let incrementals = try doc.encodeChangesSince(heads: oldHeads)
-        chunkCollection.append(incrementals)
+        let incrementalChanges = try doc.encodeChangesSince(heads: oldHeads)
+        chunkCollection.append(incrementalChanges)
         chunks[id] = chunkCollection
-        await _storage.addToRange(key: id, prefix: chunkNamespace, data: incrementals)
+        try await _storage.addToRange(key: id, prefix: chunkNamespace, data: incrementalChanges)
         latestHeads[id] = doc.heads()
     }
 
-    public func loadSyncState(id _: DocumentId, storageId _: SyncV1.STORAGE_ID) async -> SyncState {
-        SyncState()
-    }
-
-    public func saveSyncState(id _: DocumentId, storageId _: SyncV1.STORAGE_ID, state _: SyncState) async {}
+//    public func loadSyncState(id _: DocumentId, storageId _: SyncV1.STORAGE_ID) async -> SyncState {
+//        SyncState()
+//    }
+//
+//    public func saveSyncState(id _: DocumentId, storageId _: SyncV1.STORAGE_ID, state _: SyncState) async {}
 }
