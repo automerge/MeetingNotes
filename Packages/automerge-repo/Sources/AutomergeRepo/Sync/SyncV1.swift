@@ -54,19 +54,21 @@ public indirect enum SyncV1 {
 
     /// The collection of value "type" strings for the V1 automerge-repo protocol.
     public enum MsgTypes {
-        public static var peer = "peer"
+        static var peer = "peer"
+        static var join = "join"
+        static var leave = "leave"
+        static var request = "request"
         static var sync = "sync"
         static var ephemeral = "ephemeral"
         static var error = "error"
         static var unavailable = "doc-unavailable"
-        static var join = "join"
         static var remoteHeadsChanged = "remote-heads-changed"
-        static var request = "request"
         static var remoteSubscriptionChange = "remote-subscription-change"
     }
 
     case peer(PeerMsg)
     case join(JoinMsg)
+    case leave(LeaveMsg)
     case error(ErrorMsg)
     case request(RequestMsg)
     case sync(SyncMsg)
@@ -85,6 +87,8 @@ public indirect enum SyncV1 {
             P2PSyncMessageType.peer
         case .join:
             P2PSyncMessageType.join
+        case .leave:
+            P2PSyncMessageType.leave
         case .error:
             P2PSyncMessageType.syncerror
         case .request:
@@ -111,6 +115,8 @@ extension SyncV1: CustomDebugStringConvertible {
         case let .peer(interior_msg):
             interior_msg.debugDescription
         case let .join(interior_msg):
+            interior_msg.debugDescription
+        case let .leave(interior_msg):
             interior_msg.debugDescription
         case let .error(interior_msg):
             interior_msg.debugDescription

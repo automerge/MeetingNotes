@@ -30,6 +30,7 @@ enum P2PSyncMessageType: UInt32 {
     case syncerror = 8
     case remoteHeadsChanged = 9
     case remoteSubscriptionChange = 10
+    case leave = 11
 }
 
 /// The definition of the Automerge network sync protocol.

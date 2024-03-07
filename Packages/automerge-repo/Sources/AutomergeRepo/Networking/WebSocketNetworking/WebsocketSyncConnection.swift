@@ -549,6 +549,9 @@ public final class WebsocketSyncConnection: ObservableObject {
             case let .remoteSubscriptionChange(inside_msg):
                 Logger.webSocket.warning("RCVD unusual msg: \(inside_msg.debugDescription, privacy: .public)")
 
+            case let .leave(inside_msg):
+                Logger.webSocket.warning("RCVD unusual msg: \(inside_msg.debugDescription, privacy: .public)")
+
             // Messages that are always unexpected while in the "ready" state
 
             case let .peer(inside_msg):
