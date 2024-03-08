@@ -161,12 +161,12 @@ public extension SyncV1 {
     /// `documentId`).
     struct RequestMsg: Codable, CustomDebugStringConvertible {
         public var type: String = SyncV1.MsgTypes.request
-        public let documentId: DOCUMENT_ID
+        public let documentId: MSG_DOCUMENT_ID
         public let senderId: PEER_ID // The peer requesting to begin sync
         public let targetId: PEER_ID
         public let data: Data // The initial automerge sync message from the sender
 
-        public init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, sync_message: Data) {
+        public init(documentId: MSG_DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, sync_message: Data) {
             self.documentId = documentId
             self.senderId = senderId
             self.targetId = targetId
@@ -199,12 +199,12 @@ public extension SyncV1 {
     /// document.
     struct SyncMsg: Codable, CustomDebugStringConvertible {
         public var type = SyncV1.MsgTypes.sync
-        public let documentId: DOCUMENT_ID
+        public let documentId: MSG_DOCUMENT_ID
         public let senderId: PEER_ID // The peer requesting to begin sync
         public let targetId: PEER_ID
         public let data: Data // The initial automerge sync message from the sender
 
-        public init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, sync_message: Data) {
+        public init(documentId: MSG_DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID, sync_message: Data) {
             self.documentId = documentId
             self.senderId = senderId
             self.targetId = targetId
@@ -230,11 +230,11 @@ public extension SyncV1 {
     /// peer (represented by `targetId`) doesn't have a copy of the requested Document, or is unable to share it.
     struct UnavailableMsg: Codable, CustomDebugStringConvertible {
         public var type = SyncV1.MsgTypes.unavailable
-        public let documentId: DOCUMENT_ID
+        public let documentId: MSG_DOCUMENT_ID
         public let senderId: PEER_ID
         public let targetId: PEER_ID
 
-        public init(documentId: DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID) {
+        public init(documentId: MSG_DOCUMENT_ID, senderId: PEER_ID, targetId: PEER_ID) {
             self.documentId = documentId
             self.senderId = senderId
             self.targetId = targetId
@@ -270,7 +270,7 @@ public extension SyncV1 {
         public let targetId: PEER_ID
         public let count: UInt
         public let sessionId: String
-        public let documentId: DOCUMENT_ID
+        public let documentId: MSG_DOCUMENT_ID
         public let data: Data
 
         public init(
@@ -278,7 +278,7 @@ public extension SyncV1 {
             targetId: PEER_ID,
             count: UInt,
             sessionId: String,
-            documentId: DOCUMENT_ID,
+            documentId: MSG_DOCUMENT_ID,
             data: Data
         ) {
             self.senderId = senderId
@@ -377,7 +377,7 @@ public extension SyncV1 {
         public var type = SyncV1.MsgTypes.remoteHeadsChanged
         public let senderId: PEER_ID
         public let targetId: PEER_ID
-        public let documentId: DOCUMENT_ID
+        public let documentId: MSG_DOCUMENT_ID
         public var newHeads: [STORAGE_ID: HeadsAtTime]
         public var add: [STORAGE_ID]
         public var remove: [STORAGE_ID]
@@ -385,7 +385,7 @@ public extension SyncV1 {
         public init(
             senderId: PEER_ID,
             targetId: PEER_ID,
-            documentId: DOCUMENT_ID,
+            documentId: MSG_DOCUMENT_ID,
             newHeads: [STORAGE_ID: HeadsAtTime],
             add: [STORAGE_ID],
             remove: [STORAGE_ID]
