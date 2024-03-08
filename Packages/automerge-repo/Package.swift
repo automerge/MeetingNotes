@@ -22,6 +22,7 @@ let package = Package(
         .package(url: "https://github.com/automerge/automerge-swift", .upToNextMajor(from: "0.5.7")),
         .package(url: "https://github.com/outfoxx/PotentCodables", .upToNextMajor(from: "3.1.0")),
         .package(url: "https://github.com/keefertaylor/Base58Swift", .upToNextMajor(from: "2.1.14")),
+        .package(url: "https://github.com/apple/swift-async-algorithms", from: "1.0.0"),
     ],
     targets: [
         .target(
@@ -30,6 +31,7 @@ let package = Package(
                 .product(name: "Automerge", package: "automerge-swift"),
                 .product(name: "PotentCodables", package: "PotentCodables"),
                 .product(name: "Base58Swift", package: "Base58Swift"),
+                .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),
             ]
         ),
         .testTarget(

@@ -7,32 +7,10 @@ import OSLog
 import UIKit // for UIDevice.name access
 #endif
 
-/// A type that provides type-safe strings for TXTRecord publications with Bonjour
-public enum TXTRecordKeys {
-    /// The document identifier.
-    public static var doc_id = "doc_id"
-    /// The peer identifier.
-    public static var peer_id = "peer_id"
-    /// The human-readable name for the peer.
-    public static var name = "name"
-}
-
 /// A collection of User Default keys for the app.
 public enum SynchronizerDefaultKeys {
     /// The key to the string that the app broadcasts to represent you when sharing and syncing Automerge Documents.
     public static let publicPeerName = "sharingIdentity"
-}
-
-/// A weak reference to an Automerge document
-///
-/// Allow a global singleton keep references to documents without incurring memory leaks as Documents are opened and
-/// closed.
-final class WeakDocumentRef {
-    weak var value: Automerge.Document?
-
-    init(_ value: Automerge.Document? = nil) {
-        self.value = value
-    }
 }
 
 /// A application-shared sync controller that supports coordinates documents and network connections with peers.

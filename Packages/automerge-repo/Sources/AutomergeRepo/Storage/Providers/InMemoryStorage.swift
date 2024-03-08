@@ -3,7 +3,7 @@ import struct Foundation.UUID
 
 /// An in-memory only storage provider.
 public actor InMemoryStorage: StorageProvider {
-    public nonisolated let id: SyncV1.STORAGE_ID = UUID().uuidString
+    public nonisolated let id: STORAGE_ID = UUID().uuidString
 
     var _storage: [DocumentId: Data] = [:]
     var _incrementalChunks: [CombinedKey: [Data]] = [:]

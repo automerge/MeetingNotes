@@ -31,24 +31,6 @@ public indirect enum SyncV1 {
     // ; The base58check encoded bytes of a document ID
     // document_id = str
 
-    /// A type that represents a peer
-    ///
-    /// Typically a UUID4 in string form.
-    public typealias PEER_ID = String
-
-    /// A type that represents an identity for the storage of a peer.
-    ///
-    /// Typically a UUID4 in string form. Receiving peers may tie cached sync state for documents to this identifier.
-    public typealias STORAGE_ID = String
-
-    /// A type that represents a document Id.
-    ///
-    /// Typically 16 bytes encoded in bs58 format.
-    public typealias DOCUMENT_ID = String
-
-    /// A type that represents the raw bytes of an Automerge sync message.
-    public typealias SYNC_MESSAGE = Data
-
     static let encoder = CBOREncoder()
     static let decoder = CBORDecoder()
 
