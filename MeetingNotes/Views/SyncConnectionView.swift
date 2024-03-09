@@ -3,6 +3,7 @@ import Network
 import SwiftUI
 
 /// A view that displays a sync connection and its state.
+@MainActor
 struct SyncConnectionView: View {
     @ObservedObject var syncConnection: BonjourSyncConnection
 

@@ -3,7 +3,7 @@ import struct Foundation.Data
 import struct Foundation.UUID
 
 /// A type that represents an Automerge-repo compatible document identifier
-public struct DocumentId: Hashable, Comparable, Identifiable {
+public struct DocumentId: Hashable, Comparable, Identifiable, Sendable {
     /// A bs58 encoded string that represents the identifier
     public let id: String
     // Data?
