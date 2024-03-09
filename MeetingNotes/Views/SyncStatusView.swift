@@ -1,6 +1,7 @@
 import SwiftUI
 
 /// A toolbar button for activating sync for a document.
+@MainActor
 struct SyncStatusView: View {
     @State private var syncEnabledIndicator: Bool = false
     var body: some View {

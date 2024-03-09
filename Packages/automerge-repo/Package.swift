@@ -32,7 +32,8 @@ let package = Package(
                 .product(name: "PotentCodables", package: "PotentCodables"),
                 .product(name: "Base58Swift", package: "Base58Swift"),
                 .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),
-            ]
+            ],
+            swiftSettings: [.enableExperimentalFeature("StrictConcurrency")]
         ),
         .testTarget(
             name: "AutomergeRepoTests",

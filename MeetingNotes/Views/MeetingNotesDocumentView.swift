@@ -2,6 +2,7 @@ import OSLog
 import SwiftUI
 
 /// The primary document view for a MeetingNotes document.
+@MainActor
 struct MeetingNotesDocumentView: View {
     @ObservedObject var document: MeetingNotesDocument
     // The undo manager triggers serializations and saving changes to the model
