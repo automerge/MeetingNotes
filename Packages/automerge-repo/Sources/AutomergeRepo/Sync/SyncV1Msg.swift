@@ -18,7 +18,7 @@ import PotentCBOR
 // All the WebSocket messages are CBOR encoded and sent as data streams
 
 /// A type that encapsulates valid V1 Automerge-repo sync protocol messages.
-public indirect enum SyncV1 {
+public indirect enum SyncV1Msg {
     // CDDL pre-amble
     // ; The base64 encoded bytes of a Peer ID
     // peer_id = str
@@ -91,7 +91,7 @@ public indirect enum SyncV1 {
     }
 }
 
-extension SyncV1: CustomDebugStringConvertible {
+extension SyncV1Msg: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
         case let .peer(interior_msg):

@@ -1,27 +1,6 @@
-import protocol Combine.Publisher
-import struct Foundation.Data
-import struct Foundation.UUID
+//import protocol Combine.Publisher
 
-public enum NetworkAdapterEvents {
-    public struct OpenPayload {
-        let network: any NetworkProvider
-    }
-
-    public struct PeerCandidatePayload {
-        let peerId: UUID
-        let peerMetadata: SyncV1.PeerMetadata
-    }
-
-    public struct PeerDisconnectPayload {
-        let peerId: UUID
-    }
-
-    case ready(payload: OpenPayload)
-    case close
-    case peerCandidate(payload: PeerCandidatePayload)
-    case peerDisconnect(payload: PeerDisconnectPayload)
-    case message(payload: Data)
-}
+import AsyncAlgorithms
 
 // https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo/src/network/NetworkAdapterInterface.ts
 
@@ -60,12 +39,14 @@ public enum NetworkAdapterEvents {
 /// - When any other message is received, it is emitted with ``NetworkAdapterEvents/message(payload:)``.
 /// - When the transport receives a `leave` message, close the connection and emit ``NetworkAdapterEvents/close``.
 public protocol NetworkProvider<ProviderConfiguration>: Identifiable {
+    /// The identity of the network provider
+    var id: PEER_ID { get }
     /// The peer Id of the local instance.
-    var peerId: UUID { get }
+    var peerId: PEER_ID { get }
     /// The optional metadata associated with this peer's presentation.
-    var peerMetadata: SyncV1.PeerMetadata? { get }
+    var peerMetadata: PeerMetadata? { get }
     /// The peer Id of the remote
-    var connectedPeer: UUID { get }
+    var connectedPeer: PEER_ID { get }
 
     /// The type used to configure an instance of a Network Provider.
     associatedtype ProviderConfiguration
@@ -78,15 +59,21 @@ public protocol NetworkProvider<ProviderConfiguration>: Identifiable {
     func configure(_: ProviderConfiguration)
 
     /// Initiate a connection.
-    func connect(asPeer: UUID, metadata: SyncV1.PeerMetadata?) async // aka "activate"
+    func connect(asPeer: PEER_ID, metadata: PeerMetadata?) async // aka "activate"
+    
     /// Disconnect and terminate any existing connection.
     func disconnect() async // aka "deactivate"
 
+    func ready() async -> Bool
+    
     /// Sends a message.
     /// - Parameter message: The message to send.
-    func send(message: SyncV1) async
-    associatedtype NetworkEvents: Publisher<NetworkAdapterEvents, Never>
+    func send(message: SyncV1Msg) async
 
     /// A publisher that provides events and messages from the network provider.
-    var eventPublisher: NetworkEvents { get }
+    var events: AsyncChannel<NetworkAdapterEvents> { get }
+    
+    // Combine version...
+    //associatedtype NetworkEvents: Publisher<NetworkAdapterEvents, Never>
+    //var eventPublisher: NetworkEvents { get }
 }

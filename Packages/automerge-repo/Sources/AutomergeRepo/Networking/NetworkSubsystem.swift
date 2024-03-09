@@ -1,5 +1,5 @@
-import class Combine.PassthroughSubject
 import struct Foundation.Data
+import AsyncAlgorithms
 
 // riff
 // https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo/src/network/NetworkSubsystem.ts
@@ -10,24 +10,63 @@ import struct Foundation.Data
 /// messages from remote peers after the connection has been established. The connection handshake and peer negotiation
 /// is
 /// the responsibility of the network provider instance.
-public struct NetworkSubsystem {
+public actor NetworkSubsystem {
     var adapters: [any NetworkProvider]
-
-    init(adapters: [any NetworkProvider]) {
+    let combinedNetworkEvents: AsyncChannel<NetworkAdapterEvents>
+    var _backgroundNetworkReaderTasks: [Task<(), Never>] = []
+    init(adapters: [any NetworkProvider]) async {
         self.adapters = adapters
+        combinedNetworkEvents = AsyncChannel()
+        for adapter in adapters {
+            await connectAdapter(adapter: adapter)
+        }
     }
 
-    func send(message _: Data) {}
+    func connectAdapter(adapter: any NetworkProvider) async {
+        _backgroundNetworkReaderTasks.append(
+            // for each network adapter, read it's channel of
+            // network event messages and "forward" them upstream
+            // to the Repo (or whomever is reading the NetworkSubsystem's
+            // combinedNetworkEvents channel.
+            Task {
+                for await msg in adapter.events {
+                    await self.combinedNetworkEvents.send(msg)
+                }
+            }
+        )
+    }
+    
+    func send(message: SyncV1Msg) async {
+        // send any message to ALL adapters (is this right?)
+        for n in adapters {
+            await n.send(message: message)
+        }
+    }
 
     // async waits until underlying networks are connected and ready to send and receive messages
     // (aka all networks are connected and "peered")
     func isReady() async -> Bool {
-        false
+        for adapter in adapters {
+            if await !adapter.ready() {
+                return false
+            }
+        }
+        return true
     }
 
-    func whenReady() async {}
+    func allNetworksReady() async throws {
+        var currentlyReady = await self.isReady()
+        while currentlyReady != true {
+            try await Task.sleep(for: .milliseconds(500))
+            currentlyReady = await self.isReady()
+        }
+    }
 
-    let eventPublisher: PassthroughSubject<NetworkAdapterEvents, Never> = PassthroughSubject()
+    // combine version
+//import class Combine.PassthroughSubject
+//    let eventPublisher: PassthroughSubject<NetworkAdapterEvents, Never> = PassthroughSubject()
+    
+    
 }
 
 // Collection point for all messages coming in, and going out, of the repository

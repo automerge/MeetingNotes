@@ -2,12 +2,12 @@ import Foundation // Data
 import OSLog
 import PotentCBOR
 
-public extension SyncV1 {
+public extension SyncV1Msg {
     /// Attempts to decode the data you provide as a peer message.
     ///
     /// - Parameter data: The data to decode
     /// - Returns: The decoded message, or ``SyncV1/unknown(_:)`` if the decoding attempt failed.
-    static func decodePeer(_ data: Data) -> SyncV1 {
+    static func decodePeer(_ data: Data) -> SyncV1Msg {
         if let peerMsg = attemptPeer(data) {
             .peer(peerMsg)
         } else {
@@ -20,7 +20,7 @@ public extension SyncV1 {
     ///   - data: The data to be decoded
     ///   - msgType: The type of message to decode.
     /// - Returns: The decoded message.
-    internal static func decode(_ data: Data, as msgType: P2PSyncMessageType) -> SyncV1 {
+    internal static func decode(_ data: Data, as msgType: P2PSyncMessageType) -> SyncV1Msg {
         switch msgType {
         case .unknown:
             return .unknown(data)
@@ -83,7 +83,7 @@ public extension SyncV1 {
     /// Enable `withGossip` to attempt to decode head gossip messages, and `withHandshake` to include handshake phase
     /// messages.
     /// With both `withGossip` and `withHandshake` set to `true`, the decoding is exhaustive over all V1 messages.
-    static func decode(_ data: Data) -> SyncV1 {
+    static func decode(_ data: Data) -> SyncV1Msg {
         var cborMsg: CBOR? = nil
 
         // attempt to deserialize CBOR message (in order to read the type from it)
@@ -284,7 +284,7 @@ public extension SyncV1 {
         try encoder.encode(msg)
     }
 
-    static func encode(_ msg: SyncV1) throws -> Data {
+    static func encode(_ msg: SyncV1Msg) throws -> Data {
         // not sure this is useful, but might as well finish out the set...
         switch msg {
         case let .peer(peerMsg):
