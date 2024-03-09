@@ -130,7 +130,7 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
         // check the invariants
         guard let webSocketTask = self.webSocketTask
         else {
-            throw SyncV1.Errors
+            throw SyncV1Msg.Errors
                 .ConnectionClosed(errorDescription: "Attempting to wait for a websocket message when the task is nil")
         }
 
@@ -146,7 +146,7 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
             group.addTask {
                 // Race against the receive call with a continuous timer
                 try await Task.sleep(for: withTimeout)
-                throw SyncV1.Errors.Timeout()
+                throw SyncV1Msg.Errors.Timeout()
             }
 
             guard let msg = try await group.next() else {
@@ -159,29 +159,29 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
         return websocketMsg
     }
 
-    private func attemptToDecode(_ msg: URLSessionWebSocketTask.Message, peerOnly: Bool = false) throws -> SyncV1 {
+    private func attemptToDecode(_ msg: URLSessionWebSocketTask.Message, peerOnly: Bool = false) throws -> SyncV1Msg {
         // Now that we have the WebSocket message, figure out if we got what we expected.
         // For the sync protocol handshake phase, it's essentially "peer or die" since
         // we were the initiating side of the connection.
         switch msg {
         case let .data(raw_data):
             if peerOnly {
-                let msg = SyncV1.decodePeer(raw_data)
+                let msg = SyncV1Msg.decodePeer(raw_data)
                 if case .peer = msg {
                     return msg
                 } else {
                     // In the handshake phase and received anything other than a valid peer message
-                    let decodeAttempted = SyncV1.decode(raw_data)
+                    let decodeAttempted = SyncV1Msg.decode(raw_data)
                     Logger.webSocket
                         .warning(
                             "Decoding websocket message, expecting peer only - and it wasn't a peer message. RECEIVED MSG: \(decodeAttempted.debugDescription)"
                         )
-                    throw SyncV1.Errors.UnexpectedMsg(msg: decodeAttempted)
+                    throw SyncV1Msg.Errors.UnexpectedMsg(msg: decodeAttempted)
                 }
             } else {
-                let decodedMsg = SyncV1.decode(raw_data)
+                let decodedMsg = SyncV1Msg.decode(raw_data)
                 if case .unknown = decodedMsg {
-                    throw SyncV1.Errors.UnexpectedMsg(msg: decodedMsg)
+                    throw SyncV1Msg.Errors.UnexpectedMsg(msg: decodedMsg)
                 }
                 return decodedMsg
             }
@@ -190,12 +190,12 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
             // In the handshake phase and received anything other than a valid peer message
             Logger.webSocket
                 .warning("Unknown websocket message received: .string(\(string))")
-            throw SyncV1.Errors.UnexpectedMsg(msg: msg)
+            throw SyncV1Msg.Errors.UnexpectedMsg(msg: msg)
         @unknown default:
             // In the handshake phase and received anything other than a valid peer message
             Logger.webSocket
                 .error("Unknown websocket message received: \(String(describing: msg))")
-            throw SyncV1.Errors.UnexpectedMsg(msg: msg)
+            throw SyncV1Msg.Errors.UnexpectedMsg(msg: msg)
         }
     }
 
@@ -218,7 +218,7 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
         }
         guard let url = URL(string: destination) else {
             Logger.webSocket.error("Destination provided is not a valid URL")
-            throw SyncV1.Errors.InvalidURL(urlString: destination)
+            throw SyncV1Msg.Errors.InvalidURL(urlString: destination)
         }
 
         // establishes the websocket
@@ -242,8 +242,8 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
 
         // since we initiated the WebSocket, it's on us to send an initial 'join'
         // protocol message to start the handshake phase of the protocol
-        let joinMessage = SyncV1.JoinMsg(senderId: senderId)
-        let data = try SyncV1.encode(joinMessage)
+        let joinMessage = SyncV1Msg.JoinMsg(senderId: senderId)
+        let data = try SyncV1Msg.encode(joinMessage)
         try await webSocketTask.send(.data(data))
         Logger.webSocket.trace("SEND: \(joinMessage.debugDescription)")
         await MainActor.run {
@@ -260,7 +260,7 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
             // For the sync protocol handshake phase, it's essentially "peer or die" since
             // we were the initiating side of the connection.
             guard case let .peer(peerMsg) = try attemptToDecode(websocketMsg, peerOnly: true) else {
-                throw SyncV1.Errors.UnexpectedMsg(msg: websocketMsg)
+                throw SyncV1Msg.Errors.UnexpectedMsg(msg: websocketMsg)
             }
 
             Logger.webSocket.trace("Peered to targetId: \(peerMsg.senderId) \(peerMsg.debugDescription)")
@@ -341,13 +341,13 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
         await MainActor.run {
             self.syncInProgress = true
         }
-        let requestMsg = SyncV1.RequestMsg(
+        let requestMsg = SyncV1Msg.RequestMsg(
             documentId: documentId.description,
             senderId: self.senderId,
             targetId: targetId,
             sync_message: syncData
         )
-        let data = try SyncV1.encode(requestMsg)
+        let data = try SyncV1Msg.encode(requestMsg)
         try await webSocketTask.send(.data(data))
         Logger.webSocket.trace("SEND: \(requestMsg.debugDescription)")
     }
@@ -378,7 +378,7 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
                 self.protocolState = .ready
                 self.syncInProgress = true
             }
-            let syncMsg = SyncV1.SyncMsg(
+            let syncMsg = SyncV1Msg.SyncMsg(
                 documentId: documentId.description,
                 senderId: self.senderId,
                 targetId: targetId,
@@ -386,7 +386,7 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
             )
             var data: Data? = nil
             do {
-                data = try SyncV1.encode(syncMsg)
+                data = try SyncV1Msg.encode(syncMsg)
             } catch {
                 Logger.webSocket.warning("Error encoding data: \(error.localizedDescription, privacy: .public)")
             }
@@ -448,7 +448,7 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
     ///  - if it `connectionState` is in ``SyncProtocolState/handshake`` and receives anything other than a peer msg
     ///  - if it is invoked while `connectionState` is reporting a ``SyncProtocolState/closed`` state
     /// it disconnects and shuts down the web-socket.
-    private func handleReceivedMessage(msg: SyncV1) async {
+    private func handleReceivedMessage(msg: SyncV1Msg) async {
         switch protocolState {
         case .setup:
             Logger.webSocket.warning("RCVD: \(msg.debugDescription, privacy: .public) while in NEW state")
@@ -503,7 +503,7 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
                                 self.syncInProgress = true
                             }
                         }
-                        let replyingSyncMsg = SyncV1.SyncMsg(
+                        let replyingSyncMsg = SyncV1Msg.SyncMsg(
                             documentId: documentId.description,
                             senderId: self.senderId,
                             targetId: targetId,
@@ -511,7 +511,7 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
                         )
                         Logger.webSocket
                             .trace(" - SYNC: Sending another sync msg after applying updates")
-                        let replyData = try SyncV1.encode(replyingSyncMsg)
+                        let replyData = try SyncV1Msg.encode(replyingSyncMsg)
                         try await webSocketTask.send(.data(replyData))
                         Logger.webSocket.trace("SEND: \(replyingSyncMsg.debugDescription)")
                     } else {

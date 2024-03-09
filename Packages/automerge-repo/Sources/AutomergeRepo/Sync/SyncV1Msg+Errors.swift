@@ -1,6 +1,6 @@
 import Foundation
 
-public extension SyncV1 {
+public extension SyncV1Msg {
     enum Errors {
         public struct Timeout: LocalizedError {
             public var errorDescription: String? = "Task timed out before completion"

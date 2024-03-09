@@ -1,28 +1,6 @@
 import Foundation
 
-public extension SyncV1 {
-    // ; Metadata sent in either the join or peer message types
-    // peer_metadata = {
-    //    ; The storage ID of this peer
-    //    ? storageId: storage_id,
-    //    ; Whether the sender expects to connect again with this storage ID
-    //    isEphemeral: bool
-    // }
-
-    struct PeerMetadata: Codable, CustomDebugStringConvertible {
-        public var storageId: STORAGE_ID?
-        public var isEphemeral: Bool
-
-        public init(storageId: STORAGE_ID? = nil, isEphemeral: Bool) {
-            self.storageId = storageId
-            self.isEphemeral = isEphemeral
-        }
-
-        public var debugDescription: String {
-            "[storageId: \(storageId ?? "nil"), ephemeral: \(isEphemeral)]"
-        }
-    }
-
+public extension SyncV1Msg {
     // - join -
     // {
     //    type: "join",
@@ -42,7 +20,7 @@ public extension SyncV1 {
     /// If the receiving peer receives any message other than a `JoinMsg` from the initiating peer, it is expected to
     /// terminate the connection.
     struct JoinMsg: Codable, CustomDebugStringConvertible {
-        public var type: String = SyncV1.MsgTypes.join
+        public var type: String = SyncV1Msg.MsgTypes.join
         public let senderId: PEER_ID
         public var supportedProtocolVersions: String = "1"
         public var peerMetadata: PeerMetadata?
@@ -83,7 +61,7 @@ public extension SyncV1 {
     /// sync,
     /// gossiping, and ephemeral messages may now be initiated.
     struct PeerMsg: Codable, CustomDebugStringConvertible {
-        public var type: String = SyncV1.MsgTypes.peer
+        public var type: String = SyncV1Msg.MsgTypes.peer
         public let senderId: PEER_ID
         public let targetId: PEER_ID
         public var peerMetadata: PeerMetadata?
@@ -108,7 +86,7 @@ public extension SyncV1 {
     // }
 
     struct LeaveMsg: Codable, CustomDebugStringConvertible {
-        public var type: String = SyncV1.MsgTypes.leave
+        public var type: String = SyncV1Msg.MsgTypes.leave
         public let senderId: PEER_ID
 
         public init(senderId: PEER_ID) {
@@ -128,7 +106,7 @@ public extension SyncV1 {
 
     /// A sync error message
     struct ErrorMsg: Codable, CustomDebugStringConvertible {
-        public var type: String = SyncV1.MsgTypes.error
+        public var type: String = SyncV1Msg.MsgTypes.error
         public let message: String
 
         public init(message: String) {
@@ -160,7 +138,7 @@ public extension SyncV1 {
     /// message if the receiving peer (represented by `targetId` does not have the document (identified by
     /// `documentId`).
     struct RequestMsg: Codable, CustomDebugStringConvertible {
-        public var type: String = SyncV1.MsgTypes.request
+        public var type: String = SyncV1Msg.MsgTypes.request
         public let documentId: MSG_DOCUMENT_ID
         public let senderId: PEER_ID // The peer requesting to begin sync
         public let targetId: PEER_ID
@@ -198,7 +176,7 @@ public extension SyncV1 {
     /// the
     /// document.
     struct SyncMsg: Codable, CustomDebugStringConvertible {
-        public var type = SyncV1.MsgTypes.sync
+        public var type = SyncV1Msg.MsgTypes.sync
         public let documentId: MSG_DOCUMENT_ID
         public let senderId: PEER_ID // The peer requesting to begin sync
         public let targetId: PEER_ID
@@ -229,7 +207,7 @@ public extension SyncV1 {
     /// Generally a response for a ``RequestMsg`` from an initiating peer (represented by `senderId`) that the receiving
     /// peer (represented by `targetId`) doesn't have a copy of the requested Document, or is unable to share it.
     struct UnavailableMsg: Codable, CustomDebugStringConvertible {
-        public var type = SyncV1.MsgTypes.unavailable
+        public var type = SyncV1Msg.MsgTypes.unavailable
         public let documentId: MSG_DOCUMENT_ID
         public let senderId: PEER_ID
         public let targetId: PEER_ID
@@ -265,7 +243,7 @@ public extension SyncV1 {
     // }
 
     struct EphemeralMsg: Codable, CustomDebugStringConvertible {
-        public var type = SyncV1.MsgTypes.ephemeral
+        public var type = SyncV1Msg.MsgTypes.ephemeral
         public let senderId: PEER_ID
         public let targetId: PEER_ID
         public let count: UInt
@@ -310,7 +288,7 @@ public extension SyncV1 {
     // }
 
     struct RemoteSubscriptionChangeMsg: Codable, CustomDebugStringConvertible {
-        public var type = SyncV1.MsgTypes.remoteSubscriptionChange
+        public var type = SyncV1Msg.MsgTypes.remoteSubscriptionChange
         public let senderId: PEER_ID
         public let targetId: PEER_ID
         public var add: [STORAGE_ID]?
@@ -374,7 +352,7 @@ public extension SyncV1 {
             }
         }
 
-        public var type = SyncV1.MsgTypes.remoteHeadsChanged
+        public var type = SyncV1Msg.MsgTypes.remoteHeadsChanged
         public let senderId: PEER_ID
         public let targetId: PEER_ID
         public let documentId: MSG_DOCUMENT_ID
