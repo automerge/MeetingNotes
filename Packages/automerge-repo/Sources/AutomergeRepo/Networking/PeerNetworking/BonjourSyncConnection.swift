@@ -121,7 +121,7 @@ public final class BonjourSyncConnection: ObservableObject {
             return
         }
 
-        syncTriggerCancellable = trigger.sink(receiveValue: { _ in
+        syncTriggerCancellable = trigger.sink(receiveValue: { @MainActor _ in
             if let automergeDoc = SyncController.coordinator.documents[self.documentId]?.value,
                let syncData = automergeDoc.generateSyncMessage(state: self.syncState),
                self.connectionState == .ready
@@ -134,7 +134,7 @@ public final class BonjourSyncConnection: ObservableObject {
             }
         })
 
-        connection.stateUpdateHandler = { [weak self] newState in
+        connection.stateUpdateHandler = { @MainActor [weak self] newState in
             guard let self else { return }
 
             self.connectionState = newState
@@ -303,7 +303,7 @@ public final class BonjourSyncConnection: ObservableObject {
         )
     }
 
-    func receivedMessage(content data: Data?, message: NWProtocolFramer.Message, from endpoint: NWEndpoint) {
+    @MainActor func receivedMessage(content data: Data?, message: NWProtocolFramer.Message, from endpoint: NWEndpoint) {
         guard let document = SyncController.coordinator.documents[self.documentId]?.value else {
             Logger.syncConnection
                 .warning(

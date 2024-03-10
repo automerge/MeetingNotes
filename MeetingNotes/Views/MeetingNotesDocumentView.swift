@@ -1,6 +1,6 @@
+import AutomergeRepo
 import OSLog
 import SwiftUI
-import AutomergeRepo
 
 /// The primary document view for a MeetingNotes document.
 @MainActor

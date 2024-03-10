@@ -12,10 +12,9 @@ public enum NetworkAdapterEvents: Sendable {
         let peerId: PEER_ID
     }
 
-    case ready //(payload: OpenPayload) // repo only
+    case ready // (payload: OpenPayload) // repo only
     case close // handled by Repo, relevant to sync
     case peerCandidate(payload: PeerCandidatePayload) // handled by Repo
     case peerDisconnect(payload: PeerDisconnectPayload) // handled by Repo, relevant to Sync
     case message(payload: SyncV1Msg) // handled by Sync
 }
-

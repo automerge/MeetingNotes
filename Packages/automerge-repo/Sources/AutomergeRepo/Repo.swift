@@ -3,7 +3,7 @@
 import Automerge
 import Foundation
 
-//@globalActor
+// @globalActor
 public actor Repo {
 //    public static let shared = Repo()
     public let peerId: PEER_ID
@@ -14,34 +14,37 @@ public actor Repo {
     // saveDebounceRate = 100
     private var synchronizer: CollectionSynchronizer
     var sharePolicy: any SharePolicy
-    
+
     /** maps peer id to to persistence information (storageId, isEphemeral), access by collection synchronizer  */
     /** @hidden */
-    var peerMetadataByPeerId: [PEER_ID:PeerMetadata]
-    
+    var peerMetadataByPeerId: [PEER_ID: PeerMetadata]
+
 //    #remoteHeadsSubscriptions = new RemoteHeadsSubscriptions()
 //    export class RemoteHeadsSubscriptions extends EventEmitter<RemoteHeadsSubscriptionEvents> {
 //      // Storage IDs we have received remote heads from
 //      #knownHeads: Map<DocumentId, Map<StorageId, LastHeads>> = new Map()
     // ^^^ DUPLICATES DATA stored in DocHandle...
-    
+
 //      // Storage IDs we have subscribed to via Repo.subscribeToRemoteHeads
 //      #ourSubscriptions: Set<StorageId> = new Set()
-    
+
 //      // Storage IDs other peers have subscribed to by sending us a control message
 //      #theirSubscriptions: Map<StorageId, Set<PeerId>> = new Map()
-    
+
 //      // Peers we will always share remote heads with even if they are not subscribed
 //      #generousPeers: Set<PeerId> = new Set()
-    
-//      // Documents each peer has open, we need this information so we only send remote heads of documents that the peer knows
+
+//      // Documents each peer has open, we need this information so we only send remote heads of documents that the
+//      /peer knows
 //      #subscribedDocsByPeer: Map<PeerId, Set<DocumentId>> = new Map()
 
     private var remoteHeadsGossipingEnabled = false
 
-    init(storage: StorageProvider? = nil,
-         networkAdapters: [any NetworkProvider] = [],
-         sharePolicy: some SharePolicy) async  {
+    init(
+        storage: StorageProvider? = nil,
+        networkAdapters: [any NetworkProvider] = [],
+        sharePolicy: some SharePolicy
+    ) async {
         self.peerId = UUID().uuidString
         self._handles = [:]
         self.peerMetadataByPeerId = [:]
@@ -51,15 +54,15 @@ public actor Repo {
         self.synchronizer = CollectionSynchronizer()
     }
 
-// possible functions for dynamic configuration of a shared repo
+    // possible functions for dynamic configuration of a shared repo
 //    public func setStorageAdapter(storage: some StorageProvider) {
-//        
+//
 //    }
-//    
+//
 //    public func addNetworkAdapter(net: some NetworkProvider) {
 //        network.adapters.append(net)
 //    }
-//    
+//
 //    public func removeNetworkAdapter(net: some NetworkProvider) {
 //        network.adapters.removeAll { provider in
 //            provider.id == net.id
@@ -85,7 +88,7 @@ public actor Repo {
     public func create(data: Data) async throws -> DocHandle {
         try DocHandle(id: DocumentId(), isNew: true, initialValue: Document(data))
     }
-    
+
     /// Returns a ready docHandle with a loaded Document or throws an error in the attempt of it.
     /// - Parameter handle: The handle to resolve
     func resolveHandle(handle: DocHandle) async throws -> DocHandle {
@@ -100,7 +103,7 @@ public actor Repo {
 
         return handle
     }
-    
+
     public func clone(id: DocumentId) async throws -> DocHandle {
         guard let originalDocHandle = _handles[id] else {
             throw Errors.Unavailable(id: id)

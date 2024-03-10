@@ -24,9 +24,11 @@ struct WrappedAutomergeDocument: Codable {
 
 extension WrappedAutomergeDocument: Transferable {
     static var transferRepresentation: some TransferRepresentation {
-        CodableRepresentation(contentType: .meetingnote,
-                              encoder: CBORCoder.encoder,
-                              decoder: CBORCoder.decoder)
+        CodableRepresentation(
+            contentType: .meetingnote,
+            encoder: CBORCoder.encoder,
+            decoder: CBORCoder.decoder
+        )
     }
 }
 

@@ -7,7 +7,7 @@ import OSLog
 // https://forums.swift.org/t/preconcurrency-doesnt-suppress-static-property-concurrency-warnings/70469/2
 extension Logger: @unchecked Sendable {
     /// Using your bundle identifier is a great way to ensure a unique identifier.
-    nonisolated private static let subsystem = Bundle.main.bundleIdentifier!
+    private nonisolated static let subsystem = Bundle.main.bundleIdentifier!
 
     /// Logs the Document interactions, such as saving and loading.
     static let document = Logger(subsystem: subsystem, category: "Document")
