@@ -38,7 +38,7 @@ import AsyncAlgorithms
 /// return an ``SyncV1/error(_:)`` message, close the connection, and emit ``NetworkAdapterEvents/close``.
 /// - When any other message is received, it is emitted with ``NetworkAdapterEvents/message(payload:)``.
 /// - When the transport receives a `leave` message, close the connection and emit ``NetworkAdapterEvents/close``.
-public protocol NetworkProvider<ProviderConfiguration>: Identifiable {
+public protocol NetworkProvider<ProviderConfiguration>: Sendable, Identifiable {
     /// The identity of the network provider
     var id: PEER_ID { get }
     /// The peer Id of the local instance.
@@ -71,6 +71,7 @@ public protocol NetworkProvider<ProviderConfiguration>: Identifiable {
     func send(message: SyncV1Msg) async
 
     /// A publisher that provides events and messages from the network provider.
+    // Type 'NetworkAdapterEvents' does not conform to the 'Sendable' protocol
     var events: AsyncChannel<NetworkAdapterEvents> { get }
     
     // Combine version...

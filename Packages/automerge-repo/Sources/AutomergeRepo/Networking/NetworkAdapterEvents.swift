@@ -1,14 +1,14 @@
-public enum NetworkAdapterEvents {
+public enum NetworkAdapterEvents: Sendable {
 //    public struct OpenPayload {
 //        let network: any NetworkProvider // do we need this payload? What's repo going to do with it?
 //    }
 
-    public struct PeerCandidatePayload { // handled by Repo - relevant to storage
+    public struct PeerCandidatePayload: Sendable { // handled by Repo - relevant to storage
         let peerId: PEER_ID
         let peerMetadata: PeerMetadata
     }
 
-    public struct PeerDisconnectPayload { // handled by Repo, relevant to Sync
+    public struct PeerDisconnectPayload: Sendable { // handled by Repo, relevant to Sync
         let peerId: PEER_ID
     }
 

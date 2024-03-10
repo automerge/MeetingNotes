@@ -1,5 +1,5 @@
 /// A type that determines if a document may be shared with a peer
-protocol SharePolicy {
+protocol SharePolicy: Sendable {
     /// Returns a Boolean value that indicates whether a document may be shared.
     /// - Parameters:
     ///   - peer: The peer to potentially share with
@@ -7,7 +7,7 @@ protocol SharePolicy {
     func share(peer: PEER_ID, docId: DocumentId) async -> Bool
 }
 
-public enum SharePolicies {
+public enum SharePolicies: Sendable {
     public static let agreeable = AlwaysPolicy()
     public static let readonly = NeverPolicy()
 

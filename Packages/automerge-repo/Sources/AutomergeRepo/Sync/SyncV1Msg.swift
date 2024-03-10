@@ -18,7 +18,7 @@ import PotentCBOR
 // All the WebSocket messages are CBOR encoded and sent as data streams
 
 /// A type that encapsulates valid V1 Automerge-repo sync protocol messages.
-public indirect enum SyncV1Msg {
+public indirect enum SyncV1Msg: Sendable {
     // CDDL pre-amble
     // ; The base64 encoded bytes of a Peer ID
     // peer_id = str
@@ -31,21 +31,25 @@ public indirect enum SyncV1Msg {
     // ; The base58check encoded bytes of a document ID
     // document_id = str
 
+    // TODO: encoders and decoders are hugely internal state critter, so extract
+    // into something that's safe for their usage - maybe into their own actor,
+    // or alternatively pinned to a queue. I think in this case, into an encoder/decoder
+    // actor might be the best option.
     static let encoder = CBOREncoder()
     static let decoder = CBORDecoder()
 
     /// The collection of value "type" strings for the V1 automerge-repo protocol.
-    public enum MsgTypes {
-        public static var peer = "peer"
-        public static var join = "join"
-        public static var leave = "leave"
-        public static var request = "request"
-        public static var sync = "sync"
-        public static var ephemeral = "ephemeral"
-        public static var error = "error"
-        public static var unavailable = "doc-unavailable"
-        public static var remoteHeadsChanged = "remote-heads-changed"
-        public static var remoteSubscriptionChange = "remote-subscription-change"
+    public enum MsgTypes: Sendable {
+        public static let peer = "peer"
+        public static let join = "join"
+        public static let leave = "leave"
+        public static let request = "request"
+        public static let sync = "sync"
+        public static let ephemeral = "ephemeral"
+        public static let error = "error"
+        public static let unavailable = "doc-unavailable"
+        public static let remoteHeadsChanged = "remote-heads-changed"
+        public static let remoteSubscriptionChange = "remote-subscription-change"
     }
 
     case peer(PeerMsg)
