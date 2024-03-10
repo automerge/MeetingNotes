@@ -1,9 +1,6 @@
 import AutomergeRepo
 import SwiftUI
 
-/// A shared instance of a document sync coordinator.
-let sharedSyncCoordinator = DocumentSyncCoordinator.shared
-
 /// The document-based Meeting Notes application.
 @main
 struct MeetingNotesApp: App {

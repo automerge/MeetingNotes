@@ -1,5 +1,6 @@
 import OSLog
 import SwiftUI
+import AutomergeRepo
 
 /// The primary document view for a MeetingNotes document.
 @MainActor
@@ -52,7 +53,7 @@ struct MeetingNotesDocumentView: View {
                             .help("Exports the underlying Automerge document")
                             .padding(.leading)
                     }
-                    PeerSyncView(documentId: document.id, syncController: sharedSyncCoordinator)
+                    PeerSyncView(documentId: document.id)
                 }
             }
             .navigationSplitViewColumnWidth(min: 250, ideal: 250)
@@ -81,7 +82,7 @@ struct MeetingNotesDocumentView: View {
             // including sometimes regenerating them when disk contents are updated
             // in the background, so register the current instance with the
             // sync coordinator as they become visible.
-            sharedSyncCoordinator.registerDocument(document: document.doc, id: document.id)
+            SyncController.coordinator.registerDocument(document: document.doc, id: document.id)
         }
         .onReceive(document.objectWillChange, perform: { _ in
             if !document.model.agendas.contains(where: { agendaItem in

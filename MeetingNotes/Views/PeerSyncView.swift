@@ -6,7 +6,7 @@ import SwiftUI
 @MainActor
 struct PeerSyncView: View {
     var documentId: DocumentId
-    @ObservedObject var syncController: DocumentSyncCoordinator
+    @ObservedObject var syncController: DocumentSyncCoordinator = SyncController.coordinator
 
     @State var browserActive: Bool = false
     @State var browserStyling: Color = .primary
