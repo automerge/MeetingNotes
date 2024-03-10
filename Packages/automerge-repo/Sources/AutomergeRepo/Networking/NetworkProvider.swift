@@ -1,4 +1,4 @@
-//import protocol Combine.Publisher
+// import protocol Combine.Publisher
 
 import AsyncAlgorithms
 
@@ -60,12 +60,12 @@ public protocol NetworkProvider<ProviderConfiguration>: Sendable, Identifiable {
 
     /// Initiate a connection.
     func connect(asPeer: PEER_ID, metadata: PeerMetadata?) async // aka "activate"
-    
+
     /// Disconnect and terminate any existing connection.
     func disconnect() async // aka "deactivate"
 
     func ready() async -> Bool
-    
+
     /// Sends a message.
     /// - Parameter message: The message to send.
     func send(message: SyncV1Msg) async
@@ -73,8 +73,8 @@ public protocol NetworkProvider<ProviderConfiguration>: Sendable, Identifiable {
     /// A publisher that provides events and messages from the network provider.
     // Type 'NetworkAdapterEvents' does not conform to the 'Sendable' protocol
     var events: AsyncChannel<NetworkAdapterEvents> { get }
-    
+
     // Combine version...
-    //associatedtype NetworkEvents: Publisher<NetworkAdapterEvents, Never>
-    //var eventPublisher: NetworkEvents { get }
+    // associatedtype NetworkEvents: Publisher<NetworkAdapterEvents, Never>
+    // var eventPublisher: NetworkEvents { get }
 }

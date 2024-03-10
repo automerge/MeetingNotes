@@ -4,7 +4,7 @@ import Foundation
 import Network
 import OSLog
 #if os(iOS)
-import UIKit // for UIDevice.name access
+@preconcurrency import UIKit // for UIDevice.name access
 #endif
 
 /// A collection of User Default keys for the app.
@@ -17,10 +17,15 @@ public enum SynchronizerDefaultKeys: Sendable {
 @globalActor
 public actor SyncController {
     public static let shared = SyncController()
-    public static let coordinator = DocumentSyncCoordinator()
+    public static let coordinator = { @MainActor in
+        // initialize this on the MainActor since the initialization process itself uses
+        // UIDevice, which is constrained in earlier SDKs/Xcodes
+        DocumentSyncCoordinator()
+    }()
 }
 
 /// A application-shared sync controller that supports coordinates documents and network connections with peers.
+@MainActor
 public final class DocumentSyncCoordinator: ObservableObject {
     var documents: [DocumentId: WeakDocumentRef] = [:]
     var txtRecords: [DocumentId: NWTXTRecord] = [:]
@@ -71,7 +76,6 @@ public final class DocumentSyncCoordinator: ObservableObject {
     var timerCancellable: Cancellable?
     var syncTrigger: PassthroughSubject<Void, Never> = PassthroughSubject()
 
-    @MainActor
     public static func defaultSharingIdentity() -> String {
         #if os(iOS)
         UIDevice().name
@@ -80,7 +84,6 @@ public final class DocumentSyncCoordinator: ObservableObject {
         #endif
     }
 
-    @MainActor
     init() {
         self.name = UserDefaults.standard
             .string(forKey: SynchronizerDefaultKeys.publicPeerName) ?? DocumentSyncCoordinator.defaultSharingIdentity()
@@ -165,7 +168,7 @@ public final class DocumentSyncCoordinator: ObservableObject {
             using: browserNetworkParameters
         )
 
-        newNetworkBrowser.stateUpdateHandler = { newState in
+        newNetworkBrowser.stateUpdateHandler = { @MainActor newState in
             switch newState {
             case let .failed(error):
                 self.browserState = .failed(error)
@@ -188,7 +191,7 @@ public final class DocumentSyncCoordinator: ObservableObject {
             }
         }
 
-        newNetworkBrowser.browseResultsChangedHandler = { [weak self] results, _ in
+        newNetworkBrowser.browseResultsChangedHandler = { @MainActor [weak self] results, _ in
             Logger.syncController.debug("browser update shows \(results.count, privacy: .public) result(s):")
             for res in results {
                 Logger.syncController
@@ -275,7 +278,7 @@ public final class DocumentSyncCoordinator: ObservableObject {
                 type: P2PAutomergeSyncProtocol.bonjourType,
                 txtRecord: txtRecordForDoc
             )
-            listener.stateUpdateHandler = { [weak self] newState in
+            listener.stateUpdateHandler = { @MainActor [weak self] newState in
                 self?.listenerState[documentId] = newState
                 switch newState {
                 case .ready:
@@ -307,7 +310,7 @@ public final class DocumentSyncCoordinator: ObservableObject {
 
             // The system calls this when a new connection arrives at the listener.
             // Start the connection to accept it, or cancel to reject it.
-            listener.newConnectionHandler = { [weak self] newConnection in
+            listener.newConnectionHandler = { @MainActor [weak self] newConnection in
                 Logger.syncController
                     .debug(
                         "Receiving connection request from \(newConnection.endpoint.debugDescription, privacy: .public)"
@@ -394,6 +397,6 @@ public final class DocumentSyncCoordinator: ObservableObject {
     }
 }
 
-//public extension DocumentSyncCoordinator {
+// public extension DocumentSyncCoordinator {
 //    static let shared = DocumentSyncCoordinator()
-//}
+// }

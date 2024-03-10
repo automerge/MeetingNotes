@@ -1,5 +1,5 @@
-import struct Foundation.Data
 import AsyncAlgorithms
+import struct Foundation.Data
 
 // riff
 // https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo/src/network/NetworkSubsystem.ts
@@ -13,7 +13,7 @@ import AsyncAlgorithms
 public actor NetworkSubsystem {
     var adapters: [any NetworkProvider]
     let combinedNetworkEvents: AsyncChannel<NetworkAdapterEvents>
-    var _backgroundNetworkReaderTasks: [Task<(), Never>] = []
+    var _backgroundNetworkReaderTasks: [Task<Void, Never>] = []
     init(adapters: [any NetworkProvider]) async {
         self.adapters = adapters
         combinedNetworkEvents = AsyncChannel()
@@ -35,7 +35,7 @@ public actor NetworkSubsystem {
             }
         )
     }
-    
+
     func send(message: SyncV1Msg) async {
         // send any message to ALL adapters (is this right?)
         for n in adapters {
@@ -63,10 +63,8 @@ public actor NetworkSubsystem {
     }
 
     // combine version
-//import class Combine.PassthroughSubject
+    // import class Combine.PassthroughSubject
 //    let eventPublisher: PassthroughSubject<NetworkAdapterEvents, Never> = PassthroughSubject()
-    
-    
 }
 
 // Collection point for all messages coming in, and going out, of the repository
