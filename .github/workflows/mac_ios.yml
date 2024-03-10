@@ -54,7 +54,7 @@ jobs:
 
       - name: iOS build for MeetingNotes
         # Xcode 15.2 settings
-        run: xcodebuild clean build -scheme 'MeetingNotes' -destination 'platform=iOS Simulator,OS=17.0.1,name=Any iOS Simulator Device' -sdk iphonesimulator17.2 -showBuildTimingSummary
+        run: xcodebuild clean build -scheme 'MeetingNotes' -destination 'platform=iOS Simulator,OS=17.0.1,name=iPhone 14' -sdk iphonesimulator17.2 -showBuildTimingSummary
 
       - name: iOS test
         # Xcode 15.2 settings
