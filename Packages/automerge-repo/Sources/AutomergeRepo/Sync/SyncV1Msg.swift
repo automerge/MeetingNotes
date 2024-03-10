@@ -31,13 +31,6 @@ public indirect enum SyncV1Msg: Sendable {
     // ; The base58check encoded bytes of a document ID
     // document_id = str
 
-    // TODO: encoders and decoders are hugely internal state critter, so extract
-    // into something that's safe for their usage - maybe into their own actor,
-    // or alternatively pinned to a queue. I think in this case, into an encoder/decoder
-    // actor might be the best option.
-    static let encoder = CBOREncoder()
-    static let decoder = CBORDecoder()
-
     /// The collection of value "type" strings for the V1 automerge-repo protocol.
     public enum MsgTypes: Sendable {
         public static let peer = "peer"

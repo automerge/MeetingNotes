@@ -146,7 +146,7 @@ public extension SyncV1Msg {
 
     internal static func attemptSync(_ data: Data) -> SyncMsg? {
         do {
-            return try decoder.decode(SyncMsg.self, from: data)
+            return try CBORCoder.decoder.decode(SyncMsg.self, from: data)
         } catch {
             Logger.webSocket.warning("Failed to decode data as SyncMsg")
         }
@@ -155,7 +155,7 @@ public extension SyncV1Msg {
 
     internal static func attemptRequest(_ data: Data) -> RequestMsg? {
         do {
-            return try decoder.decode(RequestMsg.self, from: data)
+            return try CBORCoder.decoder.decode(RequestMsg.self, from: data)
         } catch {
             Logger.webSocket.warning("Failed to decode data as RequestMsg")
         }
@@ -164,7 +164,7 @@ public extension SyncV1Msg {
 
     internal static func attemptUnavailable(_ data: Data) -> UnavailableMsg? {
         do {
-            return try decoder.decode(UnavailableMsg.self, from: data)
+            return try CBORCoder.decoder.decode(UnavailableMsg.self, from: data)
         } catch {
             Logger.webSocket.warning("Failed to decode data as UnavailableMsg")
         }
@@ -175,7 +175,7 @@ public extension SyncV1Msg {
 
     internal static func attemptPeer(_ data: Data) -> PeerMsg? {
         do {
-            return try decoder.decode(PeerMsg.self, from: data)
+            return try CBORCoder.decoder.decode(PeerMsg.self, from: data)
         } catch {
             Logger.webSocket.warning("Failed to decode data as PeerMsg")
         }
@@ -184,7 +184,7 @@ public extension SyncV1Msg {
 
     internal static func attemptJoin(_ data: Data) -> JoinMsg? {
         do {
-            return try decoder.decode(JoinMsg.self, from: data)
+            return try CBORCoder.decoder.decode(JoinMsg.self, from: data)
         } catch {
             Logger.webSocket.warning("Failed to decode data as JoinMsg")
         }
@@ -193,7 +193,7 @@ public extension SyncV1Msg {
 
     internal static func attemptLeave(_ data: Data) -> LeaveMsg? {
         do {
-            return try decoder.decode(LeaveMsg.self, from: data)
+            return try CBORCoder.decoder.decode(LeaveMsg.self, from: data)
         } catch {
             Logger.webSocket.warning("Failed to decode data as LeaveMsg")
         }
@@ -204,7 +204,7 @@ public extension SyncV1Msg {
 
     internal static func attemptError(_ data: Data) -> ErrorMsg? {
         do {
-            return try decoder.decode(ErrorMsg.self, from: data)
+            return try CBORCoder.decoder.decode(ErrorMsg.self, from: data)
         } catch {
             Logger.webSocket.warning("Failed to decode data as ErrorMsg")
         }
@@ -215,7 +215,7 @@ public extension SyncV1Msg {
 
     internal static func attemptEphemeral(_ data: Data) -> EphemeralMsg? {
         do {
-            return try decoder.decode(EphemeralMsg.self, from: data)
+            return try CBORCoder.decoder.decode(EphemeralMsg.self, from: data)
         } catch {
             Logger.webSocket.warning("Failed to decode data as EphemeralMsg")
         }
@@ -226,7 +226,7 @@ public extension SyncV1Msg {
 
     internal static func attemptRemoteHeadsChanged(_ data: Data) -> RemoteHeadsChangedMsg? {
         do {
-            return try decoder.decode(RemoteHeadsChangedMsg.self, from: data)
+            return try CBORCoder.decoder.decode(RemoteHeadsChangedMsg.self, from: data)
         } catch {
             Logger.webSocket.warning("Failed to decode data as RemoteHeadsChangedMsg")
         }
@@ -235,7 +235,7 @@ public extension SyncV1Msg {
 
     internal static func attemptRemoteSubscriptionChange(_ data: Data) -> RemoteSubscriptionChangeMsg? {
         do {
-            return try decoder.decode(RemoteSubscriptionChangeMsg.self, from: data)
+            return try CBORCoder.decoder.decode(RemoteSubscriptionChangeMsg.self, from: data)
         } catch {
             Logger.webSocket.warning("Failed to decode data as RemoteSubscriptionChangeMsg")
         }
@@ -245,68 +245,68 @@ public extension SyncV1Msg {
     // encode messages
 
     static func encode(_ msg: JoinMsg) throws -> Data {
-        try encoder.encode(msg)
+        try CBORCoder.encoder.encode(msg)
     }
 
     static func encode(_ msg: RequestMsg) throws -> Data {
-        try encoder.encode(msg)
+        try CBORCoder.encoder.encode(msg)
     }
 
     static func encode(_ msg: LeaveMsg) throws -> Data {
-        try encoder.encode(msg)
+        try CBORCoder.encoder.encode(msg)
     }
 
     static func encode(_ msg: SyncMsg) throws -> Data {
-        try encoder.encode(msg)
+        try CBORCoder.encoder.encode(msg)
     }
 
     static func encode(_ msg: PeerMsg) throws -> Data {
-        try encoder.encode(msg)
+        try CBORCoder.encoder.encode(msg)
     }
 
     static func encode(_ msg: UnavailableMsg) throws -> Data {
-        try encoder.encode(msg)
+        try CBORCoder.encoder.encode(msg)
     }
 
     static func encode(_ msg: EphemeralMsg) throws -> Data {
-        try encoder.encode(msg)
+        try CBORCoder.encoder.encode(msg)
     }
 
     static func encode(_ msg: RemoteSubscriptionChangeMsg) throws -> Data {
-        try encoder.encode(msg)
+        try CBORCoder.encoder.encode(msg)
     }
 
     static func encode(_ msg: RemoteHeadsChangedMsg) throws -> Data {
-        try encoder.encode(msg)
+        try CBORCoder.encoder.encode(msg)
     }
 
     static func encode(_ msg: ErrorMsg) throws -> Data {
-        try encoder.encode(msg)
+        try CBORCoder.encoder.encode(msg)
     }
 
     static func encode(_ msg: SyncV1Msg) throws -> Data {
         // not sure this is useful, but might as well finish out the set...
         switch msg {
         case let .peer(peerMsg):
-            try encode(peerMsg)
+            try CBORCoder.encoder.encode(peerMsg)
         case let .join(joinMsg):
-            try encode(joinMsg)
+            try CBORCoder.encoder.encode(joinMsg)
         case let .leave(leaveMsg):
-            try encode(leaveMsg)
+            try CBORCoder.encoder.encode(leaveMsg)
         case let .error(errorMsg):
-            try encode(errorMsg)
+            try CBORCoder.encoder.encode(errorMsg)
         case let .request(requestMsg):
-            try encode(requestMsg)
+            try CBORCoder.encoder.encode(requestMsg)
         case let .sync(syncMsg):
-            try encode(syncMsg)
+            try CBORCoder.encoder.encode(syncMsg)
         case let .unavailable(unavailableMsg):
-            try encode(unavailableMsg)
+            try CBORCoder.encoder.encode(unavailableMsg)
         case let .ephemeral(ephemeralMsg):
-            try encode(ephemeralMsg)
+            try CBORCoder.encoder.encode(ephemeralMsg)
         case let .remoteSubscriptionChange(remoteSubscriptionChangeMsg):
-            try encode(remoteSubscriptionChangeMsg)
+            try CBORCoder.encoder.encode(remoteSubscriptionChangeMsg)
         case let .remoteHeadsChanged(remoteHeadsChangedMsg):
-            try encode(remoteHeadsChangedMsg)
+            try CBORCoder.encoder.encode(remoteHeadsChangedMsg)
         case let .unknown(data):
             data
         }
