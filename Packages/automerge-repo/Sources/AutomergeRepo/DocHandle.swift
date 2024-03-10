@@ -11,7 +11,7 @@ import struct Foundation.Data
 
 // ... damnit - it's the type that's exposed to users to provide a proxy for an Automerge Document,
 // so maybe it _should_ be an actor
-public struct DocHandle {
+public struct DocHandle: Sendable {
     enum DocHandleState {
         case new
         case loading

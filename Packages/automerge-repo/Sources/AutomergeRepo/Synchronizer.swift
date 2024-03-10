@@ -1,6 +1,6 @@
 import Automerge
 
-protocol SyncThing {
+protocol SyncThing: Sendable {
     func peers() -> [PEER_ID]
     func removePeer(peer: PEER_ID)
     func addPeer(peer: PEER_ID)
@@ -12,7 +12,7 @@ protocol SyncThing {
 // CollectionSynchronizer
 //  - multiple DocumentSynchronizers
 
-struct CollectionSynchronizer {
+struct CollectionSynchronizer: Sendable {
     private var docSynchronizers: [DocumentId: DocSynchronizer]
     private var _peers: Set<PEER_ID>
     
@@ -46,7 +46,7 @@ struct CollectionSynchronizer {
     }
 }
 
-struct DocSynchronizer {
+struct DocSynchronizer: Sendable {
     private var activePeers: [PEER_ID]
     private var syncStarted = false
     private var handle: DocHandle

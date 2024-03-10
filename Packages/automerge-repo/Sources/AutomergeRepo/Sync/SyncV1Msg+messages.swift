@@ -19,7 +19,7 @@ public extension SyncV1Msg {
     /// initiating client should disconnect.
     /// If the receiving peer receives any message other than a `JoinMsg` from the initiating peer, it is expected to
     /// terminate the connection.
-    struct JoinMsg: Codable, CustomDebugStringConvertible {
+    struct JoinMsg: Sendable, Codable, CustomDebugStringConvertible {
         public var type: String = SyncV1Msg.MsgTypes.join
         public let senderId: PEER_ID
         public var supportedProtocolVersions: String = "1"
@@ -60,7 +60,7 @@ public extension SyncV1Msg {
     /// A response sent by a receiving peer (represented by `targetId`) after receiving a ``JoinMsg`` that indicates
     /// sync,
     /// gossiping, and ephemeral messages may now be initiated.
-    struct PeerMsg: Codable, CustomDebugStringConvertible {
+    struct PeerMsg: Sendable, Codable, CustomDebugStringConvertible {
         public var type: String = SyncV1Msg.MsgTypes.peer
         public let senderId: PEER_ID
         public let targetId: PEER_ID
@@ -85,7 +85,7 @@ public extension SyncV1Msg {
     //    senderId: this.peerId
     // }
 
-    struct LeaveMsg: Codable, CustomDebugStringConvertible {
+    struct LeaveMsg: Sendable, Codable, CustomDebugStringConvertible {
         public var type: String = SyncV1Msg.MsgTypes.leave
         public let senderId: PEER_ID
 
@@ -105,7 +105,7 @@ public extension SyncV1Msg {
     // }
 
     /// A sync error message
-    struct ErrorMsg: Codable, CustomDebugStringConvertible {
+    struct ErrorMsg: Sendable, Codable, CustomDebugStringConvertible {
         public var type: String = SyncV1Msg.MsgTypes.error
         public let message: String
 
@@ -137,7 +137,7 @@ public extension SyncV1Msg {
     /// Identical to ``SyncMsg`` but indicates to the receiving peer that the sender would like an ``UnavailableMsg``
     /// message if the receiving peer (represented by `targetId` does not have the document (identified by
     /// `documentId`).
-    struct RequestMsg: Codable, CustomDebugStringConvertible {
+    struct RequestMsg: Sendable, Codable, CustomDebugStringConvertible {
         public var type: String = SyncV1Msg.MsgTypes.request
         public let documentId: MSG_DOCUMENT_ID
         public let senderId: PEER_ID // The peer requesting to begin sync
@@ -175,7 +175,7 @@ public extension SyncV1Msg {
     /// If the receiving peer doesn't have an Automerge document represented by `documentId` and can't or won't store
     /// the
     /// document.
-    struct SyncMsg: Codable, CustomDebugStringConvertible {
+    struct SyncMsg: Sendable, Codable, CustomDebugStringConvertible {
         public var type = SyncV1Msg.MsgTypes.sync
         public let documentId: MSG_DOCUMENT_ID
         public let senderId: PEER_ID // The peer requesting to begin sync
@@ -206,7 +206,7 @@ public extension SyncV1Msg {
     ///
     /// Generally a response for a ``RequestMsg`` from an initiating peer (represented by `senderId`) that the receiving
     /// peer (represented by `targetId`) doesn't have a copy of the requested Document, or is unable to share it.
-    struct UnavailableMsg: Codable, CustomDebugStringConvertible {
+    struct UnavailableMsg: Sendable, Codable, CustomDebugStringConvertible {
         public var type = SyncV1Msg.MsgTypes.unavailable
         public let documentId: MSG_DOCUMENT_ID
         public let senderId: PEER_ID
@@ -242,7 +242,7 @@ public extension SyncV1Msg {
     //  data: bstr
     // }
 
-    struct EphemeralMsg: Codable, CustomDebugStringConvertible {
+    struct EphemeralMsg: Sendable, Codable, CustomDebugStringConvertible {
         public var type = SyncV1Msg.MsgTypes.ephemeral
         public let senderId: PEER_ID
         public let targetId: PEER_ID
@@ -287,7 +287,7 @@ public extension SyncV1Msg {
     //  remove: [* storage_id]
     // }
 
-    struct RemoteSubscriptionChangeMsg: Codable, CustomDebugStringConvertible {
+    struct RemoteSubscriptionChangeMsg: Sendable, Codable, CustomDebugStringConvertible {
         public var type = SyncV1Msg.MsgTypes.remoteSubscriptionChange
         public let senderId: PEER_ID
         public let targetId: PEER_ID
@@ -337,8 +337,8 @@ public extension SyncV1Msg {
     //  }
     // }
 
-    struct RemoteHeadsChangedMsg: Codable, CustomDebugStringConvertible {
-        public struct HeadsAtTime: Codable, CustomDebugStringConvertible {
+    struct RemoteHeadsChangedMsg: Sendable, Codable, CustomDebugStringConvertible {
+        public struct HeadsAtTime: Codable, CustomDebugStringConvertible, Sendable {
             public var heads: [String]
             public let timestamp: uint
 
