@@ -17,16 +17,13 @@ public enum SynchronizerDefaultKeys: Sendable {
 @globalActor
 public actor SyncController {
     public static let shared = SyncController()
-    public static let coordinator = { @MainActor in
-        // initialize this on the MainActor since the initialization process itself uses
-        // UIDevice, which is constrained in earlier SDKs/Xcodes
-        DocumentSyncCoordinator()
-    }()
 }
 
 /// A application-shared sync controller that supports coordinates documents and network connections with peers.
 @MainActor
 public final class DocumentSyncCoordinator: ObservableObject {
+    public static let shared = DocumentSyncCoordinator()
+
     var documents: [DocumentId: WeakDocumentRef] = [:]
     var txtRecords: [DocumentId: NWTXTRecord] = [:]
     var listeners: [DocumentId: NWListener] = [:]

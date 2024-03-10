@@ -10,9 +10,9 @@ struct SyncStatusView: View {
             syncEnabledIndicator.toggle()
             if syncEnabledIndicator {
                 // only enable listening if an identity has been chosen
-                SyncController.coordinator.activate()
+                DocumentSyncCoordinator.shared.activate()
             } else {
-                SyncController.coordinator.deactivate()
+                DocumentSyncCoordinator.shared.deactivate()
             }
         } label: {
             Image(
