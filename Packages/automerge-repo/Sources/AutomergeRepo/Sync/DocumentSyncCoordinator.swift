@@ -8,9 +8,16 @@ import UIKit // for UIDevice.name access
 #endif
 
 /// A collection of User Default keys for the app.
-public enum SynchronizerDefaultKeys {
+public enum SynchronizerDefaultKeys: Sendable {
     /// The key to the string that the app broadcasts to represent you when sharing and syncing Automerge Documents.
     public static let publicPeerName = "sharingIdentity"
+}
+
+/// A global actor for safely isolating the state updates for the DocumentSyncCoordinator
+@globalActor
+public actor SyncController {
+    public static let shared = SyncController()
+    public static let coordinator = DocumentSyncCoordinator()
 }
 
 /// A application-shared sync controller that supports coordinates documents and network connections with peers.
@@ -385,6 +392,6 @@ public final class DocumentSyncCoordinator: ObservableObject {
     }
 }
 
-public extension DocumentSyncCoordinator {
-    static let shared = DocumentSyncCoordinator()
-}
+//public extension DocumentSyncCoordinator {
+//    static let shared = DocumentSyncCoordinator()
+//}
