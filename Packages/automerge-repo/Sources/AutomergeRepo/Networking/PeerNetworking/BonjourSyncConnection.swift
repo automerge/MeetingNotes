@@ -122,7 +122,7 @@ public final class BonjourSyncConnection: ObservableObject {
         }
 
         syncTriggerCancellable = trigger.sink(receiveValue: { @MainActor _ in
-            if let automergeDoc = SyncController.coordinator.documents[self.documentId]?.value,
+            if let automergeDoc = DocumentSyncCoordinator.shared.documents[self.documentId]?.value,
                let syncData = automergeDoc.generateSyncMessage(state: self.syncState),
                self.connectionState == .ready
             {
@@ -160,7 +160,7 @@ public final class BonjourSyncConnection: ObservableObject {
                 // Cancel the connection upon a failure.
                 connection.cancel()
                 self.syncTriggerCancellable?.cancel()
-                SyncController.coordinator.removeConnection(self.connectionId)
+                DocumentSyncCoordinator.shared.removeConnection(self.connectionId)
                 self.syncTriggerCancellable = nil
 
             case .cancelled:
@@ -169,7 +169,7 @@ public final class BonjourSyncConnection: ObservableObject {
                         "\(self.shortId, privacy: .public): CANCEL \(endpoint.debugDescription, privacy: .public) connection."
                     )
                 self.syncTriggerCancellable?.cancel()
-                SyncController.coordinator.removeConnection(self.connectionId)
+                DocumentSyncCoordinator.shared.removeConnection(self.connectionId)
                 self.syncTriggerCancellable = nil
 
             case let .waiting(nWError):
@@ -304,7 +304,7 @@ public final class BonjourSyncConnection: ObservableObject {
     }
 
     @MainActor func receivedMessage(content data: Data?, message: NWProtocolFramer.Message, from endpoint: NWEndpoint) {
-        guard let document = SyncController.coordinator.documents[self.documentId]?.value else {
+        guard let document = DocumentSyncCoordinator.shared.documents[self.documentId]?.value else {
             Logger.syncConnection
                 .warning(
                     "\(self.shortId, privacy: .public): received msg for unregistered document \(self.documentId, privacy: .public) from \(endpoint.debugDescription, privacy: .public)"
