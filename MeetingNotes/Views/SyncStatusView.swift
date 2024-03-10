@@ -1,4 +1,5 @@
 import SwiftUI
+import AutomergeRepo
 
 /// A toolbar button for activating sync for a document.
 @MainActor
@@ -9,9 +10,9 @@ struct SyncStatusView: View {
             syncEnabledIndicator.toggle()
             if syncEnabledIndicator {
                 // only enable listening if an identity has been chosen
-                sharedSyncCoordinator.activate()
+                SyncController.coordinator.activate()
             } else {
-                sharedSyncCoordinator.deactivate()
+                SyncController.coordinator.deactivate()
             }
         } label: {
             Image(

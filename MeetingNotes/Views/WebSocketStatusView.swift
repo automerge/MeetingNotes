@@ -4,7 +4,7 @@ import SwiftUI
 /// A toolbar button for activating sync for a document.
 @MainActor
 struct WebSocketStatusView: View {
-    enum SyncTargets: String, CaseIterable, Identifiable {
+    enum SyncTargets: String, Sendable, CaseIterable, Identifiable {
         case local
         case automerge
         // Identifiable conformance
