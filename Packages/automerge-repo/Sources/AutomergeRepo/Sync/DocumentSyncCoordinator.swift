@@ -71,6 +71,7 @@ public final class DocumentSyncCoordinator: ObservableObject {
     var timerCancellable: Cancellable?
     var syncTrigger: PassthroughSubject<Void, Never> = PassthroughSubject()
 
+    @MainActor
     public static func defaultSharingIdentity() -> String {
         #if os(iOS)
         UIDevice().name
@@ -79,6 +80,7 @@ public final class DocumentSyncCoordinator: ObservableObject {
         #endif
     }
 
+    @MainActor
     init() {
         self.name = UserDefaults.standard
             .string(forKey: SynchronizerDefaultKeys.publicPeerName) ?? DocumentSyncCoordinator.defaultSharingIdentity()

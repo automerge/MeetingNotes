@@ -8,8 +8,8 @@ on:
 
 jobs:
   build:
-    name: Build and Test default scheme using any available iPhone simulator
-    runs-on: macos-13
+    name: Build and Test default scheme using an iPhone simulator
+    runs-on: macos-14
     # https://github.com/actions/virtual-environments/blob/main/images/macos/macos-13-Readme.md
     # target macOS 12.4 isn't supported in default Xcode for macOS 12
     # - default Xcode version is 14.3.1 for macos-13 builder image
