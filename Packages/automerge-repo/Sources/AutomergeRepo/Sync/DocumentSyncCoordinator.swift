@@ -4,7 +4,7 @@ import Foundation
 import Network
 import OSLog
 #if os(iOS)
-@preconcurrency import UIKit // for UIDevice.name access
+import UIKit // for UIDevice.name access
 #endif
 
 /// A collection of User Default keys for the app.
