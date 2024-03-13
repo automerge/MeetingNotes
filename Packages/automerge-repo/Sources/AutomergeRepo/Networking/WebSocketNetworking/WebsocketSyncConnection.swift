@@ -5,6 +5,7 @@ import OSLog
 import PotentCBOR
 
 /// A class that provides a WebSocket connection to sync an Automerge document.
+@MainActor
 public final class WebsocketSyncConnection: ObservableObject, Identifiable {
     private var webSocketTask: URLSessionWebSocketTask?
     /// This connections "peer identifier"
