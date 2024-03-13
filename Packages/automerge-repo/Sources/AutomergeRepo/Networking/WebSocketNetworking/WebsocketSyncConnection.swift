@@ -24,7 +24,7 @@ public final class WebsocketSyncConnection: ObservableObject, Identifiable {
 
     /// A handle to a cancellable Combine pipeline that watches a document for updates and attempts to start a sync when
     /// it changes.
-    private var syncTrigger: Cancellable?
+    private var syncTrigger: (any Cancellable)?
 
     // TODO: Add a delegate link of some form for a 'ephemeral' msg data handler
     // TODO: Add an indicator of if we should involve ourselves in "gossip" about updates
