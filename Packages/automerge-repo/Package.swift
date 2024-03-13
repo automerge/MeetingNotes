@@ -39,7 +39,7 @@ let package = Package(
                 .enableExperimentalFeature("StrictConcurrency"),
                 .enableUpcomingFeature("ExistentialAny"),
 
-                .unsafeFlags(["-require-explicit-sendable"]),
+                //.unsafeFlags(["-require-explicit-sendable"]),
 
                 .enableExperimentalFeature("AccessLevelOnImport"),
                 .enableUpcomingFeature("InternalImportsByDefault"),
