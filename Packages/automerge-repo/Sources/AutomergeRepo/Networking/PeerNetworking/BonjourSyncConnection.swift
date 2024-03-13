@@ -23,6 +23,7 @@ import OSLog
 /// As soon as it is established, it attempts to commence a sync operation (send and expect to receive sync messages).
 /// In addition, it includes an optional `trigger` in its initializer that, when it receives any signal value, kicks off
 /// another attempt to sync the relevant Automerge document.
+@MainActor
 public final class BonjourSyncConnection: ObservableObject {
     /// A unique identifier to track the connections for comparison against existing connections.
     var connectionId = UUID()
