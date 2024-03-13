@@ -33,7 +33,17 @@ let package = Package(
                 .product(name: "Base58Swift", package: "Base58Swift"),
                 .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),
             ],
-            swiftSettings: [.enableExperimentalFeature("StrictConcurrency")]
+            // borrowing a set of Swift6 enabling features to double-check against
+            // future proofing concurrency, safety, and exportable feature-creep.
+            swiftSettings: [
+                .enableExperimentalFeature("StrictConcurrency"),
+                .enableUpcomingFeature("ExistentialAny"),
+
+                .unsafeFlags(["-require-explicit-sendable"]),
+
+                .enableExperimentalFeature("AccessLevelOnImport"),
+                .enableUpcomingFeature("InternalImportsByDefault"),
+            ]
         ),
         .testTarget(
             name: "AutomergeRepoTests",

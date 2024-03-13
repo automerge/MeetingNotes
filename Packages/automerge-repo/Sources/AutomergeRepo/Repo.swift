@@ -9,7 +9,7 @@ public actor Repo {
     public let peerId: PEER_ID
     // to replace DocumentSyncCoordinator
     private var _handles: [DocumentId: DocHandle]
-    private var storage: StorageProvider?
+    private var storage: (any StorageProvider)?
     private var network: NetworkSubsystem
     // saveDebounceRate = 100
     private var synchronizer: CollectionSynchronizer
@@ -41,7 +41,7 @@ public actor Repo {
     private var remoteHeadsGossipingEnabled = false
 
     init(
-        storage: StorageProvider? = nil,
+        storage: (any StorageProvider)? = nil,
         networkAdapters: [any NetworkProvider] = [],
         sharePolicy: some SharePolicy
     ) async {

@@ -9,7 +9,7 @@ import OSLog
 public actor DocumentStorage<S: StorageProvider> {
     let chunkNamespace = "incrChanges"
     var compacting: Bool
-    let _storage: StorageProvider
+    let _storage: any StorageProvider
     var latestHeads: [DocumentId: Set<ChangeHash>]
 
     var storedChunkSize: [DocumentId: Int]

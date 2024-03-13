@@ -65,12 +65,12 @@ public final class DocumentSyncCoordinator: ObservableObject {
         connections.removeAll { $0.connectionId == connectionId }
     }
 
-    @Published public var listenerSetupError: Error? = nil
+    @Published public var listenerSetupError: (any Error)? = nil
     @Published public var listenerStatusError: NWError? = nil
 
     let peerId = UUID()
     let syncQueue = DispatchQueue(label: "PeerSyncQueue")
-    var timerCancellable: Cancellable?
+    var timerCancellable: (any Cancellable)?
     var syncTrigger: PassthroughSubject<Void, Never> = PassthroughSubject()
 
     public static func defaultSharingIdentity() -> String {

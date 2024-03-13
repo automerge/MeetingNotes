@@ -47,7 +47,7 @@ public final class BonjourSyncConnection: ObservableObject {
     var syncState: SyncState
 
     /// The cancellable subscription to the trigger mechanism that attempts sync updates.
-    var syncTriggerCancellable: Cancellable?
+    var syncTriggerCancellable: (any Cancellable)?
 
     /// Initiate a connection to a network endpoint to synchronise an Automerge Document.
     /// - Parameters:
