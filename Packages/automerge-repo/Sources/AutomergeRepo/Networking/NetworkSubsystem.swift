@@ -1,6 +1,7 @@
 import AsyncAlgorithms
 import Automerge
 import struct Foundation.Data
+import PotentCBOR
 
 // riff
 // https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo/src/network/NetworkSubsystem.ts
@@ -14,27 +15,57 @@ import struct Foundation.Data
 public actor NetworkSubsystem: NetworkEventReceiver {
     public func receiveEvent(event _: NetworkAdapterEvents) async {}
 
+    var requestedDocuments: [DocumentId] = []
+    // store the sync state in the dochandle on Repo? Get it from there...
+    var syncProviderForPeer: [PEER_ID: SyncState] = [:]
+
+    public static let encoder = CBOREncoder()
+    public static let decoder = CBORDecoder()
+
+    weak var repo: Repo? = nil
     var adapters: [any NetworkProvider]
     let combinedNetworkEvents: AsyncChannel<NetworkAdapterEvents>
     var _backgroundNetworkReaderTasks: [Task<Void, Never>] = []
 
-    init(adapters: [any NetworkProvider], peerId: PEER_ID, metadata: PeerMetadata?) async {
-        self.adapters = adapters
+    init() {
+        self.adapters = []
         combinedNetworkEvents = AsyncChannel()
-        for adapter in adapters {
-            // tells the adapter to send network events to us
-            adapter.setDelegate(something: self)
-            await adapter.connect(asPeer: peerId, metadata: metadata)
-        }
     }
 
-    func remoteFetch(id _: DocumentId) async throws -> Document? {
+    func linkRepo(_ repo: Repo) async {
+        self.repo = repo
+    }
+
+    func addAdapter(adapter: some NetworkProvider) async {
+        guard let repo else {
+            fatalError("NO REPO CONFIGURED WHEN ADDING ADAPTERS")
+        }
+        adapter.setDelegate(something: self)
+        self.adapters.append(adapter)
+        await adapter.connect(asPeer: repo.peerId, localMetaData: repo.localPeerMetadata)
+        // adapter's peer metadata is set after connect returns
+        await repo.addPeerWithMetadata(peer: adapter.connectedPeer, metadata: adapter.peerMetadata)
+    }
+
+    func startRemoteFetch(id: DocumentId) async throws {
         // attempt to fetch the provided document Id from all peers, returning the document
         // or returning nil if the document is unavailable.
         // Save the throwing scenarios for failures in connection, etc.
-
+        requestedDocuments.append(id)
         try await allNetworksReady()
-        fatalError("NOT IMPLEMENTED")
+        for adapter in adapters {
+            let syncState = SyncState()
+            syncProviderForPeer[adapter.connectedPeer] = syncState
+            let newDocument = Document()
+            if let syncRequestData = newDocument.generateSyncMessage(state: syncState) {
+                await adapter.send(message: .request(SyncV1Msg.RequestMsg(
+                    documentId: id.description,
+                    senderId: adapter.peerId,
+                    targetId: adapter.connectedPeer,
+                    sync_message: syncRequestData
+                )))
+            }
+        }
     }
 
     func send(message: SyncV1Msg) async {
