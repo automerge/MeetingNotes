@@ -36,9 +36,15 @@ public actor DocumentStorage<S: StorageProvider> {
     }
 
     public var id: STORAGE_ID {
-        return _storage.id
+        _storage.id
     }
-    
+
+    /// Removes a document from persistent storage.
+    /// - Parameter id: The id of the document to remove.
+    public func purgeDoc(id: DocumentId) async throws {
+        try await _storage.remove(id: id)
+    }
+
     /// Returns an existing, or creates a new, document for the document Id you provide.
     ///
     /// The method throws errors from the underlying storage system or Document errors if the

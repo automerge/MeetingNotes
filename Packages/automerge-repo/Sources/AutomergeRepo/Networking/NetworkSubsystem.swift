@@ -1,4 +1,5 @@
 import AsyncAlgorithms
+import Automerge
 import struct Foundation.Data
 
 // riff
@@ -11,14 +12,12 @@ import struct Foundation.Data
 /// is
 /// the responsibility of the network provider instance.
 public actor NetworkSubsystem: NetworkEventReceiver {
-    public func receiveEvent(event: NetworkAdapterEvents) async {
-    
-    }
-    
+    public func receiveEvent(event _: NetworkAdapterEvents) async {}
+
     var adapters: [any NetworkProvider]
     let combinedNetworkEvents: AsyncChannel<NetworkAdapterEvents>
     var _backgroundNetworkReaderTasks: [Task<Void, Never>] = []
-    
+
     init(adapters: [any NetworkProvider], peerId: PEER_ID, metadata: PeerMetadata?) async {
         self.adapters = adapters
         combinedNetworkEvents = AsyncChannel()
@@ -27,6 +26,15 @@ public actor NetworkSubsystem: NetworkEventReceiver {
             adapter.setDelegate(something: self)
             await adapter.connect(asPeer: peerId, metadata: metadata)
         }
+    }
+
+    func remoteFetch(id _: DocumentId) async throws -> Document? {
+        // attempt to fetch the provided document Id from all peers, returning the document
+        // or returning nil if the document is unavailable.
+        // Save the throwing scenarios for failures in connection, etc.
+
+        try await allNetworksReady()
+        fatalError("NOT IMPLEMENTED")
     }
 
     func send(message: SyncV1Msg) async {
