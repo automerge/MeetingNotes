@@ -47,11 +47,13 @@ struct DocHandle: Sendable {
     var remoteHeads: [STORAGE_ID: Set<Automerge.ChangeHash>]
     var timeoutDelay: Double
 
-    init(id: DocumentId, loadFetch: Bool, initialValue: Automerge.Document? = nil, timeoutDelay: Double = 1.0) {
+    init(id: DocumentId, isNew: Bool, initialValue: Automerge.Document? = nil, timeoutDelay: Double = 1.0) {
         self.id = id
         self.timeoutDelay = timeoutDelay
         remoteHeads = [:]
-        if loadFetch {
+        // isNew is when we're creating content and it needs to get stored locally in a storage
+        // provider, if available.
+        if isNew {
             self.state = .loading
         } else {
             self.state = .ready
@@ -81,5 +83,7 @@ struct DocHandle: Sendable {
         remoteHeads[id] = heads
     }
 
-    func merge(other _: DocHandle) async {}
+    func merge(other _: DocHandle) async {
+        fatalError("NOT IMPLEMENTED")
+    }
 }

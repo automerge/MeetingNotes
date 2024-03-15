@@ -71,10 +71,10 @@ public protocol NetworkProvider<ProviderConfiguration>: Sendable, Identifiable {
     func send(message: SyncV1Msg) async
 
     func setDelegate(something: any NetworkEventReceiver)
-    
+
     /// A publisher that provides events and messages from the network provider.
     // Type 'NetworkAdapterEvents' does not conform to the 'Sendable' protocol
-    //var events: AsyncChannel<NetworkAdapterEvents> { get }
+    // var events: AsyncChannel<NetworkAdapterEvents> { get }
 
     // Combine version...
     // associatedtype NetworkEvents: Publisher<NetworkAdapterEvents, Never>
