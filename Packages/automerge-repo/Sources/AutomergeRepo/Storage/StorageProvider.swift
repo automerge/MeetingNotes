@@ -6,13 +6,13 @@ import struct Foundation.Data
 public protocol StorageProvider: Sendable {
     var id: STORAGE_ID { get }
 
-    func load(key: DocumentId) async throws -> Data?
-    func save(key: DocumentId, data: Data) async throws
-    func remove(key: DocumentId) async throws
+    func load(id: DocumentId) async throws -> Data?
+    func save(id: DocumentId, data: Data) async throws
+    func remove(id: DocumentId) async throws
 
     // MARK: Incremental Load Support
 
-    func addToRange(key: DocumentId, prefix: String, data: Data) async throws
-    func loadRange(key: DocumentId, prefix: String) async throws -> [Data]
-    func removeRange(key: DocumentId, prefix: String, data: [Data]) async throws
+    func addToRange(id: DocumentId, prefix: String, data: Data) async throws
+    func loadRange(id: DocumentId, prefix: String) async throws -> [Data]
+    func removeRange(id: DocumentId, prefix: String, data: [Data]) async throws
 }

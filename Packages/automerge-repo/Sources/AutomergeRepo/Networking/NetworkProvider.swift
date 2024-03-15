@@ -44,9 +44,9 @@ public protocol NetworkProvider<ProviderConfiguration>: Sendable, Identifiable {
     /// The peer Id of the local instance.
     var peerId: PEER_ID { get }
     /// The optional metadata associated with this peer's presentation.
-    var peerMetadata: PeerMetadata? { get }
+    var peerMetadata: PeerMetadata? { get } // ?? async - this is set AFTER connect
     /// The peer Id of the remote
-    var connectedPeer: PEER_ID { get }
+    var connectedPeer: PEER_ID { get } // ?? async - this is set AFTER connect
 
     /// The type used to configure an instance of a Network Provider.
     associatedtype ProviderConfiguration
@@ -66,15 +66,21 @@ public protocol NetworkProvider<ProviderConfiguration>: Sendable, Identifiable {
 
     func ready() async -> Bool
 
-    /// Sends a message.
+    /// Requests the network transport to send a message.
     /// - Parameter message: The message to send.
     func send(message: SyncV1Msg) async
 
+    func setDelegate(something: any NetworkEventReceiver)
+    
     /// A publisher that provides events and messages from the network provider.
     // Type 'NetworkAdapterEvents' does not conform to the 'Sendable' protocol
-    var events: AsyncChannel<NetworkAdapterEvents> { get }
+    //var events: AsyncChannel<NetworkAdapterEvents> { get }
 
     // Combine version...
     // associatedtype NetworkEvents: Publisher<NetworkAdapterEvents, Never>
     // var eventPublisher: NetworkEvents { get }
+}
+
+public protocol NetworkEventReceiver: Sendable {
+    func receiveEvent(event: NetworkAdapterEvents) async
 }

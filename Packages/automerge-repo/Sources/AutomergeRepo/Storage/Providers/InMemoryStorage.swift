@@ -13,37 +13,37 @@ public actor InMemoryStorage: StorageProvider {
         let prefix: String
     }
 
-    public func load(key: DocumentId) async -> Data? {
-        _storage[key]
+    public func load(id: DocumentId) async -> Data? {
+        _storage[id]
     }
 
-    public func save(key: DocumentId, data: Data) async {
-        _storage[key] = data
+    public func save(id: DocumentId, data: Data) async {
+        _storage[id] = data
     }
 
-    public func remove(key: DocumentId) async {
-        _storage.removeValue(forKey: key)
+    public func remove(id: DocumentId) async {
+        _storage.removeValue(forKey: id)
     }
 
     // MARK: Incremental Load Support
 
-    public func addToRange(key: DocumentId, prefix: String, data: Data) async {
-        var dataArray: [Data] = _incrementalChunks[CombinedKey(id: key, prefix: prefix)] ?? []
+    public func addToRange(id: DocumentId, prefix: String, data: Data) async {
+        var dataArray: [Data] = _incrementalChunks[CombinedKey(id: id, prefix: prefix)] ?? []
         dataArray.append(data)
-        _incrementalChunks[CombinedKey(id: key, prefix: prefix)] = dataArray
+        _incrementalChunks[CombinedKey(id: id, prefix: prefix)] = dataArray
     }
 
-    public func loadRange(key: DocumentId, prefix: String) async -> [Data] {
-        _incrementalChunks[CombinedKey(id: key, prefix: prefix)] ?? []
+    public func loadRange(id: DocumentId, prefix: String) async -> [Data] {
+        _incrementalChunks[CombinedKey(id: id, prefix: prefix)] ?? []
     }
 
-    public func removeRange(key: DocumentId, prefix: String, data: [Data]) async {
-        var chunksForKey: [Data] = _incrementalChunks[CombinedKey(id: key, prefix: prefix)] ?? []
+    public func removeRange(id: DocumentId, prefix: String, data: [Data]) async {
+        var chunksForKey: [Data] = _incrementalChunks[CombinedKey(id: id, prefix: prefix)] ?? []
         for d in data {
             if let indexToRemove = chunksForKey.firstIndex(of: d) {
                 chunksForKey.remove(at: indexToRemove)
             }
         }
-        _incrementalChunks[CombinedKey(id: key, prefix: prefix)] = chunksForKey
+        _incrementalChunks[CombinedKey(id: id, prefix: prefix)] = chunksForKey
     }
 }
