@@ -4,12 +4,12 @@ import Automerge
 import Foundation
 
 // @globalActor
-public actor Repo {
+public actor Repo<S: StorageProvider> {
 //    public static let shared = Repo()
     public let peerId: PEER_ID
     // to replace DocumentSyncCoordinator
-    private var _handles: [DocumentId: DocHandle]
-    private var storage: (any StorageProvider)?
+    private var handles: [DocumentId: DocHandle]
+    private var storage: DocumentStorage<S>?
     private var network: NetworkSubsystem
     // saveDebounceRate = 100
     private var synchronizer: CollectionSynchronizer
@@ -41,15 +41,20 @@ public actor Repo {
     private var remoteHeadsGossipingEnabled = false
 
     init(
-        storage: (any StorageProvider)? = nil,
+        storageProvider: S? = nil,
         networkAdapters: [any NetworkProvider] = [],
         sharePolicy: some SharePolicy
     ) async {
         self.peerId = UUID().uuidString
-        self._handles = [:]
+        self.handles = [:]
         self.peerMetadataByPeerId = [:]
-        self.storage = storage
-        self.network = await NetworkSubsystem(adapters: networkAdapters)
+        if let provider = storageProvider {
+            self.storage = DocumentStorage(provider)
+        } else {
+            self.storage = nil
+        }
+        let metadata = await PeerMetadata(storageId: storage?.id, isEphemeral: storageProvider == nil)
+        self.network = await NetworkSubsystem(adapters: networkAdapters, peerId: self.peerId, metadata: metadata)
         self.sharePolicy = sharePolicy
         self.synchronizer = CollectionSynchronizer()
     }
@@ -69,9 +74,9 @@ public actor Repo {
 //        }
 //    }
 
-    public func handles() async -> [DocHandle] {
-        Array(_handles.values)
-    }
+//    public func handles() async -> [DocHandle] {
+//        Array(_handles.values)
+//    }
 
     public func peers() async -> [PEER_ID] {
         []
@@ -81,60 +86,47 @@ public actor Repo {
         nil
     }
 
-    public func create(doc: Document) async -> DocHandle {
-        DocHandle(id: DocumentId(), isNew: true, initialValue: doc)
+    public func create(doc: Document) async throws -> Document {
+        let handle = DocHandle(id: DocumentId(), loadFetch: false, initialValue: doc)
+        self.handles[handle.id] = handle
+        return try await resolveDocHandle(id: handle.id)
     }
 
-    public func create(data: Data) async throws -> DocHandle {
-        try DocHandle(id: DocumentId(), isNew: true, initialValue: Document(data))
+    public func create(data: Data) async throws -> Document {
+        let handle = DocHandle(id: DocumentId(), loadFetch: false, initialValue: try Document(data))
+        self.handles[handle.id] = handle
+        return try await resolveDocHandle(id: handle.id)
     }
 
-    /// Returns a ready docHandle with a loaded Document or throws an error in the attempt of it.
-    /// - Parameter handle: The handle to resolve
-    func resolveHandle(handle: DocHandle) async throws -> DocHandle {
+    public func clone(id: DocumentId) async throws -> Document {
+        let originalDoc = try await resolveDocHandle(id: id)
+        let fork = originalDoc.fork()
+        let newId = DocumentId()
+        let newHandle = DocHandle(id: newId, loadFetch: false, initialValue: fork)
+        handles[newId] = newHandle
+        return try await resolveDocHandle(id: newId)
+    }
+
+    public func find(id: DocumentId) async throws -> Document {
         // generally of the idea that we'll drive DocHandle state updates from within Repo
         // and these async methods
-        guard !handle.isDeleted else {
-            throw Errors.DocDeleted(id: handle.id)
-        }
-        guard !handle.isUnavailable else {
-            throw Errors.DocUnavailable(id: handle.id)
-        }
-
-        return handle
-    }
-
-    public func clone(id: DocumentId) async throws -> DocHandle {
-        guard let originalDocHandle = _handles[id] else {
-            throw Errors.Unavailable(id: id)
-        }
-        let resolvedHandle = try await self.resolveHandle(handle: originalDocHandle)
-        // this would feel a lot nicer if it was try await _handles.resolve()
-
-        if let originalDoc = resolvedHandle.value {
-            let fork = originalDoc.fork()
-            let newId = DocumentId()
-            let newHandle = DocHandle(id: newId, isNew: true, initialValue: fork)
-            _handles[newId] = newHandle
-            return newHandle
+        let handle: DocHandle
+        if let knownHandle = handles[id] {
+            handle = knownHandle
         } else {
-            throw Errors.BigBadaBoom(msg: "DocHandle(\(id) doesn't have a value")
+            let newHandle = DocHandle(id: id, loadFetch: true)
+            handles[id] = newHandle
+            handle = newHandle
         }
-    }
-
-    public func find(id: DocumentId) async throws -> DocHandle {
-        // generally of the idea that we'll drive DocHandle state updates from within Repo
-        // and these async methods
-        DocHandle(id: id, isNew: false)
-        // TODO: attempt to load, failing that, req from network
+        return try await resolveDocHandle(id: handle.id)
     }
 
     public func delete(id: DocumentId) async throws {
-        guard var originalDocHandle = _handles[id] else {
+        guard var originalDocHandle = handles[id] else {
             throw Errors.Unavailable(id: id)
         }
         originalDocHandle.state = .deleted
-        originalDocHandle.value = nil
+        originalDocHandle._doc = nil
     }
 
     public func export(id _: DocumentId) async throws -> Data {
@@ -146,7 +138,49 @@ public actor Repo {
     public func subscribeToRemotes(remotes _: [STORAGE_ID]) async {}
 
     public func storageId() async -> STORAGE_ID? {
-        storage?.id
+        await storage?.id
+    }
+    
+    // MARK: Methods to resolve docHandles
+    
+    func resolveDocHandle(id: DocumentId) async throws -> Document {
+        if var handle = handles[id] {
+            switch handle.state {
+            case .idle:
+//                if handle.
+                handle.state = .loading
+                handles[id] = handle
+                return try await resolveDocHandle(id: id)
+            case .loading:
+                if let doc = try await loadFromStorage(id: id) {
+                    handle.state = .ready
+                    handles[id] = handle
+                    return doc
+                } else {
+                    handle.state = .requesting
+                    handles[id] = handle
+                    return try await resolveDocHandle(id: id)
+                }
+            case .requesting:
+                fatalError("NOT IMPLEMENTED")
+            case .ready:
+                guard let doc = handle._doc else { fatalError("DocHandle state is ready, but ._doc is null") }
+                return doc
+            case .unavailable:
+                throw Errors.DocUnavailable(id: handle.id)
+            case .deleted:
+                throw Errors.DocDeleted(id: handle.id)
+            }
+        } else {
+            throw Errors.DocUnavailable(id: id)
+        }
+    }
+
+    func loadFromStorage(id: DocumentId) async throws -> Document? {
+        guard let storage = self.storage else {
+            return nil
+        }
+        return try await storage.loadDoc(id: id)
     }
 }
 
@@ -166,11 +200,11 @@ public actor Repo {
 // Repo
 //  property: peers [PeerId] - all (currently) connected peers
 //  property: handles [DocHandle] - list of all the DocHandles
-// - func clone(DocHandle) -> DocHandle
+// - func clone(Document) -> Document
 // - func export(DocumentId) -> uint8[]
-// - func import(uint8[]) -> DocHandle
-// - func create() -> DocHandle
-// - func find(DocumentId) -> DocHandle
+// - func import(uint8[]) -> Document
+// - func create() -> Document
+// - func find(DocumentId) -> Document
 // - func delete(DocumentId)
 // - func storageId() -> StorageId (async)
 // - func storageIdForPeer(peerId) -> StorageId

@@ -11,9 +11,9 @@ import struct Foundation.Data
 
 // ... damnit - it's the type that's exposed to users to provide a proxy for an Automerge Document,
 // so maybe it _should_ be an actor
-public struct DocHandle: Sendable {
+struct DocHandle: Sendable {
     enum DocHandleState {
-        case new
+        case idle
         case loading
         case requesting
         case ready
@@ -41,34 +41,33 @@ public struct DocHandle: Sendable {
      *             └──CREATE───────────────────────────────────────────────►└────────┘
      */
 
-    weak var value: Automerge.Document?
+    weak var _doc: Automerge.Document?
     var state: DocHandleState
     public let id: DocumentId
     var remoteHeads: [STORAGE_ID: Set<Automerge.ChangeHash>]
+    var timeoutDelay: Double
 
-    init(id: DocumentId, isNew _: Bool, initialValue: Automerge.Document? = nil, timeoutDelay _: Double = 1.0) {
-        self.state = .new
+    init(id: DocumentId, loadFetch: Bool, initialValue: Automerge.Document? = nil, timeoutDelay: Double = 1.0) {
         self.id = id
+        self.timeoutDelay = timeoutDelay
         remoteHeads = [:]
-        self.value = initialValue
-    }
-
-    public var doc: Document? {
-        guard self.state == .ready else {
-            return nil
+        if loadFetch {
+            self.state = .loading
+        } else {
+            self.state = .ready
+            self._doc = initialValue ?? Document()
         }
-        return self.value
     }
 
-    public var isReady: Bool {
+    var isReady: Bool {
         self.state == .ready
     }
 
-    public var isDeleted: Bool {
+    var isDeleted: Bool {
         self.state == .deleted
     }
 
-    public var isUnavailable: Bool {
+    var isUnavailable: Bool {
         self.state == .unavailable
     }
 
@@ -84,48 +83,3 @@ public struct DocHandle: Sendable {
 
     func merge(other _: DocHandle) async {}
 }
-
-// ?? Rename this to DocHandle - it doesn't do the same thing that Automerge-repo's DocHandle does
-// though...
-
-// - init(id: DocumentId, isNew: Bool, initialValue:Doc/[u8], timeoutDelay:seconds)
-//    - prop [StorageId: Heads]
-//
-// - isReady()
-// - isDeleted()
-// - isUnavailable()
-// - var doc async { AutomergeDoc}
-// - setRemoteHeads(StorageId, Heads)
-// - getRemoteHeads(StorageId)
-// - change
-// - changeAt
-// - merge(AnotherDocHandle)
-
-// DocHandle
-/** DocHandle is a wrapper around a single Automerge document that lets us
- * listen for changes and notify the network and storage of new changes.
- *
- * @remarks
- * A `DocHandle` represents a document which is being managed by a {@link Repo}.
- * To obtain `DocHandle` use {@link Repo.find} or {@link Repo.create}.
- *
- * To modify the underlying document use either {@link DocHandle.change} or
- * {@link DocHandle.changeAt}. These methods will notify the `Repo` that some
- * change has occured and the `Repo` will save any new changes to the
- * attached {@link StorageAdapter} and send sync messages to connected peers.
- * */
-//  property: documentId: DocumentId
-//  property: url: AutomergeURL (maybe ignore this...)
-// - func broadcast(msg) - sends ephemeral message to all connected peers
-// - func change?? (callback called when changes happen?) - provide a closure that's called, passing in an Automerge
-// document to make any relevant updates, and ultimately returns a set of heads that represents the change having been
-// made.
-// - func changeAt?? (callback called when changes happen?) - makes a change as if the document were at <heads>
-// - func delete() -> Void
-// - func doc() async -> Automerge.Document
-// - func getRemoteHeads(storageId) -> [ChangeHash]
-// - func isDeleted() -> Bool
-// - func isReady() -> Bool
-// - func isUnavailable() -> Bool
-// - func merge(DocHandle) -> Void
-//  - loosely a convenience over handle.change(doc => A.merge(doc, otherHandle.docSync()))

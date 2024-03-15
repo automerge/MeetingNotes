@@ -10,30 +10,23 @@ import struct Foundation.Data
 /// messages from remote peers after the connection has been established. The connection handshake and peer negotiation
 /// is
 /// the responsibility of the network provider instance.
-public actor NetworkSubsystem {
+public actor NetworkSubsystem: NetworkEventReceiver {
+    public func receiveEvent(event: NetworkAdapterEvents) async {
+    
+    }
+    
     var adapters: [any NetworkProvider]
     let combinedNetworkEvents: AsyncChannel<NetworkAdapterEvents>
     var _backgroundNetworkReaderTasks: [Task<Void, Never>] = []
-    init(adapters: [any NetworkProvider]) async {
+    
+    init(adapters: [any NetworkProvider], peerId: PEER_ID, metadata: PeerMetadata?) async {
         self.adapters = adapters
         combinedNetworkEvents = AsyncChannel()
         for adapter in adapters {
-            await connectAdapter(adapter: adapter)
+            // tells the adapter to send network events to us
+            adapter.setDelegate(something: self)
+            await adapter.connect(asPeer: peerId, metadata: metadata)
         }
-    }
-
-    func connectAdapter(adapter: any NetworkProvider) async {
-        _backgroundNetworkReaderTasks.append(
-            // for each network adapter, read it's channel of
-            // network event messages and "forward" them upstream
-            // to the Repo (or whomever is reading the NetworkSubsystem's
-            // combinedNetworkEvents channel.
-            Task {
-                for await msg in adapter.events {
-                    await self.combinedNetworkEvents.send(msg)
-                }
-            }
-        )
     }
 
     func send(message: SyncV1Msg) async {

@@ -35,6 +35,10 @@ public actor DocumentStorage<S: StorageProvider> {
         storedDocSize = [:]
     }
 
+    public var id: STORAGE_ID {
+        return _storage.id
+    }
+    
     /// Returns an existing, or creates a new, document for the document Id you provide.
     ///
     /// The method throws errors from the underlying storage system or Document errors if the
@@ -44,13 +48,13 @@ public actor DocumentStorage<S: StorageProvider> {
     /// - Returns: An automerge document.
     public func loadDoc(id: DocumentId) async throws -> Document {
         var combined: Data
-        let storageChunks = try await _storage.loadRange(key: id, prefix: chunkNamespace)
+        let storageChunks = try await _storage.loadRange(id: id, prefix: chunkNamespace)
         if chunks[id] == nil {
             chunks[id] = []
         }
         let inMemChunks: [Data] = chunks[id] ?? []
 
-        if let baseData = try await _storage.load(key: id) {
+        if let baseData = try await _storage.load(id: id) {
             // loading all the changes from the base document and any incremental saves available
             combined = baseData
             storedDocSize[id] = baseData.count
@@ -93,13 +97,13 @@ public actor DocumentStorage<S: StorageProvider> {
         let baseSize = if let i = storedDocSize[key] {
             i
         } else {
-            try await _storage.load(key: key)?.count ?? 0
+            try await _storage.load(id: key)?.count ?? 0
         }
 
         let chunkSize = if let j = storedChunkSize[key] {
             j
         } else {
-            try await _storage.loadRange(key: key, prefix: chunkNamespace).reduce(0) { incrSize, data in
+            try await _storage.loadRange(id: key, prefix: chunkNamespace).reduce(0) { incrSize, data in
                 incrSize + data.count
             }
         }
@@ -144,7 +148,7 @@ public actor DocumentStorage<S: StorageProvider> {
     ///   - doc: The document to compact.
     public func compact(id: DocumentId, doc _: Document) async throws {
         compacting = true
-        var combined: Data = if let baseData = try await _storage.load(key: id) {
+        var combined: Data = if let baseData = try await _storage.load(id: id) {
             // loading all the changes from the base document and any incremental saves available
             baseData
         } else {
@@ -159,7 +163,7 @@ public actor DocumentStorage<S: StorageProvider> {
             combined.append(chunk)
         }
 
-        let storageChunks = try await _storage.loadRange(key: id, prefix: chunkNamespace)
+        let storageChunks = try await _storage.loadRange(id: id, prefix: chunkNamespace)
         for chunk in storageChunks {
             combined.append(chunk)
         }
@@ -168,7 +172,7 @@ public actor DocumentStorage<S: StorageProvider> {
 
         let compactedData = compactedDoc.save()
         // only remove the chunks AFTER the save is complete
-        try await _storage.save(key: id, data: compactedData)
+        try await _storage.save(id: id, data: compactedData)
         storedDocSize[id] = compactedData.count
         latestHeads[id] = compactedDoc.heads()
 
@@ -191,8 +195,8 @@ public actor DocumentStorage<S: StorageProvider> {
         // reads the base document and appends the found changes in a load, they'll still
         // end up with the same document, so these can safely be removed _after_ the new
         // compacted document has been stored away by the underlying storage provider.
-        try await _storage.removeRange(key: id, prefix: chunkNamespace, data: storageChunks)
-        storedChunkSize[id] = try await _storage.loadRange(key: id, prefix: chunkNamespace)
+        try await _storage.removeRange(id: id, prefix: chunkNamespace, data: storageChunks)
+        storedChunkSize[id] = try await _storage.loadRange(id: id, prefix: chunkNamespace)
             .reduce(0) { incrSize, data in
                 incrSize + data.count
             }
@@ -210,7 +214,7 @@ public actor DocumentStorage<S: StorageProvider> {
         let incrementalChanges = try doc.encodeChangesSince(heads: oldHeads)
         chunkCollection.append(incrementalChanges)
         chunks[id] = chunkCollection
-        try await _storage.addToRange(key: id, prefix: chunkNamespace, data: incrementalChanges)
+        try await _storage.addToRange(id: id, prefix: chunkNamespace, data: incrementalChanges)
         latestHeads[id] = doc.heads()
     }
 
