@@ -1,23 +1,26 @@
-
-
 import Automerge
 import Foundation
 
-// @globalActor
-public actor Repo<S: StorageProvider> {
-//    public static let shared = Repo()
+public actor Repo {
     public let peerId: PEER_ID
     // to replace DocumentSyncCoordinator
-    private var handles: [DocumentId: DocHandle]
-    private var storage: DocumentStorage<S>?
+    private var handles: [DocumentId: DocHandle] = [:]
+    private var storage: DocumentStorage?
+    private let localPeerMetadata: PeerMetadata
     private var network: NetworkSubsystem
+
     // saveDebounceRate = 100
     private var synchronizer: CollectionSynchronizer
     var sharePolicy: any SharePolicy
 
     /** maps peer id to to persistence information (storageId, isEphemeral), access by collection synchronizer  */
     /** @hidden */
-    var peerMetadataByPeerId: [PEER_ID: PeerMetadata]
+    private var peerMetadataByPeerId: [PEER_ID: PeerMetadata] = [:]
+    private var syncStates: [DocumentId: [PEER_ID: SyncState]] = [:]
+
+    private let maxRetriesForFetch: Int = 300
+    private let pendingRequestWaitDuration: Duration = .seconds(1)
+    private var pendingRequestReadAttempts: [DocumentId: Int] = [:]
 
 //    #remoteHeadsSubscriptions = new RemoteHeadsSubscriptions()
 //    export class RemoteHeadsSubscriptions extends EventEmitter<RemoteHeadsSubscriptionEvents> {
@@ -40,35 +43,58 @@ public actor Repo<S: StorageProvider> {
 
     private var remoteHeadsGossipingEnabled = false
 
+    // REPO
+    // https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo/src/Repo.ts
+    // - looks like it's the rough equivalent to the overall synchronization coordinator
+
+    // - owns synchronizer, network, and storage subsystems
+    // - it "just" manages the connections, adds, and removals - when documents "appear", they're
+    // added to the synchronizer, which is the thing that accepts sync messages and tries to keep documents
+    // up to date with any registered peers. It emits (at a debounced rate) events to let anyone watching
+    // a document know that changes have occurred.
+    //
+    // Looks like it also has the idea of a sharePolicy per document, and if provided, then a document
+    // will be shared with peers (or positively respond to requests for the document if it's requested)
+
+    // Repo
+    //  property: peers [PeerId] - all (currently) connected peers
+    //  property: handles [DocHandle] - list of all the DocHandles
+    // - func clone(Document) -> Document
+    // - func export(DocumentId) -> uint8[]
+    // - func import(uint8[]) -> Document
+    // - func create() -> Document
+    // - func find(DocumentId) -> Document
+    // - func delete(DocumentId)
+    // - func storageId() -> StorageId (async)
+    // - func storageIdForPeer(peerId) -> StorageId
+    // - func subscribeToRemotes([StorageId])
+
     init(
-        storageProvider: S? = nil,
+        storageProvider: (some StorageProvider)? = nil,
         networkAdapters: [any NetworkProvider] = [],
         sharePolicy: some SharePolicy
     ) async {
         self.peerId = UUID().uuidString
         self.handles = [:]
         self.peerMetadataByPeerId = [:]
+        self.localPeerMetadata = await PeerMetadata(storageId: storage?.id, isEphemeral: storageProvider == nil)
         if let provider = storageProvider {
             self.storage = DocumentStorage(provider)
         } else {
             self.storage = nil
         }
-        let metadata = await PeerMetadata(storageId: storage?.id, isEphemeral: storageProvider == nil)
-        self.network = await NetworkSubsystem(adapters: networkAdapters, peerId: self.peerId, metadata: metadata)
         self.sharePolicy = sharePolicy
         self.synchronizer = CollectionSynchronizer()
-    }
+        self.network = NetworkSubsystem()
+        // ALL STORED PROPERTIES ARE SET BY HERE
 
-    // possible functions for dynamic configuration of a shared repo
-//    public func addNetworkAdapter(net: some NetworkProvider) {
-//        network.adapters.append(net)
-//    }
-//
-//    public func removeNetworkAdapter(net: some NetworkProvider) {
-//        network.adapters.removeAll { provider in
-//            provider.id == net.id
-//        }
-//    }
+        // TODO: load up any persistent data from the storage...
+
+        await self.network.linkRepo(self)
+        for adapter in networkAdapters {
+            await network.addAdapter(adapter: adapter)
+        }
+    }
 
     public func documentIds() async -> [DocumentId] {
         handles.values
@@ -91,6 +117,16 @@ public actor Repo<S: StorageProvider> {
         } else {
             nil
         }
+    }
+
+    public func addPeerWithMetadata(peer: PEER_ID, metadata: PeerMetadata?) {
+        peerMetadataByPeerId[peer] = metadata
+//        synchronizer.addPeer(peer: peer)
+    }
+
+    public func removePeer(peer: PEER_ID) {
+        peerMetadataByPeerId.removeValue(forKey: peer)
+//        synchronizer.removePeer(peer: peer)
     }
 
     /// Creates a new Automerge document, storing it and sharing the creation with connected peers.
@@ -191,6 +227,20 @@ public actor Repo<S: StorageProvider> {
 
     // MARK: Methods to resolve docHandles
 
+    private func loadFromStorage(id: DocumentId) async throws -> Document? {
+        guard let storage = self.storage else {
+            return nil
+        }
+        return try await storage.loadDoc(id: id)
+    }
+
+    private func purgeFromStorage(id: DocumentId) async throws {
+        guard let storage = self.storage else {
+            return
+        }
+        try await storage.purgeDoc(id: id)
+    }
+
     private func resolveDocHandle(id: DocumentId) async throws -> Document {
         if var handle = handles[id] {
             switch handle.state {
@@ -224,23 +274,28 @@ public actor Repo<S: StorageProvider> {
                     } else {
                         handle.state = .requesting
                         handles[id] = handle
+                        pendingRequestReadAttempts[id] = 0
+                        try await self.network.startRemoteFetch(id: handle.id)
                         return try await resolveDocHandle(id: id)
                     }
                 }
             case .requesting:
-                assert(handle._doc == nil)
-                if let docFromNetwork = try await self.network.remoteFetch(id: handle.id) {
-                    handle._doc = docFromNetwork
-                    Task.detached {
-                        try await self.storage?.saveDoc(id: id, doc: docFromNetwork)
-                    }
-                    handle.state = .ready
-                    handles[id] = handle
-                    return docFromNetwork
-                } else {
-                    handle.state = .unavailable
-                    handles[handle.id] = handle
+                guard let updatedHandle = handles[id] else {
                     throw Errors.DocUnavailable(id: handle.id)
+                }
+                if let doc = updatedHandle._doc, updatedHandle.state == .ready {
+                    return doc
+                } else {
+                    guard let previousRequests = pendingRequestReadAttempts[id] else {
+                        throw Errors.DocUnavailable(id: id)
+                    }
+                    if previousRequests < maxRetriesForFetch {
+                        // race against the receipt of a network result and see what we get at the end
+                        try await Task.sleep(for: pendingRequestWaitDuration)
+                        return try await resolveDocHandle(id: id)
+                    } else {
+                        throw Errors.DocUnavailable(id: id)
+                    }
                 }
             case .ready:
                 guard let doc = handle._doc else { fatalError("DocHandle state is ready, but ._doc is null") }
@@ -254,44 +309,4 @@ public actor Repo<S: StorageProvider> {
             throw Errors.DocUnavailable(id: id)
         }
     }
-
-    private func loadFromStorage(id: DocumentId) async throws -> Document? {
-        guard let storage = self.storage else {
-            return nil
-        }
-        return try await storage.loadDoc(id: id)
-    }
-
-    private func purgeFromStorage(id: DocumentId) async throws {
-        guard let storage = self.storage else {
-            return
-        }
-        try await storage.purgeDoc(id: id)
-    }
 }
-
-// REPO
-// https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo/src/Repo.ts
-// - looks like it's the rough equivalent to the overall synchronization coordinator
-
-// - owns synchronizer, network, and storage subsystems
-// - it "just" manages the connections, adds, and removals - when documents "appear", they're
-// added to the synchronizer, which is the thing that accepts sync messages and tries to keep documents
-// up to date with any registered peers. It emits (at a debounced rate) events to let anyone watching
-// a document know that changes have occurred.
-//
-// Looks like it also has the idea of a sharePolicy per document, and if provided, then a document
-// will be shared with peers (or positively respond to requests for the document if it's requested)
-
-// Repo
-//  property: peers [PeerId] - all (currently) connected peers
-//  property: handles [DocHandle] - list of all the DocHandles
-// - func clone(Document) -> Document
-// - func export(DocumentId) -> uint8[]
-// - func import(uint8[]) -> Document
-// - func create() -> Document
-// - func find(DocumentId) -> Document
-// - func delete(DocumentId)
-// - func storageId() -> StorageId (async)
-// - func storageIdForPeer(peerId) -> StorageId
-// - func subscribeToRemotes([StorageId])

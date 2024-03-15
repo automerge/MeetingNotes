@@ -1,6 +1,7 @@
-// import protocol Combine.Publisher
-
 import AsyncAlgorithms
+
+// import protocol Combine.Publisher
+import Automerge
 
 // https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo/src/network/NetworkAdapterInterface.ts
 
@@ -39,10 +40,13 @@ import AsyncAlgorithms
 /// - When any other message is received, it is emitted with ``NetworkAdapterEvents/message(payload:)``.
 /// - When the transport receives a `leave` message, close the connection and emit ``NetworkAdapterEvents/close``.
 public protocol NetworkProvider<ProviderConfiguration>: Sendable, Identifiable {
-    /// The identity of the network provider
+    /// The peer Id of the local instance.
+    ///
+    /// Identical to the `peerId` property.
     var id: PEER_ID { get }
     /// The peer Id of the local instance.
     var peerId: PEER_ID { get }
+
     /// The optional metadata associated with this peer's presentation.
     var peerMetadata: PeerMetadata? { get } // ?? async - this is set AFTER connect
     /// The peer Id of the remote
@@ -59,7 +63,7 @@ public protocol NetworkProvider<ProviderConfiguration>: Sendable, Identifiable {
     func configure(_: ProviderConfiguration)
 
     /// Initiate a connection.
-    func connect(asPeer: PEER_ID, metadata: PeerMetadata?) async // aka "activate"
+    func connect(asPeer: PEER_ID, localMetaData: PeerMetadata?) async // aka "activate"
 
     /// Disconnect and terminate any existing connection.
     func disconnect() async // aka "deactivate"
