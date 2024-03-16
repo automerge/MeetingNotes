@@ -3,10 +3,10 @@ import Foundation
 
 public actor Repo {
     public let peerId: PEER_ID
+    public let localPeerMetadata: PeerMetadata
     // to replace DocumentSyncCoordinator
     private var handles: [DocumentId: DocHandle] = [:]
     private var storage: DocumentStorage?
-    private let localPeerMetadata: PeerMetadata
     private var network: NetworkSubsystem
 
     // saveDebounceRate = 100

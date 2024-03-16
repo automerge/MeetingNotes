@@ -1,5 +1,6 @@
 import struct Automerge.ChangeHash
 import class Automerge.Document
+import struct Automerge.SyncState
 import struct Foundation.Data
 
 // actor?
@@ -41,16 +42,19 @@ struct DocHandle: Sendable {
      *             └──CREATE───────────────────────────────────────────────►└────────┘
      */
 
+    let id: DocumentId
     weak var _doc: Automerge.Document?
     var state: DocHandleState
-    public let id: DocumentId
     var remoteHeads: [STORAGE_ID: Set<Automerge.ChangeHash>]
+    var syncStates: [PEER_ID: SyncState]
+    // TODO: verify that we want a timeout delay per Document, as opposed to per-Repo
     var timeoutDelay: Double
 
     init(id: DocumentId, isNew: Bool, initialValue: Automerge.Document? = nil, timeoutDelay: Double = 1.0) {
         self.id = id
         self.timeoutDelay = timeoutDelay
         remoteHeads = [:]
+        syncStates = [:]
         // isNew is when we're creating content and it needs to get stored locally in a storage
         // provider, if available.
         if isNew {
