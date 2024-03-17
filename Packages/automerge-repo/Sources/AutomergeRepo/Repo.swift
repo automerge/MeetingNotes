@@ -1,5 +1,6 @@
 import Automerge
 import Foundation
+import OSLog
 
 public actor Repo {
     public let peerId: PEER_ID
@@ -16,7 +17,6 @@ public actor Repo {
     /** maps peer id to to persistence information (storageId, isEphemeral), access by collection synchronizer  */
     /** @hidden */
     private var peerMetadataByPeerId: [PEER_ID: PeerMetadata] = [:]
-    private var syncStates: [DocumentId: [PEER_ID: SyncState]] = [:]
 
     private let maxRetriesForFetch: Int = 300
     private let pendingRequestWaitDuration: Duration = .seconds(1)
@@ -104,6 +104,8 @@ public actor Repo {
             .map(\.id)
     }
 
+    // MARK: SyncThings
+
     /// Returns a list of the ids of available peers.
     public func peers() async -> [PEER_ID] {
         peerMetadataByPeerId.keys.sorted()
@@ -111,7 +113,7 @@ public actor Repo {
 
     /// Returns the storage Id of for the id of the peer that you provide.
     /// - Parameter peer: The peer to request
-    public func getStorageIdOfPeer(peer: PEER_ID) async -> STORAGE_ID? {
+    func getStorageIdOfPeer(peer: PEER_ID) async -> STORAGE_ID? {
         if let metaForPeer = peerMetadataByPeerId[peer] {
             metaForPeer.storageId
         } else {
@@ -119,15 +121,127 @@ public actor Repo {
         }
     }
 
-    public func addPeerWithMetadata(peer: PEER_ID, metadata: PeerMetadata?) {
+    func addPeerWithMetadata(peer: PEER_ID, metadata: PeerMetadata?) {
         peerMetadataByPeerId[peer] = metadata
-//        synchronizer.addPeer(peer: peer)
     }
 
-    public func removePeer(peer: PEER_ID) {
+    func removePeer(peer: PEER_ID) {
         peerMetadataByPeerId.removeValue(forKey: peer)
-//        synchronizer.removePeer(peer: peer)
     }
+
+    func markDocUnavailable(id: DocumentId) async {
+        guard var handle = handles[id] else {
+            Logger.repo.error("missing handle for documentId \(id.description) while attempt to mark unavailable")
+            return
+        }
+        assert(handle.state == .requesting)
+        handle.state = .unavailable
+        handles[id] = handle
+    }
+
+    func handleSync(msg: SyncV1Msg.SyncMsg) async {
+        guard let docId = DocumentId(msg.documentId) else {
+            Logger.repo
+                .warning("Invalid documentId \(msg.documentId) received in a sync message \(msg.debugDescription)")
+            return
+        }
+        if handles[docId] != nil {
+            // If we have the document, see if we're agreeable to sending a copy
+            if await sharePolicy.share(peer: msg.senderId, docId: docId) {
+                do {
+                    let doc = try await self.resolveDocHandle(id: docId)
+                    let syncState = self.syncState(id: docId, peer: msg.senderId)
+                    // Apply the request message as a sync update
+                    try doc.receiveSyncMessage(state: syncState, message: msg.data)
+                    // Stash the updated document and sync state
+                    await self.updateDoc(id: docId, doc: doc)
+                    await self.updateSyncState(id: docId, peer: msg.senderId, syncState: syncState)
+                    // Attempt to generate a sync message to reply
+                    if let syncData = doc.generateSyncMessage(state: syncState) {
+                        let syncMsg: SyncV1Msg = .sync(.init(
+                            documentId: docId.description,
+                            senderId: self.peerId,
+                            targetId: msg.senderId,
+                            sync_message: syncData
+                        ))
+                        await network.send(message: syncMsg, to: msg.senderId)
+                    } // else no sync is needed, syncstate reports that they have everything they need
+                } catch {
+                    let err: SyncV1Msg =
+                        .error(.init(message: "Unable to resolve document: \(error.localizedDescription)"))
+                    await network.send(message: err, to: msg.senderId)
+                }
+            } else {
+                let nope = SyncV1Msg.UnavailableMsg(
+                    documentId: msg.documentId,
+                    senderId: self.peerId,
+                    targetId: msg.senderId
+                )
+                await network.send(message: .unavailable(nope), to: msg.senderId)
+            }
+
+        } else {
+            let nope = SyncV1Msg.UnavailableMsg(
+                documentId: msg.documentId,
+                senderId: self.peerId,
+                targetId: msg.senderId
+            )
+            await network.send(message: .unavailable(nope), to: msg.senderId)
+        }
+    }
+
+    func handleRequest(msg: SyncV1Msg.RequestMsg) async {
+        guard let docId = DocumentId(msg.documentId) else {
+            Logger.repo
+                .warning("Invalid documentId \(msg.documentId) received in a sync message \(msg.debugDescription)")
+            return
+        }
+        if handles[docId] != nil {
+            // If we have the document, see if we're agreeable to sending a copy
+            if await sharePolicy.share(peer: msg.senderId, docId: docId) {
+                do {
+                    let doc = try await self.resolveDocHandle(id: docId)
+                    let syncState = self.syncState(id: docId, peer: msg.senderId)
+                    // Apply the request message as a sync update
+                    try doc.receiveSyncMessage(state: syncState, message: msg.data)
+                    // Stash the updated doc and sync state
+                    await self.updateDoc(id: docId, doc: doc)
+                    await self.updateSyncState(id: docId, peer: msg.senderId, syncState: syncState)
+                    // Attempt to generate a sync message to reply
+                    if let syncData = doc.generateSyncMessage(state: syncState) {
+                        let syncMsg: SyncV1Msg = .sync(.init(
+                            documentId: docId.description,
+                            senderId: self.peerId,
+                            targetId: msg.senderId,
+                            sync_message: syncData
+                        ))
+                        await network.send(message: syncMsg, to: msg.senderId)
+                    } // else no sync is needed, syncstate reports that they have everything they need
+                } catch {
+                    let err: SyncV1Msg =
+                        .error(.init(message: "Unable to resolve document: \(error.localizedDescription)"))
+                    await network.send(message: err, to: msg.senderId)
+                }
+            } else {
+                let nope = SyncV1Msg.UnavailableMsg(
+                    documentId: msg.documentId,
+                    senderId: self.peerId,
+                    targetId: msg.senderId
+                )
+                await network.send(message: .unavailable(nope), to: msg.senderId)
+            }
+
+        } else {
+            let nope = SyncV1Msg.UnavailableMsg(
+                documentId: msg.documentId,
+                senderId: self.peerId,
+                targetId: msg.senderId
+            )
+            await network.send(message: .unavailable(nope), to: msg.senderId)
+        }
+    }
+
+    // MARK: PUBLIC API
 
     /// Creates a new Automerge document, storing it and sharing the creation with connected peers.
     /// - Returns: The Automerge document.
@@ -225,6 +339,50 @@ public actor Repo {
         await storage?.id
     }
 
+    // MARK: Methods to expose retrieving DocHandles to the subsystems
+
+    func syncState(id: DocumentId, peer: PEER_ID) -> SyncState {
+        guard let handle = handles[id] else {
+            fatalError("No stored dochandle for id: \(id)")
+        }
+        if let handleSyncState = handle.syncStates[peer] {
+            return handleSyncState
+        } else {
+            // TODO: add attempt to load from storage and return it before creating a new one
+            return SyncState()
+        }
+    }
+
+    func updateSyncState(id: DocumentId, peer: PEER_ID, syncState: SyncState) async {
+        guard var handle = handles[id] else {
+            fatalError("No stored dochandle for id: \(id)")
+        }
+        handle.syncStates[peer] = syncState
+    }
+
+    func updateDoc(id: DocumentId, doc: Document) async {
+        guard var handle = handles[id] else {
+            fatalError("No stored dochandle for id: \(id)")
+        }
+        if handle.state == .requesting {
+            handle.state = .ready
+        }
+        assert(handle.state == .ready)
+        handle._doc = doc
+        if let storage = self.storage {
+            Task.detached {
+                do {
+                    try await storage.saveDoc(id: id, doc: doc)
+                } catch {
+                    Logger.repo
+                        .warning(
+                            "Error received while attempting to store document ID \(id): \(error.localizedDescription)"
+                        )
+                }
+            }
+        }
+    }
+
     // MARK: Methods to resolve docHandles
 
     private func loadFromStorage(id: DocumentId) async throws -> Document? {
@@ -290,7 +448,8 @@ public actor Repo {
                         throw Errors.DocUnavailable(id: id)
                     }
                     if previousRequests < maxRetriesForFetch {
-                        // race against the receipt of a network result and see what we get at the end
+                        // we are racing against the receipt of a network result
+                        // to see what we get at the end
                         try await Task.sleep(for: pendingRequestWaitDuration)
                         return try await resolveDocHandle(id: id)
                     } else {
