@@ -19,4 +19,8 @@ extension Logger: @unchecked Sendable {
 
     /// Logs updates and interaction related to the process of synchronization over the network.
     static let storage = Logger(subsystem: subsystem, category: "storageSubsystem")
+
+    static let repo = Logger(subsystem: subsystem, category: "automerge-repo")
+
+    static let network = Logger(subsystem: subsystem, category: "networkSubsystem")
 }

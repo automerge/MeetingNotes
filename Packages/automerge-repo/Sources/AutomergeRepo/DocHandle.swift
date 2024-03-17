@@ -47,6 +47,7 @@ struct DocHandle: Sendable {
     var state: DocHandleState
     var remoteHeads: [STORAGE_ID: Set<Automerge.ChangeHash>]
     var syncStates: [PEER_ID: SyncState]
+
     // TODO: verify that we want a timeout delay per Document, as opposed to per-Repo
     var timeoutDelay: Double
 
