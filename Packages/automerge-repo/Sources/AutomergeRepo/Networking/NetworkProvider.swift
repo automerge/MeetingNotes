@@ -39,31 +39,32 @@ import Automerge
 /// return an ``SyncV1/error(_:)`` message, close the connection, and emit ``NetworkAdapterEvents/close``.
 /// - When any other message is received, it is emitted with ``NetworkAdapterEvents/message(payload:)``.
 /// - When the transport receives a `leave` message, close the connection and emit ``NetworkAdapterEvents/close``.
-public protocol NetworkProvider<ProviderConfiguration>: Sendable, Identifiable {
+public protocol NetworkProvider<ProviderConfiguration>: Sendable, Identifiable, CustomStringConvertible {
     /// The peer Id of the local instance.
     ///
     /// Identical to the `peerId` property.
     var id: PEER_ID { get }
+    var description: String { get }
     /// The peer Id of the local instance.
-    var peerId: PEER_ID { get }
+    var peerId: PEER_ID { get async }
 
     /// The optional metadata associated with this peer's presentation.
-    var peerMetadata: PeerMetadata? { get } // ?? async - this is set AFTER connect
+    var peerMetadata: PeerMetadata? { get async } // this is set AFTER connect
     /// The peer Id of the remote
-    var connectedPeer: PEER_ID { get } // ?? async - this is set AFTER connect
+    var connectedPeer: PEER_ID? { get async } // this is set AFTER connect
 
     /// The type used to configure an instance of a Network Provider.
-    associatedtype ProviderConfiguration
+    associatedtype ProviderConfiguration: Sendable
 
     /// Configure the network provider.
     ///
     /// For connecting providers, this may include enabling automatic reconnection, as well as relevant timeouts for
     /// connections.
     /// - Parameter _: the configuration for the network provider.
-    func configure(_: ProviderConfiguration)
+    func configure(_ config: ProviderConfiguration) async
 
     /// Initiate a connection.
-    func connect(asPeer: PEER_ID, localMetaData: PeerMetadata?) async // aka "activate"
+    func connect(asPeer: PEER_ID, localMetaData: PeerMetadata?) async throws // aka "activate"
 
     /// Disconnect and terminate any existing connection.
     func disconnect() async // aka "deactivate"
@@ -74,15 +75,7 @@ public protocol NetworkProvider<ProviderConfiguration>: Sendable, Identifiable {
     /// - Parameter message: The message to send.
     func send(message: SyncV1Msg) async
 
-    func setDelegate(something: any NetworkEventReceiver)
-
-    /// A publisher that provides events and messages from the network provider.
-    // Type 'NetworkAdapterEvents' does not conform to the 'Sendable' protocol
-    // var events: AsyncChannel<NetworkAdapterEvents> { get }
-
-    // Combine version...
-    // associatedtype NetworkEvents: Publisher<NetworkAdapterEvents, Never>
-    // var eventPublisher: NetworkEvents { get }
+    func setDelegate(something: any NetworkEventReceiver) async
 }
 
 public protocol NetworkEventReceiver: Sendable {

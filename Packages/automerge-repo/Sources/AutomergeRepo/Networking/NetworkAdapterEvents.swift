@@ -5,7 +5,7 @@ public enum NetworkAdapterEvents: Sendable {
 
     public struct PeerCandidatePayload: Sendable { // handled by Repo - relevant to storage
         let peerId: PEER_ID
-        let peerMetadata: PeerMetadata
+        let peerMetadata: PeerMetadata?
     }
 
     public struct PeerDisconnectPayload: Sendable { // handled by Repo, relevant to Sync

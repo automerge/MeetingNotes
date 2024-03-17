@@ -11,7 +11,6 @@ public actor Repo {
     private var network: NetworkSubsystem
 
     // saveDebounceRate = 100
-    private var synchronizer: CollectionSynchronizer
     var sharePolicy: any SharePolicy
 
     /** maps peer id to to persistence information (storageId, isEphemeral), access by collection synchronizer  */
@@ -84,7 +83,6 @@ public actor Repo {
             self.storage = nil
         }
         self.sharePolicy = sharePolicy
-        self.synchronizer = CollectionSynchronizer()
         self.network = NetworkSubsystem()
         // ALL STORED PROPERTIES ARE SET BY HERE
 
@@ -104,7 +102,7 @@ public actor Repo {
             .map(\.id)
     }
 
-    // MARK: SyncThings
+    // MARK: Synchronization Pieces - Peers
 
     /// Returns a list of the ids of available peers.
     public func peers() async -> [PEER_ID] {
@@ -129,15 +127,7 @@ public actor Repo {
         peerMetadataByPeerId.removeValue(forKey: peer)
     }
 
-    func markDocUnavailable(id: DocumentId) async {
-        guard var handle = handles[id] else {
-            Logger.repo.error("missing handle for documentId \(id.description) while attempt to mark unavailable")
-            return
-        }
-        assert(handle.state == .requesting)
-        handle.state = .unavailable
-        handles[id] = handle
-    }
+    // MARK: Synchronization Pieces - For Network Subsystem Access
 
     func handleSync(msg: SyncV1Msg.SyncMsg) async {
         guard let docId = DocumentId(msg.documentId) else {
@@ -360,7 +350,19 @@ public actor Repo {
         handle.syncStates[peer] = syncState
     }
 
+    func markDocUnavailable(id: DocumentId) async {
+        // handling a requested document being marked as unavailable after all peers have been checked
+        guard var handle = handles[id] else {
+            Logger.repo.error("missing handle for documentId \(id.description) while attempt to mark unavailable")
+            return
+        }
+        assert(handle.state == .requesting)
+        handle.state = .unavailable
+        handles[id] = handle
+    }
+
     func updateDoc(id: DocumentId, doc: Document) async {
+        // handling a requested document being marked as ready after document contents received
         guard var handle = handles[id] else {
             fatalError("No stored dochandle for id: \(id)")
         }
