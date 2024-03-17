@@ -87,8 +87,4 @@ struct DocHandle: Sendable {
     mutating func setRemoteHeads(id: STORAGE_ID, heads: Set<ChangeHash>) {
         remoteHeads[id] = heads
     }
-
-    func merge(other _: DocHandle) async {
-        fatalError("NOT IMPLEMENTED")
-    }
 }
