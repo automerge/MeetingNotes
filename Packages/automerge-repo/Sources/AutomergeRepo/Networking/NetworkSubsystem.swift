@@ -27,15 +27,15 @@ public actor NetworkSubsystem {
     // TODO: revisit this and consider if the callbacks to repo should be exposed as a delegate
     weak var repo: Repo?
     var adapters: [any NetworkProvider]
-    let combinedNetworkEvents: AsyncChannel<NetworkAdapterEvents>
-    var _backgroundNetworkReaderTasks: [Task<Void, Never>] = []
+//    let combinedNetworkEvents: AsyncChannel<NetworkAdapterEvents>
+//    var _backgroundNetworkReaderTasks: [Task<Void, Never>] = []
 
     init() {
         self.adapters = []
-        combinedNetworkEvents = AsyncChannel()
+//        combinedNetworkEvents = AsyncChannel()
     }
 
-    func linkRepo(_ repo: Repo) async {
+    func setRepo(_ repo: Repo) async {
         self.repo = repo
     }
 
@@ -91,11 +91,11 @@ public actor NetworkSubsystem {
         }
     }
 
-    func broadcast(message: SyncV1Msg) async {
-        for n in adapters {
-            await n.send(message: message)
-        }
-    }
+//    func broadcast(message: SyncV1Msg) async {
+//        for n in adapters {
+//            await n.send(message: message)
+//        }
+//    }
 
     func send(message: SyncV1Msg, to: PEER_ID) async {
         for adapter in adapters {

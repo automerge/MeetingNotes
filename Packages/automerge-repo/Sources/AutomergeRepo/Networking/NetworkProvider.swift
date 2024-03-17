@@ -69,6 +69,7 @@ public protocol NetworkProvider<ProviderConfiguration>: Sendable, Identifiable, 
     /// Disconnect and terminate any existing connection.
     func disconnect() async // aka "deactivate"
 
+    /// Returns a Boolean value that indicates whether the network adapter is connected.
     func ready() async -> Bool
 
     /// Requests the network transport to send a message.

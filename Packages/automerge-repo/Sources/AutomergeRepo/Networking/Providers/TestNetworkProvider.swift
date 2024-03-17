@@ -1,7 +1,7 @@
 import Automerge
 import Foundation
 
-public struct TestingNetworkProviderConfiguration: Sendable, CustomStringConvertible {
+public struct TestNetworkConfiguration: Sendable, CustomStringConvertible {
     let remotePeer: PEER_ID
     let remotePeerMetadata: PeerMetadata?
     let msgResponse: @Sendable (SyncV1Msg) async -> SyncV1Msg?
@@ -71,10 +71,16 @@ public struct TestingNetworkProviderConfiguration: Sendable, CustomStringConvert
     }
 }
 
-struct UnconfiguredTestNetwork: LocalizedError {}
+struct UnconfiguredTestNetwork: LocalizedError {
+    public var errorDescription: String? {
+        "The test network is not configured."
+    }
+}
 
-// this could be @MainActor public final class - or 'actor'
-public actor TestingNetworkProvider: NetworkProvider {
+/// A Test network that operates in memory
+///
+/// Acts akin to an outbound connection - doesn't "connect" and trigger messages until you explicitly ask
+public actor TestNetworkProvider: NetworkProvider {
     public nonisolated var id: PEER_ID {
         "testNetworkPeer"
     }
@@ -88,11 +94,11 @@ public actor TestingNetworkProvider: NetworkProvider {
 
     var delegate: (any NetworkEventReceiver)?
 
-    var config: TestingNetworkProviderConfiguration?
+    var config: TestNetworkConfiguration?
     var connected: Bool
     var messages: [SyncV1Msg] = []
 
-    public typealias ProviderConfiguration = TestingNetworkProviderConfiguration
+    public typealias ProviderConfiguration = TestNetworkConfiguration
 
     init(id: PEER_ID, metadata: PeerMetadata?) {
         self.localPeerId = id
@@ -101,7 +107,7 @@ public actor TestingNetworkProvider: NetworkProvider {
         self.delegate = nil
     }
 
-    public func configure(_ config: TestingNetworkProviderConfiguration) async {
+    public func configure(_ config: TestNetworkConfiguration) async {
         self.config = config
     }
 

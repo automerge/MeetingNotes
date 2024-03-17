@@ -88,7 +88,7 @@ public actor Repo {
 
         // TODO: load up any persistent data from the storage...
 
-        await self.network.linkRepo(self)
+        await self.network.setRepo(self)
         for adapter in networkAdapters {
             await network.addAdapter(adapter: adapter)
         }
@@ -386,6 +386,32 @@ public actor Repo {
     }
 
     // MARK: Methods to resolve docHandles
+
+    func merge(id: DocumentId, with: DocumentId) async throws {
+        guard let handle1 = handles[id] else {
+            throw Errors.DocUnavailable(id: id)
+        }
+        guard let handle2 = handles[with] else {
+            throw Errors.DocUnavailable(id: with)
+        }
+
+        let doc1 = try await resolveDocHandle(id: handle1.id)
+        // Start with updating from storage changes, if any
+        if let doc1Storage = try await storage?.loadDoc(id: handle1.id) {
+            try doc1.merge(other: doc1Storage)
+        }
+
+        // merge in the provided second document from memory
+        let doc2 = try await resolveDocHandle(id: handle2.id)
+        try doc1.merge(other: doc2)
+
+        // JUST IN CASE, try and load doc2 from storage and merge that if available
+        if let doc2Storage = try await storage?.loadDoc(id: handle2.id) {
+            try doc1.merge(other: doc2Storage)
+        }
+        // finally, update the repo
+        await self.updateDoc(id: id, doc: doc1)
+    }
 
     private func loadFromStorage(id: DocumentId) async throws -> Document? {
         guard let storage = self.storage else {
