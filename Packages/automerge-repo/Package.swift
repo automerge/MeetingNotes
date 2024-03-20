@@ -38,9 +38,7 @@ let package = Package(
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency"),
                 .enableUpcomingFeature("ExistentialAny"),
-
                 // .unsafeFlags(["-require-explicit-sendable"]),
-
                 .enableExperimentalFeature("AccessLevelOnImport"),
                 .enableUpcomingFeature("InternalImportsByDefault"),
             ]

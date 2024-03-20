@@ -1,7 +1,7 @@
 import Automerge
 import Foundation
 
-public struct TestNetworkConfiguration: Sendable, CustomStringConvertible {
+public struct TestOutgoingNetworkConfiguration: Sendable, CustomStringConvertible {
     let remotePeer: PEER_ID
     let remotePeerMetadata: PeerMetadata?
     let msgResponse: @Sendable (SyncV1Msg) async -> SyncV1Msg?
@@ -80,7 +80,7 @@ struct UnconfiguredTestNetwork: LocalizedError {
 /// A Test network that operates in memory
 ///
 /// Acts akin to an outbound connection - doesn't "connect" and trigger messages until you explicitly ask
-public actor TestNetworkProvider: NetworkProvider {
+public actor TestOutgoingNetworkProvider: NetworkProvider {
     public nonisolated var id: PEER_ID {
         "testNetworkPeer"
     }
@@ -94,11 +94,11 @@ public actor TestNetworkProvider: NetworkProvider {
 
     var delegate: (any NetworkEventReceiver)?
 
-    var config: TestNetworkConfiguration?
+    var config: TestOutgoingNetworkConfiguration?
     var connected: Bool
     var messages: [SyncV1Msg] = []
 
-    public typealias ProviderConfiguration = TestNetworkConfiguration
+    public typealias ProviderConfiguration = TestOutgoingNetworkConfiguration
 
     init(id: PEER_ID, metadata: PeerMetadata?) {
         self.localPeerId = id
@@ -107,7 +107,7 @@ public actor TestNetworkProvider: NetworkProvider {
         self.delegate = nil
     }
 
-    public func configure(_ config: TestNetworkConfiguration) async {
+    public func configure(_ config: TestOutgoingNetworkConfiguration) async {
         self.config = config
     }
 

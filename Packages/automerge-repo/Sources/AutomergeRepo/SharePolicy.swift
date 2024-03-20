@@ -19,7 +19,7 @@ public enum SharePolicies: Sendable {
 
     public struct NeverPolicy: SharePolicy {
         func share(peer _: PEER_ID, docId _: DocumentId) async -> Bool {
-            true
+            false
         }
     }
 }
