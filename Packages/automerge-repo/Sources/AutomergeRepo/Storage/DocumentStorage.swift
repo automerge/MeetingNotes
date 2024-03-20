@@ -92,7 +92,7 @@ public actor DocumentStorage {
     /// Determine if a documentId should be compacted.
     /// - Parameter key: the document Id to analyze
     /// - Returns: a Boolean value that indicates whether the document should be compacted.
-    private func shouldCompact(_ key: DocumentId) async throws -> Bool {
+    func shouldCompact(_ key: DocumentId) async throws -> Bool {
         if compacting {
             return false
         }
@@ -121,7 +121,7 @@ public actor DocumentStorage {
     ///   - key: The Id of the document
     ///   - doc: The Automerge document
     /// - Returns: A Boolean value that indicates the document has changes.
-    private func shouldSave(for key: DocumentId, doc: Document) -> Bool {
+    func shouldSave(for key: DocumentId, doc: Document) -> Bool {
         guard let storedHeads = self.latestHeads[key] else {
             return true
         }

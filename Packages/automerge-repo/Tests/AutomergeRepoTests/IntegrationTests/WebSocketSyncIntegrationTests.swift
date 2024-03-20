@@ -77,8 +77,8 @@ final class WebSocketSyncIntegrationTests: XCTestCase {
 
         // establish and sync the document
         // SwiftUI does it in a two-step: define and then add data through onAppear:
-        let websocket = WebsocketSyncConnection(nil, id: nil)
-        websocket.registerDocument(document, id: documentId)
+        let websocket = await WebsocketSyncConnection(nil, id: nil)
+        await websocket.registerDocument(document, id: documentId)
         print("SYNCING DOCUMENT: \(documentId.description)")
 
         try await websocket.connect(syncDestination)

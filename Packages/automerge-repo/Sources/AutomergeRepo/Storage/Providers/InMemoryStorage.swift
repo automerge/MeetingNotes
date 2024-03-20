@@ -1,16 +1,30 @@
 import struct Foundation.Data
 import struct Foundation.UUID
 
+@globalActor public actor TestActor {
+    public static var shared = TestActor()
+}
+
 /// An in-memory only storage provider.
-public actor InMemoryStorage: StorageProvider {
+@TestActor
+public final class InMemoryStorage: StorageProvider {
     public nonisolated let id: STORAGE_ID = UUID().uuidString
 
     var _storage: [DocumentId: Data] = [:]
     var _incrementalChunks: [CombinedKey: [Data]] = [:]
 
-    struct CombinedKey: Hashable {
-        let id: DocumentId
-        let prefix: String
+    public init() {}
+
+    public struct CombinedKey: Hashable, Comparable {
+        public static func < (lhs: InMemoryStorage.CombinedKey, rhs: InMemoryStorage.CombinedKey) -> Bool {
+            if lhs.prefix == rhs.prefix {
+                return lhs.id < rhs.id
+            }
+            return lhs.prefix < rhs.prefix
+        }
+
+        public let id: DocumentId
+        public let prefix: String
     }
 
     public func load(id: DocumentId) async -> Data? {
@@ -45,5 +59,15 @@ public actor InMemoryStorage: StorageProvider {
             }
         }
         _incrementalChunks[CombinedKey(id: id, prefix: prefix)] = chunksForKey
+    }
+
+    // MARK: Testing Spies/Support
+
+    public func storageKeys() -> [DocumentId] {
+        _storage.keys.sorted()
+    }
+
+    public func incrementalKeys() -> [CombinedKey] {
+        _incrementalChunks.keys.sorted()
     }
 }
