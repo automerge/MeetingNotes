@@ -27,12 +27,9 @@ public actor NetworkSubsystem {
     // TODO: revisit this and consider if the callbacks to repo should be exposed as a delegate
     weak var repo: Repo?
     var adapters: [any NetworkProvider]
-//    let combinedNetworkEvents: AsyncChannel<NetworkAdapterEvents>
-//    var _backgroundNetworkReaderTasks: [Task<Void, Never>] = []
 
     init() {
         self.adapters = []
-//        combinedNetworkEvents = AsyncChannel()
     }
 
     func setRepo(_ repo: Repo) async {
@@ -45,15 +42,6 @@ public actor NetworkSubsystem {
         }
         await adapter.setDelegate(self)
         self.adapters.append(adapter)
-//        do {
-//            try await adapter.connect(asPeer: repo.peerId, localMetaData: repo.localPeerMetadata)
-//            // adapter's peer metadata is set after connect returns
-//            if let connectedPeer = await adapter.connectedPeer {
-//                await repo.addPeerWithMetadata(peer: connectedPeer, metadata: adapter.peerMetadata)
-//            }
-//        } catch {
-//            Logger.network.warning("Connect request failed: \(error.localizedDescription, privacy: .public)")
-//        }
     }
 
     func startRemoteFetch(id: DocumentId) async throws {
@@ -90,13 +78,7 @@ public actor NetworkSubsystem {
         }
     }
 
-//    func broadcast(message: SyncV1Msg) async {
-//        for n in adapters {
-//            await n.send(message: message)
-//        }
-//    }
-
-    func send(message: SyncV1Msg, to: PEER_ID) async {
+    func send(message: SyncV1Msg, to: PEER_ID?) async {
         for adapter in adapters {
             await adapter.send(message: message, to: to)
         }

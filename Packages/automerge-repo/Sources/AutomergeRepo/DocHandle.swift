@@ -59,10 +59,19 @@ struct DocHandle: Sendable {
         // isNew is when we're creating content and it needs to get stored locally in a storage
         // provider, if available.
         if isNew {
-            self.state = .loading
-        } else {
+            if let newDoc = initialValue {
+                self._doc = newDoc
+                self.state = .loading
+            } else {
+                self._doc = nil
+                self.state = .idle
+            }
+        } else if let newDoc = initialValue {
+            self._doc = newDoc
             self.state = .ready
-            self._doc = initialValue ?? Document()
+        } else {
+            self._doc = nil
+            self.state = .idle
         }
     }
 

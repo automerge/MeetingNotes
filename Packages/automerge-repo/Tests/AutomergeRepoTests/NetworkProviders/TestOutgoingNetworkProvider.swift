@@ -1,4 +1,5 @@
 import Automerge
+import AutomergeRepo
 import Foundation
 
 public struct TestOutgoingNetworkConfiguration: Sendable, CustomDebugStringConvertible {
