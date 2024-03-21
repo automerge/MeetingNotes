@@ -40,24 +40,24 @@ public actor NetworkSubsystem {
     }
 
     func addAdapter(adapter: some NetworkProvider) async {
-        guard let repo else {
+        guard repo != nil else {
             fatalError("NO REPO CONFIGURED WHEN ADDING ADAPTERS")
         }
-        await adapter.setDelegate(something: self)
+        await adapter.setDelegate(self)
         self.adapters.append(adapter)
-        do {
-            try await adapter.connect(asPeer: repo.peerId, localMetaData: repo.localPeerMetadata)
-            // adapter's peer metadata is set after connect returns
-            if let connectedPeer = await adapter.connectedPeer {
-                await repo.addPeerWithMetadata(peer: connectedPeer, metadata: adapter.peerMetadata)
-            }
-        } catch {
-            Logger.network.warning("Connect request failed: \(error.localizedDescription, privacy: .public)")
-        }
+//        do {
+//            try await adapter.connect(asPeer: repo.peerId, localMetaData: repo.localPeerMetadata)
+//            // adapter's peer metadata is set after connect returns
+//            if let connectedPeer = await adapter.connectedPeer {
+//                await repo.addPeerWithMetadata(peer: connectedPeer, metadata: adapter.peerMetadata)
+//            }
+//        } catch {
+//            Logger.network.warning("Connect request failed: \(error.localizedDescription, privacy: .public)")
+//        }
     }
 
     func startRemoteFetch(id: DocumentId) async throws {
-        // attempt to fetch the provided document Id from all peers, returning the document
+        // attempt to fetch the provided document Id from all (current) peers, returning the document
         // or returning nil if the document is unavailable.
         // Save the throwing scenarios for failures in connection, etc.
         guard let repo else {
@@ -65,28 +65,27 @@ public actor NetworkSubsystem {
             fatalError("DocHandle isn't available from the repo")
         }
 
-        try await allNetworksReady()
         let newDocument = Document()
         for adapter in adapters {
-            guard let connectedPeer = await adapter.connectedPeer else {
-                Logger.network.warning("Adapter \(adapter.description) doesn't have a connected peer")
-                return
-            }
-            // upsert the requested document into the list by peer
-            if var existingList = requestedDocuments[id] {
-                existingList.append(connectedPeer)
-                requestedDocuments[id] = existingList
-            } else {
-                requestedDocuments[id] = [connectedPeer]
-            }
-            let syncState = await repo.syncState(id: id, peer: connectedPeer)
-            if let syncRequestData = newDocument.generateSyncMessage(state: syncState) {
-                await adapter.send(message: .request(SyncV1Msg.RequestMsg(
-                    documentId: id.description,
-                    senderId: adapter.peerId,
-                    targetId: connectedPeer,
-                    sync_message: syncRequestData
-                )))
+            for peerConnection in await adapter.connections {
+                // upsert the requested document into the list by peer
+                if var existingList = requestedDocuments[id] {
+                    existingList.append(peerConnection.peerId)
+                    requestedDocuments[id] = existingList
+                } else {
+                    requestedDocuments[id] = [peerConnection.peerId]
+                }
+                // get a current sync state (creating one if needed for a fresh sync)
+                let syncState = await repo.syncState(id: id, peer: peerConnection.peerId)
+
+                if let syncRequestData = newDocument.generateSyncMessage(state: syncState) {
+                    await adapter.send(message: .request(SyncV1Msg.RequestMsg(
+                        documentId: id.description,
+                        senderId: adapter.peerId,
+                        targetId: peerConnection.peerId,
+                        sync_message: syncRequestData
+                    )), to: peerConnection.peerId)
+                }
             }
         }
     }
@@ -99,30 +98,7 @@ public actor NetworkSubsystem {
 
     func send(message: SyncV1Msg, to: PEER_ID) async {
         for adapter in adapters {
-            if let connectedPeer = await adapter.connectedPeer {
-                if connectedPeer == to {
-                    await adapter.send(message: message)
-                }
-            }
-        }
-    }
-
-    // async waits until underlying networks are connected and ready to send and receive messages
-    // (aka all networks are connected and "peered")
-    func isReady() async -> Bool {
-        for adapter in adapters {
-            if await !adapter.ready() {
-                return false
-            }
-        }
-        return true
-    }
-
-    func allNetworksReady() async throws {
-        var currentlyReady = await self.isReady()
-        while currentlyReady != true {
-            try await Task.sleep(for: .milliseconds(500))
-            currentlyReady = await self.isReady()
+            await adapter.send(message: message, to: to)
         }
     }
 }
@@ -191,11 +167,14 @@ extension NetworkSubsystem: NetworkEventReceiver {
                     } else {
                         // handle the scenario where we started with more adapters but
                         // lost a connection...
+
                         var currentConnectedPeers: [PEER_ID] = []
                         for adapter in self.adapters {
-                            if let connectedPeer = await adapter.connectedPeer {
-                                currentConnectedPeers.append(connectedPeer)
-                            }
+                            let connectedPeers: [PEER_ID] = await adapter.connections
+                                .map { peerConnection in
+                                    peerConnection.peerId
+                                }
+                            currentConnectedPeers.append(contentsOf: connectedPeers)
                         }
                         let stillPending = remainingPeersPending.compactMap { peerId in
                             if currentConnectedPeers.contains(peerId) {
