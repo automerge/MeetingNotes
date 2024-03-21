@@ -39,46 +39,57 @@ import Automerge
 /// return an ``SyncV1/error(_:)`` message, close the connection, and emit ``NetworkAdapterEvents/close``.
 /// - When any other message is received, it is emitted with ``NetworkAdapterEvents/message(payload:)``.
 /// - When the transport receives a `leave` message, close the connection and emit ``NetworkAdapterEvents/close``.
-public protocol NetworkProvider<ProviderConfiguration>: Sendable, Identifiable, CustomStringConvertible {
-    /// The peer Id of the local instance.
-    ///
-    /// Identical to the `peerId` property.
-    var id: PEER_ID { get }
-    var description: String { get }
+public protocol NetworkProvider<ProviderConfiguration>: Sendable {
     /// The peer Id of the local instance.
     var peerId: PEER_ID { get async }
 
-    /// The optional metadata associated with this peer's presentation.
-    var peerMetadata: PeerMetadata? { get async } // this is set AFTER connect
-    /// The peer Id of the remote
-    var connectedPeer: PEER_ID? { get async } // this is set AFTER connect
+    /// A list of all active, peered connections that the provider is maintaining.
+    ///
+    /// For an outgoing connection, this is typically a single connection.
+    /// For a listening connection, this could be quite a few.
+    var connections: [PeerConnection] { get async }
 
     /// The type used to configure an instance of a Network Provider.
     associatedtype ProviderConfiguration: Sendable
 
+    /// For outgoing connections, the type that represents the endpoint to connect
+    /// For example, it could be `URL`, `NWEndpoint` for a Bonjour network, or a custom type.
+    associatedtype NetworkConnectionEndpoint: Sendable
+
     /// Configure the network provider.
-    ///
-    /// For connecting providers, this may include enabling automatic reconnection, as well as relevant timeouts for
-    /// connections.
     /// - Parameter _: the configuration for the network provider.
+    ///
+    /// After a NetworkProvider is configured, it is expected to have a local peerId and (optionally) peerMetaData.
+    /// This can be provided in the initializer, or established with the `configure` call.
+    ///
+    /// For connecting providers, this may include enabling or disabling automatic reconnection,
+    /// as well as relevant timeouts for connections.
     func configure(_ config: ProviderConfiguration) async
 
-    /// Initiate a connection.
-    func connect(asPeer: PEER_ID, localMetaData: PeerMetadata?) async throws // aka "activate"
+    /// Initiate an outgoing connection.
+    func connect(to: NetworkConnectionEndpoint) async throws // aka "activate"
 
     /// Disconnect and terminate any existing connection.
     func disconnect() async // aka "deactivate"
 
-    /// Returns a Boolean value that indicates whether the network adapter is connected.
-    func ready() async -> Bool
-
     /// Requests the network transport to send a message.
     /// - Parameter message: The message to send.
-    func send(message: SyncV1Msg) async
+    /// - Parameter to: An option peerId to identify the recipient for the message. If nil, the message is sent to all
+    /// connected peers.
+    func send(message: SyncV1Msg, to: PEER_ID?) async
 
-    func setDelegate(something: any NetworkEventReceiver) async
+    /// Called by a connection to process an event.
+    /// - Parameter msg: The message to process.
+    func receiveMessage(msg: SyncV1Msg) async
+
+    /// Sets the delegate for a Network Provider
+    /// - Parameter to: The instance that accepts asynchronous network events from the provider.
+    func setDelegate(_ to: any NetworkEventReceiver) async
 }
 
+/// A type that accepts provides a method for a Network Provider to call with network events.
 public protocol NetworkEventReceiver: Sendable {
+    /// Receive and process an event from a Network Provider.
+    /// - Parameter event: The event to process.
     func receiveEvent(event: NetworkAdapterEvents) async
 }
