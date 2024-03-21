@@ -1,12 +1,11 @@
 import Automerge
+import AutomergeRepo
 import Foundation
 import OSLog
 
 extension Logger {
     static let testNetwork = Logger(subsystem: "InMemoryNetwork", category: "testNetwork")
 }
-
-public struct InMemoryNetworkConfiguration: Sendable {}
 
 enum InMemoryNetworkErrors: Sendable {
     public struct NoSuchEndpoint: Sendable, LocalizedError {
@@ -235,7 +234,15 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     }
 
     var endpoints: [String: InMemoryNetworkEndpoint] = [:]
-    var connections: [InMemoryNetworkConnection] = []
+    var simulatedConnections: [InMemoryNetworkConnection] = []
+
+    public func networkEndpoint(named: String) -> InMemoryNetworkEndpoint? {
+        endpoints[named]
+    }
+
+    public func connections() -> [InMemoryNetworkConnection] {
+        simulatedConnections
+    }
 
     // MARK: TESTING SPECIFIC API
 
@@ -248,16 +255,12 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
         await x.configure(config)
     }
 
-    public func networkEndpoint(named: String) -> InMemoryNetworkEndpoint? {
-        endpoints[named]
-    }
-
     public func connect(from: String, to: String, latency: Duration?) async throws -> InMemoryNetworkConnection {
         if let initiator = networkEndpoint(named: from), let destination = networkEndpoint(named: to),
            await destination.listening == true
         {
             let newConnection = await InMemoryNetworkConnection(from: initiator, to: destination, latency: latency)
-            connections.append(newConnection)
+            simulatedConnections.append(newConnection)
             await destination.acceptNewConnection(newConnection)
             return newConnection
         } else {
@@ -266,15 +269,23 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     }
 
     public func terminateConnection(_ id: UUID) async {
-        if let connectionIndex = connections.firstIndex(where: { $0.id == id }) {
-            let connection = connections[connectionIndex]
+        if let connectionIndex = simulatedConnections.firstIndex(where: { $0.id == id }) {
+            let connection = simulatedConnections[connectionIndex]
             await connection.close()
-            connections.remove(at: connectionIndex)
+            simulatedConnections.remove(at: connectionIndex)
         }
     }
 
     public func messagesReceivedBy(name: String) async -> [SyncV1Msg] {
         if let msgs = await self.endpoints[name]?.received_messages {
+            msgs
+        } else {
+            []
+        }
+    }
+
+    public func messagesSentBy(name: String) async -> [SyncV1Msg] {
+        if let msgs = await self.endpoints[name]?.sent_messages {
             msgs
         } else {
             []
@@ -287,9 +298,9 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
             await endpoint.wipe()
         }
 
-        for connection in connections {
+        for connection in simulatedConnections {
             await connection.close()
         }
-        connections = []
+        simulatedConnections = []
     }
 }

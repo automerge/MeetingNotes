@@ -1,3 +1,4 @@
+import AutomergeRepo
 import struct Foundation.Data
 import struct Foundation.UUID
 

@@ -1,10 +1,11 @@
 import Automerge
 @testable import AutomergeRepo
+import AutomergeUtilities
 import XCTest
 
 final class StorageSubsystemTests: XCTestCase {
     var subsystem: DocumentStorage!
-    var testStorageProvider: InMemoryStorage?
+    var testStorageProvider: InMemoryStorage!
 
     override func setUp() async throws {
         let storageProvider = await InMemoryStorage()
@@ -49,7 +50,7 @@ final class StorageSubsystemTests: XCTestCase {
         XCTAssertEqual(combinedKeys?.count, 1)
         XCTAssertEqual(combinedKeys?[0].id, newDocId)
         XCTAssertEqual(combinedKeys?[0].prefix, "incrChanges")
-        let incData = await testStorageProvider?.loadRange(id: newDocId, prefix: "incrChanges")
+        let incData: [Data]? = await testStorageProvider?.loadRange(id: newDocId, prefix: "incrChanges")
         let incDataUnwrapped = try XCTUnwrap(incData)
         XCTAssertEqual(incDataUnwrapped.count, 1)
         XCTAssertEqual(incDataUnwrapped[0].count, 0)
@@ -80,5 +81,19 @@ final class StorageSubsystemTests: XCTestCase {
         if let incrementals = await testStorageProvider?.loadRange(id: newDocId, prefix: subsystem.chunkNamespace) {
             print(incrementals)
         }
+    }
+
+    func testSubsystemLoadDoc() async throws {
+        let newDoc = Document()
+        let newDocId = DocumentId()
+        let txt = try newDoc.putObject(obj: .ROOT, key: "words", ty: .Text)
+        try newDoc.updateText(obj: txt, value: "Hello World!")
+        try await subsystem.saveDoc(id: newDocId, doc: newDoc)
+        let originalContents = try newDoc.parseToSchema(newDoc, from: .ROOT)
+
+        let doc = try await subsystem.loadDoc(id: newDocId)
+        let loadedContents = try doc.parseToSchema(doc, from: .ROOT)
+
+        XCTAssertEqual(originalContents, loadedContents)
     }
 }

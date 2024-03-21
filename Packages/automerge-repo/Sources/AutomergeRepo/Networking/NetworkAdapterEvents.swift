@@ -1,11 +1,20 @@
 public struct PeerConnection: Sendable {
-    let peerId: PEER_ID
-    let peerMetadata: PeerMetadata?
+    public let peerId: PEER_ID
+    public let peerMetadata: PeerMetadata?
+
+    public init(peerId: PEER_ID, peerMetadata: PeerMetadata?) {
+        self.peerId = peerId
+        self.peerMetadata = peerMetadata
+    }
 }
 
 public enum NetworkAdapterEvents: Sendable {
     public struct PeerDisconnectPayload: Sendable { // handled by Repo, relevant to Sync
         let peerId: PEER_ID
+
+        public init(peerId: PEER_ID) {
+            self.peerId = peerId
+        }
     }
 
     case ready(payload: PeerConnection) // a network connection has been established and peered - sent by both listening

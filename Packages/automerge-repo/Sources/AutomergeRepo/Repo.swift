@@ -2,6 +2,13 @@ import Automerge
 import Foundation
 import OSLog
 
+/// A type that accepts ephemeral messages as they arrive from connected network peers.
+public protocol EphemeralMessageDelegate: Sendable {
+    /// Receive and process an event from a Network Provider.
+    /// - Parameter event: The event to process.
+    func receiveEphemeralMessage(_ msg: SyncV1Msg.EphemeralMsg) async
+}
+
 public actor Repo {
     public let peerId: PEER_ID
     public let localPeerMetadata: PeerMetadata
@@ -41,6 +48,8 @@ public actor Repo {
 //      #subscribedDocsByPeer: Map<PeerId, Set<DocumentId>> = new Map()
 
     private var remoteHeadsGossipingEnabled = false
+
+    private var _ephemeralMessageDelegate: (any EphemeralMessageDelegate)?
 
     // REPO
     // https://github.com/automerge/automerge-repo/blob/main/packages/automerge-repo/src/Repo.ts
@@ -94,6 +103,10 @@ public actor Repo {
         }
     }
 
+    public func setDelegate(_ delegate: some EphemeralMessageDelegate) {
+        self._ephemeralMessageDelegate = delegate
+    }
+
     public func documentIds() async -> [DocumentId] {
         handles.values
             .filter { handle in
@@ -125,6 +138,12 @@ public actor Repo {
 
     func removePeer(peer: PEER_ID) {
         peerMetadataByPeerId.removeValue(forKey: peer)
+    }
+
+    // MARK: Handle pass-back of Ephemeral Messages
+
+    func handleEphemeralMessage(_ msg: SyncV1Msg.EphemeralMsg) async {
+        await self._ephemeralMessageDelegate?.receiveEphemeralMessage(msg)
     }
 
     // MARK: Synchronization Pieces - For Network Subsystem Access
