@@ -37,8 +37,8 @@ final class RepoTests: XCTestCase {
 
     func testCreateWithId() async throws {
         let myId = DocumentId()
-        let (id, _) = try await repo.create(id: myId)
-        XCTAssertEqual(myId, id)
+        let handle = try await repo.create(id: myId)
+        XCTAssertEqual(myId, handle.id)
 
         let knownIds = await repo.documentIds()
         XCTAssertEqual(knownIds.count, 1)
@@ -46,10 +46,10 @@ final class RepoTests: XCTestCase {
     }
 
     func testCreateWithExistingDoc() async throws {
-        let (id, _) = try await repo.create(doc: Document())
+        let handle = try await repo.create(doc: Document())
         var knownIds = await repo.documentIds()
         XCTAssertEqual(knownIds.count, 1)
-        XCTAssertEqual(knownIds[0], id)
+        XCTAssertEqual(knownIds[0], handle.id)
 
         let myId = DocumentId()
         let _ = try await repo.create(doc: Document(), id: myId)
@@ -59,11 +59,11 @@ final class RepoTests: XCTestCase {
 
     func testFind() async throws {
         let myId = DocumentId()
-        let (id, newDoc) = try await repo.create(id: myId)
-        XCTAssertEqual(myId, id)
+        let handle = try await repo.create(id: myId)
+        XCTAssertEqual(myId, handle.id)
 
         let foundDoc = try await repo.find(id: myId)
-        XCTAssertEqual(foundDoc.actor, newDoc.actor)
+        XCTAssertEqual(foundDoc.doc.actor, handle.doc.actor)
     }
 
     func testFindFailed() async throws {
@@ -91,12 +91,12 @@ final class RepoTests: XCTestCase {
 
     func testClone() async throws {
         let myId = DocumentId()
-        let (id, myCreatedDoc) = try await repo.create(id: myId)
-        XCTAssertEqual(myId, id)
+        let handle = try await repo.create(id: myId)
+        XCTAssertEqual(myId, handle.id)
 
-        let (newId, clonedDoc) = try await repo.clone(id: myId)
-        XCTAssertNotEqual(newId, id)
-        XCTAssertNotEqual(myCreatedDoc.actor, clonedDoc.actor)
+        let clonedHandle = try await repo.clone(id: myId)
+        XCTAssertNotEqual(handle.id, clonedHandle.id)
+        XCTAssertNotEqual(handle.doc.actor, clonedHandle.doc.actor)
 
         let knownIds = await repo.documentIds()
         XCTAssertEqual(knownIds.count, 2)

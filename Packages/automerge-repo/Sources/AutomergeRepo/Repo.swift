@@ -13,7 +13,7 @@ public actor Repo {
     public let peerId: PEER_ID
     public var localPeerMetadata: PeerMetadata
     // to replace DocumentSyncCoordinator
-    private var handles: [DocumentId: DocHandle] = [:]
+    private var handles: [DocumentId: InternalDocHandle] = [:]
     private var storage: DocumentStorage?
     private var network: NetworkSubsystem
 
@@ -158,15 +158,15 @@ public actor Repo {
             // If we have the document, see if we're agreeable to sending a copy
             if await sharePolicy.share(peer: msg.senderId, docId: docId) {
                 do {
-                    let doc = try await self.resolveDocHandle(id: docId)
+                    let handle = try await self.resolveDocHandle(id: docId)
                     let syncState = self.syncState(id: docId, peer: msg.senderId)
                     // Apply the request message as a sync update
-                    try doc.receiveSyncMessage(state: syncState, message: msg.data)
+                    try handle.doc.receiveSyncMessage(state: syncState, message: msg.data)
                     // Stash the updated document and sync state
-                    await self.updateDoc(id: docId, doc: doc)
+                    await self.updateDoc(id: docId, doc: handle.doc)
                     await self.updateSyncState(id: docId, peer: msg.senderId, syncState: syncState)
                     // Attempt to generate a sync message to reply
-                    if let syncData = doc.generateSyncMessage(state: syncState) {
+                    if let syncData = handle.doc.generateSyncMessage(state: syncState) {
                         let syncMsg: SyncV1Msg = .sync(.init(
                             documentId: docId.description,
                             senderId: self.peerId,
@@ -209,15 +209,15 @@ public actor Repo {
             // If we have the document, see if we're agreeable to sending a copy
             if await sharePolicy.share(peer: msg.senderId, docId: docId) {
                 do {
-                    let doc = try await self.resolveDocHandle(id: docId)
+                    let handle = try await self.resolveDocHandle(id: docId)
                     let syncState = self.syncState(id: docId, peer: msg.senderId)
                     // Apply the request message as a sync update
-                    try doc.receiveSyncMessage(state: syncState, message: msg.data)
+                    try handle.doc.receiveSyncMessage(state: syncState, message: msg.data)
                     // Stash the updated doc and sync state
-                    await self.updateDoc(id: docId, doc: doc)
+                    await self.updateDoc(id: docId, doc: handle.doc)
                     await self.updateSyncState(id: docId, peer: msg.senderId, syncState: syncState)
                     // Attempt to generate a sync message to reply
-                    if let syncData = doc.generateSyncMessage(state: syncState) {
+                    if let syncData = handle.doc.generateSyncMessage(state: syncState) {
                         let syncMsg: SyncV1Msg = .sync(.init(
                             documentId: docId.description,
                             senderId: self.peerId,
@@ -254,66 +254,66 @@ public actor Repo {
 
     /// Creates a new Automerge document, storing it and sharing the creation with connected peers.
     /// - Returns: The Automerge document.
-    public func create() async throws -> (DocumentId, Document) {
-        let handle = DocHandle(id: DocumentId(), isNew: true, initialValue: Document())
+    public func create() async throws -> DocHandle {
+        let handle = InternalDocHandle(id: DocumentId(), isNew: true, initialValue: Document())
         self.handles[handle.id] = handle
         let resolved = try await resolveDocHandle(id: handle.id)
-        return (handle.id, resolved)
+        return resolved
     }
 
     /// Creates a new Automerge document, storing it and sharing the creation with connected peers.
     /// - Returns: The Automerge document.
     /// - Parameter id: The Id of the Automerge document.
-    public func create(id: DocumentId) async throws -> (DocumentId, Document) {
-        let handle = DocHandle(id: id, isNew: true, initialValue: Document())
+    public func create(id: DocumentId) async throws -> DocHandle {
+        let handle = InternalDocHandle(id: id, isNew: true, initialValue: Document())
         self.handles[handle.id] = handle
         let resolved = try await resolveDocHandle(id: handle.id)
-        return (id, resolved)
+        return resolved
     }
 
     /// Creates a new Automerge document, storing it and sharing the creation with connected peers.
     /// - Parameter doc: The Automerge document to use for the new, shared document
     /// - Returns: The Automerge document.
-    public func create(doc: Document, id: DocumentId? = nil) async throws -> (DocumentId, Document) {
+    public func create(doc: Document, id: DocumentId? = nil) async throws -> DocHandle {
         let creationId = id ?? DocumentId()
-        let handle = DocHandle(id: creationId, isNew: true, initialValue: doc)
+        let handle = InternalDocHandle(id: creationId, isNew: true, initialValue: doc)
         self.handles[handle.id] = handle
         let resolved = try await resolveDocHandle(id: handle.id)
-        return (handle.id, resolved)
+        return resolved
     }
 
     /// Creates a new Automerge document, storing it and sharing the creation with connected peers.
     /// - Parameter data: The data to load as an Automerge document for the new, shared document.
     /// - Returns: The Automerge document.
-    public func create(data: Data, id: DocumentId? = nil) async throws -> (DocumentId, Document) {
+    public func create(data: Data, id: DocumentId? = nil) async throws -> DocHandle {
         let creationId = id ?? DocumentId()
-        let handle = try DocHandle(id: creationId, isNew: true, initialValue: Document(data))
+        let handle = try InternalDocHandle(id: creationId, isNew: true, initialValue: Document(data))
         self.handles[handle.id] = handle
         let resolved = try await resolveDocHandle(id: handle.id)
-        return (handle.id, resolved)
+        return resolved
     }
 
     /// Clones a document the repo already knows to create a new, shared document.
     /// - Parameter id: The id of the document to clone.
     /// - Returns: The Automerge document.
-    public func clone(id: DocumentId) async throws -> (DocumentId, Document) {
-        let originalDoc = try await resolveDocHandle(id: id)
-        let fork = originalDoc.fork()
+    public func clone(id: DocumentId) async throws -> DocHandle {
+        let handle = try await resolveDocHandle(id: id)
+        let fork = handle.doc.fork()
         let newId = DocumentId()
-        let newHandle = DocHandle(id: newId, isNew: false, initialValue: fork)
+        let newHandle = InternalDocHandle(id: newId, isNew: false, initialValue: fork)
         handles[newHandle.id] = newHandle
         let resolved = try await resolveDocHandle(id: newHandle.id)
-        return (newHandle.id, resolved)
+        return resolved
     }
 
-    public func find(id: DocumentId) async throws -> Document {
+    public func find(id: DocumentId) async throws -> DocHandle {
         // generally of the idea that we'll drive DocHandle state updates from within Repo
         // and these async methods
-        let handle: DocHandle
+        let handle: InternalDocHandle
         if let knownHandle = handles[id] {
             handle = knownHandle
         } else {
-            let newHandle = DocHandle(id: id, isNew: false)
+            let newHandle = InternalDocHandle(id: id, isNew: false)
             handles[id] = newHandle
             handle = newHandle
         }
@@ -340,20 +340,17 @@ public actor Repo {
     /// - Parameter id: The id of the document to export.
     /// - Returns: The latest, compacted data of the Automerge document.
     public func export(id: DocumentId) async throws -> Data {
-        let doc = try await self.resolveDocHandle(id: id)
-        return doc.save()
+        let handle = try await self.resolveDocHandle(id: id)
+        return handle.doc.save()
     }
 
     /// Imports data as a new Automerge document
     /// - Parameter data: The data to import as an Automerge document
     /// - Returns: The id of the document that was created on import.
-    public func `import`(data: Data) async throws -> DocumentId {
-        let handle = try DocHandle(id: DocumentId(), isNew: true, initialValue: Document(data))
+    public func `import`(data: Data) async throws -> DocHandle {
+        let handle = try InternalDocHandle(id: DocumentId(), isNew: true, initialValue: Document(data))
         self.handles[handle.id] = handle
-        Task.detached {
-            let _ = try await self.resolveDocHandle(id: handle.id)
-        }
-        return handle.id
+        return try await self.resolveDocHandle(id: handle.id)
     }
 
     public func subscribeToRemotes(remotes _: [STORAGE_ID]) async {}
@@ -436,19 +433,19 @@ public actor Repo {
         let doc1 = try await resolveDocHandle(id: handle1.id)
         // Start with updating from storage changes, if any
         if let doc1Storage = try await storage?.loadDoc(id: handle1.id) {
-            try doc1.merge(other: doc1Storage)
+            try doc1.doc.merge(other: doc1Storage)
         }
 
         // merge in the provided second document from memory
         let doc2 = try await resolveDocHandle(id: handle2.id)
-        try doc1.merge(other: doc2)
+        try doc1.doc.merge(other: doc2.doc)
 
         // JUST IN CASE, try and load doc2 from storage and merge that if available
         if let doc2Storage = try await storage?.loadDoc(id: handle2.id) {
-            try doc1.merge(other: doc2Storage)
+            try doc1.doc.merge(other: doc2Storage)
         }
         // finally, update the repo
-        await self.updateDoc(id: id, doc: doc1)
+        await self.updateDoc(id: doc1.id, doc: doc1.doc)
     }
 
     private func loadFromStorage(id: DocumentId) async throws -> Document? {
@@ -465,7 +462,7 @@ public actor Repo {
         try await storage.purgeDoc(id: id)
     }
 
-    private func resolveDocHandle(id: DocumentId) async throws -> Document {
+    private func resolveDocHandle(id: DocumentId) async throws -> DocHandle {
         if var handle = handles[id] {
             switch handle.state {
             case .idle:
@@ -487,7 +484,7 @@ public actor Repo {
                     // peers there's a new document before jumping to the 'ready' state
                     handle.state = .ready
                     handles[id] = handle
-                    return docFromHandle
+                    return DocHandle(id: id, doc: docFromHandle)
                 } else {
                     // We don't have the underlying Automerge document, so attempt
                     // to load it from storage, and failing that - if the storage provider
@@ -496,7 +493,7 @@ public actor Repo {
                     if let doc = try await loadFromStorage(id: id) {
                         handle.state = .ready
                         handles[id] = handle
-                        return doc
+                        return DocHandle(id: id, doc: doc)
                     } else {
                         handle.state = .requesting
                         handles[id] = handle
@@ -510,7 +507,7 @@ public actor Repo {
                     throw Errors.DocUnavailable(id: handle.id)
                 }
                 if let doc = updatedHandle._doc, updatedHandle.state == .ready {
-                    return doc
+                    return DocHandle(id: id, doc: doc)
                 } else {
                     guard let previousRequests = pendingRequestReadAttempts[id] else {
                         throw Errors.DocUnavailable(id: id)
@@ -526,7 +523,7 @@ public actor Repo {
                 }
             case .ready:
                 guard let doc = handle._doc else { fatalError("DocHandle state is ready, but ._doc is null") }
-                return doc
+                return DocHandle(id: id, doc: doc)
             case .unavailable:
                 throw Errors.DocUnavailable(id: handle.id)
             case .deleted:

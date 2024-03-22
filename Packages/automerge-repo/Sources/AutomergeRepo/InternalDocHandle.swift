@@ -3,6 +3,16 @@ import class Automerge.Document
 import struct Automerge.SyncState
 import struct Foundation.Data
 
+public struct DocHandle: Sendable {
+    let id: DocumentId
+    let doc: Document
+
+    init(id: DocumentId, doc: Document) {
+        self.id = id
+        self.doc = doc
+    }
+}
+
 // actor?
 // class?
 // Object intention is ONLY data storage, used by (and protected underneath) Repo - so leaning
@@ -12,7 +22,7 @@ import struct Foundation.Data
 
 // ... damnit - it's the type that's exposed to users to provide a proxy for an Automerge Document,
 // so maybe it _should_ be an actor
-struct DocHandle: Sendable {
+struct InternalDocHandle: Sendable {
     enum DocHandleState {
         case idle
         case loading
