@@ -43,7 +43,7 @@ struct DocHandle: Sendable {
      */
 
     let id: DocumentId
-    weak var _doc: Automerge.Document?
+    var _doc: Automerge.Document?
     var state: DocHandleState
     var remoteHeads: [STORAGE_ID: Set<Automerge.ChangeHash>]
     var syncStates: [PEER_ID: SyncState]

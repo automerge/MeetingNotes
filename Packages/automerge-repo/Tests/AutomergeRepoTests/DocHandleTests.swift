@@ -26,7 +26,7 @@ final class DocHandleTests: XCTestCase {
         XCTAssertEqual(new.isReady, false)
         XCTAssertEqual(new.isUnavailable, false)
         XCTAssertEqual(new.remoteHeads.count, 0)
-        XCTAssertNil(new._doc)
+        XCTAssertNotNil(new._doc)
     }
 
     func testDocHandleRequestData() async throws {
@@ -52,6 +52,6 @@ final class DocHandleTests: XCTestCase {
         XCTAssertEqual(new.isReady, true)
         XCTAssertEqual(new.isUnavailable, false)
         XCTAssertEqual(new.remoteHeads.count, 0)
-        XCTAssertNil(new._doc)
+        XCTAssertNotNil(new._doc)
     }
 }
