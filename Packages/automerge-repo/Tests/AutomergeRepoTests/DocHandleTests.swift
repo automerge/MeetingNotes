@@ -5,7 +5,7 @@ import XCTest
 final class DocHandleTests: XCTestCase {
     func testNewDocHandleData() async throws {
         let id = DocumentId()
-        let new = DocHandle(id: id, isNew: true)
+        let new = InternalDocHandle(id: id, isNew: true)
 
         XCTAssertEqual(new.id, id)
         XCTAssertEqual(new.state, .idle)
@@ -18,7 +18,7 @@ final class DocHandleTests: XCTestCase {
 
     func testNewDocHandleDataWithDocument() async throws {
         let id = DocumentId()
-        let new = DocHandle(id: id, isNew: true, initialValue: Document())
+        let new = InternalDocHandle(id: id, isNew: true, initialValue: Document())
 
         XCTAssertEqual(new.id, id)
         XCTAssertEqual(new.state, .loading)
@@ -31,7 +31,7 @@ final class DocHandleTests: XCTestCase {
 
     func testDocHandleRequestData() async throws {
         let id = DocumentId()
-        let new = DocHandle(id: id, isNew: false)
+        let new = InternalDocHandle(id: id, isNew: false)
 
         XCTAssertEqual(new.id, id)
         XCTAssertEqual(new.state, .idle)
@@ -44,7 +44,7 @@ final class DocHandleTests: XCTestCase {
 
     func testDocHandleRequestDataWithData() async throws {
         let id = DocumentId()
-        let new = DocHandle(id: id, isNew: false, initialValue: Document())
+        let new = InternalDocHandle(id: id, isNew: false, initialValue: Document())
 
         XCTAssertEqual(new.id, id)
         XCTAssertEqual(new.state, .ready)
