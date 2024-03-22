@@ -50,7 +50,7 @@ public actor NetworkSubsystem {
         // Save the throwing scenarios for failures in connection, etc.
         guard let repo else {
             // invariant that there should be a valid doc handle available from the repo
-            fatalError("DocHandle isn't available from the repo")
+            throw Errors.Unavailable(id: id)
         }
 
         let newDocument = Document()

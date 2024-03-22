@@ -11,7 +11,7 @@ public protocol EphemeralMessageDelegate: Sendable {
 
 public actor Repo {
     public let peerId: PEER_ID
-    public let localPeerMetadata: PeerMetadata
+    public var localPeerMetadata: PeerMetadata
     // to replace DocumentSyncCoordinator
     private var handles: [DocumentId: DocHandle] = [:]
     private var storage: DocumentStorage?
@@ -78,29 +78,29 @@ public actor Repo {
     // - func subscribeToRemotes([StorageId])
 
     init(
-        storageProvider: (some StorageProvider)? = nil,
-        networkAdapters: [any NetworkProvider] = [],
         sharePolicy: some SharePolicy
-    ) async {
+    ) {
         self.peerId = UUID().uuidString
         self.handles = [:]
         self.peerMetadataByPeerId = [:]
-        self.localPeerMetadata = await PeerMetadata(storageId: storage?.id, isEphemeral: storageProvider == nil)
-        if let provider = storageProvider {
-            self.storage = DocumentStorage(provider)
-        } else {
-            self.storage = nil
-        }
+        self.storage = nil
+        self.localPeerMetadata = PeerMetadata(storageId: nil, isEphemeral: true)
         self.sharePolicy = sharePolicy
         self.network = NetworkSubsystem()
-        // ALL STORED PROPERTIES ARE SET BY HERE
+    }
 
-        // TODO: load up any persistent data from the storage...
+    public func addStorageProvider(_ provider: some StorageProvider) {
+        self.storage = DocumentStorage(provider)
+        self.localPeerMetadata = PeerMetadata(storageId: provider.id, isEphemeral: false)
+    }
 
-        await self.network.setRepo(self)
-        for adapter in networkAdapters {
-            await network.addAdapter(adapter: adapter)
+    /// Add a configured network provider to the repo
+    /// - Parameter adapter: <#adapter description#>
+    public func addNetworkAdapter(adapter: any NetworkProvider) async {
+        if await self.network.repo == nil {
+            await self.network.setRepo(self)
         }
+        await network.addAdapter(adapter: adapter)
     }
 
     public func setDelegate(_ delegate: some EphemeralMessageDelegate) {
@@ -254,40 +254,56 @@ public actor Repo {
 
     /// Creates a new Automerge document, storing it and sharing the creation with connected peers.
     /// - Returns: The Automerge document.
-    public func create() async throws -> Document {
+    public func create() async throws -> (DocumentId, Document) {
         let handle = DocHandle(id: DocumentId(), isNew: true, initialValue: Document())
         self.handles[handle.id] = handle
-        return try await resolveDocHandle(id: handle.id)
+        let resolved = try await resolveDocHandle(id: handle.id)
+        return (handle.id, resolved)
+    }
+
+    /// Creates a new Automerge document, storing it and sharing the creation with connected peers.
+    /// - Returns: The Automerge document.
+    /// - Parameter id: The Id of the Automerge document.
+    public func create(id: DocumentId) async throws -> (DocumentId, Document) {
+        let handle = DocHandle(id: id, isNew: true, initialValue: Document())
+        self.handles[handle.id] = handle
+        let resolved = try await resolveDocHandle(id: handle.id)
+        return (id, resolved)
     }
 
     /// Creates a new Automerge document, storing it and sharing the creation with connected peers.
     /// - Parameter doc: The Automerge document to use for the new, shared document
     /// - Returns: The Automerge document.
-    public func create(doc: Document) async throws -> Document {
-        let handle = DocHandle(id: DocumentId(), isNew: true, initialValue: doc)
+    public func create(doc: Document, id: DocumentId? = nil) async throws -> (DocumentId, Document) {
+        let creationId = id ?? DocumentId()
+        let handle = DocHandle(id: creationId, isNew: true, initialValue: doc)
         self.handles[handle.id] = handle
-        return try await resolveDocHandle(id: handle.id)
+        let resolved = try await resolveDocHandle(id: handle.id)
+        return (handle.id, resolved)
     }
 
     /// Creates a new Automerge document, storing it and sharing the creation with connected peers.
     /// - Parameter data: The data to load as an Automerge document for the new, shared document.
     /// - Returns: The Automerge document.
-    public func create(data: Data) async throws -> Document {
-        let handle = try DocHandle(id: DocumentId(), isNew: true, initialValue: Document(data))
+    public func create(data: Data, id: DocumentId? = nil) async throws -> (DocumentId, Document) {
+        let creationId = id ?? DocumentId()
+        let handle = try DocHandle(id: creationId, isNew: true, initialValue: Document(data))
         self.handles[handle.id] = handle
-        return try await resolveDocHandle(id: handle.id)
+        let resolved = try await resolveDocHandle(id: handle.id)
+        return (handle.id, resolved)
     }
 
     /// Clones a document the repo already knows to create a new, shared document.
     /// - Parameter id: The id of the document to clone.
     /// - Returns: The Automerge document.
-    public func clone(id: DocumentId) async throws -> Document {
+    public func clone(id: DocumentId) async throws -> (DocumentId, Document) {
         let originalDoc = try await resolveDocHandle(id: id)
         let fork = originalDoc.fork()
         let newId = DocumentId()
         let newHandle = DocHandle(id: newId, isNew: false, initialValue: fork)
-        handles[newId] = newHandle
-        return try await resolveDocHandle(id: newId)
+        handles[newHandle.id] = newHandle
+        let resolved = try await resolveDocHandle(id: newHandle.id)
+        return (newHandle.id, resolved)
     }
 
     public func find(id: DocumentId) async throws -> Document {
@@ -345,7 +361,10 @@ public actor Repo {
     /// The storage id of this repo, if any.
     /// - Returns: The storage id from the repo's storage provider or nil.
     public func storageId() async -> STORAGE_ID? {
-        await storage?.id
+        if let storage {
+            return await storage.id
+        }
+        return nil
     }
 
     // MARK: Methods to expose retrieving DocHandles to the subsystems
@@ -459,8 +478,10 @@ public actor Repo {
                 if let docFromHandle = handle._doc {
                     // We have the document - so being in loading means "try to save this to
                     // a storage provider, if one exists", then hand it back as good.
-                    Task.detached {
-                        try await self.storage?.saveDoc(id: id, doc: docFromHandle)
+                    if let storage = self.storage {
+                        Task.detached {
+                            try await storage.saveDoc(id: id, doc: docFromHandle)
+                        }
                     }
                     // TODO: if we're allowed and prolific in gossip, notify any connected
                     // peers there's a new document before jumping to the 'ready' state

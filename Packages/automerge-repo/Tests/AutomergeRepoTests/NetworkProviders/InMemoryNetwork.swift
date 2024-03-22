@@ -247,12 +247,12 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     // MARK: TESTING SPECIFIC API
 
     public func createNetworkEndpoint(
-        named: String,
         config: InMemoryNetworkEndpoint.BasicNetworkConfiguration
-    ) async {
+    ) async -> InMemoryNetworkEndpoint {
         let x = await InMemoryNetworkEndpoint()
-        endpoints[named] = x
+        endpoints[config.name] = x
         await x.configure(config)
+        return x
     }
 
     public func connect(from: String, to: String, latency: Duration?) async throws -> InMemoryNetworkConnection {
