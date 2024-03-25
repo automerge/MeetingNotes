@@ -47,7 +47,7 @@ public protocol NetworkProvider<ProviderConfiguration>: Sendable {
     ///
     /// For an outgoing connection, this is typically a single connection.
     /// For a listening connection, this could be quite a few.
-    var connections: [PeerConnection] { get async }
+    var peeredConnections: [PeerConnection] { get async }
 
     /// The type used to configure an instance of a Network Provider.
     associatedtype ProviderConfiguration: Sendable

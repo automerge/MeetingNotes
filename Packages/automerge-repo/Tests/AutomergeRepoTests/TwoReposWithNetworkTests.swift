@@ -8,6 +8,9 @@ final class TwoReposWithNetworkTests: XCTestCase {
     var repoA: Repo!
     var repoB: Repo!
 
+    var adapterA: InMemoryNetworkEndpoint!
+    var adapterB: InMemoryNetworkEndpoint!
+
     override func setUp() async throws {
         await network.resetTestNetwork()
         repoA = Repo(sharePolicy: SharePolicies.agreeable)
@@ -16,7 +19,7 @@ final class TwoReposWithNetworkTests: XCTestCase {
         let storageId = await repoA.storageId()
         XCTAssertNil(storageId)
 
-        let adapterA = await network.createNetworkEndpoint(
+        adapterA = await network.createNetworkEndpoint(
             config: .init(
                 localPeerId: "onePeer",
                 localMetaData: nil,
@@ -30,7 +33,7 @@ final class TwoReposWithNetworkTests: XCTestCase {
         XCTAssertEqual(peersA, [])
 
         repoB = Repo(sharePolicy: SharePolicies.agreeable)
-        let adapterB = await network.createNetworkEndpoint(
+        adapterB = await network.createNetworkEndpoint(
             config: .init(
                 localPeerId: "twoPeer",
                 localMetaData: nil,
@@ -45,6 +48,9 @@ final class TwoReposWithNetworkTests: XCTestCase {
 
         let connections = await network.connections()
         XCTAssertEqual(connections.count, 0)
+
+        let endpoints = await network.endpoints
+        XCTAssertEqual(endpoints.count, 2)
     }
 
     func testMostBasicRepoStartingPoints() async throws {
@@ -60,6 +66,38 @@ final class TwoReposWithNetworkTests: XCTestCase {
 
         let knownIdsB = await repoA.documentIds()
         XCTAssertEqual(knownIdsB, knownIdsA)
+    }
+
+    func testCreateNetworkEndpoint() async throws {
+        let foo = await network.createNetworkEndpoint(
+            config: .init(
+                localPeerId: "foo",
+                localMetaData: nil,
+                listeningNetwork: false,
+                name: "Z"
+            )
+        )
+        let endpoints = await network.endpoints
+        XCTAssertEqual(endpoints.count, 3)
+        let z = endpoints["Z"]
+        XCTAssertNotNil(z)
+    }
+
+    func testConnect() async throws {
+        for e in await network.endpoints {
+            print(e)
+        }
+        try await adapterA.connect(to: "B")
+
+        let connectionIdFromA = await adapterA._connections.first?.id
+        let connectionIdFromB = await adapterB._connections.first?.id
+        XCTAssertEqual(connectionIdFromA, connectionIdFromB)
+        try print(XCTUnwrap(connectionIdFromA))
+        await print("Adapter A", adapterA._connections[0].description)
+        await print("Adapter B", adapterB._connections[0].description)
+
+        await print("A: ", adapterA.peeredConnections) // missing
+        await print("B: ", adapterB.peeredConnections)
     }
 
 //    func testCreate() async throws {
