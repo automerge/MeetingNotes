@@ -21,20 +21,32 @@ final class DocumentIdTests: XCTestCase {
 
         let invalidOptionalString: String? = "SomeRandomNonBS58String"
         XCTAssertNil(DocumentId(invalidOptionalString))
-        
+
+        let invalidString = "SomeRandomNonBS58String"
+        XCTAssertNil(DocumentId(invalidString))
+
         let optionalString: String? = bs58String
         XCTAssertEqual(DocumentId(optionalString)?.description, bs58String)
-        
+
         XCTAssertNil(DocumentId(nil))
     }
 
     func testInvalidTooMuchDataDocumentId() async throws {
         let tooBig = [UInt8](UUID().data + UUID().data)
         let bs58StringFromData = Base58.base58Encode(tooBig)
-        let x = Base58.base58Decode(bs58StringFromData)
+        let tooLargeOptionalString: String? = bs58StringFromData
         XCTAssertNil(DocumentId(bs58StringFromData))
+        XCTAssertNil(DocumentId(tooLargeOptionalString))
 
         let optionalString: String? = bs58StringFromData
         XCTAssertNil(DocumentId(optionalString))
+    }
+
+    func testComparisonOnData() async throws {
+        let first = DocumentId()
+        let second = DocumentId()
+        let compareFirstAndSecond = first < second
+        let compareFirstAndSecondDescription = first.description < second.description
+        XCTAssertEqual(compareFirstAndSecond, compareFirstAndSecondDescription)
     }
 }
