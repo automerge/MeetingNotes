@@ -55,7 +55,7 @@ public actor NetworkSubsystem {
 
         let newDocument = Document()
         for adapter in adapters {
-            for peerConnection in await adapter.connections {
+            for peerConnection in await adapter.peeredConnections {
                 // upsert the requested document into the list by peer
                 if var existingList = requestedDocuments[id] {
                     existingList.append(peerConnection.peerId)
@@ -152,7 +152,7 @@ extension NetworkSubsystem: NetworkEventReceiver {
 
                         var currentConnectedPeers: [PEER_ID] = []
                         for adapter in self.adapters {
-                            let connectedPeers: [PEER_ID] = await adapter.connections
+                            let connectedPeers: [PEER_ID] = await adapter.peeredConnections
                                 .map { peerConnection in
                                     peerConnection.peerId
                                 }

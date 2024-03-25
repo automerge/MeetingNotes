@@ -14,10 +14,24 @@ enum InMemoryNetworkErrors: Sendable {
             "Endpoint \(name) doesn't exist."
         }
     }
+
+    public struct EndpointNotListening: Sendable, LocalizedError {
+        let name: String
+        public var errorDescription: String {
+            "Endpoint \(name) isn't listening for connections."
+        }
+    }
 }
 
 @InMemoryNetwork
 public final class InMemoryNetworkConnection {
+    public var description: String { get async {
+        let i = initiatingEndpoint.endpointName ?? "?"
+        let j = receivingEndpoint.endpointName ?? "?'"
+        return "\(id.uuidString) [\(i)(\(initiatingEndpoint.peerId))] --> [\(j)(\(receivingEndpoint.peerId))])"
+    }
+    }
+
     let id: UUID
     let initiatingEndpoint: InMemoryNetworkEndpoint
     let receivingEndpoint: InMemoryNetworkEndpoint
@@ -61,7 +75,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     }
 
     init() {
-        self.connections = []
+        self.peeredConnections = []
         self._connections = []
         self.delegate = nil
         self.listening = false
@@ -86,7 +100,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
         }
     }
 
-    public var connections: [PeerConnection]
+    public var peeredConnections: [PeerConnection]
     var _connections: [InMemoryNetworkConnection]
     var delegate: (any NetworkEventReceiver)?
     var config: BasicNetworkConfiguration?
@@ -96,7 +110,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     var sent_messages: [SyncV1Msg]
 
     func wipe() {
-        self.connections = []
+        self.peeredConnections = []
         self._connections = []
         self.received_messages = []
         self.sent_messages = []
@@ -145,10 +159,11 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
             await connection.close()
         }
         _connections = []
-        connections = []
+        peeredConnections = []
     }
 
     public func receiveMessage(msg: SyncV1Msg) async {
+        Logger.testNetwork.trace("\(self.peerId) RECEIVED MSG: \(msg.debugDescription)")
         received_messages.append(msg)
         switch msg {
         case let .leave(msg):
@@ -157,7 +172,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
                 connection.initiatingEndpoint.peerId == msg.senderId ||
                     connection.receivingEndpoint.peerId == msg.senderId
             }
-            connections.removeAll { peerConnection in
+            peeredConnections.removeAll { peerConnection in
                 peerConnection.peerId == msg.senderId
             }
         case let .join(msg):
@@ -170,7 +185,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
                         )
                     )
                 )
-                connections.append(PeerConnection(peerId: msg.senderId, peerMetadata: msg.peerMetadata))
+                peeredConnections.append(PeerConnection(peerId: msg.senderId, peerMetadata: msg.peerMetadata))
                 await self.send(
                     message: .peer(
                         .init(
@@ -186,6 +201,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
                 fatalError("non-listening endpoint received a join message")
             }
         case let .peer(msg):
+            peeredConnections.append(PeerConnection(peerId: msg.senderId, peerMetadata: msg.peerMetadata))
             await self.delegate?.receiveEvent(
                 event: .ready(
                     payload: .init(
@@ -229,15 +245,15 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
 ///
 /// Acts akin to an outbound connection - doesn't "connect" and trigger messages until you explicitly ask
 @globalActor public actor InMemoryNetwork {
-    public static var shared: InMemoryNetwork {
-        InMemoryNetwork()
-    }
+    public static let shared = InMemoryNetwork()
 
+    private init() {}
     var endpoints: [String: InMemoryNetworkEndpoint] = [:]
     var simulatedConnections: [InMemoryNetworkConnection] = []
 
     public func networkEndpoint(named: String) -> InMemoryNetworkEndpoint? {
-        endpoints[named]
+        let x = endpoints[named]
+        return x
     }
 
     public func connections() -> [InMemoryNetworkConnection] {
@@ -256,9 +272,11 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     }
 
     public func connect(from: String, to: String, latency: Duration?) async throws -> InMemoryNetworkConnection {
-        if let initiator = networkEndpoint(named: from), let destination = networkEndpoint(named: to),
-           await destination.listening == true
-        {
+        if let initiator = networkEndpoint(named: from), let destination = networkEndpoint(named: to) {
+            guard await destination.listening == true else {
+                throw InMemoryNetworkErrors.EndpointNotListening(name: to)
+            }
+
             let newConnection = await InMemoryNetworkConnection(from: initiator, to: destination, latency: latency)
             simulatedConnections.append(newConnection)
             await destination.acceptNewConnection(newConnection)
