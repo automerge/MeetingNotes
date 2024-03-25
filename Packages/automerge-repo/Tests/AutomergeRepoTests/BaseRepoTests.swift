@@ -4,7 +4,6 @@ import AutomergeUtilities
 import XCTest
 
 final class BaseRepoTests: XCTestCase {
-    let network = InMemoryNetwork.shared
     var repo: Repo!
 
     override func setUp() async throws {
@@ -135,12 +134,5 @@ final class BaseRepoTests: XCTestCase {
 
         let storageId = await repoA.storageId()
         XCTAssertNotNil(storageId)
-
-//        let adapter = await network.createNetworkEndpoint(config: .init(localPeerId: "onePeer", localMetaData: nil,
-//        listeningNetwork: false, name: "A"))
-//        await repoA.addNetworkAdapter(adapter: adapter)
-//
-//        let peers = await repo.peers()
-//        XCTAssertEqual(peers, [])
     }
 }
