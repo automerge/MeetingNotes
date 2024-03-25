@@ -27,6 +27,6 @@ public extension UUID {
 
     /// The contents of UUID as a BS58 encoded string.
     var bs58String: String {
-        Base58.base58Encode(self.data.bytes)
+        Base58.base58CheckEncode(self.data.bytes)
     }
 }

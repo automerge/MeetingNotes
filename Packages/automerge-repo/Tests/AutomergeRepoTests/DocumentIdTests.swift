@@ -33,7 +33,7 @@ final class DocumentIdTests: XCTestCase {
 
     func testInvalidTooMuchDataDocumentId() async throws {
         let tooBig = [UInt8](UUID().data + UUID().data)
-        let bs58StringFromData = Base58.base58Encode(tooBig)
+        let bs58StringFromData = Base58.base58CheckEncode(tooBig)
         let tooLargeOptionalString: String? = bs58StringFromData
         XCTAssertNil(DocumentId(bs58StringFromData))
         XCTAssertNil(DocumentId(tooLargeOptionalString))
