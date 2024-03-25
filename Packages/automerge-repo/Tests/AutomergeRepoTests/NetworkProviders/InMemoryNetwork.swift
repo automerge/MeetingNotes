@@ -54,7 +54,10 @@ public final class InMemoryNetworkConnection {
             if initiatingEndpoint.endpointName == sender {
                 if let latency = transferLatency {
                     try await Task.sleep(for: latency)
-                    Logger.testNetwork.trace("XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender) with delay \(latency)")
+                    Logger.testNetwork
+                        .trace(
+                            "XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender) with delay \(latency)"
+                        )
 
                 } else {
                     Logger.testNetwork.trace("XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender)")
@@ -63,7 +66,10 @@ public final class InMemoryNetworkConnection {
             } else if receivingEndpoint.endpointName == sender {
                 if let latency = transferLatency {
                     try await Task.sleep(for: latency)
-                    Logger.testNetwork.trace("XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender) with delay \(latency)")
+                    Logger.testNetwork
+                        .trace(
+                            "XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender) with delay \(latency)"
+                        )
                 } else {
                     Logger.testNetwork.trace("XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender)")
                 }
