@@ -95,12 +95,13 @@ final class TwoReposWithNetworkTests: XCTestCase {
         let connectionIdFromA = await adapterA._connections.first?.id
         let connectionIdFromB = await adapterB._connections.first?.id
         XCTAssertEqual(connectionIdFromA, connectionIdFromB)
-        try print(XCTUnwrap(connectionIdFromA))
-        await print("Adapter A", adapterA._connections[0].description)
-        await print("Adapter B", adapterB._connections[0].description)
 
-        await print("A: ", adapterA.peeredConnections) // missing
-        await print("B: ", adapterB.peeredConnections)
+        let peersA = await adapterA.peeredConnections
+        let peersB = await adapterB.peeredConnections
+        XCTAssertFalse(peersA.isEmpty)
+        XCTAssertFalse(peersB.isEmpty)
+        print("A: ", peersA)
+        print("B: ", peersB)
     }
 
 //    func testCreate() async throws {
