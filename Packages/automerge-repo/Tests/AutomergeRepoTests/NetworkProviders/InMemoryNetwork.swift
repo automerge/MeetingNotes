@@ -315,6 +315,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
         for endpoint in self.endpoints.values {
             await endpoint.wipe()
         }
+        endpoints.removeAll()
 
         for connection in simulatedConnections {
             await connection.close()

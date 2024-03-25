@@ -13,6 +13,9 @@ final class TwoReposWithNetworkTests: XCTestCase {
 
     override func setUp() async throws {
         await network.resetTestNetwork()
+        let endpoints = await network.endpoints
+        XCTAssertEqual(endpoints.count, 0)
+
         repoA = Repo(sharePolicy: SharePolicies.agreeable)
 
         // Repo setup WITHOUT any storage subsystem
@@ -49,8 +52,8 @@ final class TwoReposWithNetworkTests: XCTestCase {
         let connections = await network.connections()
         XCTAssertEqual(connections.count, 0)
 
-        let endpoints = await network.endpoints
-        XCTAssertEqual(endpoints.count, 2)
+        let endpointRecount = await network.endpoints
+        XCTAssertEqual(endpointRecount.count, 2)
     }
 
     func testMostBasicRepoStartingPoints() async throws {
@@ -69,7 +72,7 @@ final class TwoReposWithNetworkTests: XCTestCase {
     }
 
     func testCreateNetworkEndpoint() async throws {
-        let foo = await network.createNetworkEndpoint(
+        let _ = await network.createNetworkEndpoint(
             config: .init(
                 localPeerId: "foo",
                 localMetaData: nil,
