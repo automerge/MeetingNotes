@@ -3,7 +3,7 @@ import Automerge
 import AutomergeUtilities
 import XCTest
 
-final class RepoTests: XCTestCase {
+final class BaseRepoTests: XCTestCase {
     let network = InMemoryNetwork.shared
     var repo: Repo!
 
@@ -109,9 +109,20 @@ final class RepoTests: XCTestCase {
         } catch {}
     }
 
-    func testExport() async throws {}
+    func testExport() async throws {
+        let newDoc = try RepoHelpers.documentWithData()
+        let newHandle = try await repo.create(doc: newDoc)
 
-    func testImport() async throws {}
+        let exported = try await repo.export(id: newHandle.id)
+        XCTAssertEqual(exported, newDoc.save())
+    }
+
+    func testImport() async throws {
+        let newDoc = try RepoHelpers.documentWithData()
+
+        let handle = try await repo.import(data: newDoc.save())
+        XCTAssertTrue(RepoHelpers.equalContents(doc1: handle.doc, doc2: newDoc))
+    }
 
     // TBD:
     // - func storageIdForPeer(peerId) -> StorageId

@@ -68,7 +68,7 @@ final class StorageSubsystemTests: XCTestCase {
         await assertCounts(docIds: 1, incrementals: 1)
         incSize = await combinedIncData(id: newDocId)
         var docSize = await docDataSize(id: newDocId)
-        XCTAssertEqual(docSize, 121)
+        XCTAssertEqual(docSize, 176)
         XCTAssertEqual(incSize, 0)
 
         try await subsystem.compact(id: newDocId, doc: newDoc)
@@ -76,24 +76,46 @@ final class StorageSubsystemTests: XCTestCase {
         await assertCounts(docIds: 1, incrementals: 1)
         incSize = await combinedIncData(id: newDocId)
         docSize = await docDataSize(id: newDocId)
-        XCTAssertEqual(docSize, 121)
+        XCTAssertEqual(docSize, 176)
         XCTAssertEqual(incSize, 0)
-        if let incrementals = await testStorageProvider?.loadRange(id: newDocId, prefix: subsystem.chunkNamespace) {
-            print(incrementals)
-        }
+//        if let incrementals = await testStorageProvider?.loadRange(id: newDocId, prefix: subsystem.chunkNamespace) {
+//            print(incrementals)
+//        }
     }
 
     func testSubsystemLoadDoc() async throws {
-        let newDoc = Document()
+        let newDoc = try RepoHelpers.documentWithData()
         let newDocId = DocumentId()
-        let txt = try newDoc.putObject(obj: .ROOT, key: "words", ty: .Text)
-        try newDoc.updateText(obj: txt, value: "Hello World!")
         try await subsystem.saveDoc(id: newDocId, doc: newDoc)
-        let originalContents = try newDoc.parseToSchema(newDoc, from: .ROOT)
 
-        let doc = try await subsystem.loadDoc(id: newDocId)
-        let loadedContents = try doc.parseToSchema(doc, from: .ROOT)
+        let loadedDoc = try await subsystem.loadDoc(id: newDocId)
 
-        XCTAssertEqual(originalContents, loadedContents)
+        XCTAssertTrue(RepoHelpers.equalContents(doc1: newDoc, doc2: loadedDoc))
+    }
+
+    func testSubsystemPurgeDoc() async throws {
+        let newDoc = try RepoHelpers.documentWithData()
+        let newDocId = DocumentId()
+        try await subsystem.saveDoc(id: newDocId, doc: newDoc)
+
+        await assertCounts(docIds: 0, incrementals: 1)
+        let incSize = await combinedIncData(id: newDocId)
+        let docSize = await docDataSize(id: newDocId)
+        XCTAssertEqual(docSize, 0)
+        XCTAssertEqual(incSize, 106)
+
+        try await subsystem.compact(id: newDocId, doc: newDoc)
+        await assertCounts(docIds: 1, incrementals: 1)
+        let compactedIncSize = await combinedIncData(id: newDocId)
+        let compactedDocSize = await docDataSize(id: newDocId)
+        XCTAssertEqual(compactedDocSize, 170)
+        XCTAssertEqual(compactedIncSize, 0)
+
+        try await subsystem.purgeDoc(id: newDocId)
+        await assertCounts(docIds: 0, incrementals: 1)
+        let purgedIncSize = await combinedIncData(id: newDocId)
+        let purgedDocSize = await docDataSize(id: newDocId)
+        XCTAssertEqual(purgedDocSize, 0)
+        XCTAssertEqual(purgedIncSize, 0)
     }
 }

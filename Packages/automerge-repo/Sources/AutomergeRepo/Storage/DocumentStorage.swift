@@ -152,8 +152,9 @@ public actor DocumentStorage {
     /// - Parameters:
     ///   - id: The document Id to compact
     ///   - doc: The document to compact.
-    public func compact(id: DocumentId, doc _: Document) async throws {
+    public func compact(id: DocumentId, doc: Document) async throws {
         compacting = true
+        let providedData = doc.save()
         var combined: Data = if let baseData = try await _storage.load(id: id) {
             // loading all the changes from the base document and any incremental saves available
             baseData
@@ -161,6 +162,8 @@ public actor DocumentStorage {
             // loading only incremental saves available, the base document doesn't exist in storage
             Data()
         }
+
+        combined.append(providedData)
 
         let inMemChunks: [Data] = chunks[id] ?? []
         var foundChunkHashValues: [Int] = []
