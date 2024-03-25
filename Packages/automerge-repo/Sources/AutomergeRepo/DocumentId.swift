@@ -26,7 +26,7 @@ public struct DocumentId: Sendable, Hashable, Comparable, Identifiable {
         guard let id else {
             return nil
         }
-        guard let uint_array = Base58.base58CheckDecode(id) else {
+        guard let uint_array = Base58.base58Decode(id) else {
             return nil
         }
         if uint_array.count != 16 {
@@ -38,7 +38,7 @@ public struct DocumentId: Sendable, Hashable, Comparable, Identifiable {
     /// Creates a document identifier from a string.
     /// - Parameter id: The string to use as a document identifier.
     public init?(_ id: String) {
-        guard let uint_array = Base58.base58CheckDecode(id) else {
+        guard let uint_array = Base58.base58Decode(id) else {
             return nil
         }
         if uint_array.count != 16 {
