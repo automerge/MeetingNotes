@@ -36,12 +36,14 @@ public final class InMemoryNetworkConnection {
     let initiatingEndpoint: InMemoryNetworkEndpoint
     let receivingEndpoint: InMemoryNetworkEndpoint
     let transferLatency: Duration?
+    let trace: Bool
 
-    init(from: InMemoryNetworkEndpoint, to: InMemoryNetworkEndpoint, latency: Duration?) {
+    init(from: InMemoryNetworkEndpoint, to: InMemoryNetworkEndpoint, latency: Duration?, trace: Bool) {
         self.id = UUID()
         self.initiatingEndpoint = from
         self.receivingEndpoint = to
         self.transferLatency = latency
+        self.trace = trace
     }
 
     func close() async {
@@ -54,24 +56,31 @@ public final class InMemoryNetworkConnection {
             if initiatingEndpoint.endpointName == sender {
                 if let latency = transferLatency {
                     try await Task.sleep(for: latency)
-                    Logger.testNetwork
-                        .trace(
-                            "XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender) with delay \(latency)"
-                        )
-
+                    if trace {
+                        Logger.testNetwork
+                            .trace(
+                                "XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender) with delay \(latency)"
+                            )
+                    }
                 } else {
-                    Logger.testNetwork.trace("XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender)")
+                    if trace {
+                        Logger.testNetwork.trace("XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender)")
+                    }
                 }
                 await receivingEndpoint.receiveMessage(msg: msg)
             } else if receivingEndpoint.endpointName == sender {
                 if let latency = transferLatency {
                     try await Task.sleep(for: latency)
-                    Logger.testNetwork
-                        .trace(
-                            "XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender) with delay \(latency)"
-                        )
+                    if trace {
+                        Logger.testNetwork
+                            .trace(
+                                "XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender) with delay \(latency)"
+                            )
+                    }
                 } else {
-                    Logger.testNetwork.trace("XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender)")
+                    if trace {
+                        Logger.testNetwork.trace("XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender)")
+                    }
                 }
                 await initiatingEndpoint.receiveMessage(msg: msg)
             }
@@ -99,6 +108,8 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
         // testing spies
         self.received_messages = []
         self.sent_messages = []
+        // logging control
+        self.logReceivedMessages = false
     }
 
     public func configure(_ config: BasicNetworkConfiguration) async {
@@ -121,6 +132,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     var delegate: (any NetworkEventReceiver)?
     var config: BasicNetworkConfiguration?
     var listening: Bool
+    var logReceivedMessages: Bool
 
     var received_messages: [SyncV1Msg]
     var sent_messages: [SyncV1Msg]
@@ -130,6 +142,10 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
         self._connections = []
         self.received_messages = []
         self.sent_messages = []
+    }
+
+    public func logReceivedMessages(_ enableLogging: Bool) {
+        self.logReceivedMessages = enableLogging
     }
 
     public var peerId: PEER_ID {
@@ -179,7 +195,9 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     }
 
     public func receiveMessage(msg: SyncV1Msg) async {
-        Logger.testNetwork.trace("\(self.peerId) RECEIVED MSG: \(msg.debugDescription)")
+        if logReceivedMessages {
+            Logger.testNetwork.trace("\(self.peerId) RECEIVED MSG: \(msg.debugDescription)")
+        }
         received_messages.append(msg)
         switch msg {
         case let .leave(msg):
@@ -264,8 +282,14 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     public static let shared = InMemoryNetwork()
 
     private init() {}
+
     var endpoints: [String: InMemoryNetworkEndpoint] = [:]
     var simulatedConnections: [InMemoryNetworkConnection] = []
+    var enableTracing: Bool = false
+
+    public func traceConnections(_ enableTracing: Bool) {
+        self.enableTracing = enableTracing
+    }
 
     public func networkEndpoint(named: String) -> InMemoryNetworkEndpoint? {
         let x = endpoints[named]
@@ -293,7 +317,12 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
                 throw InMemoryNetworkErrors.EndpointNotListening(name: to)
             }
 
-            let newConnection = await InMemoryNetworkConnection(from: initiator, to: destination, latency: latency)
+            let newConnection = await InMemoryNetworkConnection(
+                from: initiator,
+                to: destination,
+                latency: latency,
+                trace: self.enableTracing
+            )
             simulatedConnections.append(newConnection)
             await destination.acceptNewConnection(newConnection)
             return newConnection
