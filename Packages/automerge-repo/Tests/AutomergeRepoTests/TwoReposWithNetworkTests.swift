@@ -121,11 +121,9 @@ final class TwoReposWithNetworkTests: XCTestCase {
 
         // "GO ONLINE"
         await network.traceConnections(true)
-        try await adapterOne.connect(to: "Two")
-        // I think its expected that no syncing happens automatically -
-        // you have to explicitly ask or send a sync message to trigger that...
 
-        // However, I'm not sure about intent if you connect first and THEN create
+        try await adapterOne.connect(to: "Two")
+        #warning("Initiating sync, but not getting a response over my 'test' network")
     }
 
 //    func testFind() async throws {

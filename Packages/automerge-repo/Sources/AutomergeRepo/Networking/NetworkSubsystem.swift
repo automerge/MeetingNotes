@@ -99,8 +99,8 @@ extension NetworkSubsystem: NetworkEventReceiver {
             return
         }
         switch event {
-        case .ready:
-            break
+        case let .ready(payload):
+            await repo.addPeerWithMetadata(peer: payload.peerId, metadata: payload.peerMetadata)
         case .close:
             break
         // attempt to reconnect, or remove from active adapters?
