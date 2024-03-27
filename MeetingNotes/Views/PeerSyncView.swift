@@ -1,16 +1,18 @@
+import AutomergeRepo
 import Network
 import SwiftUI
 
 /// A view that shows the status of peers and network syncing.
+@MainActor
 struct PeerSyncView: View {
     var documentId: DocumentId
-    @ObservedObject var syncController: DocumentSyncCoordinator
+    @ObservedObject var syncController: DocumentSyncCoordinator = .shared
 
     @State var browserActive: Bool = false
     @State var browserStyling: Color = .primary
 
     @State private var editNamePopoverShown: Bool = false
-    @AppStorage(MeetingNotesDefaultKeys.sharingIdentity) private var sharingIdentity: String = DocumentSyncCoordinator
+    @AppStorage(SynchronizerDefaultKeys.publicPeerName) private var sharingIdentity: String = DocumentSyncCoordinator
         .defaultSharingIdentity()
 
     var body: some View {

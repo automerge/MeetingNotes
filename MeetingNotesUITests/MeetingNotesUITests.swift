@@ -17,6 +17,7 @@ final class MeetingNotesUITests: XCTestCase {
     }
 
     @available(macOS 14.0, iOS 17.0, *)
+    @MainActor
     func testAutomatedAccessibility() {
         // https://holyswift.app/xcode-15-new-feature-streamlined-accessibility-audits/
         let myApp = XCUIApplication()

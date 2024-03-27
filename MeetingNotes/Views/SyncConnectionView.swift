@@ -1,9 +1,11 @@
+import AutomergeRepo
 import Network
 import SwiftUI
 
 /// A view that displays a sync connection and its state.
+@MainActor
 struct SyncConnectionView: View {
-    @ObservedObject var syncConnection: SyncConnection
+    @ObservedObject var syncConnection: BonjourSyncConnection
 
     func stateRepresentationView() -> some View {
         switch syncConnection.connectionState {

@@ -3,6 +3,7 @@ import OSLog
 import SwiftUI
 
 /// A view that provides an editable view of an agenda item.
+@MainActor
 struct EditableAgendaItemView: View {
     // Document is needed within this file to link to the undo manager.
     @ObservedObject var document: MeetingNotesDocument

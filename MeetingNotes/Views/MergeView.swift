@@ -2,6 +2,7 @@ import OSLog
 import SwiftUI
 
 /// A toolbar button to coordinate merging documents.
+@MainActor
 struct MergeView: View {
     @ObservedObject var document: MeetingNotesDocument
 

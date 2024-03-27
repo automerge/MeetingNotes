@@ -1,4 +1,5 @@
 import Automerge
+import AutomergeRepo
 import Combine
 import OSLog
 import PotentCBOR
@@ -19,13 +20,15 @@ extension UTType {
 struct WrappedAutomergeDocument: Codable {
     let id: DocumentId
     let data: Data
-    static let fileEncoder = CBOREncoder()
-    static let fileDecoder = CBORDecoder()
 }
 
 extension WrappedAutomergeDocument: Transferable {
     static var transferRepresentation: some TransferRepresentation {
-        CodableRepresentation(contentType: .meetingnote, encoder: fileEncoder, decoder: fileDecoder)
+        CodableRepresentation(
+            contentType: .meetingnote,
+            encoder: CBORCoder.encoder,
+            decoder: CBORCoder.decoder
+        )
     }
 }
 
