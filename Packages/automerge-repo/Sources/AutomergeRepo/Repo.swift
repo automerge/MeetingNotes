@@ -89,13 +89,15 @@ public actor Repo {
         self.network = NetworkSubsystem()
     }
 
+    /// Add a persistent storage provider to the repo.
+    /// - Parameter provider: The storage provider to add.
     public func addStorageProvider(_ provider: some StorageProvider) {
         self.storage = DocumentStorage(provider)
         self.localPeerMetadata = PeerMetadata(storageId: provider.id, isEphemeral: false)
     }
 
     /// Add a configured network provider to the repo
-    /// - Parameter adapter: <#adapter description#>
+    /// - Parameter adapter: The network provider to add.
     public func addNetworkAdapter(adapter: any NetworkProvider) async {
         if await self.network.repo == nil {
             await self.network.setRepo(self)
@@ -103,10 +105,16 @@ public actor Repo {
         await network.addAdapter(adapter: adapter)
     }
 
+    /// Set the delegate that to receive ephemeral messages from Automerge-repo peers
+    /// - Parameter delegate: The object that Automerge-repo calls with ephemeral messages.
     public func setDelegate(_ delegate: some EphemeralMessageDelegate) {
         self._ephemeralMessageDelegate = delegate
     }
 
+    /// Returns a list of repository documentIds.
+    ///
+    /// The list does not reflect deleted or unavailable documents that have been requested, but may return
+    /// Ids for documents still being creating, stored, or transferring from a peer.
     public func documentIds() async -> [DocumentId] {
         handles.values
             .filter { handle in
@@ -132,8 +140,32 @@ public actor Repo {
         }
     }
 
-    func addPeerWithMetadata(peer: PEER_ID, metadata: PeerMetadata?) {
+    func beginSync(docId: DocumentId, to peer: PEER_ID) async {
+        do {
+            let handle = try await self.resolveDocHandle(id: docId)
+            let syncState = self.syncState(id: docId, peer: peer)
+            if let syncData = handle.doc.generateSyncMessage(state: syncState) {
+                let syncMsg: SyncV1Msg = .sync(.init(
+                    documentId: docId.description,
+                    senderId: self.peerId,
+                    targetId: peer,
+                    sync_message: syncData
+                ))
+                await network.send(message: syncMsg, to: peer)
+            }
+        } catch {
+            Logger.repo
+                .error("Failed to generate sync on peer connection: \(error.localizedDescription, privacy: .public)")
+        }
+    }
+
+    func addPeerWithMetadata(peer: PEER_ID, metadata: PeerMetadata?) async {
         peerMetadataByPeerId[peer] = metadata
+        for docId in await self.documentIds() {
+            if await sharePolicy.share(peer: peer, docId: docId) {
+                await beginSync(docId: docId, to: peer)
+            }
+        }
     }
 
     func removePeer(peer: PEER_ID) {
