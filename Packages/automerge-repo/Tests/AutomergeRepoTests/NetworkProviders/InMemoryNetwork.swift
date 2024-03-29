@@ -2,6 +2,7 @@ import Automerge
 import AutomergeRepo
 import Foundation
 import OSLog
+import Tracing
 
 extension Logger {
     static let testNetwork = Logger(subsystem: "InMemoryNetwork", category: "testNetwork")
@@ -23,13 +24,52 @@ enum InMemoryNetworkErrors: Sendable {
     }
 }
 
+// Tracing experimentation
+struct InMemoryNetworkMsgBaggageManipulator: Injector, Extractor {
+    func inject(_ value: String, forKey key: String, into request: inout InMemoryNetworkMsg) {
+        request.appendHeader(key: key, value: value)
+    }
+
+    func extract(key: String, from carrier: InMemoryNetworkMsg) -> String? {
+        if let valueForKey = carrier.headers[key] {
+            return valueForKey
+        }
+        return nil
+    }
+}
+
+/// Emulates a protocol that supports headers or other embedded details
+public struct InMemoryNetworkMsg: Sendable, CustomDebugStringConvertible {
+    var headers: [String: String] = [:]
+    var payload: SyncV1Msg
+
+    public var debugDescription: String {
+        var str = ""
+        for (k, v) in headers {
+            str.append("[\(k):\(v)]")
+        }
+        str.append(" - \(payload.debugDescription)")
+        return str
+    }
+
+    init(headers: [String: String] = [:], _ payload: SyncV1Msg) {
+        self.headers = headers
+        self.payload = payload
+    }
+
+    mutating func appendHeader(key: String, value: String) {
+        headers[key] = value
+    }
+}
+
 @InMemoryNetwork
 public final class InMemoryNetworkConnection {
-    public var description: String { get async {
-        let i = initiatingEndpoint.endpointName ?? "?"
-        let j = receivingEndpoint.endpointName ?? "?'"
-        return "\(id.uuidString) [\(i)(\(initiatingEndpoint.peerId))] --> [\(j)(\(receivingEndpoint.peerId))])"
-    }
+    public var description: String {
+        get async {
+            let i = initiatingEndpoint.endpointName ?? "?"
+            let j = receivingEndpoint.endpointName ?? "?'"
+            return "\(id.uuidString) [\(i)(\(initiatingEndpoint.peerId))] --> [\(j)(\(receivingEndpoint.peerId))])"
+        }
     }
 
     let id: UUID
@@ -51,7 +91,7 @@ public final class InMemoryNetworkConnection {
         await self.receivingEndpoint.connectionTerminated(self.id)
     }
 
-    func send(sender: String, msg: SyncV1Msg) async {
+    func send(sender: String, msg: InMemoryNetworkMsg) async {
         do {
             if initiatingEndpoint.endpointName == sender {
                 if let latency = transferLatency {
@@ -67,7 +107,7 @@ public final class InMemoryNetworkConnection {
                         Logger.testNetwork.trace("XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender)")
                     }
                 }
-                await receivingEndpoint.receiveMessage(msg: msg)
+                await receivingEndpoint.receiveMessage(msg: msg.payload)
             } else if receivingEndpoint.endpointName == sender {
                 if let latency = transferLatency {
                     try await Task.sleep(for: latency)
@@ -82,7 +122,7 @@ public final class InMemoryNetworkConnection {
                         Logger.testNetwork.trace("XMIT[\(self.id.bs58String)] \(msg.debugDescription) from \(sender)")
                     }
                 }
-                await initiatingEndpoint.receiveMessage(msg: msg)
+                await initiatingEndpoint.receiveMessage(msg: msg.payload)
             }
         } catch {
             Logger.testNetwork.error("Failure during latency sleep: \(error.localizedDescription)")
@@ -181,9 +221,13 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
         // aka "activate"
         let connection = try await InMemoryNetwork.shared.connect(from: name, to: to, latency: nil)
         self._connections.append(connection)
-        await connection.send(sender: name, msg: .join(
-            .init(senderId: self.peerId, metadata: self.peerMetadata)
-        ))
+        await connection.send(
+            sender: name,
+
+            msg: InMemoryNetworkMsg(
+                .join(.init(senderId: self.peerId, metadata: self.peerMetadata))
+            )
+        )
     }
 
     public func disconnect() async {
@@ -192,6 +236,13 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
         }
         _connections = []
         peeredConnections = []
+    }
+
+    func receiveWrappedMessage(msg: InMemoryNetworkMsg) async {
+        if var context = ServiceContext.current {
+            InstrumentationSystem.instrument.extract(msg, into: &context, using: InMemoryNetworkMsgBaggageManipulator())
+        }
+        await self.receiveMessage(msg: msg.payload)
     }
 
     public func receiveMessage(msg: SyncV1Msg) async {
@@ -258,18 +309,28 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
             fatalError("Can't send without a configured endpoint")
         }
         sent_messages.append(message)
+
+        var wrappedMsg = InMemoryNetworkMsg(message)
+        if let context = ServiceContext.current {
+            InstrumentationSystem.instrument.inject(
+                context,
+                into: &wrappedMsg,
+                using: InMemoryNetworkMsgBaggageManipulator()
+            )
+        }
+
         if let peerTarget = to {
             let connectionsWithPeer = _connections.filter { connection in
                 connection.initiatingEndpoint.peerId == peerTarget ||
                     connection.receivingEndpoint.peerId == peerTarget
             }
             for connection in connectionsWithPeer {
-                await connection.send(sender: endpointName, msg: message)
+                await connection.send(sender: endpointName, msg: wrappedMsg)
             }
         } else {
             // broadcast
             for connection in _connections {
-                await connection.send(sender: endpointName, msg: message)
+                await connection.send(sender: endpointName, msg: wrappedMsg)
             }
         }
     }
