@@ -1,4 +1,12 @@
-public struct PeerConnection: Sendable {
+public struct PeerConnection: Sendable, CustomStringConvertible {
+    public var description: String {
+        if let meta = self.peerMetadata {
+            "\(peerId),\(meta)"
+        } else {
+            "\(peerId),nil"
+        }
+    }
+
     public let peerId: PEER_ID
     public let peerMetadata: PeerMetadata?
 
@@ -8,8 +16,28 @@ public struct PeerConnection: Sendable {
     }
 }
 
-public enum NetworkAdapterEvents: Sendable {
-    public struct PeerDisconnectPayload: Sendable { // handled by Repo, relevant to Sync
+public enum NetworkAdapterEvents: Sendable, CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch self {
+        case let .ready(payload):
+            "NetworkAdapterEvents.ready[\(payload)]"
+        case .close:
+            "NetworkAdapterEvents.close[]"
+        case let .peerCandidate(payload):
+            "NetworkAdapterEvents.peerCandidate[\(payload)]"
+        case let .peerDisconnect(payload):
+            "NetworkAdapterEvents.peerDisconnect[\(payload)]"
+        case let .message(payload):
+            "NetworkAdapterEvents.message[\(payload)]"
+        }
+    }
+
+    public struct PeerDisconnectPayload: Sendable, CustomStringConvertible {
+        public var description: String {
+            "\(peerId)"
+        }
+
+        // handled by Repo, relevant to Sync
         let peerId: PEER_ID
 
         public init(peerId: PEER_ID) {

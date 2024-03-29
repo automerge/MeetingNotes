@@ -1,6 +1,7 @@
 import Automerge
 @testable import AutomergeRepo
 import AutomergeUtilities
+import OTel
 import XCTest
 
 final class TwoReposWithNetworkTests: XCTestCase {
@@ -122,6 +123,7 @@ final class TwoReposWithNetworkTests: XCTestCase {
         // "GO ONLINE"
         await network.traceConnections(true)
 
+        await adapterTwo.logReceivedMessages(true)
         try await adapterOne.connect(to: "Two")
         #warning("Initiating sync, but not getting a response over my 'test' network")
     }

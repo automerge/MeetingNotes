@@ -245,6 +245,10 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
                 )
             )
         default:
+            if self.delegate == nil, logReceivedMessages {
+                Logger.testNetwork
+                    .warning("ADAPTER \(self.debugDescription) has no delegate, ignoring received message")
+            }
             await self.delegate?.receiveEvent(event: .message(payload: msg))
         }
     }
