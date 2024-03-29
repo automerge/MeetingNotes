@@ -44,7 +44,7 @@ let package = Package(
                 // .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),
 
                 // Distributed Tracing
-                .product(name: "Instrumentation", package: "swift-distributed-tracing"),
+                .product(name: "Tracing", package: "swift-distributed-tracing"),
             ],
             // borrowing a set of Swift6 enabling features to double-check against
             // future proofing concurrency, safety, and exportable feature-creep.
@@ -60,6 +60,7 @@ let package = Package(
             dependencies: [
                 "AutomergeRepo",
                 .product(name: "OTel", package: "swift-otel"),
+                .product(name: "OTLPGRPC", package: "swift-otel"),
             ]
         ),
     ]
