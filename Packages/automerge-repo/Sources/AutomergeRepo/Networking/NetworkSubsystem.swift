@@ -93,6 +93,7 @@ extension NetworkSubsystem: NetworkEventReceiver {
     // In automerge-repo code, it appears to update information on an ephemeral information (
     // a sort of middleware) before emitting it upwards.
     public func receiveEvent(event: NetworkAdapterEvents) async {
+        // Logger.network.trace("received event from network adapter: \(event.debugDescription)")
         guard let repo else {
             // No-op if there's no repo to update state or handle
             // further message passing

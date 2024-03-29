@@ -222,6 +222,9 @@ public actor Repo {
             }
 
         } else {
+            #warning(
+                "missing use case - remote side is TELLING us, not asking us, for a document - on SYNC we should be creating the document, not reporting unavailable"
+            )
             let nope = SyncV1Msg.UnavailableMsg(
                 documentId: msg.documentId,
                 senderId: self.peerId,
