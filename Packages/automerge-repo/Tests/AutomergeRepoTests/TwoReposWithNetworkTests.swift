@@ -7,129 +7,74 @@ import OTLPGRPC
 import Tracing
 import XCTest
 
+import ServiceLifecycle
+
 final class TwoReposWithNetworkTests: XCTestCase {
     let network = InMemoryNetwork.shared
     var repoOne: Repo!
     var repoTwo: Repo!
 
-    var tracer: OTelTracer<
-        OTelRandomIDGenerator<SystemRandomNumberGenerator>,
-        OTelConstantSampler,
-        OTelW3CPropagator,
-        OTelBatchSpanProcessor<OTLPGRPCSpanExporter, ContinuousClock>,
-        ContinuousClock
-    >? = nil
-
     var adapterOne: InMemoryNetworkEndpoint!
     var adapterTwo: InMemoryNetworkEndpoint!
 
     override func setUp() async throws {
-        let environment = OTelEnvironment.detected()
-        let resourceDetection = OTelResourceDetection(detectors: [
-            OTelProcessResourceDetector(),
-            OTelEnvironmentResourceDetector(environment: environment),
-            .manual(OTelResource(attributes: ["service.name": "TwoRepoTest"])),
-        ])
+        await TestTracer.shared.bootstrap()
+        await withSpan("setUp") { _ in
 
-        let resource: OTelResource = await resourceDetection.resource(environment: environment, logLevel: .trace)
+            await withSpan("resetTestNetwork") { _ in
+                await network.resetTestNetwork()
+            }
 
-        /*
-         Bootstrap the logging system to use the OTel metadata provider.
-         This will automatically include trace and span IDs in log statements
-         from your app and its dependencies.
-         */
-        LoggingSystem.bootstrap({ label, _ in
-            var handler = StreamLogHandler.standardOutput(label: label)
-            // We set the lowest possible minimum log level to see all log statements.
-            handler.logLevel = .trace
-            return handler
-        }, metadataProvider: .otel)
+            await withSpan("TwoReposWithNetworkTests_setup") { _ in
 
-        let logger = Logger(label: "example")
-        logger.debug("TEST MARKER")
+                let endpoints = await network.endpoints
+                XCTAssertEqual(endpoints.count, 0)
 
-        // Here we create an OTel span exporter that sends spans via gRPC to an OTel collector.
-        let exporter = try OTLPGRPCSpanExporter(configuration: .init(environment: environment))
-        /*
-         This exporter is passed to a batch span processor.
-         The processor receives ended spans from the tracer, batches them up, and finally forwards them to the exporter.
-         */
-        let processor = OTelBatchSpanProcessor(exporter: exporter, configuration: .init(environment: environment))
-        /*
-         We need to await tracer initialization since the tracer needs
-         some time to detect attributes about the resource being traced.
-         */
-        let myTracer = OTelTracer(
-            idGenerator: OTelRandomIDGenerator(),
-            sampler: OTelConstantSampler(isOn: true),
-            propagator: OTelW3CPropagator(),
-            processor: processor,
-            environment: environment,
-            resource: resource
-        )
-        /*
-         Once we have a tracer, we bootstrap the instrumentation system to use it.
-         This configures your application code and any of your dependencies to use the OTel tracer.
-         */
-        InstrumentationSystem.bootstrap(myTracer)
-        Task {
-            try await myTracer.run()
-        }
-        tracer = myTracer
+                repoOne = Repo(sharePolicy: SharePolicies.agreeable)
+                let repoOneMetaData = await repoOne.localPeerMetadata
+                // Repo setup WITHOUT any storage subsystem
+                let storageId = await repoOne.storageId()
+                XCTAssertNil(storageId)
 
-        await withSpan("resetTestNetwork") { _ in
-            await network.resetTestNetwork()
-        }
-
-        await withSpan("TwoReposWithNetworkTests_setup") { _ in
-
-            let endpoints = await network.endpoints
-            XCTAssertEqual(endpoints.count, 0)
-
-            repoOne = Repo(sharePolicy: SharePolicies.agreeable)
-            let repoOneMetaData = await repoOne.localPeerMetadata
-            // Repo setup WITHOUT any storage subsystem
-            let storageId = await repoOne.storageId()
-            XCTAssertNil(storageId)
-
-            adapterOne = await network.createNetworkEndpoint(
-                config: .init(
-                    localPeerId: "onePeerId",
-                    localMetaData: repoOneMetaData,
-                    listeningNetwork: false,
-                    name: "One"
+                adapterOne = await network.createNetworkEndpoint(
+                    config: .init(
+                        localPeerId: "onePeerId",
+                        localMetaData: repoOneMetaData,
+                        listeningNetwork: false,
+                        name: "One"
+                    )
                 )
-            )
-            await repoOne.addNetworkAdapter(adapter: adapterOne)
+                await repoOne.addNetworkAdapter(adapter: adapterOne)
 
-            let peersOne = await repoOne.peers()
-            XCTAssertEqual(peersOne, [])
+                let peersOne = await repoOne.peers()
+                XCTAssertEqual(peersOne, [])
 
-            repoTwo = Repo(sharePolicy: SharePolicies.agreeable)
-            let repoTwoMetaData = await repoTwo.localPeerMetadata
-            adapterTwo = await network.createNetworkEndpoint(
-                config: .init(
-                    localPeerId: "twoPeerId",
-                    localMetaData: repoTwoMetaData,
-                    listeningNetwork: true,
-                    name: "Two"
+                repoTwo = Repo(sharePolicy: SharePolicies.agreeable)
+                let repoTwoMetaData = await repoTwo.localPeerMetadata
+                adapterTwo = await network.createNetworkEndpoint(
+                    config: .init(
+                        localPeerId: "twoPeerId",
+                        localMetaData: repoTwoMetaData,
+                        listeningNetwork: true,
+                        name: "Two"
+                    )
                 )
-            )
-            await repoTwo.addNetworkAdapter(adapter: adapterTwo)
+                await repoTwo.addNetworkAdapter(adapter: adapterTwo)
 
-            let peersTwo = await repoTwo.peers()
-            XCTAssertEqual(peersTwo, [])
+                let peersTwo = await repoTwo.peers()
+                XCTAssertEqual(peersTwo, [])
 
-            let connections = await network.connections()
-            XCTAssertEqual(connections.count, 0)
+                let connections = await network.connections()
+                XCTAssertEqual(connections.count, 0)
 
-            let endpointRecount = await network.endpoints
-            XCTAssertEqual(endpointRecount.count, 2)
+                let endpointRecount = await network.endpoints
+                XCTAssertEqual(endpointRecount.count, 2)
+            }
         }
     }
 
     override func tearDown() async throws {
-        if let tracer {
+        if let tracer = await TestTracer.shared.tracer {
             tracer.forceFlush()
             // Testing does NOT have a polite shutdown waiting for a flush to complete, so
             // we explicitly give it some extra time here to flush out any spans remaining.
