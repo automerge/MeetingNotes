@@ -201,16 +201,20 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     }
 
     public func acceptNewConnection(_ connection: InMemoryNetworkConnection) async {
-        if listening {
-            self._connections.append(connection)
-        } else {
-            fatalError("Can't accept connection on a non-listening interface")
+        withSpan("accept-new-connection") { _ in
+            if listening {
+                self._connections.append(connection)
+            } else {
+                fatalError("Can't accept connection on a non-listening interface")
+            }
         }
     }
 
     public func connectionTerminated(_ id: UUID) async {
-        self._connections.removeAll { connection in
-            connection.id == id
+        withSpan("connection-terminated") { _ in
+            self._connections.removeAll { connection in
+                connection.id == id
+            }
         }
     }
 
@@ -219,88 +223,115 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
             fatalError("Can't connect an unconfigured network")
         }
         // aka "activate"
-        let connection = try await InMemoryNetwork.shared.connect(from: name, to: to, latency: nil)
-        self._connections.append(connection)
-        await connection.send(
-            sender: name,
+        try await withSpan("connect") { span in
 
-            msg: InMemoryNetworkMsg(
-                .join(.init(senderId: self.peerId, metadata: self.peerMetadata))
+            let connection = try await InMemoryNetwork.shared.connect(from: name, to: to, latency: nil)
+
+            self._connections.append(connection)
+
+            let attributes: [String: SpanAttribute] = [
+                "type": SpanAttribute(stringLiteral: "join"),
+                "peerId": SpanAttribute(stringLiteral: self.peerId),
+            ]
+
+            span.addEvent(SpanEvent(name: "message send", attributes: SpanAttributes(attributes)))
+
+            await connection.send(
+                sender: name,
+
+                msg: InMemoryNetworkMsg(
+                    .join(.init(senderId: self.peerId, metadata: self.peerMetadata))
+                )
             )
-        )
+        }
     }
 
     public func disconnect() async {
-        for connection in _connections {
-            await connection.close()
+        await withSpan("disconnect") { _ in
+            for connection in _connections {
+                await connection.close()
+            }
+            _connections = []
+            peeredConnections = []
         }
-        _connections = []
-        peeredConnections = []
     }
 
     func receiveWrappedMessage(msg: InMemoryNetworkMsg) async {
-        if var context = ServiceContext.current {
-            InstrumentationSystem.instrument.extract(msg, into: &context, using: InMemoryNetworkMsgBaggageManipulator())
+        await withSpan("receiveWrappedMessage") { _ in
+            if var context = ServiceContext.current {
+                InstrumentationSystem.instrument.extract(
+                    msg,
+                    into: &context,
+                    using: InMemoryNetworkMsgBaggageManipulator()
+                )
+            }
+            await self.receiveMessage(msg: msg.payload)
         }
-        await self.receiveMessage(msg: msg.payload)
     }
 
     public func receiveMessage(msg: SyncV1Msg) async {
-        if logReceivedMessages {
-            Logger.testNetwork.trace("\(self.peerId) RECEIVED MSG: \(msg.debugDescription)")
-        }
-        received_messages.append(msg)
-        switch msg {
-        case let .leave(msg):
-            await self.delegate?.receiveEvent(event: .close)
-            _connections.removeAll { connection in
-                connection.initiatingEndpoint.peerId == msg.senderId ||
-                    connection.receivingEndpoint.peerId == msg.senderId
+        await withSpan("receiveWrappedMessage") { span in
+            if logReceivedMessages {
+                Logger.testNetwork.trace("\(self.peerId) RECEIVED MSG: \(msg.debugDescription)")
             }
-            peeredConnections.removeAll { peerConnection in
-                peerConnection.peerId == msg.senderId
-            }
-        case let .join(msg):
-            if listening {
+            received_messages.append(msg)
+            switch msg {
+            case let .leave(msg):
+                span.addEvent(SpanEvent(name: "leave msg received"))
+                await self.delegate?.receiveEvent(event: .close)
+                _connections.removeAll { connection in
+                    connection.initiatingEndpoint.peerId == msg.senderId ||
+                        connection.receivingEndpoint.peerId == msg.senderId
+                }
+                peeredConnections.removeAll { peerConnection in
+                    peerConnection.peerId == msg.senderId
+                }
+            case let .join(msg):
+                if listening {
+                    span.addEvent(SpanEvent(name: "join msg received"))
+                    await self.delegate?.receiveEvent(
+                        event: .peerCandidate(
+                            payload: .init(
+                                peerId: msg.senderId,
+                                peerMetadata: msg.peerMetadata
+                            )
+                        )
+                    )
+                    peeredConnections.append(PeerConnection(peerId: msg.senderId, peerMetadata: msg.peerMetadata))
+                    span.addEvent(SpanEvent(name: "replying with peer msg"))
+                    await self.send(
+                        message: .peer(
+                            .init(
+                                senderId: self.peerId,
+                                targetId: msg.senderId,
+                                storageId: self.peerMetadata?.storageId,
+                                ephemeral: self.peerMetadata?.isEphemeral ?? true
+                            )
+                        ),
+                        to: msg.senderId
+                    )
+                } else {
+                    fatalError("non-listening endpoint received a join message")
+                }
+            case let .peer(msg):
+                span.addEvent(SpanEvent(name: "peer msg received"))
+                peeredConnections.append(PeerConnection(peerId: msg.senderId, peerMetadata: msg.peerMetadata))
                 await self.delegate?.receiveEvent(
-                    event: .peerCandidate(
+                    event: .ready(
                         payload: .init(
                             peerId: msg.senderId,
                             peerMetadata: msg.peerMetadata
                         )
                     )
                 )
-                peeredConnections.append(PeerConnection(peerId: msg.senderId, peerMetadata: msg.peerMetadata))
-                await self.send(
-                    message: .peer(
-                        .init(
-                            senderId: self.peerId,
-                            targetId: msg.senderId,
-                            storageId: self.peerMetadata?.storageId,
-                            ephemeral: self.peerMetadata?.isEphemeral ?? true
-                        )
-                    ),
-                    to: msg.senderId
-                )
-            } else {
-                fatalError("non-listening endpoint received a join message")
+            default:
+                if self.delegate == nil, logReceivedMessages {
+                    Logger.testNetwork
+                        .warning("ADAPTER \(self.debugDescription) has no delegate, ignoring received message")
+                }
+                span.addEvent(SpanEvent(name: "forwarding received msg to delegate"))
+                await self.delegate?.receiveEvent(event: .message(payload: msg))
             }
-        case let .peer(msg):
-            peeredConnections.append(PeerConnection(peerId: msg.senderId, peerMetadata: msg.peerMetadata))
-            await self.delegate?.receiveEvent(
-                event: .ready(
-                    payload: .init(
-                        peerId: msg.senderId,
-                        peerMetadata: msg.peerMetadata
-                    )
-                )
-            )
-        default:
-            if self.delegate == nil, logReceivedMessages {
-                Logger.testNetwork
-                    .warning("ADAPTER \(self.debugDescription) has no delegate, ignoring received message")
-            }
-            await self.delegate?.receiveEvent(event: .message(payload: msg))
         }
     }
 
@@ -308,29 +339,37 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
         guard let endpointName = self.endpointName else {
             fatalError("Can't send without a configured endpoint")
         }
-        sent_messages.append(message)
+        await withSpan("send message") { span in
+            sent_messages.append(message)
 
-        var wrappedMsg = InMemoryNetworkMsg(message)
-        if let context = ServiceContext.current {
-            InstrumentationSystem.instrument.inject(
-                context,
-                into: &wrappedMsg,
-                using: InMemoryNetworkMsgBaggageManipulator()
-            )
-        }
+            var wrappedMsg = InMemoryNetworkMsg(message)
+            if let context = ServiceContext.current {
+                InstrumentationSystem.instrument.inject(
+                    context,
+                    into: &wrappedMsg,
+                    using: InMemoryNetworkMsgBaggageManipulator()
+                )
+            }
 
-        if let peerTarget = to {
-            let connectionsWithPeer = _connections.filter { connection in
-                connection.initiatingEndpoint.peerId == peerTarget ||
-                    connection.receivingEndpoint.peerId == peerTarget
-            }
-            for connection in connectionsWithPeer {
-                await connection.send(sender: endpointName, msg: wrappedMsg)
-            }
-        } else {
-            // broadcast
-            for connection in _connections {
-                await connection.send(sender: endpointName, msg: wrappedMsg)
+            if let peerTarget = to {
+                let connectionsWithPeer = _connections.filter { connection in
+                    connection.initiatingEndpoint.peerId == peerTarget ||
+                        connection.receivingEndpoint.peerId == peerTarget
+                }
+                for connection in connectionsWithPeer {
+                    span.addEvent(
+                        SpanEvent(name: "send message to peer", attributes: SpanAttributes([
+                            "msg": SpanAttribute(stringLiteral: wrappedMsg.debugDescription),
+                            "destination": SpanAttribute(stringLiteral: peerTarget),
+                        ]))
+                    )
+                    await connection.send(sender: endpointName, msg: wrappedMsg)
+                }
+            } else {
+                // broadcast
+                for connection in _connections {
+                    await connection.send(sender: endpointName, msg: wrappedMsg)
+                }
             }
         }
     }
