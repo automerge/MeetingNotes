@@ -1,4 +1,5 @@
 import Automerge
+import AutomergeUtilities
 import Foundation
 import OSLog
 
@@ -181,56 +182,54 @@ public actor Repo {
     // MARK: Synchronization Pieces - For Network Subsystem Access
 
     func handleSync(msg: SyncV1Msg.SyncMsg) async {
+        Logger.repo.trace("PEER: \(self.peerId) - handling a sync msg from \(msg.senderId) to \(msg.targetId)")
         guard let docId = DocumentId(msg.documentId) else {
             Logger.repo
                 .warning("Invalid documentId \(msg.documentId) received in a sync message \(msg.debugDescription)")
             return
         }
-        if handles[docId] != nil {
-            // If we have the document, see if we're agreeable to sending a copy
-            if await sharePolicy.share(peer: msg.senderId, docId: docId) {
-                do {
-                    let handle = try await self.resolveDocHandle(id: docId)
-                    let syncState = self.syncState(id: docId, peer: msg.senderId)
-                    // Apply the request message as a sync update
-                    try handle.doc.receiveSyncMessage(state: syncState, message: msg.data)
-                    // Stash the updated document and sync state
-                    await self.updateDoc(id: docId, doc: handle.doc)
-                    await self.updateSyncState(id: docId, peer: msg.senderId, syncState: syncState)
-                    // Attempt to generate a sync message to reply
-                    if let syncData = handle.doc.generateSyncMessage(state: syncState) {
-                        let syncMsg: SyncV1Msg = .sync(.init(
-                            documentId: docId.description,
-                            senderId: self.peerId,
-                            targetId: msg.senderId,
-                            sync_message: syncData
-                        ))
-                        await network.send(message: syncMsg, to: msg.senderId)
-                    } // else no sync is needed, syncstate reports that they have everything they need
-                } catch {
-                    let err: SyncV1Msg =
-                        .error(.init(message: "Unable to resolve document: \(error.localizedDescription)"))
-                    await network.send(message: err, to: msg.senderId)
-                }
-            } else {
-                let nope = SyncV1Msg.UnavailableMsg(
-                    documentId: msg.documentId,
-                    senderId: self.peerId,
-                    targetId: msg.senderId
-                )
-                await network.send(message: .unavailable(nope), to: msg.senderId)
-            }
+        do {
+            if handles[docId] == nil {
+                // There is no in-memory handle for the document being synced, so this is a request
+                // to create a local copy of the document encapsulated in the sync message.
+                let newDocument = Document()
+                let newHandle = InternalDocHandle(id: docId, isNew: true, initialValue: newDocument)
 
-        } else {
-            #warning(
-                "missing use case - remote side is TELLING us, not asking us, for a document - on SYNC we should be creating the document, not reporting unavailable"
-            )
-            let nope = SyncV1Msg.UnavailableMsg(
-                documentId: msg.documentId,
-                senderId: self.peerId,
-                targetId: msg.senderId
-            )
-            await network.send(message: .unavailable(nope), to: msg.senderId)
+                // must update the repo with the new handle and empty document _before_
+                // using syncState, since it needs to resolve the documentId
+                handles[docId] = newHandle
+            }
+            let handle = try await self.resolveDocHandle(id: docId)
+            #error("BUG IN SYNC STATE _ ALWAYS GETTING A NEW ONE")
+            let syncState = self.syncState(id: docId, peer: msg.senderId)
+            // Apply the request message as a sync update
+            try handle.doc.receiveSyncMessage(state: syncState, message: msg.data)
+            // Stash the updated document and sync state
+            await self.updateDoc(id: docId, doc: handle.doc)
+            await self.updateSyncState(id: docId, peer: msg.senderId, syncState: syncState)
+            // Attempt to generate a sync message to reply
+
+            // DEBUG ONLY
+            print("\(self.peerId): STATE OF \(handle.id)")
+            try handle.doc.walk()
+
+            if let syncData = handle.doc.generateSyncMessage(state: syncState) {
+                let syncMsg: SyncV1Msg = .sync(.init(
+                    documentId: docId.description,
+                    senderId: self.peerId,
+                    targetId: msg.senderId,
+                    sync_message: syncData
+                ))
+                Logger.repo.trace("Sync received and applied, replying with a sync msg back to \(msg.senderId)")
+                await network.send(message: syncMsg, to: msg.senderId)
+            }
+            // else no sync is needed, as the last sync state reports that it knows about
+            // all the changes it needs - that it's up to date with the local document
+        } catch {
+            let err: SyncV1Msg =
+                .error(.init(message: "Error receiving sync: \(error.localizedDescription)"))
+            Logger.repo.warning("Error receiving initial sync for \(docId, privacy: .public)")
+            await network.send(message: err, to: msg.senderId)
         }
     }
 
@@ -364,7 +363,7 @@ public actor Repo {
             throw Errors.Unavailable(id: id)
         }
         originalDocHandle.state = .deleted
-        originalDocHandle._doc = nil
+        originalDocHandle.doc = nil
         handles[id] = originalDocHandle
         Task.detached {
             try await self.purgeFromStorage(id: id)
@@ -406,9 +405,12 @@ public actor Repo {
             fatalError("No stored dochandle for id: \(id)")
         }
         if let handleSyncState = handle.syncStates[peer] {
+            Logger.repo.trace("Providing stored sync state for doc \(id)")
             return handleSyncState
         } else {
             // TODO: add attempt to load from storage and return it before creating a new one
+            Logger.repo.trace("No stored sync state for doc \(id) and peer \(peer).")
+            Logger.repo.trace("Creating a new sync state for doc \(id)")
             return SyncState()
         }
     }
@@ -417,6 +419,7 @@ public actor Repo {
         guard var handle = handles[id] else {
             fatalError("No stored dochandle for id: \(id)")
         }
+        Logger.repo.trace("Storing updated sync state for doc \(id) and peer \(peer).")
         handle.syncStates[peer] = syncState
     }
 
@@ -434,13 +437,13 @@ public actor Repo {
     func updateDoc(id: DocumentId, doc: Document) async {
         // handling a requested document being marked as ready after document contents received
         guard var handle = handles[id] else {
-            fatalError("No stored dochandle for id: \(id)")
+            fatalError("No stored document handle for document id: \(id)")
         }
         if handle.state == .requesting {
             handle.state = .ready
         }
         assert(handle.state == .ready)
-        handle._doc = doc
+        handle.doc = doc
         if let storage = self.storage {
             Task.detached {
                 do {
@@ -498,16 +501,23 @@ public actor Repo {
     }
 
     private func resolveDocHandle(id: DocumentId) async throws -> DocHandle {
-        if var handle = handles[id] {
+        if var handle: InternalDocHandle = handles[id] {
             switch handle.state {
             case .idle:
-                // default path with no other detail should probably route through loading
-                handle.state = .loading
-                handles[id] = handle
+                if handle.doc != nil {
+                    // if there's an Automerge document in memory, jump to ready
+                    handle.state = .ready
+                    handles[id] = handle
+                } else {
+                    // otherwise, first attempt to load it from persistent storage
+                    // (if available)
+                    handle.state = .loading
+                    handles[id] = handle
+                }
                 return try await resolveDocHandle(id: id)
             case .loading:
                 // Do we have the document
-                if let docFromHandle = handle._doc {
+                if let docFromHandle = handle.doc {
                     // We have the document - so being in loading means "try to save this to
                     // a storage provider, if one exists", then hand it back as good.
                     if let storage = self.storage {
@@ -541,7 +551,7 @@ public actor Repo {
                 guard let updatedHandle = handles[id] else {
                     throw Errors.DocUnavailable(id: handle.id)
                 }
-                if let doc = updatedHandle._doc, updatedHandle.state == .ready {
+                if let doc = updatedHandle.doc, updatedHandle.state == .ready {
                     return DocHandle(id: id, doc: doc)
                 } else {
                     guard let previousRequests = pendingRequestReadAttempts[id] else {
@@ -557,7 +567,7 @@ public actor Repo {
                     }
                 }
             case .ready:
-                guard let doc = handle._doc else { fatalError("DocHandle state is ready, but ._doc is null") }
+                guard let doc = handle.doc else { fatalError("DocHandle state is ready, but ._doc is null") }
                 return DocHandle(id: id, doc: doc)
             case .unavailable:
                 throw Errors.DocUnavailable(id: handle.id)
