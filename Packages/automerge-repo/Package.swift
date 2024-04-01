@@ -27,7 +27,7 @@ let package = Package(
         // Distributed Tracing
         .package(url: "https://github.com/apple/swift-distributed-tracing", from: "1.0.0"),
         // Testing Tracing
-        .package(url: "https://github.com/heckj/swift-otel", branch: "ios"),
+        .package(url: "https://github.com/heckj/DistributedTracer", branch: "main"),
         // this ^^ brings in a MASSIVE cascade of dependencies
     ],
     targets: [
@@ -59,8 +59,7 @@ let package = Package(
             name: "AutomergeRepoTests",
             dependencies: [
                 "AutomergeRepo",
-                .product(name: "OTel", package: "swift-otel"),
-                .product(name: "OTLPGRPC", package: "swift-otel"),
+                .product(name: "DistributedTracer", package: "DistributedTracer"),
             ]
         ),
     ]

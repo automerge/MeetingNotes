@@ -1,13 +1,13 @@
 import Automerge
 @testable import AutomergeRepo
 import AutomergeUtilities
+import DistributedTracer
 import Logging
 import OTel
 import OTLPGRPC
+import ServiceLifecycle
 import Tracing
 import XCTest
-
-import ServiceLifecycle
 
 final class TwoReposWithNetworkTests: XCTestCase {
     let network = InMemoryNetwork.shared
