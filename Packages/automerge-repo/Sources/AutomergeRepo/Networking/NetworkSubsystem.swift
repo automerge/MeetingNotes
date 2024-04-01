@@ -37,10 +37,10 @@ public actor NetworkSubsystem {
     }
 
     func addAdapter(adapter: some NetworkProvider) async {
-        guard repo != nil else {
+        guard let peerId = repo?.peerId else {
             fatalError("NO REPO CONFIGURED WHEN ADDING ADAPTERS")
         }
-        await adapter.setDelegate(self)
+        await adapter.setDelegate(self, as: peerId, with: repo?.localPeerMetadata)
         self.adapters.append(adapter)
     }
 
@@ -69,7 +69,7 @@ public actor NetworkSubsystem {
                 if let syncRequestData = newDocument.generateSyncMessage(state: syncState) {
                     await adapter.send(message: .request(SyncV1Msg.RequestMsg(
                         documentId: id.description,
-                        senderId: adapter.peerId,
+                        senderId: repo.peerId,
                         targetId: peerConnection.peerId,
                         sync_message: syncRequestData
                     )), to: peerConnection.peerId)

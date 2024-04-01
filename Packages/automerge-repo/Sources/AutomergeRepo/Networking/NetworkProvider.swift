@@ -40,9 +40,6 @@ import Automerge
 /// - When any other message is received, it is emitted with ``NetworkAdapterEvents/message(payload:)``.
 /// - When the transport receives a `leave` message, close the connection and emit ``NetworkAdapterEvents/close``.
 public protocol NetworkProvider<ProviderConfiguration>: Sendable {
-    /// The peer Id of the local instance.
-    var peerId: PEER_ID { get async }
-
     /// A list of all active, peered connections that the provider is maintaining.
     ///
     /// For an outgoing connection, this is typically a single connection.
@@ -82,9 +79,10 @@ public protocol NetworkProvider<ProviderConfiguration>: Sendable {
     /// - Parameter msg: The message to process.
     func receiveMessage(msg: SyncV1Msg) async
 
-    /// Sets the delegate for a Network Provider
+    /// Sets the delegate and configures the peer information for a Network Provider
     /// - Parameter to: The instance that accepts asynchronous network events from the provider.
-    func setDelegate(_ to: any NetworkEventReceiver) async
+    /// - Parameter peer: The peer ID for the network provider to use.
+    func setDelegate(_ delegate: any NetworkEventReceiver, as peer: PEER_ID, with metadata: PeerMetadata?) async
 }
 
 /// A type that accepts provides a method for a Network Provider to call with network events.

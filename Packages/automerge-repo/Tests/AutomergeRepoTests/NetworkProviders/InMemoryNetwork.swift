@@ -67,8 +67,8 @@ public final class InMemoryNetworkConnection {
     public var description: String {
         get async {
             let i = initiatingEndpoint.endpointName ?? "?"
-            let j = receivingEndpoint.endpointName ?? "?'"
-            return "\(id.uuidString) [\(i)(\(initiatingEndpoint.peerId))] --> [\(j)(\(receivingEndpoint.peerId))])"
+            let j = receivingEndpoint.endpointName ?? "?"
+            return "\(id.uuidString) [\(i)(\(initiatingEndpoint.peerId ?? "unconfigured"))] --> [\(j)(\(receivingEndpoint.peerId ?? "unconfigured"))])"
         }
     }
 
@@ -133,8 +133,6 @@ public final class InMemoryNetworkConnection {
 @InMemoryNetwork // isolate all calls to this class using the InMemoryNetwork global actor
 public final class InMemoryNetworkEndpoint: NetworkProvider {
     public struct BasicNetworkConfiguration: Sendable {
-        let localPeerId: PEER_ID
-        let localMetaData: PeerMetadata?
         let listeningNetwork: Bool
         let name: String
     }
@@ -142,8 +140,11 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     init() {
         self.peeredConnections = []
         self._connections = []
-        self.delegate = nil
         self.listening = false
+
+        self.delegate = nil
+        self.peerId = nil
+        self.peerMetadata = nil
 
         // testing spies
         self.received_messages = []
@@ -160,8 +161,8 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     }
 
     public var debugDescription: String {
-        if let config = self.config {
-            "In-Memory Network: \(config.localPeerId)"
+        if let peerId = self.peerId {
+            "In-Memory Network: \(peerId)"
         } else {
             "Unconfigured In-Memory Network"
         }
@@ -173,6 +174,9 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     var config: BasicNetworkConfiguration?
     var listening: Bool
     var logReceivedMessages: Bool
+
+    public var peerId: PEER_ID?
+    var peerMetadata: PeerMetadata?
 
     var received_messages: [SyncV1Msg]
     var sent_messages: [SyncV1Msg]
@@ -186,14 +190,6 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
 
     public func logReceivedMessages(_ enableLogging: Bool) {
         self.logReceivedMessages = enableLogging
-    }
-
-    public var peerId: PEER_ID {
-        self.config?.localPeerId ?? "UNCONFIGURED"
-    }
-
-    public var peerMetadata: PeerMetadata? {
-        self.config?.localMetaData
     }
 
     public var endpointName: String? {
@@ -219,7 +215,10 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     }
 
     public func connect(to: String) async throws {
-        guard let name = self.endpointName else {
+        guard let name = self.endpointName,
+              let peerId = self.peerId,
+              let peerMetadata = self.peerMetadata
+        else {
             fatalError("Can't connect an unconfigured network")
         }
         // aka "activate"
@@ -231,7 +230,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
 
             let attributes: [String: SpanAttribute] = [
                 "type": SpanAttribute(stringLiteral: "join"),
-                "peerId": SpanAttribute(stringLiteral: self.peerId),
+                "peerId": SpanAttribute(stringLiteral: peerId),
             ]
 
             span.addEvent(SpanEvent(name: "message send", attributes: SpanAttributes(attributes)))
@@ -240,7 +239,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
                 sender: name,
 
                 msg: InMemoryNetworkMsg(
-                    .join(.init(senderId: self.peerId, metadata: self.peerMetadata))
+                    .join(.init(senderId: peerId, metadata: peerMetadata))
                 )
             )
         }
@@ -271,8 +270,11 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
 
     public func receiveMessage(msg: SyncV1Msg) async {
         await withSpan("receiveWrappedMessage") { span in
+            guard let peerId = self.peerId else {
+                fatalError("Attempting to receive message with unconfigured network adapter")
+            }
             if logReceivedMessages {
-                Logger.testNetwork.trace("\(self.peerId) RECEIVED MSG: \(msg.debugDescription)")
+                Logger.testNetwork.trace("\(peerId) RECEIVED MSG: \(msg.debugDescription)")
             }
             received_messages.append(msg)
             switch msg {
@@ -302,7 +304,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
                     await self.send(
                         message: .peer(
                             .init(
-                                senderId: self.peerId,
+                                senderId: peerId,
                                 targetId: msg.senderId,
                                 storageId: self.peerMetadata?.storageId,
                                 ephemeral: self.peerMetadata?.isEphemeral ?? true
@@ -374,7 +376,13 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
         }
     }
 
-    public func setDelegate(_ delegate: any NetworkEventReceiver) async {
+    public func setDelegate(
+        _ delegate: any NetworkEventReceiver,
+        as peer: PEER_ID,
+        with metadata: AutomergeRepo.PeerMetadata?
+    ) async {
+        self.peerId = peer
+        self.peerMetadata = metadata
         self.delegate = delegate
     }
 }

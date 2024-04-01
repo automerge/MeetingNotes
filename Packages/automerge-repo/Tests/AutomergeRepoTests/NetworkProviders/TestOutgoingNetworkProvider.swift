@@ -88,9 +88,6 @@ public actor TestOutgoingNetworkProvider: NetworkProvider {
         "TestNetwork"
     }
 
-    public var localPeerId: PEER_ID
-    private var localMetaData: PeerMetadata?
-
     var delegate: (any NetworkEventReceiver)?
 
     var config: TestOutgoingNetworkConfiguration?
@@ -99,28 +96,13 @@ public actor TestOutgoingNetworkProvider: NetworkProvider {
 
     public typealias ProviderConfiguration = TestOutgoingNetworkConfiguration
 
-    init(id: PEER_ID, metadata: PeerMetadata?) {
-        self.localPeerId = id
-        self.localMetaData = metadata
+    init() {
         self.connected = false
         self.delegate = nil
     }
 
     public func configure(_ config: TestOutgoingNetworkConfiguration) async {
         self.config = config
-    }
-
-    public var peerId: PEER_ID {
-        self.localPeerId
-    }
-
-    public var peerMetadata: PeerMetadata? {
-        get async {
-            if let config = self.config, self.connected == true {
-                return config.remotePeerMetadata
-            }
-            return nil
-        }
     }
 
     public var connectedPeer: PEER_ID? {
@@ -185,7 +167,11 @@ public actor TestOutgoingNetworkProvider: NetworkProvider {
         // by the configuration of this test network provider.
     }
 
-    public func setDelegate(_ delegate: any NetworkEventReceiver) async {
+    public func setDelegate(
+        _ delegate: any AutomergeRepo.NetworkEventReceiver,
+        as _: AutomergeRepo.PEER_ID,
+        with _: AutomergeRepo.PeerMetadata?
+    ) async {
         self.delegate = delegate
     }
 

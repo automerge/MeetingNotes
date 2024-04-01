@@ -38,8 +38,6 @@ final class TwoReposWithNetworkTests: XCTestCase {
 
                 adapterOne = await network.createNetworkEndpoint(
                     config: .init(
-                        localPeerId: "onePeerId",
-                        localMetaData: repoOneMetaData,
                         listeningNetwork: false,
                         name: "One"
                     )
@@ -53,8 +51,6 @@ final class TwoReposWithNetworkTests: XCTestCase {
                 let repoTwoMetaData = await repoTwo.localPeerMetadata
                 adapterTwo = await network.createNetworkEndpoint(
                     config: .init(
-                        localPeerId: "twoPeerId",
-                        localMetaData: repoTwoMetaData,
                         listeningNetwork: true,
                         name: "Two"
                     )
@@ -100,8 +96,6 @@ final class TwoReposWithNetworkTests: XCTestCase {
     func testCreateNetworkEndpoint() async throws {
         let _ = await network.createNetworkEndpoint(
             config: .init(
-                localPeerId: "foo",
-                localMetaData: nil,
                 listeningNetwork: false,
                 name: "Z"
             )
