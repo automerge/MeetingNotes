@@ -18,7 +18,7 @@ final class TwoReposWithNetworkTests: XCTestCase {
     var adapterTwo: InMemoryNetworkEndpoint!
 
     override func setUp() async throws {
-        await TestTracer.shared.bootstrap()
+        await TestTracer.shared.bootstrap(serviceName: "RepoTests")
         await withSpan("setUp") { _ in
 
             await withSpan("resetTestNetwork") { _ in
@@ -31,7 +31,6 @@ final class TwoReposWithNetworkTests: XCTestCase {
                 XCTAssertEqual(endpoints.count, 0)
 
                 repoOne = Repo(sharePolicy: SharePolicies.agreeable)
-                let repoOneMetaData = await repoOne.localPeerMetadata
                 // Repo setup WITHOUT any storage subsystem
                 let storageId = await repoOne.storageId()
                 XCTAssertNil(storageId)
@@ -48,7 +47,6 @@ final class TwoReposWithNetworkTests: XCTestCase {
                 XCTAssertEqual(peersOne, [])
 
                 repoTwo = Repo(sharePolicy: SharePolicies.agreeable)
-                let repoTwoMetaData = await repoTwo.localPeerMetadata
                 adapterTwo = await network.createNetworkEndpoint(
                     config: .init(
                         listeningNetwork: true,
@@ -144,14 +142,18 @@ final class TwoReposWithNetworkTests: XCTestCase {
             XCTAssertEqual(knownIds.count, 1)
             XCTAssertEqual(knownIds[0], newDocId)
 
-            // "GO ONLINE"
-            await network.traceConnections(true)
+            // add some content to the new document
+            try newDoc.doc.put(obj: .ROOT, key: "title", value: .String("INITIAL VALUE"))
+
+            // "GO ONLINE", which should share this document...
+
+            // await network.traceConnections(true)
 
             await adapterTwo.logReceivedMessages(true)
             try await withSpan("adapterOne.connect") { _ in
                 try await adapterOne.connect(to: "Two")
             }
-            #warning("Initiating sync, but not getting a response over my 'test' network")
+            // #warning("Initiating sync, but not getting a response over my 'test' network")
         }
     }
 

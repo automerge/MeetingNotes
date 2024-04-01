@@ -53,7 +53,7 @@ struct InternalDocHandle: Sendable {
      */
 
     let id: DocumentId
-    var _doc: Automerge.Document?
+    var doc: Automerge.Document?
     var state: DocHandleState
     var remoteHeads: [STORAGE_ID: Set<Automerge.ChangeHash>]
     var syncStates: [PEER_ID: SyncState]
@@ -70,17 +70,17 @@ struct InternalDocHandle: Sendable {
         // provider, if available.
         if isNew {
             if let newDoc = initialValue {
-                self._doc = newDoc
+                self.doc = newDoc
                 self.state = .loading
             } else {
-                self._doc = nil
+                self.doc = nil
                 self.state = .idle
             }
         } else if let newDoc = initialValue {
-            self._doc = newDoc
+            self.doc = newDoc
             self.state = .ready
         } else {
-            self._doc = nil
+            self.doc = nil
             self.state = .idle
         }
     }
