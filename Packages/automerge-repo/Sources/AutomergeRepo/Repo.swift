@@ -13,7 +13,7 @@ public protocol EphemeralMessageDelegate: Sendable {
 public actor Repo {
     public let peerId: PEER_ID
     public var localPeerMetadata: PeerMetadata
-    // to replace DocumentSyncCoordinator
+
     private var handles: [DocumentId: InternalDocHandle] = [:]
     private var storage: DocumentStorage?
     private var network: NetworkSubsystem
@@ -200,7 +200,7 @@ public actor Repo {
                 handles[docId] = newHandle
             }
             let handle = try await self.resolveDocHandle(id: docId)
-            #error("BUG IN SYNC STATE _ ALWAYS GETTING A NEW ONE")
+            // #error("BUG IN SYNC STATE _ ALWAYS GETTING A NEW ONE")
             let syncState = self.syncState(id: docId, peer: msg.senderId)
             // Apply the request message as a sync update
             try handle.doc.receiveSyncMessage(state: syncState, message: msg.data)
@@ -359,14 +359,20 @@ public actor Repo {
     ///
     /// > NOTE: deletes do not propagate to connected peers.
     public func delete(id: DocumentId) async throws {
-        guard var originalDocHandle = handles[id] else {
+        guard let originalDocHandle = handles[id] else {
             throw Errors.Unavailable(id: id)
         }
         originalDocHandle.state = .deleted
         originalDocHandle.doc = nil
-        handles[id] = originalDocHandle
-        Task.detached {
-            try await self.purgeFromStorage(id: id)
+        // STRUCT ONLY handles[id] = originalDocHandle
+
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            group.addTask {
+                try await self.purgeFromStorage(id: id)
+            }
+            // specifically call/wait in case we get an error from
+            // the delete process in purging the document.
+            try await group.next()
         }
     }
 
@@ -416,7 +422,7 @@ public actor Repo {
     }
 
     func updateSyncState(id: DocumentId, peer: PEER_ID, syncState: SyncState) async {
-        guard var handle = handles[id] else {
+        guard let handle = handles[id] else {
             fatalError("No stored dochandle for id: \(id)")
         }
         Logger.repo.trace("Storing updated sync state for doc \(id) and peer \(peer).")
@@ -425,7 +431,7 @@ public actor Repo {
 
     func markDocUnavailable(id: DocumentId) async {
         // handling a requested document being marked as unavailable after all peers have been checked
-        guard var handle = handles[id] else {
+        guard let handle = handles[id] else {
             Logger.repo.error("missing handle for documentId \(id.description) while attempt to mark unavailable")
             return
         }
@@ -436,7 +442,7 @@ public actor Repo {
 
     func updateDoc(id: DocumentId, doc: Document) async {
         // handling a requested document being marked as ready after document contents received
-        guard var handle = handles[id] else {
+        guard let handle = handles[id] else {
             fatalError("No stored document handle for document id: \(id)")
         }
         if handle.state == .requesting {
@@ -501,18 +507,18 @@ public actor Repo {
     }
 
     private func resolveDocHandle(id: DocumentId) async throws -> DocHandle {
-        if var handle: InternalDocHandle = handles[id] {
+        if let handle: InternalDocHandle = handles[id] {
             switch handle.state {
             case .idle:
                 if handle.doc != nil {
                     // if there's an Automerge document in memory, jump to ready
                     handle.state = .ready
-                    handles[id] = handle
+                    // STRUCT ONLY handles[id] = handle
                 } else {
                     // otherwise, first attempt to load it from persistent storage
                     // (if available)
                     handle.state = .loading
-                    handles[id] = handle
+                    // STRUCT ONLY handles[id] = handle
                 }
                 return try await resolveDocHandle(id: id)
             case .loading:
@@ -521,14 +527,25 @@ public actor Repo {
                     // We have the document - so being in loading means "try to save this to
                     // a storage provider, if one exists", then hand it back as good.
                     if let storage = self.storage {
-                        Task.detached {
-                            try await storage.saveDoc(id: id, doc: docFromHandle)
+                        await withThrowingTaskGroup(of: Void.self) { group in
+                            group.addTask {
+                                try await storage.saveDoc(id: id, doc: docFromHandle)
+                            }
+                            // DO NOT wait/see if there's an error in the repo attempting to
+                            // store the document - this gives us a bit of "best effort" functionality
+                            // TODO: consider making this a parameter, or review this choice before release
+                            // specifically call/wait in case we get an error from
+                            // the delete process in purging the document.
+                            // try await group.next()
+                            //
+                            // if we want to change this, uncomment the `try await` above and
+                            // convert the `withThrowingTaskGroup` to `try await` as well.
                         }
                     }
                     // TODO: if we're allowed and prolific in gossip, notify any connected
                     // peers there's a new document before jumping to the 'ready' state
                     handle.state = .ready
-                    handles[id] = handle
+                    // STRUCT ONLY handles[id] = handle
                     return DocHandle(id: id, doc: docFromHandle)
                 } else {
                     // We don't have the underlying Automerge document, so attempt
@@ -537,11 +554,11 @@ public actor Repo {
                     // it from a peer.
                     if let doc = try await loadFromStorage(id: id) {
                         handle.state = .ready
-                        handles[id] = handle
+                        // STRUCT ONLY handles[id] = handle
                         return DocHandle(id: id, doc: doc)
                     } else {
                         handle.state = .requesting
-                        handles[id] = handle
+                        // STRUCT ONLY handles[id] = handle
                         pendingRequestReadAttempts[id] = 0
                         try await self.network.startRemoteFetch(id: handle.id)
                         return try await resolveDocHandle(id: id)

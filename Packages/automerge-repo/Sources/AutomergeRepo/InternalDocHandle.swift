@@ -3,26 +3,7 @@ import class Automerge.Document
 import struct Automerge.SyncState
 import struct Foundation.Data
 
-public struct DocHandle: Sendable {
-    let id: DocumentId
-    let doc: Document
-
-    init(id: DocumentId, doc: Document) {
-        self.id = id
-        self.doc = doc
-    }
-}
-
-// actor?
-// class?
-// Object intention is ONLY data storage, used by (and protected underneath) Repo - so leaning
-// towards `struct` at the moment, with the relevant states being updated by it's owner (Repo)
-// since this object doesn't know about storage (if it exists) or network and relevant network
-// peers to request
-
-// ... damnit - it's the type that's exposed to users to provide a proxy for an Automerge Document,
-// so maybe it _should_ be an actor
-struct InternalDocHandle: Sendable {
+final class InternalDocHandle {
     enum DocHandleState {
         case idle
         case loading
@@ -38,6 +19,8 @@ struct InternalDocHandle: Sendable {
     // more states to this diagram (originally from `automerge-repo`) - one for 'purged' and
     // an associated action PURGE - the idea being that might be invoked when an app is coming
     // under memory pressure.
+    //
+    // The state itself is driven from Repo, in the `resolveDocHandle(id:)` method
 
     /**
      * Internally we use a state machine to orchestrate document loading and/or syncing, in order to
@@ -103,7 +86,7 @@ struct InternalDocHandle: Sendable {
         remoteHeads[id]
     }
 
-    mutating func setRemoteHeads(id: STORAGE_ID, heads: Set<ChangeHash>) {
+    func setRemoteHeads(id: STORAGE_ID, heads: Set<ChangeHash>) {
         remoteHeads[id] = heads
     }
 }
