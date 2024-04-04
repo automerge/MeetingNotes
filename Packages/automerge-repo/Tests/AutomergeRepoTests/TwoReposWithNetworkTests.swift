@@ -2,9 +2,11 @@ import Automerge
 @testable import AutomergeRepo
 import AutomergeUtilities
 import DistributedTracer
+import Foundation
 import Logging
 import OTel
 import OTLPGRPC
+import RegexBuilder
 import ServiceLifecycle
 import Tracing
 import XCTest
@@ -30,7 +32,7 @@ final class TwoReposWithNetworkTests: XCTestCase {
                 let endpoints = await network.endpoints
                 XCTAssertEqual(endpoints.count, 0)
 
-                repoOne = Repo(sharePolicy: SharePolicies.agreeable)
+                repoOne = Repo(sharePolicy: SharePolicies.readonly)
                 // Repo setup WITHOUT any storage subsystem
                 let storageId = await repoOne.storageId()
                 XCTAssertNil(storageId)
@@ -132,39 +134,133 @@ final class TwoReposWithNetworkTests: XCTestCase {
 
     func testCreate() async throws {
         try await withSpan("testCreate") { _ in
+
+            // initial conditions
+            var knownOnTwo = await repoTwo.documentIds()
+            var knownOnOne = await repoOne.documentIds()
+            XCTAssertEqual(knownOnOne.count, 0)
+            XCTAssertEqual(knownOnTwo.count, 0)
+
+            // Create and add some doc content to the "server" repo - RepoTwo
             let newDocId = DocumentId()
-            let newDoc = try await withSpan("repoOne.create") { _ in
-                try await repoOne.create(id: newDocId)
+            let newDoc = try await withSpan("repoTwo.create") { _ in
+                try await repoTwo.create(id: newDocId)
             }
-
-            XCTAssertNotNil(newDoc)
-            let knownIds = await repoOne.documentIds()
-            XCTAssertEqual(knownIds.count, 1)
-            XCTAssertEqual(knownIds[0], newDocId)
-
             // add some content to the new document
             try newDoc.doc.put(obj: .ROOT, key: "title", value: .String("INITIAL VALUE"))
 
-            // "GO ONLINE", which should share this document...
+            XCTAssertNotNil(newDoc)
+            knownOnTwo = await repoTwo.documentIds()
+            XCTAssertEqual(knownOnTwo.count, 1)
+            XCTAssertEqual(knownOnTwo[0], newDocId)
 
+            knownOnOne = await repoOne.documentIds()
+            XCTAssertEqual(knownOnOne.count, 0)
+
+            // "GO ONLINE"
             // await network.traceConnections(true)
-
-            await adapterTwo.logReceivedMessages(true)
+            // await adapterTwo.logReceivedMessages(true)
             try await withSpan("adapterOne.connect") { _ in
                 try await adapterOne.connect(to: "Two")
             }
-            // #warning("Initiating sync, but not getting a response over my 'test' network")
+
+            // verify that after sync, both repos have a copy of the document
+            knownOnOne = await repoOne.documentIds()
+            XCTAssertEqual(knownOnOne.count, 1)
+            XCTAssertEqual(knownOnOne[0], newDocId)
         }
     }
 
-//    func testFind() async throws {
-//        let myId = DocumentId()
-//        let handle = try await repo.create(id: myId)
-//        XCTAssertEqual(myId, handle.id)
-//
-//        let foundDoc = try await repo.find(id: myId)
-//        XCTAssertEqual(foundDoc.doc.actor, handle.doc.actor)
-//    }
+    func testFind() async throws {
+        // initial conditions
+        var knownOnTwo = await repoTwo.documentIds()
+        var knownOnOne = await repoOne.documentIds()
+        XCTAssertEqual(knownOnOne.count, 0)
+        XCTAssertEqual(knownOnTwo.count, 0)
+
+        // "GO ONLINE"
+        // await network.traceConnections(true)
+        // await adapterTwo.logReceivedMessages(true)
+        try await withSpan("adapterOne.connect") { _ in
+            try await adapterOne.connect(to: "Two")
+        }
+
+        // Create and add some doc content to the "server" repo - RepoTwo
+        let newDocId = DocumentId()
+        let newDoc = try await withSpan("repoTwo.create") { _ in
+            try await repoTwo.create(id: newDocId)
+        }
+        XCTAssertNotNil(newDoc.doc)
+        // add some content to the new document
+        try newDoc.doc.put(obj: .ROOT, key: "title", value: .String("INITIAL VALUE"))
+
+        // Introducing a doc _after_ connecting shouldn't share it automatically
+        knownOnTwo = await repoTwo.documentIds()
+        XCTAssertEqual(knownOnTwo.count, 1)
+        XCTAssertEqual(knownOnTwo[0], newDocId)
+
+        knownOnOne = await repoOne.documentIds()
+        XCTAssertEqual(knownOnOne.count, 0)
+
+        // We can _request_ the document, and should find it
+        do {
+            let foundDoc = try await repoOne.find(id: newDocId)
+            XCTAssertTrue(
+                RepoHelpers.equalContents(doc1: foundDoc.doc, doc2: newDoc.doc)
+            )
+        } catch {
+            let errMsg = error.localizedDescription
+            print(errMsg)
+        }
+    }
+
+    func testFindFail() async throws {
+        // initial conditions
+        var knownOnTwo = await repoTwo.documentIds()
+        var knownOnOne = await repoOne.documentIds()
+        XCTAssertEqual(knownOnOne.count, 0)
+        XCTAssertEqual(knownOnTwo.count, 0)
+
+        // Create and add some doc content to the "client" repo - RepoOne
+        let newDocId = DocumentId()
+        let newDoc = try await withSpan("repoTwo.create") { _ in
+            try await repoOne.create(id: newDocId)
+        }
+        XCTAssertNotNil(newDoc.doc)
+        // add some content to the new document
+        try newDoc.doc.put(obj: .ROOT, key: "title", value: .String("INITIAL VALUE"))
+
+        knownOnTwo = await repoTwo.documentIds()
+        XCTAssertEqual(knownOnTwo.count, 0)
+
+        knownOnOne = await repoOne.documentIds()
+        XCTAssertEqual(knownOnOne.count, 1)
+        XCTAssertEqual(knownOnOne[0], newDocId)
+        // "GO ONLINE"
+        await network.traceConnections(true)
+        // await adapterTwo.logReceivedMessages(true)
+        try await withSpan("adapterOne.connect") { _ in
+            try await adapterOne.connect(to: "Two")
+        }
+
+        // Two doesn't automatically get the document because RepoOne
+        // isn't configured to "share" automatically on connect
+        // (it's not "agreeable")
+        knownOnTwo = await repoTwo.documentIds()
+        XCTAssertEqual(knownOnTwo.count, 0)
+
+        knownOnOne = await repoOne.documentIds()
+        XCTAssertEqual(knownOnOne.count, 1)
+
+        // We can _request_ the document, but should be denied
+        do {
+            let _ = try await repoTwo.find(id: newDocId)
+            XCTFail("RepoOne is private and should NOT share the document")
+        } catch {
+            let errMsg = error.localizedDescription
+            print(errMsg)
+        }
+    }
 //
 //    func testDelete() async throws {
 //        let myId = DocumentId()

@@ -198,22 +198,23 @@ public actor Repo {
                 // must update the repo with the new handle and empty document _before_
                 // using syncState, since it needs to resolve the documentId
                 handles[docId] = newHandle
+                _ = try await self.resolveDocHandle(id: docId)
             }
-            let handle = try await self.resolveDocHandle(id: docId)
-            // #error("BUG IN SYNC STATE _ ALWAYS GETTING A NEW ONE")
+            guard let handle = handles[docId] else { fatalError("HANDLE DOESN'T EXIST") }
+            let docFromHandle = handle.doc ?? Document()
             let syncState = self.syncState(id: docId, peer: msg.senderId)
             // Apply the request message as a sync update
-            try handle.doc.receiveSyncMessage(state: syncState, message: msg.data)
+            try docFromHandle.receiveSyncMessage(state: syncState, message: msg.data)
             // Stash the updated document and sync state
-            await self.updateDoc(id: docId, doc: handle.doc)
+            await self.updateDoc(id: docId, doc: docFromHandle)
             await self.updateSyncState(id: docId, peer: msg.senderId, syncState: syncState)
             // Attempt to generate a sync message to reply
 
             // DEBUG ONLY
-            print("\(self.peerId): STATE OF \(handle.id)")
-            try handle.doc.walk()
+            // print("\(self.peerId): STATE OF \(handle.id)")
+            // try docFromHandle.walk()
 
-            if let syncData = handle.doc.generateSyncMessage(state: syncState) {
+            if let syncData = docFromHandle.generateSyncMessage(state: syncState) {
                 let syncMsg: SyncV1Msg = .sync(.init(
                     documentId: docId.description,
                     senderId: self.peerId,
@@ -451,15 +452,20 @@ public actor Repo {
         assert(handle.state == .ready)
         handle.doc = doc
         if let storage = self.storage {
-            Task.detached {
-                do {
-                    try await storage.saveDoc(id: id, doc: doc)
-                } catch {
-                    Logger.repo
-                        .warning(
-                            "Error received while attempting to store document ID \(id): \(error.localizedDescription)"
-                        )
+            do {
+                try await withThrowingTaskGroup(of: Void.self) { group in
+                    group.addTask {
+                        try await storage.saveDoc(id: id, doc: doc)
+                    }
+                    // specifically call/wait in case we get an error from
+                    // the delete process in purging the document.
+                    try await group.next()
                 }
+            } catch {
+                Logger.repo
+                    .warning(
+                        "Error received while attempting to store document ID \(id): \(error.localizedDescription)"
+                    )
             }
         }
     }
