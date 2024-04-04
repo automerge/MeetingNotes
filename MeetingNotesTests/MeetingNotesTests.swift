@@ -1,4 +1,3 @@
-import Base58Swift
 import MeetingNotes
 import XCTest
 
