@@ -132,12 +132,15 @@ public final class InMemoryNetworkConnection {
 
 @InMemoryNetwork // isolate all calls to this class using the InMemoryNetwork global actor
 public final class InMemoryNetworkEndpoint: NetworkProvider {
+    public typealias ProviderConfiguration = BasicNetworkConfiguration
+    public typealias NetworkConnectionEndpoint = String
+
     public struct BasicNetworkConfiguration: Sendable {
         let listeningNetwork: Bool
         let name: String
     }
 
-    init() {
+    public init(_ config: BasicNetworkConfiguration) async {
         self.peeredConnections = []
         self._connections = []
         self.listening = false
@@ -151,6 +154,10 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
         self.sent_messages = []
         // logging control
         self.logReceivedMessages = false
+        self.config = config
+        if config.listeningNetwork {
+            self.listening = true
+        }
     }
 
     public func configure(_ config: BasicNetworkConfiguration) async {
@@ -171,7 +178,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     public var peeredConnections: [PeerConnection]
     var _connections: [InMemoryNetworkConnection]
     var delegate: (any NetworkEventReceiver)?
-    var config: BasicNetworkConfiguration?
+    var config: BasicNetworkConfiguration
     var listening: Bool
     var logReceivedMessages: Bool
 
@@ -193,7 +200,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     }
 
     public var endpointName: String? {
-        self.config?.name
+        self.config.name
     }
 
     public func acceptNewConnection(_ connection: InMemoryNetworkConnection) async {
@@ -268,7 +275,7 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
         }
     }
 
-    public func receiveMessage(msg: SyncV1Msg) async {
+    func receiveMessage(msg: SyncV1Msg) async {
         await withSpan("receiveWrappedMessage") { span in
             guard let peerId = self.peerId else {
                 fatalError("Attempting to receive message with unconfigured network adapter")
@@ -417,9 +424,8 @@ public final class InMemoryNetworkEndpoint: NetworkProvider {
     public func createNetworkEndpoint(
         config: InMemoryNetworkEndpoint.BasicNetworkConfiguration
     ) async -> InMemoryNetworkEndpoint {
-        let x = await InMemoryNetworkEndpoint()
+        let x = await InMemoryNetworkEndpoint(config)
         endpoints[config.name] = x
-        await x.configure(config)
         return x
     }
 

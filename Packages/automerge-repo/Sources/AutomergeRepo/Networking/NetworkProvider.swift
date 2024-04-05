@@ -39,29 +39,16 @@ import Automerge
 /// return an ``SyncV1/error(_:)`` message, close the connection, and emit ``NetworkAdapterEvents/close``.
 /// - When any other message is received, it is emitted with ``NetworkAdapterEvents/message(payload:)``.
 /// - When the transport receives a `leave` message, close the connection and emit ``NetworkAdapterEvents/close``.
-public protocol NetworkProvider<ProviderConfiguration>: Sendable {
+public protocol NetworkProvider: Sendable {
     /// A list of all active, peered connections that the provider is maintaining.
     ///
     /// For an outgoing connection, this is typically a single connection.
     /// For a listening connection, this could be quite a few.
     var peeredConnections: [PeerConnection] { get async }
 
-    /// The type used to configure an instance of a Network Provider.
-    associatedtype ProviderConfiguration: Sendable
-
     /// For outgoing connections, the type that represents the endpoint to connect
     /// For example, it could be `URL`, `NWEndpoint` for a Bonjour network, or a custom type.
     associatedtype NetworkConnectionEndpoint: Sendable
-
-    /// Configure the network provider.
-    /// - Parameter _: the configuration for the network provider.
-    ///
-    /// After a NetworkProvider is configured, it is expected to have a local peerId and (optionally) peerMetaData.
-    /// This can be provided in the initializer, or established with the `configure` call.
-    ///
-    /// For connecting providers, this may include enabling or disabling automatic reconnection,
-    /// as well as relevant timeouts for connections.
-    func configure(_ config: ProviderConfiguration) async
 
     /// Initiate an outgoing connection.
     func connect(to: NetworkConnectionEndpoint) async throws // aka "activate"
@@ -74,10 +61,6 @@ public protocol NetworkProvider<ProviderConfiguration>: Sendable {
     /// - Parameter to: An option peerId to identify the recipient for the message. If nil, the message is sent to all
     /// connected peers.
     func send(message: SyncV1Msg, to: PEER_ID?) async
-
-    /// Called by a connection to process an event.
-    /// - Parameter msg: The message to process.
-    func receiveMessage(msg: SyncV1Msg) async
 
     /// Sets the delegate and configures the peer information for a Network Provider
     /// - Parameter to: The instance that accepts asynchronous network events from the provider.
