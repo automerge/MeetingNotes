@@ -78,7 +78,7 @@ public actor Repo {
     // - func storageIdForPeer(peerId) -> StorageId
     // - func subscribeToRemotes([StorageId])
 
-    init(
+    public init(
         sharePolicy: some SharePolicy
     ) {
         self.peerId = UUID().uuidString

@@ -1,8 +1,8 @@
 import class Automerge.Document
 
 public struct DocHandle: Sendable {
-    let id: DocumentId
-    let doc: Document
+    public let id: DocumentId
+    public let doc: Document
 
     init(id: DocumentId, doc: Document) {
         self.id = id
