@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -29,12 +29,13 @@
 		1A6FF21D2B64710700C99F81 /* WebSocketStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FF21C2B64710700C99F81 /* WebSocketStatusView.swift */; };
 		1A7700C52A67343800869A4D /* PeerSyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C42A67343800869A4D /* PeerSyncView.swift */; };
 		1A7700C72A67479F00869A4D /* NWBrowserResultItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7700C62A67479F00869A4D /* NWBrowserResultItemView.swift */; };
-		1A9D231A2B940D23007F3A16 /* AutomergeRepo in Frameworks */ = {isa = PBXBuildFile; productRef = 1A9D23192B940D23007F3A16 /* AutomergeRepo */; };
+		1A90F7F62BC75BEE00E5B3BA /* AutomergeRepo in Frameworks */ = {isa = PBXBuildFile; productRef = 1A90F7F52BC75BEE00E5B3BA /* AutomergeRepo */; };
 		1AC103972B7EB0EF0099296C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1AC103962B7EB0EF0099296C /* PrivacyInfo.xcprivacy */; };
 		1AD5DA352A4650520085DF79 /* MeetingNotesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */; };
 		1AD71E8E2A57622B00B965BF /* MeetingNotesDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */; };
 		1AD71E912A57630B00B965BF /* MergeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E902A57630B00B965BF /* MergeView.swift */; };
 		1AD71E932A5765A800B965BF /* SyncStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E922A5765A800B965BF /* SyncStatusView.swift */; };
+		1ADDFBD92BC865900051195D /* WebsocketSyncConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADDFBD82BC865900051195D /* WebsocketSyncConnection.swift */; };
 		1AF4DDDA2B7C57E800B23BF8 /* ExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF4DDD92B7C57E800B23BF8 /* ExportView.swift */; };
 /* End PBXBuildFile section */
 
@@ -70,7 +71,6 @@
 		1A0DDC532A464DEB001ECADD /* MeetingNotesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesUITests.swift; sourceTree = "<group>"; };
 		1A0DDC552A464DEB001ECADD /* MeetingNotesUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeetingNotes.xctestplan; sourceTree = "<group>"; };
-		1A273DC02B93EBD000B321C5 /* Packages */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Packages; sourceTree = "<group>"; };
 		1A273DD62B93F64500B321C5 /* Logger+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Logger+extensions.swift"; sourceTree = "<group>"; };
 		1A2A02A42A50E74A0044064B /* EditableAgendaItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableAgendaItemView.swift; sourceTree = "<group>"; };
 		1A2AD0302A7437E200EF0C5F /* SyncConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncConnectionView.swift; sourceTree = "<group>"; };
@@ -82,6 +82,7 @@
 		1AD71E8D2A57622B00B965BF /* MeetingNotesDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesDocumentView.swift; sourceTree = "<group>"; };
 		1AD71E902A57630B00B965BF /* MergeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MergeView.swift; sourceTree = "<group>"; };
 		1AD71E922A5765A800B965BF /* SyncStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStatusView.swift; sourceTree = "<group>"; };
+		1ADDFBD82BC865900051195D /* WebsocketSyncConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketSyncConnection.swift; sourceTree = "<group>"; };
 		1AF4DDD92B7C57E800B23BF8 /* ExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportView.swift; sourceTree = "<group>"; };
 		1AF5DB3A2A4A0C38008DAC6F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1AF5DB3B2A4A0C5E008DAC6F /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
@@ -92,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A90F7F62BC75BEE00E5B3BA /* AutomergeRepo in Frameworks */,
 				1A273DCC2B93EEA600B321C5 /* Base58Swift in Frameworks */,
 				1A273DCF2B93EEBB00B321C5 /* Automerge in Frameworks */,
 				1A273DC92B93EE9300B321C5 /* PotentCodables in Frameworks */,
@@ -104,7 +106,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A9D231A2B940D23007F3A16 /* AutomergeRepo in Frameworks */,
 				1A273DD32B93EEEC00B321C5 /* Base58Swift in Frameworks */,
 				1A273DD12B93EEE200B321C5 /* PotentCodables in Frameworks */,
 				1A273DD52B93EEF700B321C5 /* Automerge in Frameworks */,
@@ -128,7 +129,6 @@
 				1AF5DB3A2A4A0C38008DAC6F /* README.md */,
 				1AF5DB3B2A4A0C5E008DAC6F /* CONTRIBUTING.md */,
 				1A0DDC622A464E2D001ECADD /* MeetingNotes.xctestplan */,
-				1A273DC02B93EBD000B321C5 /* Packages */,
 				1A0DDC332A464DEA001ECADD /* MeetingNotes */,
 				1A0DDC482A464DEB001ECADD /* MeetingNotesTests */,
 				1A0DDC522A464DEB001ECADD /* MeetingNotesUITests */,
@@ -151,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */,
+				1ADDFBD82BC865900051195D /* WebsocketSyncConnection.swift */,
 				1AB369012A50D82C00F855F8 /* Views */,
 				1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */,
 				1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */,
@@ -234,6 +235,7 @@
 				1A273DC82B93EE9300B321C5 /* PotentCodables */,
 				1A273DCB2B93EEA600B321C5 /* Base58Swift */,
 				1A273DCE2B93EEBB00B321C5 /* Automerge */,
+				1A90F7F52BC75BEE00E5B3BA /* AutomergeRepo */,
 			);
 			productName = MeetingNotes;
 			productReference = 1A0DDC312A464DEA001ECADD /* MeetingNotes.app */;
@@ -257,7 +259,6 @@
 				1A273DD02B93EEE200B321C5 /* PotentCodables */,
 				1A273DD22B93EEEC00B321C5 /* Base58Swift */,
 				1A273DD42B93EEF700B321C5 /* Automerge */,
-				1A9D23192B940D23007F3A16 /* AutomergeRepo */,
 			);
 			productName = MeetingNotesTests;
 			productReference = 1A0DDC452A464DEB001ECADD /* MeetingNotesTests.xctest */;
@@ -314,10 +315,10 @@
 			);
 			mainGroup = 1A0DDC282A464DEA001ECADD;
 			packageReferences = (
-				1A273DC42B93ECF400B321C5 /* XCLocalSwiftPackageReference "Packages/automerge-repo" */,
 				1A273DC72B93EE9300B321C5 /* XCRemoteSwiftPackageReference "PotentCodables" */,
 				1A273DCA2B93EEA600B321C5 /* XCRemoteSwiftPackageReference "Base58Swift" */,
 				1A273DCD2B93EEBA00B321C5 /* XCRemoteSwiftPackageReference "automerge-swift" */,
+				1A90F7F42BC75BEE00E5B3BA /* XCRemoteSwiftPackageReference "automerge-repo-swift" */,
 			);
 			productRefGroup = 1A0DDC322A464DEA001ECADD /* Products */;
 			projectDirPath = "";
@@ -372,6 +373,7 @@
 				1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */,
 				1AD71E8E2A57622B00B965BF /* MeetingNotesDocumentView.swift in Sources */,
 				1A273DD72B93F64500B321C5 /* Logger+extensions.swift in Sources */,
+				1ADDFBD92BC865900051195D /* WebsocketSyncConnection.swift in Sources */,
 				1A7700C72A67479F00869A4D /* NWBrowserResultItemView.swift in Sources */,
 				1AD71E932A5765A800B965BF /* SyncStatusView.swift in Sources */,
 				1A7700C52A67343800869A4D /* PeerSyncView.swift in Sources */,
@@ -768,13 +770,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		1A273DC42B93ECF400B321C5 /* XCLocalSwiftPackageReference "Packages/automerge-repo" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "Packages/automerge-repo";
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
 		1A273DC72B93EE9300B321C5 /* XCRemoteSwiftPackageReference "PotentCodables" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -798,6 +793,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.5.8;
+			};
+		};
+		1A90F7F42BC75BEE00E5B3BA /* XCRemoteSwiftPackageReference "automerge-repo-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/automerge/automerge-repo-swift";
+			requirement = {
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -841,9 +844,9 @@
 			package = 1A273DCD2B93EEBA00B321C5 /* XCRemoteSwiftPackageReference "automerge-swift" */;
 			productName = Automerge;
 		};
-		1A9D23192B940D23007F3A16 /* AutomergeRepo */ = {
+		1A90F7F52BC75BEE00E5B3BA /* AutomergeRepo */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1A273DC42B93ECF400B321C5 /* XCLocalSwiftPackageReference "Packages/automerge-repo" */;
+			package = 1A90F7F42BC75BEE00E5B3BA /* XCRemoteSwiftPackageReference "automerge-repo-swift" */;
 			productName = AutomergeRepo;
 		};
 /* End XCSwiftPackageProductDependency section */
