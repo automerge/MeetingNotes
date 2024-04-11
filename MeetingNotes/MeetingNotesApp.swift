@@ -1,6 +1,8 @@
 import AutomergeRepo
 import SwiftUI
 
+public let repo = Repo(sharePolicy: SharePolicies.agreeable)
+
 /// The document-based Meeting Notes application.
 @main
 struct MeetingNotesApp: App {
