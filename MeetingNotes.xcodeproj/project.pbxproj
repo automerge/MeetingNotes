@@ -151,10 +151,10 @@
 			isa = PBXGroup;
 			children = (
 				1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */,
-				1ADDFBD82BC865900051195D /* WebsocketSyncConnection.swift */,
 				1AB369012A50D82C00F855F8 /* Views */,
 				1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */,
 				1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */,
+				1AEC38032BC870CC00EA4B41 /* Legacy */,
 				1A0916FF2A4A171C00D80BF7 /* Documentation.docc */,
 				1A0DDC3A2A464DEB001ECADD /* Assets.xcassets */,
 				1A0DDC3E2A464DEB001ECADD /* Preview Content */,
@@ -211,6 +211,14 @@
 				1A6FF21C2B64710700C99F81 /* WebSocketStatusView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		1AEC38032BC870CC00EA4B41 /* Legacy */ = {
+			isa = PBXGroup;
+			children = (
+				1ADDFBD82BC865900051195D /* WebsocketSyncConnection.swift */,
+			);
+			path = Legacy;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
