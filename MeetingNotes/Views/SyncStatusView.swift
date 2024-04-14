@@ -10,9 +10,14 @@ struct SyncStatusView: View {
             syncEnabledIndicator.toggle()
             if syncEnabledIndicator {
                 // only enable listening if an identity has been chosen
-                DocumentSyncCoordinator.shared.activate()
+                Task {
+                    try await peerToPeer.startListening()
+                }
+                
             } else {
-                DocumentSyncCoordinator.shared.deactivate()
+                Task {
+                    await peerToPeer.stopListening()
+                }
             }
         } label: {
             Image(
