@@ -1,19 +1,20 @@
 import AutomergeRepo
 import Network
 import SwiftUI
+@preconcurrency import Combine
 
 /// A view that shows the status of peers and network syncing.
 @MainActor
 struct PeerSyncView: View {
     var documentId: DocumentId
-    @ObservedObject var syncController: DocumentSyncCoordinator = .shared
 
+    @State var availablePeers: [AvailablePeer] = []
+    @State var connectionList: [PeerConnection] = []
     @State var browserActive: Bool = false
     @State var browserStyling: Color = .primary
 
+    @State private var nameToDisplay: String = ""
     @State private var editNamePopoverShown: Bool = false
-    @AppStorage(SynchronizerDefaultKeys.publicPeerName) private var sharingIdentity: String = DocumentSyncCoordinator
-        .defaultSharingIdentity()
 
     var body: some View {
         VStack {
@@ -22,20 +23,22 @@ struct PeerSyncView: View {
                 Button(action: {
                     editNamePopoverShown.toggle()
                 }, label: {
-                    Text("\(syncController.name)").font(.headline)
+                    Text("\(nameToDisplay)").font(.headline)
                 })
                 .buttonStyle(.borderless)
                 .popover(isPresented: $editNamePopoverShown, content: {
                     Form {
                         Text("What name should we show for collaboration?")
-                        TextField("identity", text: $sharingIdentity)
+                        TextField("identity", text: $nameToDisplay)
                             .textFieldStyle(.roundedBorder)
                             .onSubmit {
                                 // Require a name to continue
-                                if !sharingIdentity.isEmpty {
+                                if !nameToDisplay.isEmpty {
                                     editNamePopoverShown.toggle()
                                 }
-                                syncController.name = sharingIdentity
+                                Task {
+                                    await peerToPeer.peerName = nameToDisplay
+                                }
                             }
                         Button(role: .cancel) {
                             editNamePopoverShown.toggle()
@@ -51,7 +54,7 @@ struct PeerSyncView: View {
                     .foregroundStyle(browserStyling)
             }
             .padding(.horizontal)
-            if !syncController.browserResults.isEmpty {
+            if !availablePeers.isEmpty {
                 Divider()
                 HStack {
                     Text("Peers").bold()
@@ -59,8 +62,8 @@ struct PeerSyncView: View {
                 }
                 .padding(.leading)
                 LazyVStack {
-                    ForEach(syncController.browserResults, id: \.hashValue) { result in
-                        NWBrowserResultItemView(documentId: documentId, syncController: syncController, result: result)
+                    ForEach(availablePeers, id: \.peerId) { result in
+                        AvailablePeerView(result: result)
                             .padding(4)
                             .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8))
                             .padding(.horizontal)
@@ -68,34 +71,18 @@ struct PeerSyncView: View {
                 }
             }
             LazyVStack {
-                ForEach(syncController.connections) { connection in
-                    SyncConnectionView(syncConnection: connection)
+                ForEach(connectionList) { connection in
+                    PeerConnectionView(peerConnection: connection)
                         .padding(.leading, 4)
                 }
             }
         }
         .padding(.vertical)
-        .onReceive(syncController.$browserState, perform: { status in
-            switch status {
-            case .cancelled:
-                browserActive = false
-                browserStyling = .orange
-            case .failed:
-                browserActive = false
-                browserStyling = .red
-            case .ready:
-                browserActive = true
-                browserStyling = .green
-            case .setup:
-                browserActive = false
-                browserStyling = .yellow
-            case .waiting:
-                browserActive = true
-                browserStyling = .gray
-            @unknown default:
-                browserActive = false
-                browserStyling = .gray
-            }
+        .onReceive(peerToPeer.connectionPublisher, perform: { connectionList in
+            self.connectionList = connectionList
+        })
+        .onReceive(peerToPeer.availablePeerPublisher, perform: { availablePeerList in
+            availablePeers = availablePeerList
         })
     }
 }
