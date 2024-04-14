@@ -1,9 +1,9 @@
- import Automerge
+import Automerge
 import AutomergeRepo
- import Combine
- import Foundation
- import OSLog
- import PotentCBOR
+import Combine
+import Foundation
+import OSLog
+import PotentCBOR
 
 extension Logger {
     /// Using your bundle identifier is a great way to ensure a unique identifier.
@@ -14,8 +14,8 @@ extension Logger {
 }
 
 /// A class that provides a WebSocket connection to sync an Automerge document.
- @MainActor
- public final class WebsocketSyncConnection: ObservableObject, Identifiable {
+@MainActor
+public final class WebsocketSyncConnection: ObservableObject, Identifiable {
     private var webSocketTask: URLSessionWebSocketTask?
     /// This connections "peer identifier"
     private let senderId: String
@@ -100,7 +100,8 @@ extension Logger {
         while websocketconnection.syncInProgress {
             try Task.checkCancellation()
             Logger.legacyWebSocket
-                .trace("sync in progress, !cancelled - state is: \(websocketconnection.protocolState.rawValue, privacy: .public)"
+                .trace(
+                    "sync in progress, !cancelled - state is: \(websocketconnection.protocolState.rawValue, privacy: .public)"
                 )
             // Race a timeout against receiving a Peer message from the other side
             // of the WebSocket connection. If we fail that race, shut down the connection
@@ -182,7 +183,8 @@ extension Logger {
                     // In the handshake phase and received anything other than a valid peer message
                     let decodeAttempted = SyncV1Msg.decode(raw_data)
                     Logger.legacyWebSocket
-                        .warning("Decoding websocket message, expecting peer only - and it wasn't a peer message. RECEIVED MSG: \(decodeAttempted.debugDescription)"
+                        .warning(
+                            "Decoding websocket message, expecting peer only - and it wasn't a peer message. RECEIVED MSG: \(decodeAttempted.debugDescription)"
                         )
                     throw SyncV1Msg.Errors.UnexpectedMsg(msg: decodeAttempted.debugDescription)
                 }
@@ -436,7 +438,9 @@ extension Logger {
             try Task.checkCancellation()
 
             Logger.legacyWebSocket
-                .trace("Receive Handler: Task not cancelled, awaiting next message, state is \(self.protocolState.rawValue, privacy: .public)")
+                .trace(
+                    "Receive Handler: Task not cancelled, awaiting next message, state is \(self.protocolState.rawValue, privacy: .public)"
+                )
 
             let webSocketMessage = try await webSocketTask.receive()
             do {
@@ -468,7 +472,8 @@ extension Logger {
             } else {
                 // In the handshake phase and received anything other than a valid peer message
                 Logger.legacyWebSocket
-                    .warning("FAILED TO PEER - RECEIVED MSG: \(msg.debugDescription, privacy: .public), shutting down WebSocket"
+                    .warning(
+                        "FAILED TO PEER - RECEIVED MSG: \(msg.debugDescription, privacy: .public), shutting down WebSocket"
                     )
                 await disconnect()
             }
@@ -490,7 +495,8 @@ extension Logger {
                       documentId.description == syncMsg.documentId
                 else {
                     Logger.legacyWebSocket
-                        .warning("Sync message target and document Id don't match expected values. Received: \(syncMsg.debugDescription), targetId expected: \(self.senderId), documentId expected: \(documentId.description)"
+                        .warning(
+                            "Sync message target and document Id don't match expected values. Received: \(syncMsg.debugDescription), targetId expected: \(self.senderId), documentId expected: \(documentId.description)"
                         )
                     return
                 }
@@ -526,8 +532,11 @@ extension Logger {
                     }
                 } catch {
                     Logger.legacyWebSocket
-                        .error("Error while applying sync message \(error.localizedDescription, privacy: .public), DISCONNECTING!")
-                    Logger.legacyWebSocket.error("sync data raw bytes: \(syncMsg.data.hexEncodedString(), privacy: .public)")
+                        .error(
+                            "Error while applying sync message \(error.localizedDescription, privacy: .public), DISCONNECTING!"
+                        )
+                    Logger.legacyWebSocket
+                        .error("sync data raw bytes: \(syncMsg.data.hexEncodedString(), privacy: .public)")
                     await disconnect()
                 }
             case let .ephemeral(msg):
@@ -570,4 +579,4 @@ extension Logger {
             await disconnect()
         }
     }
- }
+}

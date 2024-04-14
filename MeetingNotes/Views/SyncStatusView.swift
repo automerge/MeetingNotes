@@ -13,7 +13,7 @@ struct SyncStatusView: View {
                 Task {
                     try await peerToPeer.startListening()
                 }
-                
+
             } else {
                 Task {
                     await peerToPeer.stopListening()
