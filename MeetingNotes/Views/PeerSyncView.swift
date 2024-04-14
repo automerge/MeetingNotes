@@ -1,7 +1,7 @@
 import AutomergeRepo
+@preconcurrency import Combine
 import Network
 import SwiftUI
-@preconcurrency import Combine
 
 /// A view that shows the status of peers and network syncing.
 @MainActor
@@ -37,7 +37,7 @@ struct PeerSyncView: View {
                                     editNamePopoverShown.toggle()
                                 }
                                 Task {
-                                    await peerToPeer.peerName = nameToDisplay
+                                    await peerToPeer.setName(nameToDisplay)
                                 }
                             }
                         Button(role: .cancel) {

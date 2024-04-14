@@ -77,13 +77,15 @@ struct MeetingNotesDocumentView: View {
                 // upon choosing a new selection on macOS
                 .id(selection)
         }
-        .onAppear {
+        .task {
             // SwiftUI controls the lifecycle of MeetingNoteDocument instances,
             // including sometimes regenerating them when disk contents are updated
             // in the background, so register the current instance with the
             // sync coordinator as they become visible.
-            Task {
-                try await repo.create(doc: document.doc, id: document.id)
+            do {
+                _ = try await repo.create(doc: document.doc, id: document.id)
+            } catch {
+                fatalError("Crashed loading the document: \(error.localizedDescription)")
             }
         }
         .onReceive(document.objectWillChange, perform: { _ in
