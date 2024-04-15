@@ -10,10 +10,9 @@ struct PeerSyncView: View {
 
     @State var availablePeers: [AvailablePeer] = []
     @State var connectionList: [PeerConnection] = []
-    @State var browserActive: Bool = false
     @State var browserStyling: Color = .primary
 
-    @State private var nameToDisplay: String = ""
+    @AppStorage(UserDefaultKeys.publicPeerName) var nameToDisplay: String = "???"
     @State private var editNamePopoverShown: Bool = false
 
     var body: some View {
@@ -48,9 +47,8 @@ struct PeerSyncView: View {
                     }
                     .padding()
                 })
-
                 Spacer()
-                Image(systemName: browserActive ? "bolt.horizontal.fill" : "bolt.horizontal")
+                Image(systemName: "bolt.horizontal")
                     .foregroundStyle(browserStyling)
             }
             .padding(.horizontal)
