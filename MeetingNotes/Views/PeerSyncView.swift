@@ -78,10 +78,10 @@ struct PeerSyncView: View {
             }
         }
         .padding(.vertical)
-        .onReceive(peerToPeer.connectionPublisher, perform: { connectionList in
+        .onReceive(peerToPeer.connectionPublisher.receive(on: DispatchQueue.main), perform: { connectionList in
             self.connectionList = connectionList
         })
-        .onReceive(peerToPeer.availablePeerPublisher, perform: { availablePeerList in
+        .onReceive(peerToPeer.availablePeerPublisher.receive(on: DispatchQueue.main), perform: { availablePeerList in
             availablePeers = availablePeerList
         })
     }
