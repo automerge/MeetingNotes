@@ -82,6 +82,15 @@ struct PeerSyncView: View {
         .onReceive(peerToPeer.availablePeerPublisher.receive(on: DispatchQueue.main), perform: { availablePeerList in
             availablePeers = availablePeerList
         })
+        .task {
+            if nameToDisplay == "???" {
+                // no user default is setup, so load a default value from the library
+                nameToDisplay = await peerToPeer.peerName
+            } else {
+                // overrides the library default name
+                await peerToPeer.setName(nameToDisplay)
+            }
+        }
     }
 }
 
