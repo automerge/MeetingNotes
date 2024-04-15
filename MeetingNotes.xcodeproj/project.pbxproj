@@ -36,6 +36,7 @@
 		1AD71E912A57630B00B965BF /* MergeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E902A57630B00B965BF /* MergeView.swift */; };
 		1AD71E932A5765A800B965BF /* SyncStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD71E922A5765A800B965BF /* SyncStatusView.swift */; };
 		1ADDFBD92BC865900051195D /* WebsocketSyncConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADDFBD82BC865900051195D /* WebsocketSyncConnection.swift */; };
+		1AEFB5682BCDA2B50096D5DF /* UserDefaultKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AEFB5672BCDA2B50096D5DF /* UserDefaultKeys.swift */; };
 		1AF4DDDA2B7C57E800B23BF8 /* ExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF4DDD92B7C57E800B23BF8 /* ExportView.swift */; };
 /* End PBXBuildFile section */
 
@@ -83,6 +84,7 @@
 		1AD71E902A57630B00B965BF /* MergeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MergeView.swift; sourceTree = "<group>"; };
 		1AD71E922A5765A800B965BF /* SyncStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStatusView.swift; sourceTree = "<group>"; };
 		1ADDFBD82BC865900051195D /* WebsocketSyncConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketSyncConnection.swift; sourceTree = "<group>"; };
+		1AEFB5672BCDA2B50096D5DF /* UserDefaultKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultKeys.swift; sourceTree = "<group>"; };
 		1AF4DDD92B7C57E800B23BF8 /* ExportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportView.swift; sourceTree = "<group>"; };
 		1AF5DB3A2A4A0C38008DAC6F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1AF5DB3B2A4A0C5E008DAC6F /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				1A0DDC342A464DEA001ECADD /* MeetingNotesApp.swift */,
+				1AEFB5672BCDA2B50096D5DF /* UserDefaultKeys.swift */,
 				1AB369012A50D82C00F855F8 /* Views */,
 				1A0DDC362A464DEA001ECADD /* MeetingNotesDocument.swift */,
 				1AD5DA342A4650520085DF79 /* MeetingNotesModel.swift */,
@@ -376,6 +379,7 @@
 				1A2AD0312A7437E200EF0C5F /* PeerConnectionView.swift in Sources */,
 				1A2A02A52A50E74B0044064B /* EditableAgendaItemView.swift in Sources */,
 				1A0917002A4A171C00D80BF7 /* Documentation.docc in Sources */,
+				1AEFB5682BCDA2B50096D5DF /* UserDefaultKeys.swift in Sources */,
 				1AD71E912A57630B00B965BF /* MergeView.swift in Sources */,
 				1A6FF21D2B64710700C99F81 /* WebSocketStatusView.swift in Sources */,
 				1A0DDC352A464DEA001ECADD /* MeetingNotesApp.swift in Sources */,
