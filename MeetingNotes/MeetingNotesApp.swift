@@ -6,9 +6,8 @@ public let websocket = WebSocketProvider()
 public let peerToPeer = PeerToPeerProvider(
     PeerToPeerProviderConfiguration(
         passcode: "AutomergeMeetingNotes",
-        listening: true,
         reconnectOnError: true,
-        autoconnect: true
+        autoconnect: false
     )
 )
 
