@@ -11,9 +11,45 @@ struct PeerSyncView: View {
     @State var availablePeers: [AvailablePeer] = []
     @State var connectionList: [PeerConnection] = []
     @State var browserStyling: Color = .primary
+    @State var browserState: NWBrowser.State = .setup
+    @State var listenerState: NWListener.State = .setup
 
     @AppStorage(UserDefaultKeys.publicPeerName) var nameToDisplay: String = "???"
     @State private var editNamePopoverShown: Bool = false
+
+    func browserColor() -> Color {
+        switch browserState {
+        case .setup:
+            return .gray
+        case .ready:
+            return .blue
+        case .failed:
+            return .red
+        case .cancelled:
+            return .orange
+        case .waiting:
+            return .orange
+        @unknown default:
+            fatalError("unknown NWBrowser state: \(browserState)")
+        }
+    }
+
+    func listenerColor() -> Color {
+        switch listenerState {
+        case .setup:
+            return .gray
+        case .waiting:
+            return .orange
+        case .ready:
+            return .blue
+        case .failed:
+            return .red
+        case .cancelled:
+            return .orange
+        @unknown default:
+            fatalError("unknown NWBrowser state: \(browserState)")
+        }
+    }
 
     var body: some View {
         VStack {
@@ -48,8 +84,10 @@ struct PeerSyncView: View {
                     .padding()
                 })
                 Spacer()
-                Image(systemName: "bolt.horizontal")
-                    .foregroundStyle(browserStyling)
+                Image(systemName: "arrow.up.circle")
+                    .foregroundStyle(browserColor())
+                Image(systemName: "arrow.down.circle")
+                    .foregroundStyle(listenerColor())
             }
             .padding(.horizontal)
             if !availablePeers.isEmpty {
@@ -80,7 +118,17 @@ struct PeerSyncView: View {
             self.connectionList = connectionList
         })
         .onReceive(peerToPeer.availablePeerPublisher.receive(on: DispatchQueue.main), perform: { availablePeerList in
-            availablePeers = availablePeerList
+            // display all peers _except_ the one that represents ourself
+            let reducedPeers = availablePeerList.filter { peer in
+                peer.peerId != repo.peerId
+            }
+            availablePeers = reducedPeers
+        })
+        .onReceive(peerToPeer.browserStatePublisher.receive(on: DispatchQueue.main), perform: { state in
+            browserState = state
+        })
+        .onReceive(peerToPeer.listenerStatePublisher.receive(on: DispatchQueue.main), perform: { state in
+            listenerState = state
         })
         .task {
             if nameToDisplay == "???" {

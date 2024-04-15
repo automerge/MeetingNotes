@@ -72,8 +72,10 @@ struct EditableAgendaItemView: View {
                         Text("Delete")
                     }
                     .buttonStyle(.borderedProminent)
-                }.padding([.horizontal, .bottom])
+                }
+                .padding([.horizontal, .bottom])
             }
+            .padding(.top)
             .focused($titleIsFocused)
             .onAppear(perform: {
                 if let indexPosition = document.model.agendas.firstIndex(where: { $0.id == agendaItemId }) {
