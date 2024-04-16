@@ -1,6 +1,7 @@
 import AutomergeRepo
 @preconcurrency import Combine
 import Network
+import OSLog
 import SwiftUI
 
 /// A view that shows the status of peers and network syncing.
@@ -9,7 +10,7 @@ struct PeerSyncView: View {
     var documentId: DocumentId
 
     @State var availablePeers: [AvailablePeer] = []
-    @State var connectionList: [PeerConnection] = []
+    @State var connectionList: [PeerConnectionInfo] = []
     @State var browserStyling: Color = .primary
     @State var browserState: NWBrowser.State = .setup
     @State var listenerState: NWListener.State = .setup
@@ -26,7 +27,7 @@ struct PeerSyncView: View {
         case .failed:
             return .red
         case .cancelled:
-            return .orange
+            return .gray
         case .waiting:
             return .orange
         @unknown default:
@@ -125,9 +126,11 @@ struct PeerSyncView: View {
             availablePeers = reducedPeers
         })
         .onReceive(peerToPeer.browserStatePublisher.receive(on: DispatchQueue.main), perform: { state in
+            Logger.document.debug("Browser state update to \(String(describing: state))")
             browserState = state
         })
         .onReceive(peerToPeer.listenerStatePublisher.receive(on: DispatchQueue.main), perform: { state in
+            Logger.document.debug("Listener state update to \(String(describing: state))")
             listenerState = state
         })
         .task {
