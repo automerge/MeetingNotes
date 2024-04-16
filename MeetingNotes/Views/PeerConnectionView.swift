@@ -5,7 +5,7 @@ import SwiftUI
 /// A view that displays a sync connection and its state.
 @MainActor
 struct PeerConnectionView: View {
-    let peerConnection: PeerConnection
+    let peerConnection: PeerConnectionInfo
 
     func stateRepresentationView() -> some View {
         if peerConnection.peered {
