@@ -89,6 +89,17 @@ struct MeetingNotesDocumentView: View {
             }
         }
         .onReceive(document.objectWillChange, perform: { _ in
+            // When we see the document itself has been updated, send a little "note" to the undoManager
+            // to let it know that something has changed, so that it can "serialize and save" the updates
+            // when the Document-based system is ready to do so automagically.
+            // Without this in place, a document that was updated over the network by a repository would
+            // never provide any detail to the SwiftUI Document-based control mechanisms that it needs to
+            // wrangle a local copy into safety (at least automatically). This was quite the tricky little
+            // bug to resolve on iOS where that automagic stuff rules, and there's not an explicit "save"
+            // menu/keyboard shortcut to invoke.
+            undoManager?.registerUndo(withTarget: document) { _ in }
+            // And just to be safe, verify that now that stuff has changed, the agendaItem we have stored
+            // as the current view selection does, in fact, still exist - if not, set the selection to nil.
             if !document.model.agendas.contains(where: { agendaItem in
                 agendaItem.id == selection
             }) {
