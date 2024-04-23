@@ -1,7 +1,7 @@
 import AutomergeRepo
 import SwiftUI
 
-public let repo = Repo(sharePolicy: SharePolicies.agreeable)
+public let repo = Repo(sharePolicy: SharePolicy.agreeable)
 public let websocket = WebSocketProvider()
 public let peerToPeer = PeerToPeerProvider(
     PeerToPeerProviderConfiguration(
