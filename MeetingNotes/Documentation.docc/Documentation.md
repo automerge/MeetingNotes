@@ -25,25 +25,23 @@ The source for the MeetingNotes app is [available on Github](https://github.com/
 ### Core Application
 
 - ``MeetingNotesApp``
-- ``sharedSyncCoordinator``
-- ``MeetingNotesDefaultKeys``
 - ``MergeError``
 
 ### Logger extensions
 
 - ``MeetingNotes/os/Logger/document``
-- ``MeetingNotes/os/Logger/syncController``
-- ``MeetingNotes/os/Logger/syncConnection``
 
 ### Views
 
 - ``MeetingNotesDocumentView``
 - ``EditableAgendaItemView``
-- ``NWBrowserResultItemView``
+- ``AvailablePeerView``
+- ``PeerConnectionView``
 - ``PeerSyncView``
-- ``SyncConnectionView``
+- ``SyncStatusView``
 - ``MergeView``
-
+- ``ExportView``
+- ``WebSocketStatusView``
 
 ### Previews
 
@@ -52,19 +50,12 @@ The source for the MeetingNotes app is [available on Github](https://github.com/
 - ``PeerBrowserView_Previews``
 - ``MergeView_Previews``
 - ``SyncView_Previews``
+- ``ExportView_Previews``
+- ``WebSocketView_Previews``
 
-### Shared Peer Networking Components
+### Legacy Sync Connection
 
-- ``DocumentSyncCoordinator``
-- ``SyncConnection``
-- ``TXTRecordKeys``
-
-### Peer to Peer Syncing Protocol
-
-- ``P2PAutomergeSyncProtocol``
-- ``P2PSyncMessageType`` 
-- ``P2PAutomergeSyncProtocolHeader``
-- ``MeetingNotes/Network/NWParameters/peerSyncParameters(documentId:)``
+- ``WebsocketSyncConnection``
 
 ### Application Resources
 
