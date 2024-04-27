@@ -10,18 +10,17 @@ struct WebSocketStatusView: View {
         // Identifiable conformance
         var id: Self { self }
         // URL string assist
-        var urlString: String {
+        var url: URL {
             switch self {
             case .local:
-                return "ws://localhost:3030/"
+                return URL(string: "ws://localhost:3030/")!
             case .automerge:
-                return "wss://sync.automerge.org/"
+                return URL(string: "wss://sync.automerge.org/")!
             }
         }
     }
 
     @ObservedObject var document: MeetingNotesDocument
-    @StateObject private var websocket = WebsocketSyncConnection(nil, id: nil)
     @State private var syncEnabledIndicator: Bool = false
     @State private var syncDestination: SyncTargets = .automerge
 
@@ -39,8 +38,7 @@ struct WebSocketStatusView: View {
                 syncEnabledIndicator.toggle()
                 if syncEnabledIndicator {
                     Task {
-                        try await websocket.connect(syncDestination.urlString)
-                        try await websocket.runOngoingSync()
+                        try await websocket.connect(to: syncDestination.url)
                     }
                 } else {
                     Task {
@@ -57,9 +55,6 @@ struct WebSocketStatusView: View {
             #if os(macOS)
             .buttonStyle(.borderless)
             #endif
-        }
-        .onAppear {
-            websocket.registerDocument(document.doc, id: document.id)
         }
     }
 }
