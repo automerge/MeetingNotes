@@ -87,6 +87,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         }
 
         syncedDocumentTrigger = doc.objectWillChange.sink {
+            Logger.syncflow.trace("\(self.id) ** objectWillChange **")
             self.objectWillChange.send()
         }
     }
@@ -151,6 +152,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
             .throttle(for: 1.0, scheduler: DispatchQueue.main, latest: true)
             .receive(on: RunLoop.main)
             .sink {
+                Logger.syncflow.trace("\(self.id) ** objectWillChange (1 sec delay) **")
                 do {
                     try self.getModelUpdates()
                 } catch {
@@ -195,13 +197,14 @@ final class MeetingNotesDocument: ReferenceFileDocument {
 
     /// Updates the Automerge document with the current value from the model.
     func storeModelUpdates() throws {
+        Logger.syncflow.debug("Storing model updates")
         try modelEncoder.encode(model)
         self.objectWillChange.send()
     }
 
     /// Updates the model document with any changed values in the Automerge document.
     func getModelUpdates() throws {
-        // Logger.document.debug("Updating model from Automerge document.")
+        Logger.syncflow.debug("Loading model updates")
         model = try modelDecoder.decode(MeetingNotesModel.self)
     }
 
