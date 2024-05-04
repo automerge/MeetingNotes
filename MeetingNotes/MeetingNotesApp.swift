@@ -2,12 +2,13 @@ import AutomergeRepo
 import SwiftUI
 
 public let repo = Repo(sharePolicy: SharePolicy.agreeable)
-public let websocket = WebSocketProvider()
+public let websocket = WebSocketProvider(.init(reconnectOnError: true, loggingAt: .tracing))
 public let peerToPeer = PeerToPeerProvider(
     PeerToPeerProviderConfiguration(
         passcode: "AutomergeMeetingNotes",
         reconnectOnError: true,
-        autoconnect: false
+        autoconnect: false,
+        logVerbosity: .tracing
     )
 )
 
@@ -29,6 +30,7 @@ struct MeetingNotesApp: App {
 
     init() {
         Task {
+            
             await repo.addNetworkAdapter(adapter: websocket)
             await repo.addNetworkAdapter(adapter: peerToPeer)
         }
