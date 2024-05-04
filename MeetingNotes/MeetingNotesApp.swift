@@ -30,7 +30,11 @@ struct MeetingNotesApp: App {
 
     init() {
         Task {
-            
+            // Enable repo tracing
+            await repo.setLogLevel(.network, to: .tracing)
+            await repo.setLogLevel(.resolver, to: .tracing)
+            await repo.setLogLevel(.repo, to: .tracing)
+            // Enable network adapters
             await repo.addNetworkAdapter(adapter: websocket)
             await repo.addNetworkAdapter(adapter: peerToPeer)
         }
