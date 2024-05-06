@@ -87,7 +87,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         }
 
         syncedDocumentTrigger = doc.objectWillChange.sink {
-            Logger.syncflow.trace("\(self.id) ** objectWillChange **")
+            Logger.syncflow.trace("APPSYNC: \(self.id) ** objectWillChange **")
             self.objectWillChange.send()
         }
     }
@@ -111,13 +111,18 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         // Set the identifier of this document, external from the Automerge document.
         id = wrappedDocument.id
         // Then deserialize the Automerge document from the wrappers data.
-        doc = try Document(wrappedDocument.data)
-        Logger.document
-            .debug(
-                "Created Automerge doc of ID \(self.id, privacy: .public) from CBOR encoded data of \(wrappedDocument.data.count, privacy: .public) bytes"
-            )
-        modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
-        modelDecoder = AutomergeDecoder(doc: doc)
+        do {
+            doc = try Document(wrappedDocument.data)
+            Logger.document
+                .debug(
+                    "Created Automerge doc of ID \(self.id, privacy: .public) from CBOR encoded data of \(wrappedDocument.data.count, privacy: .public) bytes"
+                )
+            modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
+            modelDecoder = AutomergeDecoder(doc: doc)
+        } catch {
+            Logger.document.error("Failed to construct Automerge doc from data: \(error.localizedDescription)")
+            throw error
+        }
         do {
             model = try modelDecoder.decode(MeetingNotesModel.self)
         } catch let DecodingError.dataCorrupted(context) {
@@ -152,7 +157,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
             .throttle(for: 1.0, scheduler: DispatchQueue.main, latest: true)
             .receive(on: RunLoop.main)
             .sink {
-                Logger.syncflow.trace("\(self.id) ** objectWillChange (1 sec delay) **")
+                Logger.syncflow.trace("APPSYNC: \(self.id) ** Automerge document objectWillChange (1 sec delay) **")
                 do {
                     try self.getModelUpdates()
                 } catch {
@@ -197,14 +202,14 @@ final class MeetingNotesDocument: ReferenceFileDocument {
 
     /// Updates the Automerge document with the current value from the model.
     func storeModelUpdates() throws {
-        Logger.syncflow.debug("Storing model updates")
+        Logger.syncflow.debug("APPSYNC: Storing model updates")
         try modelEncoder.encode(model)
         self.objectWillChange.send()
     }
 
     /// Updates the model document with any changed values in the Automerge document.
     func getModelUpdates() throws {
-        Logger.syncflow.debug("Loading model updates")
+        Logger.syncflow.debug("APPSYNC: Loading model updates")
         model = try modelDecoder.decode(MeetingNotesModel.self)
     }
 
