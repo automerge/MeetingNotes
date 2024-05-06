@@ -11,7 +11,7 @@ extension Logger: @unchecked Sendable {
 
     /// Logs the Document interactions, such as saving and loading.
     static let document = Logger(subsystem: subsystem, category: "Document")
-    
+
     /// Logs messages that might pertain to initiating, or receiving, sync updates
     static let syncflow = Logger(subsystem: subsystem, category: "SyncFlow")
 }
