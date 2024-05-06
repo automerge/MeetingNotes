@@ -134,12 +134,16 @@ struct PeerSyncView: View {
             listenerState = state
         })
         .task {
+            // NOTE: this task gets invoked on _every_ re-appearance of the view - kind of the async
+            // equivalent of .onAppear() {} closure structure.
+            //
+            // The result is this bit if repeatedly redundant, but covers the case where the app is
+            // first coming online and a default "???" value should be set whatever the inline default
+            // from the library can provide. Since this is an @AppStorage() setup, if there's a configured
+            // setting, this won't get hit and we're just waiting cycles with the check.
             if nameToDisplay == "???" {
                 // no user default is setup, so load a default value from the library
                 nameToDisplay = await peerToPeer.peerName
-            } else {
-                // overrides the library default name
-                await peerToPeer.setName(nameToDisplay)
             }
         }
     }
