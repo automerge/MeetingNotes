@@ -62,6 +62,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
     let modelDecoder: AutomergeDecoder
     let id: DocumentId
     var doc: Document
+    var latestHeads: Set<ChangeHash>
 
     @Published
     var model: MeetingNotesModel
@@ -74,6 +75,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         Logger.document.debug("INITIALIZING NEW DOCUMENT")
         id = DocumentId()
         doc = Document()
+        latestHeads = doc.heads()
         let newModel = MeetingNotesModel(title: "Untitled")
         model = newModel
         modelEncoder = AutomergeEncoder(doc: doc, strategy: .createWhenNeeded)
@@ -86,9 +88,14 @@ final class MeetingNotesDocument: ReferenceFileDocument {
             fatalError(error.localizedDescription)
         }
 
-        syncedDocumentTrigger = doc.objectWillChange.sink {
-            Logger.syncflow.trace("APPSYNC: \(self.id) ** objectWillChange **")
-            self.objectWillChange.send()
+        syncedDocumentTrigger = doc.objectWillChange.sink { [weak self] in
+            guard let self else { return }
+            let now = self.doc.heads()
+            if now != self.latestHeads {
+                self.latestHeads = now
+                Logger.syncflow.trace("APPSYNC: \(self.id) ** objectWillChange **")
+                self.objectWillChange.send()
+            }
         }
     }
 
@@ -113,6 +120,7 @@ final class MeetingNotesDocument: ReferenceFileDocument {
         // Then deserialize the Automerge document from the wrappers data.
         do {
             doc = try Document(wrappedDocument.data)
+            latestHeads = doc.heads()
             Logger.document
                 .debug(
                     "Created Automerge doc of ID \(self.id, privacy: .public) from CBOR encoded data of \(wrappedDocument.data.count, privacy: .public) bytes"
@@ -148,18 +156,25 @@ final class MeetingNotesDocument: ReferenceFileDocument {
             Logger.document.error("error: \(error, privacy: .public)")
             fatalError()
         }
+
         Logger.document
             .debug("finished loading from \(String(describing: configuration.file.filename), privacy: .public)")
+
         syncedDocumentTrigger = doc.objectWillChange
             // slow down the rate at which updates can appear so that the whole SwiftUI view
             // structure won't be reset too frequently, but IS updated when changes come in from
             // a syncing mechanism.
             .throttle(for: 1.0, scheduler: DispatchQueue.main, latest: true)
             .receive(on: RunLoop.main)
-            .sink {
-                Logger.syncflow.trace("APPSYNC: \(self.id) ** Automerge document objectWillChange (1 sec delay) **")
+            .sink { [weak self] in
+                guard let self else { return }
                 do {
-                    try self.getModelUpdates()
+                    Logger.syncflow.trace("APPSYNC: \(self.id) ** Automerge document objectWillChange (1 sec delay) **")
+                    let now = self.doc.heads()
+                    if now != self.latestHeads {
+                        self.latestHeads = now
+                        try self.getModelUpdates()
+                    }
                 } catch {
                     fatalError("Error occurred while updating the model from the Automerge document: \(error)")
                 }
