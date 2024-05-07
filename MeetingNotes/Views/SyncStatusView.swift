@@ -4,6 +4,7 @@ import SwiftUI
 /// A toolbar button for activating sync for a document.
 @MainActor
 struct SyncStatusView: View {
+    @AppStorage(UserDefaultKeys.publicPeerName) var nameToDisplay: String = "???"
     @State private var syncEnabledIndicator: Bool = false
     var body: some View {
         Button {
@@ -11,9 +12,13 @@ struct SyncStatusView: View {
             if syncEnabledIndicator {
                 // only enable listening if an identity has been chosen
                 Task {
-                    try await peerToPeer.startListening()
+                    if self.nameToDisplay == "???" {
+                        let nameToUse = await peerToPeer.peerName
+                        try await peerToPeer.startListening(as: nameToUse)
+                    } else {
+                        try await peerToPeer.startListening(as: self.nameToDisplay)
+                    }
                 }
-
             } else {
                 Task {
                     await peerToPeer.stopListening()

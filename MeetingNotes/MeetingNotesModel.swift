@@ -3,7 +3,7 @@ import Foundation
 
 /// An individual agenda item tracked by meeting notes.
 /// The `discussion` property is the type `Text` is from Automerge, and represents a collaboratively edited string.
-struct AgendaItem: Identifiable, Codable, Hashable {
+struct AgendaItem: Identifiable, Codable, Hashable, Sendable {
     let id: UUID
     var title: String
     var discussion: AutomergeText
@@ -39,7 +39,7 @@ struct AgendaItem: Identifiable, Codable, Hashable {
 ///   ]
 /// }
 /// ```
-struct MeetingNotesModel: Codable {
+struct MeetingNotesModel: Codable, Sendable {
     var title: String
     var attendees: [String]
     var agendas: [AgendaItem]
