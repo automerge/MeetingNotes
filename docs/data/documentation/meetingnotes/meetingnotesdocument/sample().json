@@ -8,14 +8,14 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument\/sample()"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument\/sample()"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -58,7 +58,7 @@
     ],
     "remoteSource" : {
       "fileName" : "MeetingNotesDocument.swift",
-      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/MeetingNotesDocument.swift#L204"
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/MeetingNotesDocument.swift#L253"
     },
     "role" : "symbol",
     "roleHeading" : "Type Method",
@@ -101,7 +101,7 @@
               "text" : "() -> "
             },
             {
-              "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
+              "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
               "kind" : "typeIdentifier",
               "preciseIdentifier" : "s:12MeetingNotes0aB8DocumentC",
               "text" : "MeetingNotesDocument"
@@ -154,21 +154,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument": {
   "abstract" : [
     {
       "text" : "The concrete subclass of a reference-based file document.",
@@ -189,7 +189,7 @@
       "text" : "MeetingNotesDocument"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -202,7 +202,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesdocument"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument/sample()": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument/sample()": {
   "abstract" : [
     {
       "text" : "Creates a same meeting notes document with two empty agenda items.",
@@ -240,7 +240,7 @@
       "text" : "MeetingNotesDocument"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument\/sample()",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument\/sample()",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "sample()",

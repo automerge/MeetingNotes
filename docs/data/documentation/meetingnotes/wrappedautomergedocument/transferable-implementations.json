@@ -2,14 +2,14 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/Transferable-Implementations"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/Transferable-Implementations"
   },
   "kind" : "article",
   "metadata" : {
@@ -19,6 +19,7 @@
       }
     ],
     "role" : "collectionGroup",
+    "roleHeading" : "API Collection",
     "title" : "Transferable Implementations"
   },
   "schemaVersion" : {
@@ -33,7 +34,7 @@
     {
       "generated" : true,
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/transferRepresentation"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/transferRepresentation"
       ],
       "title" : "Type Properties"
     }
@@ -52,21 +53,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument": {
   "abstract" : [
     {
       "text" : "A CBOR encoded wrapper around a serialized Automerge document.",
@@ -87,7 +88,7 @@
       "text" : "WrappedAutomergeDocument"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -100,7 +101,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/wrappedautomergedocument"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/transferRepresentation": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/transferRepresentation": {
   "abstract" : [
 
   ],
@@ -143,7 +144,7 @@
       "text" : "TransferRepresentation"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/transferRepresentation",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/transferRepresentation",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "transferRepresentation",

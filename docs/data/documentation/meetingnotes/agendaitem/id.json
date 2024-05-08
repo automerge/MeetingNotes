@@ -16,14 +16,14 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem\/id"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem\/id"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -125,21 +125,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AgendaItem": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/AgendaItem": {
   "abstract" : [
     {
       "text" : "An individual agenda item tracked by meeting notes.",
@@ -184,7 +184,7 @@
       "text" : "AgendaItem"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -197,7 +197,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/agendaitem"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AgendaItem/id": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/AgendaItem/id": {
   "abstract" : [
 
   ],
@@ -224,7 +224,7 @@
       "text" : "UUID"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem\/id",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem\/id",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "id",

@@ -2,14 +2,14 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView\/document"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView\/document"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -44,7 +44,7 @@
     ],
     "remoteSource" : {
       "fileName" : "MeetingNotesDocumentView.swift",
-      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/MeetingNotesDocumentView.swift#L6"
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/MeetingNotesDocumentView.swift#L8"
     },
     "role" : "symbol",
     "roleHeading" : "Instance Property",
@@ -92,7 +92,7 @@
               "text" : ": "
             },
             {
-              "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
+              "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
               "kind" : "typeIdentifier",
               "preciseIdentifier" : "s:12MeetingNotes0aB8DocumentC",
               "text" : "MeetingNotesDocument"
@@ -145,21 +145,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument": {
   "abstract" : [
     {
       "text" : "The concrete subclass of a reference-based file document.",
@@ -180,7 +180,7 @@
       "text" : "MeetingNotesDocument"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -193,7 +193,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesdocument"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView": {
   "abstract" : [
     {
       "text" : "The primary document view for a MeetingNotes document.",
@@ -214,7 +214,7 @@
       "text" : "MeetingNotesDocumentView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -227,7 +227,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesdocumentview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView/document": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView/document": {
   "abstract" : [
 
   ],
@@ -254,7 +254,7 @@
       "text" : "MeetingNotesDocument"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView\/document",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView\/document",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "document",

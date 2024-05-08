@@ -8,13 +8,13 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -46,7 +46,7 @@
     ],
     "remoteSource" : {
       "fileName" : "PeerSyncView.swift",
-      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/PeerSyncView.swift#L5"
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/PeerSyncView.swift#L9"
     },
     "role" : "symbol",
     "roleHeading" : "Structure",
@@ -64,6 +64,19 @@
             "macOS"
           ],
           "tokens" : [
+            {
+              "kind" : "attribute",
+              "text" : "@"
+            },
+            {
+              "kind" : "attribute",
+              "preciseIdentifier" : "s:ScM",
+              "text" : "MainActor"
+            },
+            {
+              "kind" : "text",
+              "text" : " "
+            },
             {
               "kind" : "keyword",
               "text" : "struct"
@@ -85,7 +98,8 @@
   "relationshipsSections" : [
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/7SwiftUI4ViewP"
+        "doc:\/\/com.automerge.MeetingNotes\/s8SendableP",
+        "doc:\/\/com.automerge.MeetingNotes\/7SwiftUI4ViewP"
       ],
       "kind" : "relationships",
       "title" : "Conforms To",
@@ -104,12 +118,14 @@
     {
       "generated" : true,
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/NWBrowserResultItemView",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncConnectionView",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/AvailablePeerView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerConnectionView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncStatusView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/ExportView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WebSocketStatusView"
       ],
       "title" : "Views"
     }
@@ -117,24 +133,34 @@
   "topicSections" : [
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/init(documentId:syncController:browserActive:browserStyling:)"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/init(documentId:availablePeers:connectionList:browserStyling:browserState:listenerState:nameToDisplay:)"
       ],
       "title" : "Initializers"
     },
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/body",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/browserActive",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/browserStyling",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/documentId",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/syncController"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/availablePeers",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/body",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/browserState",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/browserStyling",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/connectionList",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/documentId",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/listenerState",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/nameToDisplay"
       ],
       "title" : "Instance Properties"
     },
     {
+      "identifiers" : [
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/browserColor()",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/listenerColor()"
+      ],
+      "title" : "Instance Methods"
+    },
+    {
       "generated" : true,
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/View-Implementations"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/View-Implementations"
       ],
       "title" : "Default Implementations"
     }
@@ -153,26 +179,60 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/7SwiftUI4ViewP": {
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/7SwiftUI4ViewP",
+"doc://com.automerge.MeetingNotes/7SwiftUI4ViewP": {
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/7SwiftUI4ViewP",
   "title" : "SwiftUI.View",
   "type" : "unresolvable"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/AvailablePeerView": {
+  "abstract" : [
+    {
+      "text" : "A view that shows nearby peers available for sync.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "AvailablePeerView"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/AvailablePeerView",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "AvailablePeerView"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "AvailablePeerView",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/availablepeerview"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView": {
   "abstract" : [
     {
       "text" : "A view that provides an editable view of an agenda item.",
@@ -193,7 +253,7 @@
       "text" : "EditableAgendaItemView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -206,7 +266,41 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/editableagendaitemview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/ExportView": {
+  "abstract" : [
+    {
+      "text" : "A toolbar button to coordinate merging documents.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "ExportView"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/ExportView",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "ExportView"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "ExportView",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/exportview"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView": {
   "abstract" : [
     {
       "text" : "The primary document view for a MeetingNotes document.",
@@ -227,7 +321,7 @@
       "text" : "MeetingNotesDocumentView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -240,7 +334,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesdocumentview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeView": {
   "abstract" : [
     {
       "text" : "A toolbar button to coordinate merging documents.",
@@ -261,7 +355,7 @@
       "text" : "MergeView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -274,10 +368,10 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/mergeview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/NWBrowserResultItemView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerConnectionView": {
   "abstract" : [
     {
-      "text" : "A view that shows nearby peers available for sync.",
+      "text" : "A view that displays a sync connection and its state.",
       "type" : "text"
     }
   ],
@@ -292,23 +386,23 @@
     },
     {
       "kind" : "identifier",
-      "text" : "NWBrowserResultItemView"
+      "text" : "PeerConnectionView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/NWBrowserResultItemView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerConnectionView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
       "kind" : "identifier",
-      "text" : "NWBrowserResultItemView"
+      "text" : "PeerConnectionView"
     }
   ],
   "role" : "symbol",
-  "title" : "NWBrowserResultItemView",
+  "title" : "PeerConnectionView",
   "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/nwbrowserresultitemview"
+  "url" : "\/documentation\/meetingnotes\/peerconnectionview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView": {
   "abstract" : [
     {
       "text" : "A view that shows the status of peers and network syncing.",
@@ -329,7 +423,7 @@
       "text" : "PeerSyncView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -342,18 +436,56 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/peersyncview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/View-Implementations": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/View-Implementations": {
   "abstract" : [
 
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/View-Implementations",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/View-Implementations",
   "kind" : "article",
   "role" : "collectionGroup",
   "title" : "View Implementations",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/peersyncview\/view-implementations"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/body": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/availablePeers": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "availablePeers"
+    },
+    {
+      "kind" : "text",
+      "text" : ": ["
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:13AutomergeRepo13AvailablePeerV",
+      "text" : "AvailablePeer"
+    },
+    {
+      "kind" : "text",
+      "text" : "]"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/availablePeers",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "availablePeers",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/peersyncview\/availablepeers"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/body": {
   "abstract" : [
 
   ],
@@ -388,14 +520,48 @@
       "text" : "View"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/body",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/body",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "body",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/peersyncview\/body"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/browserActive": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/browserColor()": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "func"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "browserColor"
+    },
+    {
+      "kind" : "text",
+      "text" : "() -> "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7SwiftUI5ColorV",
+      "text" : "Color"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/browserColor()",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "browserColor()",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/peersyncview\/browsercolor()"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/browserState": {
   "abstract" : [
 
   ],
@@ -410,7 +576,7 @@
     },
     {
       "kind" : "identifier",
-      "text" : "browserActive"
+      "text" : "browserState"
     },
     {
       "kind" : "text",
@@ -418,18 +584,27 @@
     },
     {
       "kind" : "typeIdentifier",
-      "preciseIdentifier" : "s:Sb",
-      "text" : "Bool"
+      "preciseIdentifier" : "s:7Network9NWBrowserC",
+      "text" : "NWBrowser"
+    },
+    {
+      "kind" : "text",
+      "text" : "."
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network9NWBrowserC5StateO",
+      "text" : "State"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/browserActive",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/browserState",
   "kind" : "symbol",
   "role" : "symbol",
-  "title" : "browserActive",
+  "title" : "browserState",
   "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/peersyncview\/browseractive"
+  "url" : "\/documentation\/meetingnotes\/peersyncview\/browserstate"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/browserStyling": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/browserStyling": {
   "abstract" : [
 
   ],
@@ -456,14 +631,52 @@
       "text" : "Color"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/browserStyling",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/browserStyling",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "browserStyling",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/peersyncview\/browserstyling"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/documentId": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/connectionList": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "var"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "connectionList"
+    },
+    {
+      "kind" : "text",
+      "text" : ": ["
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:13AutomergeRepo18PeerConnectionInfoV",
+      "text" : "PeerConnectionInfo"
+    },
+    {
+      "kind" : "text",
+      "text" : "]"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/connectionList",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "connectionList",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/peersyncview\/connectionlist"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/documentId": {
   "abstract" : [
 
   ],
@@ -486,18 +699,18 @@
     },
     {
       "kind" : "typeIdentifier",
-      "preciseIdentifier" : "s:10Foundation4UUIDV",
-      "text" : "UUID"
+      "preciseIdentifier" : "s:13AutomergeRepo10DocumentIdV",
+      "text" : "DocumentId"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/documentId",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/documentId",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "documentId",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/peersyncview\/documentid"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/init(documentId:syncController:browserActive:browserStyling:)": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/init(documentId:availablePeers:connectionList:browserStyling:browserState:listenerState:nameToDisplay:)": {
   "abstract" : [
 
   ],
@@ -520,8 +733,8 @@
     },
     {
       "kind" : "typeIdentifier",
-      "preciseIdentifier" : "s:10Foundation4UUIDV",
-      "text" : "UUID"
+      "preciseIdentifier" : "s:13AutomergeRepo10DocumentIdV",
+      "text" : "DocumentId"
     },
     {
       "kind" : "text",
@@ -529,37 +742,37 @@
     },
     {
       "kind" : "externalParam",
-      "text" : "syncController"
+      "text" : "availablePeers"
     },
     {
       "kind" : "text",
-      "text" : ": "
+      "text" : ": ["
     },
     {
       "kind" : "typeIdentifier",
-      "preciseIdentifier" : "s:12MeetingNotes23DocumentSyncCoordinatorC",
-      "text" : "DocumentSyncCoordinator"
+      "preciseIdentifier" : "s:13AutomergeRepo13AvailablePeerV",
+      "text" : "AvailablePeer"
     },
     {
       "kind" : "text",
-      "text" : ", "
+      "text" : "], "
     },
     {
       "kind" : "externalParam",
-      "text" : "browserActive"
+      "text" : "connectionList"
     },
     {
       "kind" : "text",
-      "text" : ": "
+      "text" : ": ["
     },
     {
       "kind" : "typeIdentifier",
-      "preciseIdentifier" : "s:Sb",
-      "text" : "Bool"
+      "preciseIdentifier" : "s:13AutomergeRepo18PeerConnectionInfoV",
+      "text" : "PeerConnectionInfo"
     },
     {
       "kind" : "text",
-      "text" : ", "
+      "text" : "], "
     },
     {
       "kind" : "externalParam",
@@ -576,17 +789,120 @@
     },
     {
       "kind" : "text",
+      "text" : ", "
+    },
+    {
+      "kind" : "externalParam",
+      "text" : "browserState"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network9NWBrowserC",
+      "text" : "NWBrowser"
+    },
+    {
+      "kind" : "text",
+      "text" : "."
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network9NWBrowserC5StateO",
+      "text" : "State"
+    },
+    {
+      "kind" : "text",
+      "text" : ", "
+    },
+    {
+      "kind" : "externalParam",
+      "text" : "listenerState"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network10NWListenerC",
+      "text" : "NWListener"
+    },
+    {
+      "kind" : "text",
+      "text" : "."
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network10NWListenerC5StateO",
+      "text" : "State"
+    },
+    {
+      "kind" : "text",
+      "text" : ", "
+    },
+    {
+      "kind" : "externalParam",
+      "text" : "nameToDisplay"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:SS",
+      "text" : "String"
+    },
+    {
+      "kind" : "text",
       "text" : ")"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/init(documentId:syncController:browserActive:browserStyling:)",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/init(documentId:availablePeers:connectionList:browserStyling:browserState:listenerState:nameToDisplay:)",
   "kind" : "symbol",
   "role" : "symbol",
-  "title" : "init(documentId:syncController:browserActive:browserStyling:)",
+  "title" : "init(documentId:availablePeers:connectionList:browserStyling:browserState:listenerState:nameToDisplay:)",
   "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/peersyncview\/init(documentid:synccontroller:browseractive:browserstyling:)"
+  "url" : "\/documentation\/meetingnotes\/peersyncview\/init(documentid:availablepeers:connectionlist:browserstyling:browserstate:listenerstate:nametodisplay:)"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/syncController": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/listenerColor()": {
+  "abstract" : [
+
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "func"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "listenerColor"
+    },
+    {
+      "kind" : "text",
+      "text" : "() -> "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7SwiftUI5ColorV",
+      "text" : "Color"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/listenerColor()",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "listenerColor()",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/peersyncview\/listenercolor()"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/listenerState": {
   "abstract" : [
 
   ],
@@ -601,7 +917,7 @@
     },
     {
       "kind" : "identifier",
-      "text" : "syncController"
+      "text" : "listenerState"
     },
     {
       "kind" : "text",
@@ -609,28 +925,34 @@
     },
     {
       "kind" : "typeIdentifier",
-      "preciseIdentifier" : "s:12MeetingNotes23DocumentSyncCoordinatorC",
-      "text" : "DocumentSyncCoordinator"
+      "preciseIdentifier" : "s:7Network10NWListenerC",
+      "text" : "NWListener"
+    },
+    {
+      "kind" : "text",
+      "text" : "."
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:7Network10NWListenerC5StateO",
+      "text" : "State"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/syncController",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/listenerState",
   "kind" : "symbol",
   "role" : "symbol",
-  "title" : "syncController",
+  "title" : "listenerState",
   "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/peersyncview\/synccontroller"
+  "url" : "\/documentation\/meetingnotes\/peersyncview\/listenerstate"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncConnectionView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/nameToDisplay": {
   "abstract" : [
-    {
-      "text" : "A view that displays a sync connection and its state.",
-      "type" : "text"
-    }
+
   ],
   "fragments" : [
     {
       "kind" : "keyword",
-      "text" : "struct"
+      "text" : "var"
     },
     {
       "kind" : "text",
@@ -638,23 +960,26 @@
     },
     {
       "kind" : "identifier",
-      "text" : "SyncConnectionView"
-    }
-  ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncConnectionView",
-  "kind" : "symbol",
-  "navigatorTitle" : [
+      "text" : "nameToDisplay"
+    },
     {
-      "kind" : "identifier",
-      "text" : "SyncConnectionView"
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:SS",
+      "text" : "String"
     }
   ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/nameToDisplay",
+  "kind" : "symbol",
   "role" : "symbol",
-  "title" : "SyncConnectionView",
+  "title" : "nameToDisplay",
   "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/syncconnectionview"
+  "url" : "\/documentation\/meetingnotes\/peersyncview\/nametodisplay"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/SyncStatusView": {
   "abstract" : [
     {
       "text" : "A toolbar button for activating sync for a document.",
@@ -672,21 +997,60 @@
     },
     {
       "kind" : "identifier",
-      "text" : "SyncView"
+      "text" : "SyncStatusView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncStatusView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
       "kind" : "identifier",
-      "text" : "SyncView"
+      "text" : "SyncStatusView"
     }
   ],
   "role" : "symbol",
-  "title" : "SyncView",
+  "title" : "SyncStatusView",
   "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/syncview"
+  "url" : "\/documentation\/meetingnotes\/syncstatusview"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/WebSocketStatusView": {
+  "abstract" : [
+    {
+      "text" : "A toolbar button for activating sync for a document.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "WebSocketStatusView"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WebSocketStatusView",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "WebSocketStatusView"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "WebSocketStatusView",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/websocketstatusview"
+},
+"doc://com.automerge.MeetingNotes/s8SendableP": {
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/s8SendableP",
+  "title" : "Swift.Sendable",
+  "type" : "unresolvable"
 }
 }
 }

@@ -27,15 +27,15 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/View-Implementations"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/View-Implementations"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/navigationBarHidden(_:)"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/navigationBarHidden(_:)"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -229,21 +229,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView": {
   "abstract" : [
     {
       "text" : "A view that shows the status of peers and network syncing.",
@@ -264,7 +264,7 @@
       "text" : "PeerSyncView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -277,18 +277,18 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/peersyncview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/View-Implementations": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/View-Implementations": {
   "abstract" : [
 
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/View-Implementations",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/View-Implementations",
   "kind" : "article",
   "role" : "collectionGroup",
   "title" : "View Implementations",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/peersyncview\/view-implementations"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/navigationBarHidden(_:)": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/navigationBarHidden(_:)": {
   "abstract" : [
 
   ],
@@ -333,7 +333,7 @@
       "text" : "View"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/navigationBarHidden(_:)",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/navigationBarHidden(_:)",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "navigationBarHidden(_:)",

@@ -16,15 +16,15 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument\/ReferenceFileDocument-Implementations"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument\/ReferenceFileDocument-Implementations"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument\/writableContentTypes"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument\/writableContentTypes"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -174,21 +174,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument": {
   "abstract" : [
     {
       "text" : "The concrete subclass of a reference-based file document.",
@@ -209,7 +209,7 @@
       "text" : "MeetingNotesDocument"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -222,18 +222,18 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesdocument"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument/ReferenceFileDocument-Implementations": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument/ReferenceFileDocument-Implementations": {
   "abstract" : [
 
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument\/ReferenceFileDocument-Implementations",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument\/ReferenceFileDocument-Implementations",
   "kind" : "article",
   "role" : "collectionGroup",
   "title" : "ReferenceFileDocument Implementations",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesdocument\/referencefiledocument-implementations"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument/writableContentTypes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument/writableContentTypes": {
   "abstract" : [
 
   ],
@@ -272,7 +272,7 @@
       "text" : "]"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument\/writableContentTypes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument\/writableContentTypes",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "writableContentTypes",

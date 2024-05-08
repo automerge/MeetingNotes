@@ -1,0 +1,302 @@
+{
+  "abstract" : [
+    {
+      "text" : "A collection of User Default keys for the app.",
+      "type" : "text"
+    }
+  ],
+  "hierarchy" : {
+    "paths" : [
+      [
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes"
+      ]
+    ]
+  },
+  "identifier" : {
+    "interfaceLanguage" : "swift",
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/UserDefaultKeys"
+  },
+  "kind" : "symbol",
+  "metadata" : {
+    "externalID" : "s:12MeetingNotes15UserDefaultKeysO",
+    "fragments" : [
+      {
+        "kind" : "keyword",
+        "text" : "enum"
+      },
+      {
+        "kind" : "text",
+        "text" : " "
+      },
+      {
+        "kind" : "identifier",
+        "text" : "UserDefaultKeys"
+      }
+    ],
+    "modules" : [
+      {
+        "name" : "MeetingNotes"
+      }
+    ],
+    "navigatorTitle" : [
+      {
+        "kind" : "identifier",
+        "text" : "UserDefaultKeys"
+      }
+    ],
+    "remoteSource" : {
+      "fileName" : "UserDefaultKeys.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/UserDefaultKeys.swift#L2"
+    },
+    "role" : "symbol",
+    "roleHeading" : "Enumeration",
+    "symbolKind" : "enum",
+    "title" : "UserDefaultKeys"
+  },
+  "primaryContentSections" : [
+    {
+      "declarations" : [
+        {
+          "languages" : [
+            "swift"
+          ],
+          "platforms" : [
+            "macOS"
+          ],
+          "tokens" : [
+            {
+              "kind" : "keyword",
+              "text" : "enum"
+            },
+            {
+              "kind" : "text",
+              "text" : " "
+            },
+            {
+              "kind" : "identifier",
+              "text" : "UserDefaultKeys"
+            }
+          ]
+        }
+      ],
+      "kind" : "declarations"
+    }
+  ],
+  "relationshipsSections" : [
+    {
+      "identifiers" : [
+        "doc:\/\/com.automerge.MeetingNotes\/s8SendableP"
+      ],
+      "kind" : "relationships",
+      "title" : "Conforms To",
+      "type" : "conformsTo"
+    }
+  ],
+  "schemaVersion" : {
+    "major" : 0,
+    "minor" : 3,
+    "patch" : 0
+  },
+  "sections" : [
+
+  ],
+  "seeAlsoSections" : [
+    {
+      "generated" : true,
+      "identifiers" : [
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError"
+      ],
+      "title" : "Core Application"
+    }
+  ],
+  "topicSections" : [
+    {
+      "identifiers" : [
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/UserDefaultKeys\/publicPeerName"
+      ],
+      "title" : "Type Properties"
+    }
+  ],
+  "variants" : [
+    {
+      "paths" : [
+        "\/documentation\/meetingnotes\/userdefaultkeys"
+      ],
+      "traits" : [
+        {
+          "interfaceLanguage" : "swift"
+        }
+      ]
+    }
+  ]
+, 
+"references": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
+  "abstract" : [
+    {
+      "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
+      "type" : "text"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "kind" : "symbol",
+  "role" : "collection",
+  "title" : "MeetingNotes",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp": {
+  "abstract" : [
+    {
+      "text" : "The document-based Meeting Notes application.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesApp"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MeetingNotesApp"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MeetingNotesApp",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/meetingnotesapp"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeError": {
+  "abstract" : [
+    {
+      "text" : "Document merging errors",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "enum"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "MergeError"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "MergeError"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "MergeError",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/mergeerror"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/UserDefaultKeys": {
+  "abstract" : [
+    {
+      "text" : "A collection of User Default keys for the app.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "enum"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "UserDefaultKeys"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/UserDefaultKeys",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "UserDefaultKeys"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "UserDefaultKeys",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/userdefaultkeys"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/UserDefaultKeys/publicPeerName": {
+  "abstract" : [
+    {
+      "text" : "The key to the string that the app broadcasts to represent you when sharing and syncing Automerge Documents.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "static"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "keyword",
+      "text" : "let"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "publicPeerName"
+    },
+    {
+      "kind" : "text",
+      "text" : ": "
+    },
+    {
+      "kind" : "typeIdentifier",
+      "preciseIdentifier" : "s:SS",
+      "text" : "String"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/UserDefaultKeys\/publicPeerName",
+  "kind" : "symbol",
+  "role" : "symbol",
+  "title" : "publicPeerName",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/userdefaultkeys\/publicpeername"
+},
+"doc://com.automerge.MeetingNotes/s8SendableP": {
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/s8SendableP",
+  "title" : "Swift.Sendable",
+  "type" : "unresolvable"
+}
+}
+}

@@ -8,13 +8,13 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/document"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/document"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -60,8 +60,8 @@
       }
     ],
     "remoteSource" : {
-      "fileName" : "OSLog+extensions.swift",
-      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/OSLog+extensions.swift#L8"
+      "fileName" : "Logger+extensions.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Logger+extensions.swift#L13"
     },
     "role" : "symbol",
     "roleHeading" : "Type Property",
@@ -126,8 +126,7 @@
     {
       "generated" : true,
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/syncController",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/syncConnection"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/syncflow"
       ],
       "title" : "Logger extensions"
     }
@@ -146,21 +145,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/os/Logger/document": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/os/Logger/document": {
   "abstract" : [
     {
       "text" : "Logs the Document interactions, such as saving and loading.",
@@ -198,17 +197,17 @@
       "text" : "Logger"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/document",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/document",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "document",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/os\/logger\/document"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/os/Logger/syncConnection": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/os/Logger/syncflow": {
   "abstract" : [
     {
-      "text" : "Logs updates and interaction related to the process of synchronization over the network.",
+      "text" : "Logs messages that pertain to sending or receiving sync updates.",
       "type" : "text"
     }
   ],
@@ -231,7 +230,7 @@
     },
     {
       "kind" : "identifier",
-      "text" : "syncConnection"
+      "text" : "syncflow"
     },
     {
       "kind" : "text",
@@ -243,57 +242,12 @@
       "text" : "Logger"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/syncConnection",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/syncflow",
   "kind" : "symbol",
   "role" : "symbol",
-  "title" : "syncConnection",
+  "title" : "syncflow",
   "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/os\/logger\/syncconnection"
-},
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/os/Logger/syncController": {
-  "abstract" : [
-    {
-      "text" : "Logs updates and interaction related to watching for external peer systems.",
-      "type" : "text"
-    }
-  ],
-  "fragments" : [
-    {
-      "kind" : "keyword",
-      "text" : "static"
-    },
-    {
-      "kind" : "text",
-      "text" : " "
-    },
-    {
-      "kind" : "keyword",
-      "text" : "let"
-    },
-    {
-      "kind" : "text",
-      "text" : " "
-    },
-    {
-      "kind" : "identifier",
-      "text" : "syncController"
-    },
-    {
-      "kind" : "text",
-      "text" : ": "
-    },
-    {
-      "kind" : "typeIdentifier",
-      "preciseIdentifier" : "s:2os6LoggerV",
-      "text" : "Logger"
-    }
-  ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/os\/Logger\/syncController",
-  "kind" : "symbol",
-  "role" : "symbol",
-  "title" : "syncController",
-  "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/os\/logger\/synccontroller"
+  "url" : "\/documentation\/meetingnotes\/os\/logger\/syncflow"
 }
 }
 }

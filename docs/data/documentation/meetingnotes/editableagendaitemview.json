@@ -8,13 +8,13 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -46,7 +46,7 @@
     ],
     "remoteSource" : {
       "fileName" : "EditableAgendaItemView.swift",
-      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/EditableAgendaItemView.swift#L6"
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/EditableAgendaItemView.swift#L7"
     },
     "role" : "symbol",
     "roleHeading" : "Structure",
@@ -64,6 +64,19 @@
             "macOS"
           ],
           "tokens" : [
+            {
+              "kind" : "attribute",
+              "text" : "@"
+            },
+            {
+              "kind" : "attribute",
+              "preciseIdentifier" : "s:ScM",
+              "text" : "MainActor"
+            },
+            {
+              "kind" : "text",
+              "text" : " "
+            },
             {
               "kind" : "keyword",
               "text" : "struct"
@@ -85,7 +98,8 @@
   "relationshipsSections" : [
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/7SwiftUI4ViewP"
+        "doc:\/\/com.automerge.MeetingNotes\/s8SendableP",
+        "doc:\/\/com.automerge.MeetingNotes\/7SwiftUI4ViewP"
       ],
       "kind" : "relationships",
       "title" : "Conforms To",
@@ -104,12 +118,14 @@
     {
       "generated" : true,
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/NWBrowserResultItemView",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncConnectionView",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/AvailablePeerView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerConnectionView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncStatusView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/ExportView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WebSocketStatusView"
       ],
       "title" : "Views"
     }
@@ -117,29 +133,29 @@
   "topicSections" : [
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/init(document:agendaItemId:)"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/init(document:agendaItemId:)"
       ],
       "title" : "Initializers"
     },
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/agendaItemId",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/body",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/document",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/undoManager"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/agendaItemId",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/body",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/document",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/undoManager"
       ],
       "title" : "Instance Properties"
     },
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/bindingForAgendaItem()"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/bindingForAgendaItem()"
       ],
       "title" : "Instance Methods"
     },
     {
       "generated" : true,
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/View-Implementations"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/View-Implementations"
       ],
       "title" : "Default Implementations"
     }
@@ -158,26 +174,60 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/7SwiftUI4ViewP": {
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/7SwiftUI4ViewP",
+"doc://com.automerge.MeetingNotes/7SwiftUI4ViewP": {
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/7SwiftUI4ViewP",
   "title" : "SwiftUI.View",
   "type" : "unresolvable"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/AvailablePeerView": {
+  "abstract" : [
+    {
+      "text" : "A view that shows nearby peers available for sync.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "AvailablePeerView"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/AvailablePeerView",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "AvailablePeerView"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "AvailablePeerView",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/availablepeerview"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView": {
   "abstract" : [
     {
       "text" : "A view that provides an editable view of an agenda item.",
@@ -198,7 +248,7 @@
       "text" : "EditableAgendaItemView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -211,18 +261,18 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/editableagendaitemview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/View-Implementations": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/View-Implementations": {
   "abstract" : [
 
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/View-Implementations",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/View-Implementations",
   "kind" : "article",
   "role" : "collectionGroup",
   "title" : "View Implementations",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/editableagendaitemview\/view-implementations"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/agendaItemId": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/agendaItemId": {
   "abstract" : [
 
   ],
@@ -253,14 +303,14 @@
       "text" : "?"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/agendaItemId",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/agendaItemId",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "agendaItemId",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/editableagendaitemview\/agendaitemid"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/bindingForAgendaItem()": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/bindingForAgendaItem()": {
   "abstract" : [
 
   ],
@@ -300,14 +350,14 @@
       "text" : ">"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/bindingForAgendaItem()",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/bindingForAgendaItem()",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "bindingForAgendaItem()",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/editableagendaitemview\/bindingforagendaitem()"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/body": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/body": {
   "abstract" : [
 
   ],
@@ -342,14 +392,14 @@
       "text" : "View"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/body",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/body",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "body",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/editableagendaitemview\/body"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/document": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/document": {
   "abstract" : [
 
   ],
@@ -376,14 +426,14 @@
       "text" : "MeetingNotesDocument"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/document",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/document",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "document",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/editableagendaitemview\/document"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/init(document:agendaItemId:)": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/init(document:agendaItemId:)": {
   "abstract" : [
 
   ],
@@ -431,14 +481,14 @@
       "text" : "?)"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/init(document:agendaItemId:)",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/init(document:agendaItemId:)",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "init(document:agendaItemId:)",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/editableagendaitemview\/init(document:agendaitemid:)"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/undoManager": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/undoManager": {
   "abstract" : [
 
   ],
@@ -469,14 +519,48 @@
       "text" : "?"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/undoManager",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/undoManager",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "undoManager",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/editableagendaitemview\/undomanager"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/ExportView": {
+  "abstract" : [
+    {
+      "text" : "A toolbar button to coordinate merging documents.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "ExportView"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/ExportView",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "ExportView"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "ExportView",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/exportview"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocumentView": {
   "abstract" : [
     {
       "text" : "The primary document view for a MeetingNotes document.",
@@ -497,7 +581,7 @@
       "text" : "MeetingNotesDocumentView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocumentView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -510,7 +594,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesdocumentview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeView": {
   "abstract" : [
     {
       "text" : "A toolbar button to coordinate merging documents.",
@@ -531,7 +615,7 @@
       "text" : "MergeView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -544,10 +628,10 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/mergeview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/NWBrowserResultItemView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerConnectionView": {
   "abstract" : [
     {
-      "text" : "A view that shows nearby peers available for sync.",
+      "text" : "A view that displays a sync connection and its state.",
       "type" : "text"
     }
   ],
@@ -562,23 +646,23 @@
     },
     {
       "kind" : "identifier",
-      "text" : "NWBrowserResultItemView"
+      "text" : "PeerConnectionView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/NWBrowserResultItemView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerConnectionView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
       "kind" : "identifier",
-      "text" : "NWBrowserResultItemView"
+      "text" : "PeerConnectionView"
     }
   ],
   "role" : "symbol",
-  "title" : "NWBrowserResultItemView",
+  "title" : "PeerConnectionView",
   "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/nwbrowserresultitemview"
+  "url" : "\/documentation\/meetingnotes\/peerconnectionview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView": {
   "abstract" : [
     {
       "text" : "A view that shows the status of peers and network syncing.",
@@ -599,7 +683,7 @@
       "text" : "PeerSyncView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -612,41 +696,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/peersyncview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncConnectionView": {
-  "abstract" : [
-    {
-      "text" : "A view that displays a sync connection and its state.",
-      "type" : "text"
-    }
-  ],
-  "fragments" : [
-    {
-      "kind" : "keyword",
-      "text" : "struct"
-    },
-    {
-      "kind" : "text",
-      "text" : " "
-    },
-    {
-      "kind" : "identifier",
-      "text" : "SyncConnectionView"
-    }
-  ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncConnectionView",
-  "kind" : "symbol",
-  "navigatorTitle" : [
-    {
-      "kind" : "identifier",
-      "text" : "SyncConnectionView"
-    }
-  ],
-  "role" : "symbol",
-  "title" : "SyncConnectionView",
-  "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/syncconnectionview"
-},
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/SyncStatusView": {
   "abstract" : [
     {
       "text" : "A toolbar button for activating sync for a document.",
@@ -664,21 +714,60 @@
     },
     {
       "kind" : "identifier",
-      "text" : "SyncView"
+      "text" : "SyncStatusView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncStatusView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
       "kind" : "identifier",
-      "text" : "SyncView"
+      "text" : "SyncStatusView"
     }
   ],
   "role" : "symbol",
-  "title" : "SyncView",
+  "title" : "SyncStatusView",
   "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/syncview"
+  "url" : "\/documentation\/meetingnotes\/syncstatusview"
+},
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/WebSocketStatusView": {
+  "abstract" : [
+    {
+      "text" : "A toolbar button for activating sync for a document.",
+      "type" : "text"
+    }
+  ],
+  "fragments" : [
+    {
+      "kind" : "keyword",
+      "text" : "struct"
+    },
+    {
+      "kind" : "text",
+      "text" : " "
+    },
+    {
+      "kind" : "identifier",
+      "text" : "WebSocketStatusView"
+    }
+  ],
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WebSocketStatusView",
+  "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "WebSocketStatusView"
+    }
+  ],
+  "role" : "symbol",
+  "title" : "WebSocketStatusView",
+  "type" : "topic",
+  "url" : "\/documentation\/meetingnotes\/websocketstatusview"
+},
+"doc://com.automerge.MeetingNotes/s8SendableP": {
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/s8SendableP",
+  "title" : "Swift.Sendable",
+  "type" : "unresolvable"
 }
 }
 }

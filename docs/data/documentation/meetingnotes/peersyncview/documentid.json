@@ -2,18 +2,18 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/documentId"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/documentId"
   },
   "kind" : "symbol",
   "metadata" : {
-    "externalID" : "s:12MeetingNotes12PeerSyncViewV10documentId10Foundation4UUIDVvp",
+    "externalID" : "s:12MeetingNotes12PeerSyncViewV10documentId13AutomergeRepo08DocumentG0Vvp",
     "fragments" : [
       {
         "kind" : "keyword",
@@ -33,8 +33,8 @@
       },
       {
         "kind" : "typeIdentifier",
-        "preciseIdentifier" : "s:10Foundation4UUIDV",
-        "text" : "UUID"
+        "preciseIdentifier" : "s:13AutomergeRepo10DocumentIdV",
+        "text" : "DocumentId"
       }
     ],
     "modules" : [
@@ -44,7 +44,7 @@
     ],
     "remoteSource" : {
       "fileName" : "PeerSyncView.swift",
-      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/PeerSyncView.swift#L6"
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/PeerSyncView.swift#L10"
     },
     "role" : "symbol",
     "roleHeading" : "Instance Property",
@@ -80,8 +80,8 @@
             },
             {
               "kind" : "typeIdentifier",
-              "preciseIdentifier" : "s:10Foundation4UUIDV",
-              "text" : "UUID"
+              "preciseIdentifier" : "s:13AutomergeRepo10DocumentIdV",
+              "text" : "DocumentId"
             }
           ]
         }
@@ -111,21 +111,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView": {
   "abstract" : [
     {
       "text" : "A view that shows the status of peers and network syncing.",
@@ -146,7 +146,7 @@
       "text" : "PeerSyncView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -159,7 +159,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/peersyncview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/documentId": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerSyncView/documentId": {
   "abstract" : [
 
   ],
@@ -182,11 +182,11 @@
     },
     {
       "kind" : "typeIdentifier",
-      "preciseIdentifier" : "s:10Foundation4UUIDV",
-      "text" : "UUID"
+      "preciseIdentifier" : "s:13AutomergeRepo10DocumentIdV",
+      "text" : "DocumentId"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/documentId",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerSyncView\/documentId",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "documentId",

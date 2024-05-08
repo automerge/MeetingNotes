@@ -16,14 +16,14 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerBrowserView_Previews"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerBrowserView_Previews"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerBrowserView_Previews\/previews"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerBrowserView_Previews\/previews"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -74,7 +74,7 @@
     ],
     "remoteSource" : {
       "fileName" : "PeerSyncView.swift",
-      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/PeerSyncView.swift#L102"
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/PeerSyncView.swift#L153"
     },
     "role" : "symbol",
     "roleHeading" : "Type Property",
@@ -169,21 +169,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerBrowserView_Previews": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerBrowserView_Previews": {
   "abstract" : [
 
   ],
@@ -201,7 +201,7 @@
       "text" : "PeerBrowserView_Previews"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerBrowserView_Previews",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerBrowserView_Previews",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -214,7 +214,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/peerbrowserview_previews"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/PeerBrowserView_Previews/previews": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/PeerBrowserView_Previews/previews": {
   "abstract" : [
 
   ],
@@ -257,7 +257,7 @@
       "text" : "View"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerBrowserView_Previews\/previews",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/PeerBrowserView_Previews\/previews",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "previews",

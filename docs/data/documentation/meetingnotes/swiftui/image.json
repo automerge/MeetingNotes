@@ -2,14 +2,14 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI\/Image"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI\/Image"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -106,7 +106,7 @@
   "topicSections" : [
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI\/Image\/init(_:)"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI\/Image\/init(_:)"
       ],
       "title" : "Initializers"
     }
@@ -125,32 +125,32 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SwiftUI": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/SwiftUI": {
   "abstract" : [
 
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "SwiftUI",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/swiftui"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SwiftUI/Image": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/SwiftUI/Image": {
   "abstract" : [
 
   ],
@@ -177,7 +177,7 @@
       "text" : "Image"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI\/Image",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI\/Image",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -190,7 +190,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/swiftui\/image"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SwiftUI/Image/init(_:)": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/SwiftUI/Image/init(_:)": {
   "abstract" : [
     {
       "text" : "Initialize an ",
@@ -224,7 +224,7 @@
       "text" : ")"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI\/Image\/init(_:)",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SwiftUI\/Image\/init(_:)",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "init(_:)",

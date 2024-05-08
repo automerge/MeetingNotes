@@ -8,13 +8,13 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -46,7 +46,7 @@
     ],
     "remoteSource" : {
       "fileName" : "MeetingNotesDocument.swift",
-      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/MeetingNotesDocument.swift#L18"
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/MeetingNotesDocument.swift#L20"
     },
     "role" : "symbol",
     "roleHeading" : "Structure",
@@ -121,10 +121,10 @@
   "relationshipsSections" : [
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/16CoreTransferable0B0P",
-        "doc:\/\/com.github.automerge.MeetingNotes\/Se",
-        "doc:\/\/com.github.automerge.MeetingNotes\/SE",
-        "doc:\/\/com.github.automerge.MeetingNotes\/s8SendableP"
+        "doc:\/\/com.automerge.MeetingNotes\/16CoreTransferable0B0P",
+        "doc:\/\/com.automerge.MeetingNotes\/Se",
+        "doc:\/\/com.automerge.MeetingNotes\/SE",
+        "doc:\/\/com.automerge.MeetingNotes\/s8SendableP"
       ],
       "kind" : "relationships",
       "title" : "Conforms To",
@@ -143,11 +143,11 @@
     {
       "generated" : true,
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppWalkthrough",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesModel",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/UniformTypeIdentifiers\/UTType\/meetingnote"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppWalkthrough",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesModel",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/UniformTypeIdentifiers\/UTType\/meetingnote"
       ],
       "title" : "Document Model"
     }
@@ -155,29 +155,22 @@
   "topicSections" : [
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/init(from:)",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/init(id:data:)"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/init(from:)",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/init(id:data:)"
       ],
       "title" : "Initializers"
     },
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/data",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/id"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/data",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/id"
       ],
       "title" : "Instance Properties"
     },
     {
-      "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/fileDecoder",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/fileEncoder"
-      ],
-      "title" : "Type Properties"
-    },
-    {
       "generated" : true,
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/Transferable-Implementations"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/Transferable-Implementations"
       ],
       "title" : "Default Implementations"
     }
@@ -196,36 +189,36 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/16CoreTransferable0B0P": {
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/16CoreTransferable0B0P",
+"doc://com.automerge.MeetingNotes/16CoreTransferable0B0P": {
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/16CoreTransferable0B0P",
   "title" : "CoreTransferable.Transferable",
   "type" : "unresolvable"
 },
-"doc://com.github.automerge.MeetingNotes/SE": {
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/SE",
+"doc://com.automerge.MeetingNotes/SE": {
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/SE",
   "title" : "Swift.Encodable",
   "type" : "unresolvable"
 },
-"doc://com.github.automerge.MeetingNotes/Se": {
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/Se",
+"doc://com.automerge.MeetingNotes/Se": {
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/Se",
   "title" : "Swift.Decodable",
   "type" : "unresolvable"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AgendaItem": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/AgendaItem": {
   "abstract" : [
     {
       "text" : "An individual agenda item tracked by meeting notes.",
@@ -270,7 +263,7 @@
       "text" : "AgendaItem"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/AgendaItem",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -283,21 +276,21 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/agendaitem"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/AppWalkthrough": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/AppWalkthrough": {
   "abstract" : [
     {
       "text" : "A guided tour of MeetingNotes, a sample iOS and macOS SwiftUI app that uses Automerge for data storage and collaboration.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppWalkthrough",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/AppWalkthrough",
   "kind" : "article",
   "role" : "article",
   "title" : "Meeting Notes, a Document-based SwiftUI app using Automerge",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/appwalkthrough"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDocument": {
   "abstract" : [
     {
       "text" : "The concrete subclass of a reference-based file document.",
@@ -318,7 +311,7 @@
       "text" : "MeetingNotesDocument"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDocument",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -331,7 +324,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesdocument"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesModel": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesModel": {
   "abstract" : [
     {
       "text" : "The top-level application model for Meeting Notes.",
@@ -352,7 +345,7 @@
       "text" : "MeetingNotesModel"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesModel",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesModel",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -365,7 +358,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesmodel"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/UniformTypeIdentifiers/UTType/meetingnote": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/UniformTypeIdentifiers/UTType/meetingnote": {
   "abstract" : [
     {
       "text" : "An Automerge document that is CBOR encoded with a document identifier.",
@@ -403,14 +396,14 @@
       "text" : "UTType"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/UniformTypeIdentifiers\/UTType\/meetingnote",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/UniformTypeIdentifiers\/UTType\/meetingnote",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "meetingnote",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/uniformtypeidentifiers\/uttype\/meetingnote"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument": {
   "abstract" : [
     {
       "text" : "A CBOR encoded wrapper around a serialized Automerge document.",
@@ -431,7 +424,7 @@
       "text" : "WrappedAutomergeDocument"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -444,18 +437,18 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/wrappedautomergedocument"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/Transferable-Implementations": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/Transferable-Implementations": {
   "abstract" : [
 
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/Transferable-Implementations",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/Transferable-Implementations",
   "kind" : "article",
   "role" : "collectionGroup",
   "title" : "Transferable Implementations",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/wrappedautomergedocument\/transferable-implementations"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/data": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/data": {
   "abstract" : [
 
   ],
@@ -482,98 +475,14 @@
       "text" : "Data"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/data",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/data",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "data",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/wrappedautomergedocument\/data"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/fileDecoder": {
-  "abstract" : [
-
-  ],
-  "fragments" : [
-    {
-      "kind" : "keyword",
-      "text" : "static"
-    },
-    {
-      "kind" : "text",
-      "text" : " "
-    },
-    {
-      "kind" : "keyword",
-      "text" : "let"
-    },
-    {
-      "kind" : "text",
-      "text" : " "
-    },
-    {
-      "kind" : "identifier",
-      "text" : "fileDecoder"
-    },
-    {
-      "kind" : "text",
-      "text" : ": "
-    },
-    {
-      "kind" : "typeIdentifier",
-      "preciseIdentifier" : "s:10PotentCBOR11CBORDecoderC",
-      "text" : "CBORDecoder"
-    }
-  ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/fileDecoder",
-  "kind" : "symbol",
-  "role" : "symbol",
-  "title" : "fileDecoder",
-  "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/wrappedautomergedocument\/filedecoder"
-},
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/fileEncoder": {
-  "abstract" : [
-
-  ],
-  "fragments" : [
-    {
-      "kind" : "keyword",
-      "text" : "static"
-    },
-    {
-      "kind" : "text",
-      "text" : " "
-    },
-    {
-      "kind" : "keyword",
-      "text" : "let"
-    },
-    {
-      "kind" : "text",
-      "text" : " "
-    },
-    {
-      "kind" : "identifier",
-      "text" : "fileEncoder"
-    },
-    {
-      "kind" : "text",
-      "text" : ": "
-    },
-    {
-      "kind" : "typeIdentifier",
-      "preciseIdentifier" : "s:10PotentCBOR11CBOREncoderC",
-      "text" : "CBOREncoder"
-    }
-  ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/fileEncoder",
-  "kind" : "symbol",
-  "role" : "symbol",
-  "title" : "fileEncoder",
-  "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/wrappedautomergedocument\/fileencoder"
-},
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/id": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/id": {
   "abstract" : [
 
   ],
@@ -596,18 +505,18 @@
     },
     {
       "kind" : "typeIdentifier",
-      "preciseIdentifier" : "s:10Foundation4UUIDV",
-      "text" : "UUID"
+      "preciseIdentifier" : "s:13AutomergeRepo10DocumentIdV",
+      "text" : "DocumentId"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/id",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/id",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "id",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/wrappedautomergedocument\/id"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/init(from:)": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/init(from:)": {
   "abstract" : [
 
   ],
@@ -626,7 +535,7 @@
     },
     {
       "kind" : "text",
-      "text" : ": "
+      "text" : ": any "
     },
     {
       "kind" : "typeIdentifier",
@@ -642,14 +551,14 @@
       "text" : "throws"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/init(from:)",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/init(from:)",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "init(from:)",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/wrappedautomergedocument\/init(from:)"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/init(id:data:)": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/WrappedAutomergeDocument/init(id:data:)": {
   "abstract" : [
 
   ],
@@ -672,8 +581,8 @@
     },
     {
       "kind" : "typeIdentifier",
-      "preciseIdentifier" : "s:10Foundation4UUIDV",
-      "text" : "UUID"
+      "preciseIdentifier" : "s:13AutomergeRepo10DocumentIdV",
+      "text" : "DocumentId"
     },
     {
       "kind" : "text",
@@ -697,15 +606,15 @@
       "text" : ")"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/init(id:data:)",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/WrappedAutomergeDocument\/init(id:data:)",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "init(id:data:)",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/wrappedautomergedocument\/init(id:data:)"
 },
-"doc://com.github.automerge.MeetingNotes/s8SendableP": {
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/s8SendableP",
+"doc://com.automerge.MeetingNotes/s8SendableP": {
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/s8SendableP",
   "title" : "Swift.Sendable",
   "type" : "unresolvable"
 }

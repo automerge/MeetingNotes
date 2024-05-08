@@ -1,6 +1,6 @@
 {
   "bundleDisplayName" : "MeetingNotes",
-  "bundleIdentifier" : "com.github.automerge.MeetingNotes",
+  "bundleIdentifier" : "com.automerge.MeetingNotes",
   "schemaVersion" : {
     "major" : 0,
     "minor" : 1,

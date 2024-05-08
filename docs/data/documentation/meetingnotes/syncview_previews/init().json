@@ -2,14 +2,14 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView_Previews"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView_Previews"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView_Previews\/init()"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView_Previews\/init()"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -30,8 +30,8 @@
       }
     ],
     "remoteSource" : {
-      "fileName" : "SyncView.swift",
-      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/SyncView.swift#L31"
+      "fileName" : "SyncStatusView.swift",
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/SyncStatusView.swift#L41"
     },
     "role" : "symbol",
     "roleHeading" : "Initializer",
@@ -85,21 +85,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncView_Previews": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/SyncView_Previews": {
   "abstract" : [
     {
       "text" : "Preview of the sync toolbar button.",
@@ -120,7 +120,7 @@
       "text" : "SyncView_Previews"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView_Previews",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView_Previews",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -133,7 +133,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/syncview_previews"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/SyncView_Previews/init()": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/SyncView_Previews/init()": {
   "abstract" : [
 
   ],
@@ -147,7 +147,7 @@
       "text" : "()"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView_Previews\/init()",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/SyncView_Previews\/init()",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "init()",

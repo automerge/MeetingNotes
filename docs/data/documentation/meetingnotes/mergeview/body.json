@@ -16,14 +16,14 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView\/body"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView\/body"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -66,7 +66,7 @@
     ],
     "remoteSource" : {
       "fileName" : "MergeView.swift",
-      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/MergeView.swift#L10"
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/Views\/MergeView.swift#L11"
     },
     "role" : "symbol",
     "roleHeading" : "Instance Property",
@@ -153,21 +153,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeView": {
   "abstract" : [
     {
       "text" : "A toolbar button to coordinate merging documents.",
@@ -188,7 +188,7 @@
       "text" : "MergeView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -201,7 +201,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/mergeview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeView/body": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeView/body": {
   "abstract" : [
 
   ],
@@ -236,7 +236,7 @@
       "text" : "View"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView\/body",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView\/body",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "body",
