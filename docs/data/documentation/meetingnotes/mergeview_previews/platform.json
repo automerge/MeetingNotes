@@ -16,15 +16,15 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews\/PreviewProvider-Implementations"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews\/PreviewProvider-Implementations"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews\/platform"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews\/platform"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -201,21 +201,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeView_Previews": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeView_Previews": {
   "abstract" : [
     {
       "text" : "Preview of the merge toolbar button.",
@@ -236,7 +236,7 @@
       "text" : "MergeView_Previews"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -249,18 +249,18 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/mergeview_previews"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeView_Previews/PreviewProvider-Implementations": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeView_Previews/PreviewProvider-Implementations": {
   "abstract" : [
 
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews\/PreviewProvider-Implementations",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews\/PreviewProvider-Implementations",
   "kind" : "article",
   "role" : "collectionGroup",
   "title" : "PreviewProvider Implementations",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/mergeview_previews\/previewprovider-implementations"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeView_Previews/platform": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeView_Previews/platform": {
   "abstract" : [
 
   ],
@@ -299,7 +299,7 @@
       "text" : "?"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews\/platform",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeView_Previews\/platform",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "platform",

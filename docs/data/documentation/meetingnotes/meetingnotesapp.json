@@ -8,13 +8,13 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -46,7 +46,7 @@
     ],
     "remoteSource" : {
       "fileName" : "MeetingNotesApp.swift",
-      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/MeetingNotesApp.swift#L8"
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/MeetingNotesApp.swift#L20"
     },
     "role" : "symbol",
     "roleHeading" : "Structure",
@@ -93,8 +93,8 @@
   "relationshipsSections" : [
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/s8SendableP",
-        "doc:\/\/com.github.automerge.MeetingNotes\/7SwiftUI3AppP"
+        "doc:\/\/com.automerge.MeetingNotes\/s8SendableP",
+        "doc:\/\/com.automerge.MeetingNotes\/7SwiftUI3AppP"
       ],
       "kind" : "relationships",
       "title" : "Conforms To",
@@ -113,9 +113,8 @@
     {
       "generated" : true,
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/sharedSyncCoordinator",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDefaultKeys",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/UserDefaultKeys"
       ],
       "title" : "Core Application"
     }
@@ -123,20 +122,20 @@
   "topicSections" : [
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/init()"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/init()"
       ],
       "title" : "Initializers"
     },
     {
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/body"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/body"
       ],
       "title" : "Instance Properties"
     },
     {
       "generated" : true,
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/App-Implementations"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/App-Implementations"
       ],
       "title" : "Default Implementations"
     }
@@ -155,26 +154,26 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/7SwiftUI3AppP": {
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/7SwiftUI3AppP",
+"doc://com.automerge.MeetingNotes/7SwiftUI3AppP": {
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/7SwiftUI3AppP",
   "title" : "SwiftUI.App",
   "type" : "unresolvable"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp": {
   "abstract" : [
     {
       "text" : "The document-based Meeting Notes application.",
@@ -195,7 +194,7 @@
       "text" : "MeetingNotesApp"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -208,18 +207,18 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesapp"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp/App-Implementations": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp/App-Implementations": {
   "abstract" : [
 
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/App-Implementations",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/App-Implementations",
   "kind" : "article",
   "role" : "collectionGroup",
   "title" : "App Implementations",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesapp\/app-implementations"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp/body": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp/body": {
   "abstract" : [
 
   ],
@@ -254,14 +253,14 @@
       "text" : "Scene"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/body",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/body",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "body",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesapp\/body"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp/init()": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp/init()": {
   "abstract" : [
 
   ],
@@ -275,48 +274,14 @@
       "text" : "()"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/init()",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/init()",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "init()",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesapp\/init()"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesDefaultKeys": {
-  "abstract" : [
-    {
-      "text" : "A collection of User Default keys for the app.",
-      "type" : "text"
-    }
-  ],
-  "fragments" : [
-    {
-      "kind" : "keyword",
-      "text" : "enum"
-    },
-    {
-      "kind" : "text",
-      "text" : " "
-    },
-    {
-      "kind" : "identifier",
-      "text" : "MeetingNotesDefaultKeys"
-    }
-  ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesDefaultKeys",
-  "kind" : "symbol",
-  "navigatorTitle" : [
-    {
-      "kind" : "identifier",
-      "text" : "MeetingNotesDefaultKeys"
-    }
-  ],
-  "role" : "symbol",
-  "title" : "MeetingNotesDefaultKeys",
-  "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/meetingnotesdefaultkeys"
-},
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeError": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeError": {
   "abstract" : [
     {
       "text" : "Document merging errors",
@@ -337,7 +302,7 @@
       "text" : "MergeError"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -350,17 +315,17 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/mergeerror"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/sharedSyncCoordinator": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/UserDefaultKeys": {
   "abstract" : [
     {
-      "text" : "A shared instance of a document sync coordinator.",
+      "text" : "A collection of User Default keys for the app.",
       "type" : "text"
     }
   ],
   "fragments" : [
     {
       "kind" : "keyword",
-      "text" : "let"
+      "text" : "enum"
     },
     {
       "kind" : "text",
@@ -368,27 +333,24 @@
     },
     {
       "kind" : "identifier",
-      "text" : "sharedSyncCoordinator"
-    },
-    {
-      "kind" : "text",
-      "text" : ": "
-    },
-    {
-      "kind" : "typeIdentifier",
-      "preciseIdentifier" : "s:12MeetingNotes23DocumentSyncCoordinatorC",
-      "text" : "DocumentSyncCoordinator"
+      "text" : "UserDefaultKeys"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/sharedSyncCoordinator",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/UserDefaultKeys",
   "kind" : "symbol",
+  "navigatorTitle" : [
+    {
+      "kind" : "identifier",
+      "text" : "UserDefaultKeys"
+    }
+  ],
   "role" : "symbol",
-  "title" : "sharedSyncCoordinator",
+  "title" : "UserDefaultKeys",
   "type" : "topic",
-  "url" : "\/documentation\/meetingnotes\/sharedsynccoordinator"
+  "url" : "\/documentation\/meetingnotes\/userdefaultkeys"
 },
-"doc://com.github.automerge.MeetingNotes/s8SendableP": {
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/s8SendableP",
+"doc://com.automerge.MeetingNotes/s8SendableP": {
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/s8SendableP",
   "title" : "Swift.Sendable",
   "type" : "unresolvable"
 }

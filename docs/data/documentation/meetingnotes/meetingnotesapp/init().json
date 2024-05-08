@@ -16,14 +16,14 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/init()"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/init()"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -45,7 +45,7 @@
     ],
     "remoteSource" : {
       "fileName" : "MeetingNotesApp.swift",
-      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/MeetingNotesApp.swift#L8"
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/MeetingNotesApp.swift#L34"
     },
     "role" : "symbol",
     "roleHeading" : "Initializer",
@@ -99,21 +99,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp": {
   "abstract" : [
     {
       "text" : "The document-based Meeting Notes application.",
@@ -134,7 +134,7 @@
       "text" : "MeetingNotesApp"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -147,7 +147,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/meetingnotesapp"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp/init()": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MeetingNotesApp/init()": {
   "abstract" : [
 
   ],
@@ -161,7 +161,7 @@
       "text" : "()"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/init()",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MeetingNotesApp\/init()",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "init()",

@@ -32,14 +32,14 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/ImageResource"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/ImageResource"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/ImageResource\/init(name:bundle:)"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/ImageResource\/init(name:bundle:)"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -59,7 +59,11 @@
       },
       {
         "kind" : "text",
-        "text" : ": "
+        "text" : ": Swift"
+      },
+      {
+        "kind" : "text",
+        "text" : "."
       },
       {
         "kind" : "typeIdentifier",
@@ -76,7 +80,11 @@
       },
       {
         "kind" : "text",
-        "text" : ": "
+        "text" : ": Foundation"
+      },
+      {
+        "kind" : "text",
+        "text" : "."
       },
       {
         "kind" : "typeIdentifier",
@@ -123,7 +131,11 @@
             },
             {
               "kind" : "text",
-              "text" : ": "
+              "text" : ": Swift"
+            },
+            {
+              "kind" : "text",
+              "text" : "."
             },
             {
               "kind" : "typeIdentifier",
@@ -140,7 +152,11 @@
             },
             {
               "kind" : "text",
-              "text" : ": "
+              "text" : ": Foundation"
+            },
+            {
+              "kind" : "text",
+              "text" : "."
             },
             {
               "kind" : "typeIdentifier",
@@ -179,21 +195,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/ImageResource": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/ImageResource": {
   "abstract" : [
     {
       "text" : "An image resource.",
@@ -214,7 +230,7 @@
       "text" : "ImageResource"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/ImageResource",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/ImageResource",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -227,7 +243,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/imageresource"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/ImageResource/init(name:bundle:)": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/ImageResource/init(name:bundle:)": {
   "abstract" : [
     {
       "text" : "Initialize an ",
@@ -273,7 +289,11 @@
     },
     {
       "kind" : "text",
-      "text" : ": "
+      "text" : ": Swift"
+    },
+    {
+      "kind" : "text",
+      "text" : "."
     },
     {
       "kind" : "typeIdentifier",
@@ -290,7 +310,11 @@
     },
     {
       "kind" : "text",
-      "text" : ": "
+      "text" : ": Foundation"
+    },
+    {
+      "kind" : "text",
+      "text" : "."
     },
     {
       "kind" : "typeIdentifier",
@@ -302,7 +326,7 @@
       "text" : ")"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/ImageResource\/init(name:bundle:)",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/ImageResource\/init(name:bundle:)",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "init(name:bundle:)",

@@ -8,14 +8,14 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError\/NoSharedHistory"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError\/NoSharedHistory"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -41,7 +41,7 @@
     ],
     "remoteSource" : {
       "fileName" : "MeetingNotesDocument.swift",
-      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/MeetingNotesDocument.swift#L34"
+      "url" : "https:\/\/github.com\/automerge\/meetingnotes\/tree\/main\/MeetingNotes\/MeetingNotesDocument.swift#L38"
     },
     "role" : "symbol",
     "roleHeading" : "Case",
@@ -99,21 +99,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeError": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeError": {
   "abstract" : [
     {
       "text" : "Document merging errors",
@@ -134,7 +134,7 @@
       "text" : "MergeError"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -147,7 +147,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/mergeerror"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeError/NoSharedHistory": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeError/NoSharedHistory": {
   "abstract" : [
     {
       "text" : "The documents don’t have a shared history.",
@@ -168,7 +168,7 @@
       "text" : "NoSharedHistory"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError\/NoSharedHistory",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError\/NoSharedHistory",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "MergeError.NoSharedHistory",

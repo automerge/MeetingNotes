@@ -16,15 +16,15 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError\/LocalizedError-Implementations"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError\/LocalizedError-Implementations"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError\/errorDescription"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError\/errorDescription"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -172,21 +172,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeError": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeError": {
   "abstract" : [
     {
       "text" : "Document merging errors",
@@ -207,7 +207,7 @@
       "text" : "MergeError"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -220,18 +220,18 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/mergeerror"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeError/LocalizedError-Implementations": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeError/LocalizedError-Implementations": {
   "abstract" : [
 
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError\/LocalizedError-Implementations",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError\/LocalizedError-Implementations",
   "kind" : "article",
   "role" : "collectionGroup",
   "title" : "LocalizedError Implementations",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/mergeerror\/localizederror-implementations"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/MergeError/errorDescription": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/MergeError/errorDescription": {
   "abstract" : [
 
   ],
@@ -262,7 +262,7 @@
       "text" : "?"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError\/errorDescription",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/MergeError\/errorDescription",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "errorDescription",

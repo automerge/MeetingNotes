@@ -2,14 +2,14 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews\/PreviewProvider-Implementations"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews\/PreviewProvider-Implementations"
   },
   "kind" : "article",
   "metadata" : {
@@ -19,6 +19,7 @@
       }
     ],
     "role" : "collectionGroup",
+    "roleHeading" : "API Collection",
     "title" : "PreviewProvider Implementations"
   },
   "schemaVersion" : {
@@ -33,7 +34,7 @@
     {
       "generated" : true,
       "identifiers" : [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews\/platform"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews\/platform"
       ],
       "title" : "Type Properties"
     }
@@ -52,21 +53,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemListView_Previews": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemListView_Previews": {
   "abstract" : [
     {
       "text" : "Preview of an editable agenda item view.",
@@ -87,7 +88,7 @@
       "text" : "EditableAgendaItemListView_Previews"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -100,7 +101,7 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/editableagendaitemlistview_previews"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemListView_Previews/platform": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemListView_Previews/platform": {
   "abstract" : [
 
   ],
@@ -139,7 +140,7 @@
       "text" : "?"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews\/platform",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemListView_Previews\/platform",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "platform",

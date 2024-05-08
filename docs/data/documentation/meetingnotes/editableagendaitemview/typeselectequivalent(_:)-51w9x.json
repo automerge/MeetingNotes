@@ -16,15 +16,15 @@
   "hierarchy" : {
     "paths" : [
       [
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView",
-        "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/View-Implementations"
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView",
+        "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/View-Implementations"
       ]
     ]
   },
   "identifier" : {
     "interfaceLanguage" : "swift",
-    "url" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/typeSelectEquivalent(_:)-51w9x"
+    "url" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/typeSelectEquivalent(_:)-51w9x"
   },
   "kind" : "symbol",
   "metadata" : {
@@ -210,21 +210,21 @@
   ]
 , 
 "references": {
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes": {
   "abstract" : [
     {
       "text" : "An example iOS and macOS document-based application that uses Automerge as an underlying document store to synchronize and seamlessly merge documents.",
       "type" : "text"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes",
   "kind" : "symbol",
   "role" : "collection",
   "title" : "MeetingNotes",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView": {
   "abstract" : [
     {
       "text" : "A view that provides an editable view of an agenda item.",
@@ -245,7 +245,7 @@
       "text" : "EditableAgendaItemView"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView",
   "kind" : "symbol",
   "navigatorTitle" : [
     {
@@ -258,18 +258,18 @@
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/editableagendaitemview"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/View-Implementations": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/View-Implementations": {
   "abstract" : [
 
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/View-Implementations",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/View-Implementations",
   "kind" : "article",
   "role" : "collectionGroup",
   "title" : "View Implementations",
   "type" : "topic",
   "url" : "\/documentation\/meetingnotes\/editableagendaitemview\/view-implementations"
 },
-"doc://com.github.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/typeSelectEquivalent(_:)-51w9x": {
+"doc://com.automerge.MeetingNotes/documentation/MeetingNotes/EditableAgendaItemView/typeSelectEquivalent(_:)-51w9x": {
   "abstract" : [
 
   ],
@@ -313,7 +313,7 @@
       "text" : "View"
     }
   ],
-  "identifier" : "doc:\/\/com.github.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/typeSelectEquivalent(_:)-51w9x",
+  "identifier" : "doc:\/\/com.automerge.MeetingNotes\/documentation\/MeetingNotes\/EditableAgendaItemView\/typeSelectEquivalent(_:)-51w9x",
   "kind" : "symbol",
   "role" : "symbol",
   "title" : "typeSelectEquivalent(_:)",
