@@ -26,10 +26,18 @@ The source for the MeetingNotes app is [available on Github](https://github.com/
 
 - ``MeetingNotesApp``
 - ``MergeError``
+- ``UserDefaultKeys``
+
+### Global Variables
+
+- ``repo``
+- ``websocket``
+- ``peerToPeer``
 
 ### Logger extensions
 
 - ``MeetingNotes/os/Logger/document``
+- ``MeetingNotes/os/Logger/syncflow``
 
 ### Views
 
@@ -52,10 +60,6 @@ The source for the MeetingNotes app is [available on Github](https://github.com/
 - ``SyncView_Previews``
 - ``ExportView_Previews``
 - ``WebSocketView_Previews``
-
-### Legacy Sync Connection
-
-- ``WebsocketSyncConnection``
 
 ### Application Resources
 
