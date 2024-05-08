@@ -329,213 +329,53 @@ With a document-based SwiftUI app, the SwiftUI app framework owns the lifetime o
 If the file saved from the document-based app is stored in iCloud, the operating system may destroy an existing instance and re-create it from the contents on device - most notably after having replicated the file with iCloud.
 There may be other instances of where the document can be rebuilt, but the important aspect to note is that SwiftUI is in control of that instance's lifecycle.
 
-To provide peer to peer syncing, MeetingNotes handles the document being ephemeral by enabling an app-level sync coordinator: [DocumentSyncCoordinator.swift](https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/PeerNetworking/DocumentSyncCoordinator.swift)
-This coordinator has properties for tracking Documents using identifiers that represent those documents and identifiers to represent the peers it syncs with.
-The sync coordinator presents itself as an `Observable` object for more convenient use within SwiftUI views, to provide information about peers, connections, and exposing a control to establish a new connection.
-
-When MeetingNotes enables sync for a document, it registers a document with the SyncCoordinator, which builds a [NWTextRecord](https://developer.apple.com/documentation/network/nwtxtrecord) instance to use in advertising that the document.
+To provide peer to peer syncing, MeetingNotes uses the [automerge-repo-swift package](https://github.com/automerge/automerge-repo-swift).
+It creates a single globally available instance of a repository to track documents that are loaded by the SwiftUI document-based app.
+To provide the network connections, it also creates an instance of a `WebSocketprovider` and `PeerToPeerProvider`, and adds those to the repository at the end of app initialization:
 
 ```swift
-func registerDocument(_ document: MeetingNotesDocument) {
-    documents[document.id] = document
+public let repo = Repo(sharePolicy: SharePolicy.agreeable)
+public let websocket = WebSocketProvider(.init(reconnectOnError: true))
+public let peerToPeer = PeerToPeerProvider(
+    PeerToPeerProviderConfiguration(
+        passcode: "AutomergeMeetingNotes",
+        reconnectOnError: true,
+        autoconnect: false
+    )
+)
 
-    var txtRecord = NWTXTRecord()
-    txtRecord[TXTRecordKeys.name] = name
-    txtRecord[TXTRecordKeys.peer_id] = peerId.uuidString
-    txtRecord[TXTRecordKeys.doc_id] = document.id.uuidString
-    txtRecords[document.id] = txtRecord
+/// The document-based Meeting Notes application.
+@main
+struct MeetingNotesApp: App {
+    ...
+    init() {
+        Task {
+            // Enable network adapters
+            await repo.addNetworkAdapter(adapter: websocket)
+            await repo.addNetworkAdapter(adapter: peerToPeer)
+        }
+    }
 }
+
 ```
 
-On activating sync, the coordinator activates both an [NWBrowser](https://developer.apple.com/documentation/network/nwbrowser) and [NWListener](https://developer.apple.com/documentation/network/nwlistener) instance.
-In addition to activating the network services, the coordinator starts a timer to drive checks for document updates to determine if they should send a network sync message.
-When a connection is established, it subscribes to the timer to drive checks to sync the Automerge document.
+The SwiftUI document-based API is all synchronous, so loading an Automerge document it provides is down within the view when it first appears.
 
-#### Network Browser
-
-The browser looks for nearby peers that the app can sync with, while the listener provides the means to accept network connections.
-The actual sync connection can be initiated by either peer, and only one needs to be initiated to support sync.
-
-The browser filters results by the type of network protocol it is initialized with: [AutomergeSyncProtocol](https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/PeerNetworking/AutomergeSyncProtocol.swift).
-The `NWBrowser` instance sees all available listeners, including itself, when the listener is active.
-The handler that processes browser updates filters the results to only show other peers on the network.
-
-```swift
-// Only show broadcasting peers that doesn't have the name 
-// provided by this app.
-let filtered = results.filter { result in
-    if case let .bonjour(txtrecord) = result.metadata,
-       txtrecord[TXTRecordKeys.peer_id] != self.peerId.uuidString
-    {
-        return true
-    }
-    return false
-}
-.sorted(by: {
-    $0.hashValue < $1.hashValue
-})
 ```
-
-MeetingNotes automatically connects to a new peer listed within [NWBrowser.Result](https://developer.apple.com/documentation/network/nwbrowser/result) when running on iOS.
-The view that shows these results also provides a button to establish a connection manually.
-The auto-connect waits for a short, random period of time before establishing an automatic connection.
-
-#### Network Listener
-
-To accept a connection, the coordinator activates a bonjour listener for the document being shared.
-Within MeetingNotes, the listener is configured with the sync protocol, a `NWTxtRecord` that describes the document, and network parameters to configure TCP and TLS.
-MeetingNotes uses the document identifier as a pre-shared TLS secret, which both enables encryption and constraints sync connections to other instances that use this same convention.
-
-> Warning: Using a pre-shared secret is _not_ a recommended security practice, and this example makes no attestations of being a secure means of encrypting the communications.
-
-While the browser receives the published TXTRecord of the peer with the Bonjour notifications, the Listener only knows that it has received a connection.
-Because of this, at the start, who initiated the connection is unknown.
-MeetingNotes accepts any full connections that get fully established with TLS, using the document identifier as a shared key.
-A more fully developed application might also track and determine acceptability of connections using additional information - either embedded within the network sync protocol or passed as parameters within the protocol.
-
-Once MeetingNotes accepts a connection, it creates an instance of [SyncConnection](https://github.com/automerge/MeetingNotes/blob/main/MeetingNotes/PeerNetworking/SyncConnection.swift).
-
-#### Syncing over a connection
-
-`SyncConnection` tracks the state of a connection as well as the sync state with a peer.
-It is initialized with a [NWConnection](https://developer.apple.com/documentation/network/nwconnection), the identifier for the document.
-It maintains it's own identifier and establishes an instance of `SyncState` to track the state of the peer on the other side of the connection.
-
-Upon initialization, the connection wrapper subscribes to the timer provided by the sync coordinator.
-The `SyncConnection` uses the timer signal to drive a check to determine if a sync message should be sent.
-
-```swift
-syncTriggerCancellable = trigger.sink(receiveValue: { _ in
-    if let automergeDoc = sharedSyncCoordinator
-        .documents[self.documentId]?.doc,
-       let syncData = automergeDoc.generateSyncMessage(
-            state: self.syncState),
-       self.connectionState == .ready
-    {
-        Logger.syncConnection
-            .info(
-                "\(self.shortId, privacy: .public): Syncing \(syncData.count, privacy: .public) bytes to \(connection.endpoint.debugDescription, privacy: .public)"
-            )
-        self.sendSyncMsg(syncData)
-    }
-})
-```
-
-The underlying network protocol only sends an event if the call to `generateSyncMessage(state:)` returns non-nil data.
-The heart of the synchronization happens when the connection receives a network protocol sync message.
-This message is structured wrapper around the sync bytes from another Automerge document, along with a minimal type-of-message identifier, taking advantage of the [Network framework](https://developer.apple.com/documentation/network) to frame and establish the messages being transferred.
-Once received, the connection uses [NWProtocolFramer](https://developer.apple.com/documentation/network/nwprotocolframer) to retrieve the message from the bytes sent over the network, and delegates receiving the message to be processed if complete, before waiting for the next message on the network.
-
-```swift
-private func receiveNextMessage() {
-    guard let connection = connection else {
-        return
-    }
-
-    connection.receiveMessage { content, context, isComplete, error in
-        Logger.syncConnection
-            .debug(
-                "\(self.shortId, privacy: .public): Received a \(isComplete ? "complete" : "incomplete", privacy: .public) msg on connection"
-            )
-        if let content {
-            Logger.syncConnection.debug("  - received \(content.count) bytes")
-        } else {
-            Logger.syncConnection.debug("  - received no data with msg")
-        }
-        // Extract your message type from the received context.
-        if let syncMessage = context?
-            .protocolMetadata(
-                definition: AutomergeSyncProtocol.definition
-            ) as? NWProtocolFramer.Message,
-            let endpoint = self.connection?.endpoint
-        {
-            self.receivedMessage(
-                content: content, 
-                message: syncMessage, 
-                from: endpoint)
-        }
-        if error == nil {
-            // Continue to receive more messages until we receive
-            // an error.
-            self.receiveNextMessage()
-        } else {
-            Logger.syncConnection.error("  - error on received message: \(error)")
-            self.cancel()
-        }
+.task {
+    // SwiftUI controls the lifecycle of MeetingNoteDocument instances,
+    // including sometimes regenerating them when disk contents are updated
+    // in the background, so register the current instance with the
+    // sync coordinator as they become visible.
+    do {
+        _ = try await repo.create(doc: document.doc, id: document.id)
+    } catch {
+        fatalError("Crashed loading the document: \(error.localizedDescription)")
     }
 }
 ```
 
-The connection processes the received sync protocol message with the `receivedMessage` function, using the identifier of the document stored with the connection to retrieve a reference to the document instance.
-Neither the connection, nor the sync coordinator object, can maintain a stable reference to the Automerge document instance because SwiftUI owns the life-cycle of the app's `ReferenceFileDocument` subclass.
-To work around SwiftUI replacing this class, the coordinator maintains and updates references as `Document` subclasses register themselves, in order to provide a quick lookup by the document's identifier.
-
-With a reference to the document, the method invokes `receiveSyncMessageWithPatches(state:message:)` to receive any provided changes, and uses the returns array of `Patch` to log how many patches were returned.
-Immediately after receiving an update, the function calls `generateSyncMessage(state:)` to determine if the additional sync messages are needed, and sends a return sync message if the function returns any data.
-
-```swift
-func receivedMessage(
-    content data: Data?, 
-    message: NWProtocolFramer.Message, 
-    from endpoint: NWEndpoint) {
-
-    guard let document = sharedSyncCoordinator.documents[self.documentId] else {
-        // ...
-        return
-    }
-    switch message.syncMessageType {
-    case .invalid:
-        // ...
-    case .sync:
-        guard let data else {
-            // ...
-            return
-        }
-        do {
-            // When we receive a complete sync message from the 
-            // underlying transport, update our automerge document, 
-            // and the associated SyncState.
-            let patches = try document.doc.receiveSyncMessageWithPatches(
-                state: syncState,
-                message: data
-            )
-            Logger.syncConnection
-                .debug(
-                    "\(self.shortId, privacy: .public): Received \(patches.count, privacy: .public) patches in \(data.count, privacy: .public) bytes"
-                )
-            try document.getModelUpdates()
-
-            // Once the Automerge doc is updated, check (using the 
-            // SyncState) to see if we believe we need to send additional
-            // messages to the peer to keep it in sync.
-            if let response = document.doc.generateSyncMessage(state: syncState) {
-                sendSyncMsg(response)
-            } else {
-                // When generateSyncMessage returns nil, the remote 
-                // endpoint represented by SyncState should be up to date.
-                Logger.syncConnection
-                    .debug(
-                        "\(self.shortId, privacy: .public): Sync complete with \(endpoint.debugDescription, privacy: .public)"
-                    )
-            }
-        } catch {
-            Logger.syncConnection
-                .error("\(self.shortId, privacy: .public): Error applying sync message: \(error, privacy: .public)")
-        }
-    case .id:
-        Logger.syncConnection.info("\(self.shortId, privacy: .public): received request for document ID")
-        sendDocumentId(document.id.uuidString)
-    }
-}
-```
-
-With this pattern established on both sides of a Bonjour connection, once a sync process is initiated, the functions send messages back and forth until a sync is complete.
-The timer, provided from the sync coordinator, is only needed to start to drive sync messages when changes have occurred locally.
-
-> Note: The messages that contain changes to sync generated by Automerge are _not_ guaranteed to have all the updates needed within a single round trip.
-The underlying mechanism optimizes for sharing the state of heads initially, resulting in a small initial message, followed by sets of changes from either side.
-The full sync process is iterative, which allows for efficient sync even when the two peers may be concurrently syncing with other, unseen or unknown, peers.
-
-The timer frequency in MeetingNotes is intentionally set to a short value to drive sync updates frequently enough to appear to "sync with each keystroke" to show off interactively collaboration.
-Your own app may not need, or want, to drive a network sync this frequently.
-
+Once added to the repository, toolbar buttons on the `MeetingNotesDocumentView` toggle a WebSocket connection or activate the peer to peer networking.
+`PeerSyncView` provides information about available peers on your local network, and allows you to explicitly connect to those peers.
+The repository handles syncing automatically as the Automerge document is updated.
+Both the WebSocket and peer-to-peer networking implement the Automerge sync protocol over their respective transports.

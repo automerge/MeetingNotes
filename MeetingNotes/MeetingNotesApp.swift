@@ -1,9 +1,12 @@
 import AutomergeRepo
 import SwiftUI
 
-public let repo = Repo(sharePolicy: SharePolicy.agreeable)
-public let websocket = WebSocketProvider(.init(reconnectOnError: true, loggingAt: .tracing))
-public let peerToPeer = PeerToPeerProvider(
+/// A global repository for storing and synchronizing Automerge documents by ID.
+let repo = Repo(sharePolicy: SharePolicy.agreeable)
+/// A WebSocket network provider for the repository.
+let websocket = WebSocketProvider(.init(reconnectOnError: true, loggingAt: .tracing))
+/// A peer-to-peer network provider for the repository.
+let peerToPeer = PeerToPeerProvider(
     PeerToPeerProviderConfiguration(
         passcode: "AutomergeMeetingNotes",
         reconnectOnError: true,
