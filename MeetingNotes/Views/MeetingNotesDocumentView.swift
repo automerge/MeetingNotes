@@ -83,7 +83,7 @@ struct MeetingNotesDocumentView: View {
             // in the background, so register the current instance with the
             // sync coordinator as they become visible.
             do {
-                _ = try await repo.create(doc: document.doc, id: document.id)
+                _ = try await repo.import(handle: DocHandle(id: document.id, doc: document.doc))
             } catch {
                 fatalError("Crashed loading the document: \(error.localizedDescription)")
             }
