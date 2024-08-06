@@ -800,7 +800,7 @@
 			repositoryURL = "https://github.com/automerge/automerge-repo-swift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.0;
+				minimumVersion = 0.3.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
