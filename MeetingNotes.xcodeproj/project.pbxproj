@@ -18,10 +18,8 @@
 		1A273DC32B93EC8D00B321C5 /* AutomergeRepo in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DC22B93EC8D00B321C5 /* AutomergeRepo */; };
 		1A273DC62B93ECF400B321C5 /* AutomergeRepo in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DC52B93ECF400B321C5 /* AutomergeRepo */; };
 		1A273DC92B93EE9300B321C5 /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DC82B93EE9300B321C5 /* PotentCodables */; };
-		1A273DCC2B93EEA600B321C5 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DCB2B93EEA600B321C5 /* Base58Swift */; };
 		1A273DCF2B93EEBB00B321C5 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DCE2B93EEBB00B321C5 /* Automerge */; };
 		1A273DD12B93EEE200B321C5 /* PotentCodables in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DD02B93EEE200B321C5 /* PotentCodables */; };
-		1A273DD32B93EEEC00B321C5 /* Base58Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DD22B93EEEC00B321C5 /* Base58Swift */; };
 		1A273DD52B93EEF700B321C5 /* Automerge in Frameworks */ = {isa = PBXBuildFile; productRef = 1A273DD42B93EEF700B321C5 /* Automerge */; };
 		1A273DD72B93F64500B321C5 /* Logger+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A273DD62B93F64500B321C5 /* Logger+extensions.swift */; };
 		1A2A02A52A50E74B0044064B /* EditableAgendaItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2A02A42A50E74A0044064B /* EditableAgendaItemView.swift */; };
@@ -94,7 +92,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A90F7F62BC75BEE00E5B3BA /* AutomergeRepo in Frameworks */,
-				1A273DCC2B93EEA600B321C5 /* Base58Swift in Frameworks */,
 				1A273DCF2B93EEBB00B321C5 /* Automerge in Frameworks */,
 				1A273DC92B93EE9300B321C5 /* PotentCodables in Frameworks */,
 				1A273DC32B93EC8D00B321C5 /* AutomergeRepo in Frameworks */,
@@ -106,7 +103,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A273DD32B93EEEC00B321C5 /* Base58Swift in Frameworks */,
 				1A273DD12B93EEE200B321C5 /* PotentCodables in Frameworks */,
 				1A273DD52B93EEF700B321C5 /* Automerge in Frameworks */,
 			);
@@ -233,7 +229,6 @@
 				1A273DC22B93EC8D00B321C5 /* AutomergeRepo */,
 				1A273DC52B93ECF400B321C5 /* AutomergeRepo */,
 				1A273DC82B93EE9300B321C5 /* PotentCodables */,
-				1A273DCB2B93EEA600B321C5 /* Base58Swift */,
 				1A273DCE2B93EEBB00B321C5 /* Automerge */,
 				1A90F7F52BC75BEE00E5B3BA /* AutomergeRepo */,
 			);
@@ -257,7 +252,6 @@
 			name = MeetingNotesTests;
 			packageProductDependencies = (
 				1A273DD02B93EEE200B321C5 /* PotentCodables */,
-				1A273DD22B93EEEC00B321C5 /* Base58Swift */,
 				1A273DD42B93EEF700B321C5 /* Automerge */,
 			);
 			productName = MeetingNotesTests;
@@ -316,7 +310,6 @@
 			mainGroup = 1A0DDC282A464DEA001ECADD;
 			packageReferences = (
 				1A273DC72B93EE9300B321C5 /* XCRemoteSwiftPackageReference "PotentCodables" */,
-				1A273DCA2B93EEA600B321C5 /* XCRemoteSwiftPackageReference "Base58Swift" */,
 				1A273DCD2B93EEBA00B321C5 /* XCRemoteSwiftPackageReference "automerge-swift" */,
 				1A90F7F42BC75BEE00E5B3BA /* XCRemoteSwiftPackageReference "automerge-repo-swift" */,
 			);
@@ -779,14 +772,6 @@
 				minimumVersion = 3.2.0;
 			};
 		};
-		1A273DCA2B93EEA600B321C5 /* XCRemoteSwiftPackageReference "Base58Swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/keefertaylor/Base58Swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.14;
-			};
-		};
 		1A273DCD2B93EEBA00B321C5 /* XCRemoteSwiftPackageReference "automerge-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/automerge/automerge-swift/";
@@ -800,7 +785,7 @@
 			repositoryURL = "https://github.com/automerge/automerge-repo-swift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.0;
+				minimumVersion = 0.3.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -819,11 +804,6 @@
 			package = 1A273DC72B93EE9300B321C5 /* XCRemoteSwiftPackageReference "PotentCodables" */;
 			productName = PotentCodables;
 		};
-		1A273DCB2B93EEA600B321C5 /* Base58Swift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1A273DCA2B93EEA600B321C5 /* XCRemoteSwiftPackageReference "Base58Swift" */;
-			productName = Base58Swift;
-		};
 		1A273DCE2B93EEBB00B321C5 /* Automerge */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1A273DCD2B93EEBA00B321C5 /* XCRemoteSwiftPackageReference "automerge-swift" */;
@@ -833,11 +813,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1A273DC72B93EE9300B321C5 /* XCRemoteSwiftPackageReference "PotentCodables" */;
 			productName = PotentCodables;
-		};
-		1A273DD22B93EEEC00B321C5 /* Base58Swift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1A273DCA2B93EEA600B321C5 /* XCRemoteSwiftPackageReference "Base58Swift" */;
-			productName = Base58Swift;
 		};
 		1A273DD42B93EEF700B321C5 /* Automerge */ = {
 			isa = XCSwiftPackageProductDependency;
