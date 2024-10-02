@@ -1,8 +1,8 @@
-import Automerge
+@preconcurrency import Automerge
 import AutomergeRepo
 import Combine
 import OSLog
-import PotentCBOR
+@preconcurrency import PotentCBOR
 import SwiftUI
 import UniformTypeIdentifiers
 
