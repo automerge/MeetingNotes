@@ -141,9 +141,10 @@ struct PeerSyncView: View {
             // first coming online and a default "???" value should be set whatever the inline default
             // from the library can provide. Since this is an @AppStorage() setup, if there's a configured
             // setting, this won't get hit and we're just waiting cycles with the check.
-            if nameToDisplay == "???" {
+            if nameToDisplay.isEmpty || nameToDisplay == "???" {
                 // no user default is setup, so load a default value from the library
                 nameToDisplay = await peerToPeer.peerName
+                editNamePopoverShown = true
             }
         }
     }
