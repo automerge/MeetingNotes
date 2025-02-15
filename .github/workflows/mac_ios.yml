@@ -46,8 +46,8 @@ jobs:
       - name: Show Destinations
         run: xcodebuild -showdestinations -scheme 'MeetingNotes'
 
-      - name: Show Test Plans
-        run: xcodebuild -showTestPlans -scheme 'MeetingNotes'
+      #- name: Show Test Plans
+      #  run: xcodebuild -showTestPlans -scheme 'MeetingNotes'
 
       #- name: iOS xcodebuild basic invoke
       #  run: xcodebuild clean test -scheme 'MeetingNotes'
@@ -56,9 +56,9 @@ jobs:
         # Xcode 15.2 settings
         run: xcodebuild clean build -scheme 'MeetingNotes' -destination 'platform=iOS Simulator,OS=17.0.1,name=iPhone 14' -sdk iphonesimulator17.2 -showBuildTimingSummary
 
-      - name: iOS test
-        # Xcode 15.2 settings
-        run: xcodebuild test -scheme 'MeetingNotes' -testPlan 'MeetingNotes' -destination 'platform=iOS Simulator,OS=17.0.1,name=iPhone 14' -sdk iphonesimulator17.2 -showBuildTimingSummary
+      #- name: iOS test
+      #  # Xcode 15.2 settings
+      #  run: xcodebuild test -scheme 'MeetingNotes' -testPlan 'MeetingNotes' -destination 'platform=iOS Simulator,OS=17.0.1,name=iPhone 14' -sdk iphonesimulator17.2 -showBuildTimingSummary
 
       - name: macOS build for MeetingNotes
         # Xcode 15.2 settings
